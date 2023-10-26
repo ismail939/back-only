@@ -1,5 +1,5 @@
 module.exports = (db, type) => {
-    return db.define("cwspacePhones", {
+    return db.define("cwspace_phones", {
         phone: {
             type: type.INTEGER
         },

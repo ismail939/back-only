@@ -1,5 +1,5 @@
 module.exports = (db, type) => {
-    return db.define("eventPhotos", {
+    return db.define("event_photos", {
         photo: {
             type: type.TEXT,
             allowNull: false
