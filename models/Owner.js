@@ -1,6 +1,6 @@
 module.exports = (db, type)=>{
     return db.define('owners', {
-        id: {
+        ID: {
             type: type.INTEGER,
             autoIncrement: true,
             primaryKey: true
@@ -16,7 +16,6 @@ module.exports = (db, type)=>{
         username: {
             type: type.STRING,
             allowNull: false,
-            
         },
         email: {
             type: type.STRING,
@@ -32,6 +31,8 @@ module.exports = (db, type)=>{
         },
         phone: {
             type: type.STRING,
+            allowNull: true,
+            unique: true
         }
     })
 }

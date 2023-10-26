@@ -1,31 +1,40 @@
 module.exports = (db, type)=>{
-    return db.define('books',{
+    return db.define('book',{
         dateTime: {
-            type: type.DATE
+            type: type.DATE,
+            allowNull: false
         },
         start: {
-            type: type.DATE
+            type: type.DATE,
+            allowNull: false
         },
         end: {
-            type: type.DATE
+            type: type.DATE,
+            allowNull: false
         },
         roomType: {
-            type: type.STRING
+            type: type.STRING,
+            allowNull: false
         },
         payment: {
-            type: type.STRING
+            type: type.STRING,
+            allowNull: false
         },
         type: {
-            type: type.STRING
+            type: type.STRING,
+            allowNull: false
         },
         status: {
-            type: type.STRING
+            type: type.STRING,
+            allowNull: false
         },
         cID: {
-            type: type.INTEGER
+            type: type.INTEGER,
+            primaryKey: true
         },
         rID: {
-            type: type.INTEGER
+            type: type.INTEGER,
+            primaryKey: true
         }
     })
 }

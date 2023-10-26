@@ -22,15 +22,12 @@ module.exports = (db, type) => {
         },
         ID: {
             type: type.INTEGER,
-            allowNull: false
+            autoIncrement: true,
+            primaryKey: true
         },
         number: {
             type: type.INTEGER,
             allowNull: false
-        },
-        cwID: {
-            type: type.INTEGER,
-            allowNull: false
         }
-    });
-};
+    })
+}

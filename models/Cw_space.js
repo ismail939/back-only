@@ -1,5 +1,5 @@
 module.exports = (db, type)=>{
-    return db.define('cwspaces', {
+    return db.define('cw_spaces', {
         ID: {
             type: type.INTEGER,
             autoIncrement: true,
@@ -8,33 +8,35 @@ module.exports = (db, type)=>{
         name: {
             type: type.STRING,
             allowNull: false,
-            
+            unique: true
         },
         email: {
             type: type.STRING,
-            allowNull: false
+            allowNull: true
         },
         address: {
-            type: type.TEXT
+            type: type.TEXT,
+            allowNull: false
         },
         fbPage: {
-            type: type.TEXT
+            type: type.TEXT,
+            allowNull: true
         },
         openingTime: {
-            type: type.TIME
+            type: type.TIME,
+            allowNull: false
         },
         closingTime: {
-            type: type.TIME
+            type: type.TIME,
+            allowNull: false
         },
         description: {
-            type: type.TEXT
+            type: type.TEXT,
+            allowNull: false
         },
         rate: {
-            type: type.FLOAT
-        },
-        oID: {
-            type: type.INTEGER
-            // foriegn key
+            type: type.FLOAT,
+            allowNull: true
         }
     })
 }

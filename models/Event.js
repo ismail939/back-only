@@ -1,35 +1,37 @@
 module.exports = (db, type)=>{
-    return db.define('events', {
-        id: {
+    return db.define("events", {
+        ID: {
             type: type.INTEGER,
             autoIncrement: true,
-            primaryKey: true
+            primaryKey: true,
         },
         name: {
             type: type.STRING,
             allowNull: false,
-            
-        },
-        description: {
-            type: type.TEXT
         },
         start: {
-            type: type.DATE
+            type: type.DATE,
+            allowNull: false,
         },
         end: {
-            type: type.DATE
+            type: type.DATE,
+            allowNull: false,
         },
         price: {
-            type: type.FLOAT
+            type: type.FLOAT,
+            allowNull: true,
         },
         capacity: {
-            type: type.INTEGER
+            type: type.INTEGER,
+            allowNull: false,
         },
         maxCapacity: {
-            type: type.INTEGER
+            type: type.INTEGER,
+            allowNull: false,
         },
-        cwID: {
-
+        description: {
+            type: type.TEXT,
+            allowNull: false
         }
     })
 }

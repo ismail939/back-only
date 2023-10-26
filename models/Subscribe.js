@@ -13,10 +13,12 @@ module.exports = (db, type) => {
             allowNull: false
         },
         cID: {
-            type: type.INTEGER
+            type: type.INTEGER,
+            primaryKey: true
         },
         cwID: {
-            type: type.INTEGER
-        },
-    });
-};
+            type: type.INTEGER,
+            primaryKey: true
+        }
+    })
+}
