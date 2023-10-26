@@ -1,5 +1,5 @@
-module.exports = (db, type) => {
-    return db.define('clients', {
+module.exports = (db, type)=>{
+    return db.define('owners', {
         id: {
             type: type.INTEGER,
             autoIncrement: true,
@@ -31,7 +31,7 @@ module.exports = (db, type) => {
             allowNUll: true
         },
         phone: {
-            type: type.TEXT
+            type: type.STRING,
         }
     })
 }
