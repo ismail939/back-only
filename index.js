@@ -4,6 +4,7 @@ const app = express()
 
 
 app.use(express.json())
+
 const db = require('./config/database')
 
 db.authenticate()
