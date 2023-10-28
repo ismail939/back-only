@@ -29,5 +29,7 @@ module.exports = (db, type) => {
             type: type.INTEGER,
             allowNull: false
         }
-    })
+    },{
+        timestamps: false 
+     })
 }

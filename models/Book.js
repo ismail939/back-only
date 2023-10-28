@@ -16,7 +16,7 @@ module.exports = (db, type)=>{
             type: type.STRING,
             allowNull: false
         },
-        payment: {
+        payment: { 
             type: type.STRING,
             allowNull: false
         },
@@ -27,14 +27,8 @@ module.exports = (db, type)=>{
         status: {
             type: type.STRING,
             allowNull: false
-        },
-        cID: {
-            type: type.INTEGER,
-            primaryKey: true
-        },
-        rID: {
-            type: type.INTEGER,
-            primaryKey: true
         }
+    },{
+       timestamps: false 
     })
 }

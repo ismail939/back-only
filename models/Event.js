@@ -33,5 +33,7 @@ module.exports = (db, type)=>{
             type: type.TEXT,
             allowNull: false
         }
-    })
+    },{
+        timestamps: false 
+     })
 }

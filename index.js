@@ -1,10 +1,12 @@
 const express = require('express')
 
 const app = express()
+const clientRouter = require('./routes/client')
+
 
 
 app.use(express.json())
-
+app.use('/', clientRouter)
 const db = require('./config/database')
 
 db.authenticate()

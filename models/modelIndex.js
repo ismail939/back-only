@@ -7,10 +7,10 @@ const Cw_spaceModel = require("./Cw_space")
 const Cw_spacePhoneModel = require("./Cw_spacePhone");
 const EventModel = require("./Event")
 const EventPhotoModel = require("./EventPhoto");
-const OwnerModel = require("./Owner")
-const ReviewModel = require("./Client")
+const OwnerModel = require("./Owner") 
+const ReviewModel = require("./Review")
 const RoomModel = require("./Room")
-const SubscribeModel = require("./Client")
+const SubscribeModel = require("./Subscribe")
 
 
 

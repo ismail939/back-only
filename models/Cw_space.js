@@ -38,5 +38,7 @@ module.exports = (db, type)=>{
             type: type.FLOAT,
             allowNull: true
         }
-    })
+    },{
+        timestamps: false 
+     })
 }

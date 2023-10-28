@@ -31,8 +31,9 @@ module.exports = (db, type)=>{
         },
         phone: {
             type: type.STRING,
-            allowNull: true,
-            unique: true
+            allowNull: true
         }
-    })
+    },{
+        timestamps: false 
+     })
 }

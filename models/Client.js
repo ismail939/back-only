@@ -7,7 +7,7 @@ module.exports = (db, type) => {
         },
         fname: {
             type: type.STRING,
-            allowNull: false
+            allowNull: false 
         },
         lname: {
             type: type.STRING,
@@ -15,13 +15,11 @@ module.exports = (db, type) => {
         },
         username: {
             type: type.STRING,
-            allowNull: false,
-            unique: true
+            allowNull: false
         },
         email: {
             type: type.STRING,
-            allowNull: false,
-            unique: true
+            allowNull: false
         },
         password: {
             type: type.STRING,
@@ -35,5 +33,7 @@ module.exports = (db, type) => {
             type: type.TEXT,
             allowNull: false
         }
+    }, {
+        timestamps: false
     })
 }

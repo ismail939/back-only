@@ -12,13 +12,7 @@ module.exports = (db, type) => {
             type: type.STRING,
             allowNull: false
         },
-        cID: {
-            type: type.INTEGER,
-            primaryKey: true
-        },
-        cwID: {
-            type: type.INTEGER,
-            primaryKey: true
-        }
-    })
+    },{
+        timestamps: false 
+     })
 }
