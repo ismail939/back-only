@@ -1,14 +1,16 @@
 const express = require('express')
-const router = express.Router()
-const controller = require('../controllers/clientController')
+const clientsController = require('../controllers/clientController')
 
+const router = express.Router();
 
-router.route('/clients').get(controller.get)
-.post(controller.create)
+router.route("/clients")
+    .get(clientsController.get)
+    .post(clientsController.create);
 
-router.route('/clients/:username').get(controller.getOne)
-.patch(controller.update)
-.delete(controller.delete)
+router.route("/clients/:username")
+    .get(clientsController.getOne)
+    .patch(clientsController.update)
+    .delete(clientsController.delete);
 
 module.exports = router
 
