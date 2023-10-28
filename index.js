@@ -5,12 +5,23 @@ const cors = require("cors");
 const app = express()
 app.use(express.json())
 
+const bookRouter = require("./routes/book");
 const clientRouter = require('./routes/client')
+const cw_spaceRouter = require('./routes/cw_space')
+const cw_spacePhoneRouter = require("./routes/cw_spacePhone");
+const eventRouter = require("./routes/event")
+const subscribeRouter = require("./routes/subscribe");
+
 
 
 
 app.use(cors()) //to handle the request comes from other ports
-app.use('/', clientRouter)
+app.use("/book", bookRouter);
+app.use("/clients", clientRouter);
+app.use("/cw_spaces", cw_spaceRouter);
+app.use("/cw_spacePhone", cw_spacePhoneRouter);
+app.use("/events", eventRouter);
+app.use("/subscribe", subscribeRouter);
 
 const db = require('./config/database')
 
