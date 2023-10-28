@@ -6,11 +6,19 @@ const app = express()
 app.use(express.json())
 
 const clientRouter = require('./routes/client')
+const ownerRouter = require('./routes/owner')
+const roomRouter = require('./routes/room')
+const reviewRouter = require('./routes/review')
+const eventPhotoRouter = require('./routes/eventphoto')
 
 
 
 app.use(cors()) //to handle the request comes from other ports
-app.use('/', clientRouter)
+app.use('/clients', clientRouter)
+app.use('/owners', ownerRouter)
+app.use('/rooms', roomRouter)
+app.use('/reviews', reviewRouter)
+app.use('/eventphotos', eventPhotoRouter)
 
 const db = require('./config/database')
 

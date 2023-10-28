@@ -7,8 +7,7 @@ module.exports = (db, type)=>{
         },
         name: {
             type: type.STRING,
-            allowNull: false,
-            unique: true
+            allowNull: false
         },
         email: {
             type: type.STRING,
