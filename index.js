@@ -14,11 +14,11 @@ const subscribeRouter = require("./routes/subscribe");
 const ownerRouter = require("./routes/owner");
 const roomRouter = require("./routes/room");
 const reviewRouter = require("./routes/review");
-const eventPhotoRouter = require("./routes/eventphoto");
+const eventPhotoRouter = require("./routes/eventPhoto");
 
 
 app.use(cors()) //to handle the request comes from other ports
-app.use("/book", bookRouter);
+app.use("/books", bookRouter);
 app.use("/cw_spaces", cw_spaceRouter);
 app.use("/cw_spacePhone", cw_spacePhoneRouter);
 app.use("/events", eventRouter);
@@ -27,7 +27,7 @@ app.use("/clients", clientRouter);
 app.use("/owners", ownerRouter);
 app.use("/rooms", roomRouter);
 app.use("/reviews", reviewRouter);
-app.use("/eventphotos", eventPhotoRouter);
+app.use("/eventPhotos", eventPhotoRouter);
 
 const db = require('./config/database')
 

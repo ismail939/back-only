@@ -13,4 +13,3 @@ router.route("/:ID")
     .delete(eventController.delete);
 
 module.exports = router
-

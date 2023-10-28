@@ -1,16 +1,16 @@
 const express = require('express')
-const eventphotoController = require('../controllers/eventphotoController')
+const eventPhotoController = require('../controllers/eventPhotoController')
 
 const router = express.Router();
 
 router.route("/")
-    .get(eventphotoController.get)
-    .post(eventphotoController.create);
+    .get(eventPhotoController.get)
+    .post(eventPhotoController.create);
 
 router.route("/:id/:eventID")
-    .get(eventphotoController.getOne)
-    .patch(eventphotoController.update)
-    .delete(eventphotoController.delete);
+    .get(eventPhotoController.getOne)
+    .patch(eventPhotoController.update)
+    .delete(eventPhotoController.delete);
 
 module.exports = router
 
