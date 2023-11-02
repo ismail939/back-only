@@ -20,7 +20,7 @@ module.exports = (db, type) => {
             type: type.INTEGER,
             allowNull: false
         },
-        ID: {
+        roomID: {
             type: type.INTEGER,
             autoIncrement: true,
             primaryKey: true
@@ -31,5 +31,5 @@ module.exports = (db, type) => {
         }
     },{
         timestamps: false 
-     })
+    })
 }

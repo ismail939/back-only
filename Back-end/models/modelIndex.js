@@ -7,6 +7,7 @@ const Cw_spaceModel = require("./Cw_space")
 const Cw_spacePhoneModel = require("./Cw_spacePhone");
 const EventModel = require("./Event")
 const EventPhotoModel = require("./EventPhoto");
+const OfferModel = require("./Offer");
 const OwnerModel = require("./Owner") 
 const ReviewModel = require("./Review")
 const RoomModel = require("./Room")
@@ -21,6 +22,7 @@ const Cw_space = Cw_spaceModel(db, Sequelize)
 const Cw_spacePhone = Cw_spacePhoneModel(db, Sequelize)
 const Event = EventModel(db, Sequelize)
 const EventPhoto = EventPhotoModel(db, Sequelize)
+const Offer = OfferModel(db, Sequelize);
 const Owner = OwnerModel(db, Sequelize)
 const Review = ReviewModel(db, Sequelize)
 const Room = RoomModel(db, Sequelize)
@@ -32,7 +34,7 @@ const Subscribe = SubscribeModel(db, Sequelize)
 Owner.belongsTo(Cw_space)
 Cw_space.belongsTo(Owner)
 
-// client & room (many -> many) through book
+// client & room (1 -> many) through book
 Client.belongsToMany(Room, { through: Book, as : "client1" })
 Room.belongsToMany(Client, { through: Book, as: "room" });
 
@@ -55,6 +57,10 @@ Cw_spacePhone.belongsTo(Cw_space)
 // cw-space & event (1 -> many)
 Cw_space.hasMany(Event)
 Event.belongsTo(Cw_space)
+
+// cw-space & offer (1 -> many)
+Cw_space.hasMany(Offer)
+Offer.belongsTo(Cw_space)
 
 // event & event photos (1-> many)
 Event.hasMany(EventPhoto)

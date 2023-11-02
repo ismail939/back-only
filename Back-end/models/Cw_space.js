@@ -1,6 +1,6 @@
 module.exports = (db, type)=>{
     return db.define('cw_spaces', {
-        ID: {
+        cwID: {
             type: type.INTEGER,
             autoIncrement: true,
             primaryKey: true
@@ -39,5 +39,5 @@ module.exports = (db, type)=>{
         }
     },{
         timestamps: false 
-     })
+    })
 }

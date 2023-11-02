@@ -1,6 +1,6 @@
 module.exports = (db, type)=>{
     return db.define("events", {
-        ID: {
+        eventID: {
             type: type.INTEGER,
             autoIncrement: true,
             primaryKey: true,
@@ -19,7 +19,7 @@ module.exports = (db, type)=>{
         },
         price: {
             type: type.FLOAT,
-            allowNull: true,
+            allowNull: false,
         },
         capacity: {
             type: type.INTEGER,
@@ -35,5 +35,5 @@ module.exports = (db, type)=>{
         }
     },{
         timestamps: false 
-     })
+    })
 }

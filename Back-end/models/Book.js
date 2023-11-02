@@ -29,6 +29,6 @@ module.exports = (db, type)=>{
             allowNull: false
         }
     },{
-       timestamps: false 
+        timestamps: false 
     })
 }

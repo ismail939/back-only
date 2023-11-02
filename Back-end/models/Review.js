@@ -14,5 +14,5 @@ module.exports = (db, type) => {
         },
     },{
         timestamps: false 
-     })
+    })
 }

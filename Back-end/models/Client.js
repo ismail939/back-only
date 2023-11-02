@@ -1,6 +1,6 @@
 module.exports = (db, type) => {
     return db.define('clients', {
-        ID: {
+        clientID: {
             type: type.INTEGER,
             autoIncrement: true,
             primaryKey: true
