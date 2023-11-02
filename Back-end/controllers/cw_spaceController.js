@@ -19,7 +19,7 @@ module.exports ={
         async (req, res, next) => {
             const cw_space = await Cw_space.findAll({
                 where: {
-                    ID: req.params.ID
+                    cwID: req.params.ID
                 }
             })
             if (cw_space.length === 0) {
@@ -39,7 +39,7 @@ module.exports ={
         async (req, res, next) => {
             const updatedCw_space = await Cw_space.findAll({
                 where: {
-                    ID: req.params.ID
+                    cwID: req.params.ID
                 }
             });
             if (updatedCw_space.length === 0) {
@@ -48,7 +48,7 @@ module.exports ={
             }
             await Cw_space.update(req.body, {
                 where: {
-                    ID: req.params.ID
+                    cwID: req.params.ID
                 }
             });
             return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "updated successfully" });
@@ -58,7 +58,7 @@ module.exports ={
         async (req, res, next) => {
             const deletedCw_space = await Cw_space.findAll({
                 where: {
-                    ID: req.params.ID
+                    cwID: req.params.ID
                 }
             });
             if (deletedCw_space.length === 0) {
@@ -67,7 +67,7 @@ module.exports ={
             }
             await Cw_space.destroy({
                 where: {
-                    ID: req.params.ID
+                    cwID: req.params.ID
                 }
             })
             return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "deleted successfully" });
