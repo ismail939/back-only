@@ -56,8 +56,7 @@ module.exports ={
             let newCw_spacePhone=null;
             let newCw_spacePhoneList=[]
             for(let i=0;i<req.body.phones.length;i++){
-                console.log(req.body.phones[i])
-                newCw_spacePhone = await Cw_spacePhone.create({phone:req.body.phones[i]})
+                newCw_spacePhone = await Cw_spacePhone.create({phone:req.body.phones[i], cwSpaceCwID:newCw_space.cwID})
                 newCw_spacePhoneList.push(newCw_spacePhone)
             }
             return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newCw_space , phones: newCw_spacePhoneList});
