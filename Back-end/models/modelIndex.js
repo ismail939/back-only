@@ -4,7 +4,8 @@ const db = require('../config/database')
 const BookModel = require('./Book')
 const ClientModel = require("./Client")
 const Cw_spaceModel = require("./Cw_space")
-const Cw_spacePhoneModel = require("./Cw_spacePhone");
+const Cw_spacePhoneModel = require("./Cw_spacePhone")
+const Cw_spacePhotoModel = require("./Cw_spacePhotos")
 const EventModel = require("./Event")
 const EventPhotoModel = require("./EventPhoto");
 const OfferModel = require("./Offer");
@@ -20,6 +21,7 @@ const Book = BookModel(db, Sequelize)
 const Client = ClientModel(db, Sequelize)
 const Cw_space = Cw_spaceModel(db, Sequelize)
 const Cw_spacePhone = Cw_spacePhoneModel(db, Sequelize)
+const Cw_spacePhoto = Cw_spacePhotoModel(db, Sequelize);
 const Event = EventModel(db, Sequelize)
 const EventPhoto = EventPhotoModel(db, Sequelize)
 const Offer = OfferModel(db, Sequelize);
@@ -54,6 +56,11 @@ Room.belongsTo(Cw_space)
 Cw_space.hasMany(Cw_spacePhone)
 Cw_spacePhone.belongsTo(Cw_space)
 
+// cw-space & cw-space phones (1-> many)
+Cw_space.hasMany(Cw_spacePhoto)
+Cw_spacePhoto.belongsTo(Cw_space)
+
+
 // cw-space & event (1 -> many)
 Cw_space.hasMany(Event)
 Event.belongsTo(Cw_space)
@@ -78,8 +85,10 @@ module.exports = {
     Client,
     Cw_space,
     Cw_spacePhone,
+    Cw_spacePhoto,
     Event,
     EventPhoto,
+    Offer,
     Owner,
     Review,
     Room,
