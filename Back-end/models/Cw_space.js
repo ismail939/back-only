@@ -36,6 +36,10 @@ module.exports = (db, type)=>{
         rate: {
             type: type.FLOAT,
             allowNull: true
+        },
+        mainPhoto: {
+            type: type.TEXT,
+            allowNull: true
         }
     },{
         timestamps: false 
