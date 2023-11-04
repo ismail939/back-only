@@ -1,7 +1,8 @@
-const { Cw_space } = require('../models/modelIndex')
+const { Cw_space, Cw_spacePhone } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
+
 
 
 module.exports ={
@@ -31,8 +32,15 @@ module.exports ={
     ),
     create: asyncWrapper(
         async (req, res, next) => {
-            const newCw_space = await Cw_space.create(req.body)
-            return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newCw_space });
+            const newCw_space = await Cw_space.create(req.body.data)
+            let newCw_spacePhone=null;
+            let newCw_spacePhoneList=[]
+            for(let i=0;i<req.body.phones.length;i++){
+                console.log(req.body.phones[i])
+                newCw_spacePhone = await Cw_spacePhone.create({phone:req.body.phones[i]})
+                newCw_spacePhoneList.push(newCw_spacePhone)
+            }
+            return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newCw_space , phones: newCw_spacePhoneList});
         }
     ),
     update: asyncWrapper(
