@@ -18,11 +18,6 @@ module.exports ={
                 const error = appError.create("Cw_spacePhones not found", 404, httpStatusCode.ERROR);
                 return next(error);
             }
-            const cw_spacePhotos = await Cw_spacePhoto.findAll()
-            if (cw_spacePhotos.length === 0) {
-                const error = appError.create("Cw_spacePhotos not found", 404, httpStatusCode.ERROR);
-                return next(error);
-            }
             return res.json({ status: httpStatusCode.SUCCESS, data: cw_spaces, cw_spacePhones: cw_spacePhones, cw_spacePhotos:cw_spacePhotos}); 
         }
     ),
@@ -33,8 +28,23 @@ module.exports ={
                     cwID: req.params.ID
                 }
             })
-            if (cw_space.length === 0) {
-                const error = appError.create("cw_space not found", 404, httpStatusCode.ERROR);
+        
+            const cw_spacePhones = await Cw_spacePhone.findAll({
+                where: {
+                    cw_SpaceCwID:req.params.ID
+                }
+            })
+            if (cw_spacePhones.length === 0) {
+                const error = appError.create("Cw_spacePhones not found", 404, httpStatusCode.ERROR);
+                return next(error);
+            }
+            const cw_spacePhotos = await Cw_spacePhoto.findAll({
+                where: {
+                    cw_SpaceCwID:req.params.ID
+                }
+            })
+            if (cw_spacePhotos.length === 0) {
+                const error = appError.create("Cw_spacePhotos not found", 404, httpStatusCode.ERROR);
                 return next(error);
             }
             return res.json({ status: httpStatusCode.SUCCESS, data: cw_space }) 
