@@ -1,4 +1,4 @@
-const { Cw_space, Cw_spacePhone } = require('../models/modelIndex')
+const { Cw_space, Cw_spacePhone, Cw_spacePhoto } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
@@ -13,7 +13,17 @@ module.exports ={
                 const error = appError.create("Cw_spaces not found", 404, httpStatusCode.ERROR);
                 return next(error);
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: cw_spaces }); 
+            const cw_spacePhones = await Cw_spacePhone.findAll()
+            if (cw_spacePhones.length === 0) {
+                const error = appError.create("Cw_spacePhones not found", 404, httpStatusCode.ERROR);
+                return next(error);
+            }
+            const cw_spacePhotos = await Cw_spacePhoto.findAll()
+            if (cw_spacePhotos.length === 0) {
+                const error = appError.create("Cw_spacePhotos not found", 404, httpStatusCode.ERROR);
+                return next(error);
+            }
+            return res.json({ status: httpStatusCode.SUCCESS, data: cw_spaces, cw_spacePhones: cw_spacePhones, cw_spacePhotos:cw_spacePhotos}); 
         }
     ),
     getOne: asyncWrapper(
