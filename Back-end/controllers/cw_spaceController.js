@@ -18,7 +18,7 @@ module.exports ={
                 const error = appError.create("Cw_spacePhones not found", 404, httpStatusCode.ERROR);
                 return next(error);
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: cw_spaces, cw_spacePhones: cw_spacePhones, cw_spacePhotos:cw_spacePhotos}); 
+            return res.json({ status: httpStatusCode.SUCCESS, data: cw_spaces, cw_spacePhones: cw_spacePhones}); 
         }
     ),
     getOne: asyncWrapper(
