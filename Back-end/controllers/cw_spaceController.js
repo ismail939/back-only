@@ -8,17 +8,26 @@ const appError = require("../utils/appError");
 module.exports ={
     get: asyncWrapper(
         async (req, res, next) => {
-            const cw_spaces = await Cw_space.findAll()
+            let cw_spaces = await Cw_space.findAll({ raw: true })
+            const cw_spacePhones = await Cw_spacePhone.findAll();
+            for (let i = 0; i < cw_spaces.length; i++) {
+                cw_spaces[i].phones = []
+                for (let j = 0; j < cw_spacePhones.length; j++) { 
+                    if (cw_spaces[i].cwID == cw_spacePhones[j].cwSpaceCwID) {
+                        cw_spaces[i].phones.push(cw_spacePhones[j].phone)
+                    }
+                }
+            }
             if (cw_spaces.length === 0) {
                 const error = appError.create("Cw_spaces not found", 404, httpStatusCode.ERROR);
                 return next(error);
             }
-            const cw_spacePhones = await Cw_spacePhone.findAll()
+            
             if (cw_spacePhones.length === 0) {
                 const error = appError.create("Cw_spacePhones not found", 404, httpStatusCode.ERROR);
                 return next(error);
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: cw_spaces, cw_spacePhones: cw_spacePhones}); 
+            return res.json({ status: httpStatusCode.SUCCESS, data: cw_spaces }); 
         }
     ),
     getOne: asyncWrapper(
