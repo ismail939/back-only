@@ -30,7 +30,7 @@ function Slider(){
                         })}
                     </div>
                 </div>
-                <button className="absolute bottom-2 right-4 bg-black rounded-lg py-2 px-4 text-white hover:bg-white hover:text-black ease-in-out duration-100 max-sm:right-1">View all</button>
+                <button className="md:w-36 absolute bottom-2 right-4 btn-color rounded-lg py-2 px-4 text-white  ease-in-out duration-100 max-sm:right-1">View all</button>
             </div>
             
         </div>
