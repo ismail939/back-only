@@ -33,29 +33,40 @@ module.exports ={
     getOne: asyncWrapper(
         async (req, res, next) => {
             const cw_space = await Cw_space.findAll({
+                raw: true,
                 where: {
                     cwID: req.params.ID
                 }
             })
-        
             const cw_spacePhones = await Cw_spacePhone.findAll({
                 where: {
-                    cw_SpaceCwID:req.params.ID
+                    cwSpaceCwID: req.params.ID
                 }
             })
+            cw_space.phones = []
+            for (let j = 0; j < cw_spacePhones.length; j++) { 
+                console.log("lol");
+                console.log(cw_space.cwID);
+                console.log(cw_spacePhones[j].cwSpaceCwID);
+                if (cw_space.cwID == cw_spacePhones[j].cwSpaceCwID) {
+                    console.log("lol")
+                    cw_space.phones.push(cw_spacePhones[j].phone)
+                    console.log("lol")
+                }
+                }
             if (cw_spacePhones.length === 0) {
                 const error = appError.create("Cw_spacePhones not found", 404, httpStatusCode.ERROR);
                 return next(error);
             }
-            const cw_spacePhotos = await Cw_spacePhoto.findAll({
-                where: {
-                    cw_SpaceCwID:req.params.ID
-                }
-            })
-            if (cw_spacePhotos.length === 0) {
-                const error = appError.create("Cw_spacePhotos not found", 404, httpStatusCode.ERROR);
-                return next(error);
-            }
+            //const cw_spacePhotos = await Cw_spacePhoto.findAll({
+            //    where: {
+            //        cw_SpaceCwID:req.params.ID
+            //    }
+            //})
+            //if (cw_spacePhotos.length === 0) {
+            //    const error = appError.create("Cw_spacePhotos not found", 404, httpStatusCode.ERROR);
+            //    return next(error);
+            //}
             return res.json({ status: httpStatusCode.SUCCESS, data: cw_space }) 
         }
     ),
