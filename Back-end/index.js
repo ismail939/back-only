@@ -48,7 +48,7 @@ app.all("*", (req, res) => {
 
 //global error handler
 app.use((error, req, res, next) => { 
-    res.status(error.statusCode || 500).json({ status: error.statusText, message: error.message });
+    res.status(error.statusCode || 500).json({ status: error.statusText || httpStatusCode.FAIL, message: error.message });
 })
 
 app.listen(process.env.PORT, ()=>{

@@ -2,6 +2,7 @@ const { Cw_space, Cw_spacePhone, Cw_spacePhoto } = require('../models/modelIndex
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
+const { validationResult } = require("express-validator");
 
 
 
@@ -66,6 +67,15 @@ module.exports = {
     ),
     create: asyncWrapper(
         async (req, res, next) => {
+            let errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                errors = errors.array()
+                let errorsList = []
+                for (let i = 0; i < errors.length; i++) {
+                    errorsList.push(errors[i].msg)
+                }
+                return res.status(400).json({ status: httpStatusCode.ERROR, errors: errorsList });
+            }
             let newCw_space = await Cw_space.create(req.body.data)
             newCw_space = await Cw_space.findAll({ raw: true, where:{ cwID: newCw_space.cwID }})
             newCw_space = newCw_space[0]
