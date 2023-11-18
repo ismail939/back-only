@@ -15,7 +15,8 @@ module.exports = (db, type) => {
         },
         username: {
             type: type.STRING,
-            allowNull: false
+            allowNull: false,
+            unique : true
         },
         email: {
             type: type.STRING,
