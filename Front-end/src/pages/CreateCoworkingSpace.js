@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ExclamationCircleFill } from "react-bootstrap-icons";
+import Swal from "sweetalert2";
 function CreateCoworkingSpace() {
   const [Name, setName] = useState("");
   const [Address, setAddress] = useState("");
@@ -15,6 +16,14 @@ function CreateCoworkingSpace() {
     endDate : false,
     phonenumber1 : false
   });
+  const success = () =>{
+    Swal.fire({
+      position:"center",
+      icon: "success",
+      title: "Your Workspace is added successfully",
+      showConfirmButton: false,
+    });
+  }
   const AddData = () => {
     fetch(`http://localhost:4000/cw_spaces`, {
       method: "POST",
@@ -40,7 +49,6 @@ function CreateCoworkingSpace() {
     } else if (phonenumber.length !== 11) {
       return true;
     } else {
-      setDataErrors({...dataerrors , "phonenumber1":false})
       return false;
     }
   };
@@ -58,16 +66,19 @@ function CreateCoworkingSpace() {
       e.preventDefault();
       if (PhoneNumberError(phonenumberOne)) {
         setDataErrors({...dataerrors , "phonenumber1":true})
-        setCheckError("Error: Please write your First phone number correctly"); window.scrollTo(0, 0);
+        setCheckError("phonenumber should be excatly 11 numbers");window.scrollTo(0, 0);
       }
       else if (DateError(startDate)) {
-        setCheckError("Error: Please write your opening hour correctly"); window.scrollTo(0, 0);
+        setDataErrors({...dataerrors ,"phonenumber1":false ,"startDate":true})
+        setCheckError("openinig Hour should be in this format 00:00"); window.scrollTo(0, 0);
       } else if (DateError(endDate)) {
-        setCheckError("Error: Please write your closing hour correctly"); window.scrollTo(0, 0);
+        setDataErrors({...dataerrors ,"startDate":false ,"endDate":true})
+        setCheckError("closing Hour should be in this format 00:00"); window.scrollTo(0, 0);
       } else {
         setCheckError("");
+        setDataErrors({"phonenumber1":false ,"startDate":false, "endDate":false})
         AddData();
-        window.alert("Data submitted Successfully");
+        success();
       }
   };
   return (
@@ -79,7 +90,7 @@ function CreateCoworkingSpace() {
               <div className="px-1 py-2 bg-rose-600 text-white text-sm rounded-md font-semibold">
                 <div className="flex items-center gap-2">
                   <ExclamationCircleFill />{" "}
-                  <span>{checkerror}</span>
+                  <span>Please write your Inputs correctly</span>
                 </div>
               </div>
             ) : null}
@@ -92,7 +103,7 @@ function CreateCoworkingSpace() {
                   htmlFor="name"
                   className="block mb-2 text-sm font-medium text-gray-900 "
                 >
-                  Name*
+                  Name<span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -111,7 +122,7 @@ function CreateCoworkingSpace() {
                   htmlFor="Location"
                   className="block mb-2 text-sm font-medium text-gray-900 "
                 >
-                  Location*
+                  Location<span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -130,7 +141,7 @@ function CreateCoworkingSpace() {
                   htmlFor="Description"
                   className=" block mb-2 text-sm font-medium text-gray-900 "
                 >
-                  Description*
+                  Description<span className="text-red-500">*</span>
                 </label>
                 <textarea
                   type="text"
@@ -167,7 +178,7 @@ function CreateCoworkingSpace() {
                   htmlFor="phonenumber1"
                   className="block mb-2 text-sm font-medium text-gray-900 "
                 >
-                  Phone Number 1*
+                  Phone Number<span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -180,7 +191,7 @@ function CreateCoworkingSpace() {
                     setPhoneNumberOne(e.target.value);
                   }}
                 ></input>
-                {dataerrors.phonenumber1 ? <span className="text-[12px] text-red-500">Please Enter phonenumber correctly</span> : null}
+                {dataerrors.phonenumber1 ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
               </div>
               <div>
                 <label
@@ -206,13 +217,13 @@ function CreateCoworkingSpace() {
                     htmlFor="phonenumber1"
                     className="block mb-2 text-sm font-medium text-gray-900 "
                   >
-                    Opening hour*
+                    Opening hour<span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     name="startDate"
                     id="startDate"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                    className={`bg-gray-50 border ${dataerrors.startDate ? "border-red-500" :"border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
                     placeholder="24 hour format ex 09:30"
                     required
                     onChange={(e) => {
@@ -225,13 +236,13 @@ function CreateCoworkingSpace() {
                     htmlFor="phonenumber1"
                     className="block mb-2 text-sm font-medium text-gray-900 "
                   >
-                    Closing hour*
+                    Closing hour<span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     name="endDate"
                     id="endDate"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                    className={`bg-gray-50 border ${dataerrors.endDate ? "border-red-500" :"border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
                     placeholder="24 hour format ex 09:30"
                     required
                     onChange={(e) => {
@@ -240,6 +251,7 @@ function CreateCoworkingSpace() {
                   ></input>
                 </div>
               </div>
+              {(dataerrors.endDate || dataerrors.startDate) ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
               <br></br>
               <button
                 type="submit"
