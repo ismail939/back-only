@@ -15,6 +15,7 @@ const ownerRouter = require("./routes/owner");
 const roomRouter = require("./routes/room");
 const reviewRouter = require("./routes/review");
 const eventPhotoRouter = require("./routes/eventPhoto");
+const login_registerRouter = require("./routes/login_register");
 
 
 app.use(cors()) //to handle the request comes from other ports
@@ -28,6 +29,7 @@ app.use("/owners", ownerRouter);
 app.use("/rooms", roomRouter);
 app.use("/reviews", reviewRouter);
 app.use("/eventPhotos", eventPhotoRouter);
+app.use(login_registerRouter);
 
 const db = require('./config/database')
 
