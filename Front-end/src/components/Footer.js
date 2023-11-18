@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 function Footer() {
     return (
-        <div className="w-full mt-[100px] py-5" style={{ backgroundColor: "#a6a6a6" }}>
+        <div className="w-full mt-[100px] py-5" style={{ backgroundColor: "#1B262C" }}>
             <div className="md:w-3/5 w-4/5 mx-auto">
                 <div className="flex text-white items-center justify-between">
                     <div className="flex flex-col">

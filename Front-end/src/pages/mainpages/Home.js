@@ -1,9 +1,7 @@
-import Footer from "../../components/Footer";
 import Image1 from "../../components/images/cover.jpg"
 import Image2 from "../../components/images/offer1.jpg"
 import Slider from "../../components/Slider";
 import { Link } from "react-router-dom";
-import { Star } from "react-bootstrap-icons";
 function Home() {
     return (
         <>
@@ -21,10 +19,11 @@ function Home() {
                 <h2 className="text-left mb-8 text-4xl font-bold">Discover</h2>
                 <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
                     <div className="max-w-sm rounded-lg overflow-hidden shadow-lg">
-                        <div className="w-full relative">
+                        <div className="w-full relative group">
                             <img className="w-full" src={Image2} alt="Sunset in the mountains"></img>
                             <Link><div className="h-full w-full absolute inset-0 duration-500 hover:bg-black hover:opacity-50"></div></Link>
-                            
+                            <h2 className="absolute top-3 right-1 font-extrabold text-lg text-white text-yellow-400 opacity-0 duration-500
+                            group-hover:-translate-x-5 group-hover:opacity-100">New</h2>
                         </div>
                         <div className="px-6 py-4">
                             <div className="font-bold text-xl mb-2">The Coldest Sunset</div>
@@ -34,9 +33,11 @@ function Home() {
                         </div>
                     </div>
                     <div className="max-w-sm rounded-lg overflow-hidden shadow-lg">
-                        <div className="w-full relative">
+                        <div className="w-full relative group">
                             <img className="w-full" src={Image2} alt="Sunset in the mountains"></img>
                             <Link><div className="h-full w-full absolute inset-0 duration-500 hover:bg-black hover:opacity-50"></div></Link>
+                            <h2 className="absolute top-3 right-1 font-extrabold text-lg text-white text-yellow-400 opacity-0 duration-500
+                            group-hover:-translate-x-5 group-hover:opacity-100">New</h2>
                         </div>
                         <div className="px-6 py-4">
                             <div className="font-bold text-xl mb-2">The Coldest Sunset</div>
@@ -46,9 +47,11 @@ function Home() {
                         </div>
                     </div>
                     <div className="max-w-sm rounded-lg overflow-hidden shadow-lg">
-                        <div className="w-full relative">
+                        <div className="w-full relative group">
                             <img className="w-full" src={Image2} alt="Sunset in the mountains"></img>
                             <Link><div className="h-full w-full absolute inset-0 duration-500 hover:bg-black hover:opacity-50"></div></Link>
+                            <h2 className="absolute top-3 right-1 font-extrabold text-lg text-orange-500 opacity-0 duration-500
+                            group-hover:-translate-x-5 group-hover:opacity-100">Top-Rated</h2>
                         </div>
                         <div className="px-6 py-4">
                             <div className="font-bold text-xl mb-2">The Coldest Sunset</div>
@@ -58,9 +61,11 @@ function Home() {
                         </div>
                     </div>
                     <div className="max-w-sm rounded-lg overflow-hidden shadow-lg">
-                        <div className="w-full relative">
+                        <div className="w-full relative group">
                             <img className="w-full" src={Image2} alt="Sunset in the mountains"></img>
                             <Link><div className="h-full w-full absolute inset-0 duration-500 hover:bg-black hover:opacity-50"></div></Link>
+                            <h2 className="absolute top-3 right-1 font-extrabold text-lg text-orange-500 opacity-0 duration-500
+                            group-hover:-translate-x-5 group-hover:opacity-100">Top-Rated</h2>
                         </div>
                         <div className="px-6 py-4">
                             <div className="font-bold text-xl mb-2">The Coldest Sunset</div>
@@ -70,22 +75,25 @@ function Home() {
                         </div>
                     </div>
                     <div className="max-w-sm rounded-lg overflow-hidden shadow-lg">
-                        <div className="w-full relative">
+                        <div className="w-full relative group">
                             <img className="w-full" src={Image2} alt="Sunset in the mountains"></img>
                             <Link><div className="h-full w-full absolute inset-0 duration-500 hover:bg-black hover:opacity-50"></div></Link>
+                            <h2 className="absolute top-3 right-1 font-extrabold text-lg text-sky-500 opacity-0 duration-500
+                            group-hover:-translate-x-5 group-hover:opacity-100">Best-Seller</h2>
                         </div>
                         <div className="px-6 py-4">
                             <div className="font-bold text-xl mb-2">The Coldest Sunset</div>
                             <p className="text-gray-700 text-base">
                                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
                             </p>
                         </div>
                     </div>
                     <div className="max-w-sm rounded-lg overflow-hidden shadow-lg">
-                        <div className="w-full relative">
+                        <div className="w-full relative group">
                             <img className="w-full" src={Image2} alt="Sunset in the mountains"></img>
                             <Link><div className="h-full w-full absolute inset-0 duration-500 hover:bg-black hover:opacity-50"></div></Link>
+                            <h2 className="absolute top-3 right-1 font-extrabold text-lg text-sky-500 opacity-0 duration-500
+                            group-hover:-translate-x-5 group-hover:opacity-100">Best-Seller</h2>
                         </div>
                         <div className="px-6 py-4">
                             <div className="font-bold text-xl mb-2">The Coldest Sunset</div>
