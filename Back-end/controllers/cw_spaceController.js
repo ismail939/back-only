@@ -20,7 +20,7 @@ module.exports = {
                 }
             }
             if (cw_spaces.length === 0) {
-                const error = appError.create("Cw_spaces not found", 404, httpStatusCode.ERROR);
+                const error = appError.create("Co-working spaces not found", 404, httpStatusCode.ERROR);
                 return next(error);
             }
 
