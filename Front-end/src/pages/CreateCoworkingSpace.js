@@ -11,14 +11,14 @@ function CreateCoworkingSpace() {
   const [checkerror, setCheckError] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [dataerrors , setDataErrors] = useState({
-    startDate : false,
-    endDate : false,
-    phonenumber1 : false
+  const [dataerrors, setDataErrors] = useState({
+    startDate: false,
+    endDate: false,
+    phonenumber1: false
   });
-  const success = () =>{
+  const success = () => {
     Swal.fire({
-      position:"center",
+      position: "center",
       icon: "success",
       title: "Your Workspace is added successfully",
       showConfirmButton: false,
@@ -63,23 +63,23 @@ function CreateCoworkingSpace() {
     }
   };
   const HandleError = (e) => {
-      e.preventDefault();
-      if (PhoneNumberError(phonenumberOne)) {
-        setDataErrors({...dataerrors , "phonenumber1":true})
-        setCheckError("phonenumber should be excatly 11 numbers");window.scrollTo(0, 0);
-      }
-      else if (DateError(startDate)) {
-        setDataErrors({...dataerrors ,"phonenumber1":false ,"startDate":true})
-        setCheckError("openinig Hour should be in this format 00:00"); window.scrollTo(0, 0);
-      } else if (DateError(endDate)) {
-        setDataErrors({...dataerrors ,"startDate":false ,"endDate":true})
-        setCheckError("closing Hour should be in this format 00:00"); window.scrollTo(0, 0);
-      } else {
-        setCheckError("");
-        setDataErrors({"phonenumber1":false ,"startDate":false, "endDate":false})
-        AddData();
-        success();
-      }
+    e.preventDefault();
+    if (PhoneNumberError(phonenumberOne)) {
+      setDataErrors({ ...dataerrors, "phonenumber1": true })
+      setCheckError("phonenumber should be excatly 11 numbers"); window.scrollTo(0, 0);
+    }
+    else if (DateError(startDate)) {
+      setDataErrors({ ...dataerrors, "phonenumber1": false, "startDate": true })
+      setCheckError("openinig Hour should be in this format 00:00"); window.scrollTo(0, 0);
+    } else if (DateError(endDate)) {
+      setDataErrors({ ...dataerrors, "startDate": false, "endDate": true })
+      setCheckError("closing Hour should be in this format 00:00"); window.scrollTo(0, 0);
+    } else {
+      setCheckError("");
+      setDataErrors({ "phonenumber1": false, "startDate": false, "endDate": false })
+      AddData();
+      success();
+    }
   };
   return (
     <section className="">
@@ -184,7 +184,7 @@ function CreateCoworkingSpace() {
                   type="text"
                   name="phonenumber1"
                   id="phonenumber1"
-                  className={`bg-gray-50 border ${dataerrors.phonenumber1 ? "border-red-500" :"border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
+                  className={`bg-gray-50 border ${dataerrors.phonenumber1 ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
                   placeholder="0100000"
                   required
                   onChange={(e) => {
@@ -223,7 +223,7 @@ function CreateCoworkingSpace() {
                     type="text"
                     name="startDate"
                     id="startDate"
-                    className={`bg-gray-50 border ${dataerrors.startDate ? "border-red-500" :"border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
+                    className={`bg-gray-50 border ${dataerrors.startDate ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
                     placeholder="24 hour format ex 09:30"
                     required
                     onChange={(e) => {
@@ -242,7 +242,7 @@ function CreateCoworkingSpace() {
                     type="text"
                     name="endDate"
                     id="endDate"
-                    className={`bg-gray-50 border ${dataerrors.endDate ? "border-red-500" :"border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
+                    className={`bg-gray-50 border ${dataerrors.endDate ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
                     placeholder="24 hour format ex 09:30"
                     required
                     onChange={(e) => {

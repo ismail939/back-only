@@ -11,10 +11,28 @@ function SignUp() {
     const [password, setPassword] = useState("");
     const [confirmpassword, setConfirmPassword] = useState("");
     const [username, setUserName] = useState("");
-    const [checkerror , setCheckError] = useState("");
+    const [checkerror, setCheckError] = useState("");
     function compPassword() {
         if ((password !== confirmpassword) && (password !== "") && (confirmpassword !== "")) return false;
         else return true
+    }
+    const AddData = () => {
+        fetch(`http://localhost:4000/register`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "data": {
+                    "fname": firstName,
+                    "lname": lastName,
+                    "email": email,
+                    "password": password,
+                    "username": username,
+                    "phone": phonenumber
+                }
+            }),
+        }).then(res => res.json()).then((data) => { console.log(data) })
     }
     const nameError = () => {
         var letters = /^[A-Za-z]+$/;
@@ -75,14 +93,14 @@ function SignUp() {
             return false;
         }
     }
-    const HandleError = () =>{
-        if (nameError()){
+    const HandleError = () => {
+        if (nameError()) {
             setCheckError("name")
-        }else if(UsernameError()){
+        } else if (UsernameError()) {
             setCheckError("username")
-        }else if(PhoneNumberError()){
+        } else if (PhoneNumberError()) {
             setCheckError("phone number")
-        }else{
+        } else {
             setCheckError("")
         }
     }
@@ -139,7 +157,7 @@ function SignUp() {
                             </div>
                             <br></br>
                             <button type="submit" className="mt-3 w-full text-black bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 font-medium rounded-lg text-md px-5 py-2.5 text-center duration-300 ease-in-out"
-                                onClick={(e) => {HandleError() ; e.preventDefault(); }}>Sign Up</button>
+                                onClick={(e) => { HandleError(); e.preventDefault(); AddData() }}>Sign Up</button>
                             <p className="text-sm font-light text-gray-500">
                                 Already have an account? <Link to="../login" className="font-medium text-primary-600 hover:underline">Login</Link>
                             </p>
