@@ -6,6 +6,7 @@ const { validationResult } = require("express-validator");
 const path = require('path')
 const fs = require('fs')
 
+
 function generateRandomName(baseName, length = 8) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let randomName = baseName;
@@ -119,26 +120,28 @@ module.exports = {
             // }
 
             // newCw_space.phones = newCw_spacePhoneList
-            const baseFilename = new Date()
-            const randomImageName = generateRandomName(baseFilename)
-            console.log("🚀 ~ file: cw_spaceController.js:112 ~ randomImageName:", randomImageName)
-            console.log(req)
-            console.log(req.body)
-            console.log(req.body.mainPhoto)
-            const {imageData, extension} = req.body.mainPhoto 
-            console.log("🚀 ~ file: cw_spaceController.js:126 ~ extension:", extension)
-            // Remove the data:image/png;base64 prefix
-            const base64Data = imageData.replace(/^data:image\/png|jpg;base64,/, '');
-            const filename = randomImageName+extension
-            // Specify the path to the folder where you want to save the image
-            const filePath = path.join(__dirname, 'images', filename);
+            
+            // const baseFilename = new Date()
+            // const randomImageName = generateRandomName(baseFilename)
+            // console.log("🚀 ~ file: cw_spaceController.js:112 ~ randomImageName:", randomImageName)
+            // // console.log(req)
+            // console.log(req.files, req.body)
+            return res.json("succeded")
+            // console.log(req.body.mainPhoto)
+            // const {imageData, extension} = req.body.mainPhoto 
+            // console.log("🚀 ~ file: cw_spaceController.js:126 ~ extension:", extension)
+            // // Remove the data:image/png;base64 prefix
+            // const base64Data = imageData.replace(/^data:image\/png|jpg;base64,/, '');
+            // const filename = randomImageName+extension
+            // // Specify the path to the folder where you want to save the image
+            // const filePath = path.join(__dirname, 'images', filename);
 
-            // Save the image to the specified folder
-            fs.writeFile(filePath, base64Data, 'base64', (err)=>{
-                console.log('saving to folder failed')
-            })
-            req.body.data.mainPhoto = filename
-            // return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newCw_space });
+            // // Save the image to the specified folder
+            // fs.writeFile(filePath, base64Data, 'base64', (err)=>{
+            //     console.log('saving to folder failed')
+            // })
+            // req.body.data.mainPhoto = filename
+            // // return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newCw_space });
         }
     ),
     update: asyncWrapper(

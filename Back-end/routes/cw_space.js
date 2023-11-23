@@ -1,10 +1,9 @@
 const express = require('express')
 const cw_spaceController = require('../controllers/cw_spaceController')
 const { validationSchema } = require('../middlewares/validationSchema');
+const router = express.Router(); 
 
-const router = express.Router();
-
-router.route("/")
+router.route("/") 
     .get(cw_spaceController.get)
     .post(cw_spaceController.create);
 
