@@ -1,8 +1,9 @@
-const { Cw_space, Cw_spacePhone, Cw_spacePhoto } = require('../models/modelIndex')
+const { Cw_space, Cw_spacePhone, Cw_spacePhoto, Room } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 const { validationResult } = require("express-validator");
+
 
 
 
@@ -11,12 +12,27 @@ module.exports = {
         async (req, res, next) => {
             let cw_spaces = await Cw_space.findAll({ raw: true })
             const cw_spacePhones = await Cw_spacePhone.findAll();
+            let rooms = await Room.findAll({
+                raw:true,
+                where: {
+                    type: "shared room" 
+                }
+            });
             for (let i = 0; i < cw_spaces.length; i++) {
                 cw_spaces[i].phones = []
                 for (let j = 0; j < cw_spacePhones.length; j++) {
                     if (cw_spaces[i].cwID == cw_spacePhones[j].cwSpaceCwID) {
                         cw_spaces[i].phones.push(cw_spacePhones[j].phone)
                     }
+                }
+                cw_spaces[i].prices = []
+                for(let j = 0;j<rooms.length;j++){
+                    if (cw_spaces[i].cwID==rooms[j].cwSpaceCwID){
+                        cw_spaces[i].prices.push(rooms[j].hourPrice)
+                        delete rooms[j]
+                    }
+                    
+                    console.log("🚀 ~ file: cw_spaceController.js:35 ~ cw_spaces[i]:", cw_spaces[i])
                 }
             }
             if (cw_spaces.length === 0) {
