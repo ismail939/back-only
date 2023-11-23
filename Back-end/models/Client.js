@@ -20,7 +20,8 @@ module.exports = (db, type) => {
         },
         email: {
             type: type.STRING,
-            allowNull: false
+            allowNull: false,
+            unique : true
         },
         password: {
             type: type.STRING,

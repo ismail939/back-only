@@ -50,10 +50,7 @@ app.all("*", (req, res) => {
 
 //global error handler
 app.use((error, req, res, next) => {
-    if (error.statusText == null) {
-        res.status(500).json({ status: httpStatusCode.FAIL, message: "oops, there is a problem at the moment. try again later" });
-    }
-    res.status(error.statusCode || 500).json({ status: error.statusText || httpStatusCode.FAIL, message: error.message });
+    res.status(error.statusCode).json({ status: error.statusText || httpStatusCode.ERROR, message: error.message });
 })
 
 app.listen(process.env.PORT, ()=>{
