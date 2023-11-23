@@ -17,22 +17,26 @@ module.exports ={
     ),
     getOne: asyncWrapper(
         async (req, res, next) => {
-            const client = await Client.findAll({
-                where: {
-                    username: req.params.username
+            const client = await Client.findOne({
+                raw: true, where: {
+                    username: req.body.data.username,
+                    password: req.body.data.password
                 }
             })
-            if (client.length === 0) {
-                const error = appError.create("Client not found", 404, httpStatusCode.ERROR);
-                return next(error);
+            if (client) {
+                return res.json({ status: httpStatusCode.SUCCESS, data: client })
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: client }) 
+            return res.status(404).json({ status: httpStatusCode.ERROR, message: "Username or password are incorrect"})
+
         }
     ),
     create: asyncWrapper(
-        async (req, res, next) => {
-            const newClient = await Client.create(req.body)
-            return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newClient });
+        async (req, res, next)=>{
+            const client = await Client.create(req.body.data)
+            if(client){
+                return res.json({ status: httpStatusCode.SUCCESS, message: "Client is created successfully" })
+            }
+            return res.json({ status: httpStatusCode.ERROR , message: "There is something wrong with the inputs"})
         }
     ),
     update: asyncWrapper(
@@ -73,4 +77,4 @@ module.exports ={
             return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "deleted successfully" });
         }
     )
-} 
+}
