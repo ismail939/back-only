@@ -9,9 +9,9 @@ import notFoundImage from "../../components/images/WorkSpaceNotFound.png"
 function ShowError() {
     return (
         <div className="flex flex-col items-center mt-[100px] text-center">
-            <XCircleFill className="" style={{ fontSize: "100px", color: "red" }} />
-            <h2 className="mt-4 text-2xl font-medium">Failed to fetch data</h2>
-            <p>Some data requirments failed to load please try again later</p>
+            <XCircleFill className="mb-4" style={{ fontSize: "100px", color: "red" }} />
+            {/* <h2 className="mt-4 text-2xl font-medium">Failed to fetch data</h2> */}
+            <p className="mt-8 text-2xl font-medium">oops, there is a problem at the moment. try again later</p>
         </div>
     )
 }
@@ -39,11 +39,12 @@ function WorkSpaces() {
         fetch("http://localhost:4000/cw_spaces")
             .then(res => res.json())
             .then(responsedata => {
+                console.log(responsedata)
                 setCWSpaces(responsedata.data);
                 setFetchError(false)
                 setStatusResponse(responsedata.message)
             }
-            ).catch(error => { setFetchError(true); console.log(error) });
+            ).catch(error => { setFetchError(true); });
     }
     const getSearchData = (event) => {
         const search = event.target.value;
@@ -53,7 +54,7 @@ function WorkSpaces() {
         }))
     }
     return (
-        <div className="flex relative">
+        <div className="flex relative min-h-screen">
             <div className="bg-gray-100 w-52 sticky h-[100dvh] hidden">
                 <Filters />
             </div>
