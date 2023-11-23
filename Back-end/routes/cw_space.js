@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.route("/")
     .get(cw_spaceController.get)
-    .post(validationSchema(), cw_spaceController.create);
+    .post(cw_spaceController.create);
 
 router.route("/:ID")
     .get(cw_spaceController.getOne)
