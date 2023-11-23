@@ -37,11 +37,9 @@ function SignUp() {
     const nameError = () => {
         var letters = /^[A-Za-z]+$/;
         if (!firstName.match(letters) || !lastName.match(letters)) {
-            console.log("Go edit your inputs idiot")
             return true;
         }
         else if ((firstName.length < 3 || firstName.length > 20) || (lastName.length < 3 || lastName.length > 20)) {
-            console.log("Go edit your inputs idiot")
             return true;
         }
         else {
@@ -51,11 +49,9 @@ function SignUp() {
     const UsernameError = () => {
         var letterNumber = /^[0-9a-zA-Z@&_]+$/;
         if (!username.match(letterNumber)) {
-            console.log("Go edit your username idiot")
             return true;
         }
         else if (username.length < 3 || username.length > 20) {
-            console.log("Go edit your username idiot")
             return true;
         }
         else {
@@ -65,11 +61,9 @@ function SignUp() {
     const PhoneNumberError = () => {
         var numbers = /^[0-9]+$/;
         if (!phonenumber.match(numbers)) {
-            console.log("Go edit your Phonenumber idiot")
             return true;
         }
         else if (phonenumber.length !== 11) {
-            console.log("Go edit your Phonenumber idiot")
             return true;
         }
         else {
