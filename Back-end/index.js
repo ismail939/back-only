@@ -1,7 +1,6 @@
 const express = require('express')
 const httpStatusCode = require("./utils/httpStatusText");
 const cors = require("cors");
-const multer = require('multer')
 const app = express()
 app.use(express.json())
 
@@ -17,18 +16,13 @@ const reviewRouter = require("./routes/review");
 const eventPhotoRouter = require("./routes/eventPhoto");
 const login_registerRouter = require("./routes/login_register");
 
-const upload = multer({ dest: 'public/images/' }) 
+
 const path = require('path')
 app.use(express.static(path.join(__dirname, 'public')));
 
 
 
-app.post('/cw_spaces', upload.single('image'), function (req, res, next) {
-    console.log(req.file)
-    
-  // req.file is the `avatar` file
-  // req.body will hold the text fields, if there were any
-})
+
 
 app.use(cors()) //to handle the request comes from other ports
 app.use("/books", bookRouter);

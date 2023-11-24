@@ -5,23 +5,7 @@ const appError = require("../utils/appError");
 const { validationResult } = require("express-validator");
 const path = require('path')
 const fs = require('fs')
-
-
-function generateRandomName(baseName, length = 8) {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let randomName = baseName;
-
-    for (let i = 0; i < length; i++) {
-        const randomCharacter = characters.charAt(Math.floor(Math.random() * characters.length));
-        randomName += randomCharacter;
-    }
-
-    return randomName;
-}
-
-
-
-
+let { imageName } = require('../routes/cw_space')
 
 module.exports = {
     get: asyncWrapper(
@@ -99,49 +83,43 @@ module.exports = {
     ),
     create: asyncWrapper(
         async (req, res, next) => {
-            // let errors = validationResult(req);
-            // if (!errors.isEmpty()) {
-            //     errors = errors.array()
-            //     let errorsList = []
-            //     for (let i = 0; i < errors.length; i++) {
-            //         errorsList.push(errors[i].msg)
-            //     }
-            //     return res.status(400).json({ status: httpStatusCode.ERROR, errors: errorsList });
-            // }
-            // let newCw_space = await Cw_space.create(req.body.data)
+            console.log(req.body.data.name)
+            let errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                errors = errors.array()
+                let errorsList = []
+                for (let i = 0; i < errors.length; i++) {
+                    errorsList.push(errors[i].msg)
+                }
+                return res.status(400).json({ status: httpStatusCode.ERROR, errors: errorsList });
+            }
+
+            let newCw_space = (await Cw_space.create({
+                name: req.body.data.name,
+                email: req.body.data.email,
+                address: req.body.data.address,
+                fbPage: req.body.data.fbPage,
+                openingTime: req.body.data.openingTime,
+                closingTime: req.body.data.closingTime,
+                description: req.body.data.description,
+                rate: req.body.data.rate,
+                mainPhoto: req.body.data.imageName
+            })).get({ plain: true })
+            console.log(newCw_space)
             // newCw_space = await Cw_space.findAll({ raw: true, where: { cwID: newCw_space.cwID } })
             // newCw_space = newCw_space[0]
-            // let newCw_spacePhone = null;
-            // let newCw_spacePhoneList = []
+            let newCw_spacePhone = null;
+            let newCw_spacePhoneList = req.body.phones.split(',')
+            console.log(newCw_spacePhoneList)
+            for (let i = 0; i < newCw_spacePhoneList.length; i++) {
+                newCw_spacePhone = await Cw_spacePhone.create({ phone: newCw_spacePhoneList[i], cwSpaceCwID: newCw_space.cwID })
+            }
 
-            // for (let i = 0; i < req.body.phones.length; i++) {
-            //     newCw_spacePhone = await Cw_spacePhone.create({ phone: req.body.phones[i], cwSpaceCwID: newCw_space.cwID })
-            //     newCw_spacePhoneList.push(newCw_spacePhone.phone)
-            // }
+            newCw_space.phones = newCw_spacePhoneList
 
-            // newCw_space.phones = newCw_spacePhoneList
-            
-            // const baseFilename = new Date()
-            // const randomImageName = generateRandomName(baseFilename)
-            // console.log("🚀 ~ file: cw_spaceController.js:112 ~ randomImageName:", randomImageName)
-            // // console.log(req)
-            // console.log(req.files, req.body)
-            return res.json("succeded")
-            // console.log(req.body.mainPhoto)
-            // const {imageData, extension} = req.body.mainPhoto 
-            // console.log("🚀 ~ file: cw_spaceController.js:126 ~ extension:", extension)
-            // // Remove the data:image/png;base64 prefix
-            // const base64Data = imageData.replace(/^data:image\/png|jpg;base64,/, '');
-            // const filename = randomImageName+extension
-            // // Specify the path to the folder where you want to save the image
-            // const filePath = path.join(__dirname, 'images', filename);
 
-            // // Save the image to the specified folder
-            // fs.writeFile(filePath, base64Data, 'base64', (err)=>{
-            //     console.log('saving to folder failed')
-            // })
-            // req.body.data.mainPhoto = filename
-            // // return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newCw_space });
+            console.log(req.file, req.body)
+            return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newCw_space });
         }
     ),
     update: asyncWrapper(
