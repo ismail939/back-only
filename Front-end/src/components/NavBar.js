@@ -15,7 +15,7 @@ function NavBar() {
                     <li className="lg:hidden block"><X className="cursor-pointer text-3xl" onClick={() => clicked()} /></li>
                     <li><Link to="/">Home</Link></li>
                     <li><Link to="workspaces">WorkSpaces</Link></li>
-                    <li><Link >Offers</Link></li>
+                    <li><Link to="offers">Offers</Link></li>
                     <li><Link >Events&Workshops</Link></li>
                 </ul>
                 <div className="flex max-lg:w-[75px] max-lg:justify-between rounded-full">
