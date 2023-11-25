@@ -5,11 +5,11 @@ const router = express.Router();
 const multer = require('multer')
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        console.log('req 1', req.body)
+        // console.log('req 1', req.body)
         cb(null, './public/images')
     },
     filename: function (req, file, cb) {
-        console.log('req 2', req.body)
+        // console.log('req 2', req.body)
         const acceptedFormats = ['png', 'jpg', 'jpeg']
         if(acceptedFormats.includes(file.originalname.split('.')[1])){
             const uniqueSuffix = Date().slice(0, 24) + '-' + file.originalname
@@ -26,7 +26,7 @@ const upload = multer({ storage: storage })
 
 router.route("/")
     .get(cw_spaceController.get)
-    .post(upload.single('mainPhoto'), cw_spaceController.create);
+    .post(validationSchema(), upload.single('mainPhoto'), cw_spaceController.create);
 
 router.route("/:ID")
     .get(cw_spaceController.getOne)
