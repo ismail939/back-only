@@ -7,5 +7,27 @@ const isEmail = (email) => {
     return undefined
 }
 
+const isImage = (fileName) => {
+    // Get the file extension
+  const fileExtension = fileName.split('.').pop().toLowerCase();
 
-console.log(isEmail('som3amasry@gmail.com'))
+  // List of allowed image file extensions
+  const allowedExtensions = ['png', 'jpg', 'jpeg'];
+
+  // Check if the file extension is in the allowed list
+  if(!allowedExtensions.includes(fileExtension)){
+    return `${fileExtension} is not allowed`
+  }
+  return undefined
+}
+
+function isURL(url) {
+    // Regular expression for a basic URL validation
+    const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+  
+    if(!urlRegex.test(url)){
+        return "not in url format"
+    }
+    return undefined
+  }
+  
