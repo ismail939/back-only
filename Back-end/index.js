@@ -15,7 +15,7 @@ const roomRouter = require("./routes/room");
 const reviewRouter = require("./routes/review");
 const eventPhotoRouter = require("./routes/eventPhoto");
 const login_registerRouter = require("./routes/login_register");
-
+const offerRouter = require('./routes/offer')
 
 const path = require('path')
 app.use(express.static(path.join(__dirname, 'public')));
@@ -36,6 +36,7 @@ app.use("/rooms", roomRouter);
 app.use("/reviews", reviewRouter);
 app.use("/eventPhotos", eventPhotoRouter);
 app.use(login_registerRouter);
+app.use('/offers', offerRouter)
 
 const db = require('./config/database')
 
