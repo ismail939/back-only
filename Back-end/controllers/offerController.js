@@ -7,7 +7,7 @@ const appError = require("../utils/appError");
 module.exports ={
     get: asyncWrapper(
         async (req, res, next) => {
-            const offers = await Offer.findAll()
+            const offers = await Offer.findAll({raw: true})
             if (offers.length === 0) {
                 const error = appError.create("Offers not found", 404, httpStatusCode.ERROR);
                 return next(error);
@@ -19,8 +19,7 @@ module.exports ={
         async (req, res, next) => {
             const offer = await Offer.findAll({
                 where: {
-                    clientID: req.params.clientID,
-                    cwSpaceID: req.params.cwSpaceID
+                    offerID: req.params.offerID
                 }
             })
             if (offer.length === 0) {
@@ -40,8 +39,7 @@ module.exports ={
         async (req, res, next) => {
             const updatedOffer = await Offer.findAll({
                 where: {
-                    clientID: req.params.clientID,
-                    cwSpaceID: req.params.cwSpaceID
+                    offerID: req.params.offerID
                 }
             });
             if (updatedOffer.length === 0) {
@@ -50,8 +48,7 @@ module.exports ={
             }
             await Offer.update(req.body, {
                 where: {
-                    clientID: req.params.clientID,
-                    cwSpaceID: req.params.cwSpaceID
+                    offerID: req.params.offerID
                 }
             });
             return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "updated successfully" });
@@ -61,8 +58,7 @@ module.exports ={
         async (req, res, next) => {
             const deletedOffer = await Offer.findAll({
                 where: {
-                    clientID: req.params.clientID,
-                    cwSpaceID: req.params.cwSpaceID
+                    offerID: req.params.offerID
                 }
             });
             if (deletedOffer.length === 0) {
@@ -71,8 +67,7 @@ module.exports ={
             }
             await Offer.destroy({
                 where: {
-                    clientID: req.params.clientID,
-                    cwSpaceID: req.params.cwSpaceID
+                    offerID: req.params.offerID
                 }
             })
             return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "deleted successfully" });
