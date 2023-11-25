@@ -24,7 +24,7 @@ function Footer() {
                         <Link>Link</Link>
                     </div>
                 </div>
-                <p className="text-center text-white font-bold mt-5">Copyright © CoSpace. All rights reserved.</p>
+                <p className="text-center text-white font-bold mt-5">Copyright © SPACE S. All rights reserved.</p>
             </div>
         </div>
     )

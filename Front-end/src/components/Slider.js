@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import Offer1 from "./images/offer1.jpg"
 import Offer2 from "./images/offer2.jpg"
+import { Link } from "react-router-dom"
 
 function Slider(){
     const images = [Offer1, Offer2, Offer1,Offer2]
@@ -30,7 +31,7 @@ function Slider(){
                         })}
                     </div>
                 </div>
-                <button className="md:w-36 absolute bottom-2 right-4 btn-color rounded-lg py-2 px-4 text-white  ease-in-out duration-100 max-sm:right-1">View all</button>
+                <Link to="offers"><button className="md:w-36 absolute bottom-2 right-4 btn-color rounded-lg py-2 px-4 text-white  ease-in-out duration-100 max-sm:right-1">View all</button></Link>
             </div>
             
         </div>

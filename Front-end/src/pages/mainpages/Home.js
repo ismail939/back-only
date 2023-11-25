@@ -10,8 +10,10 @@ function Home() {
                 <div className="bg-black w-full h-full opacity-50 absolute"></div>
                 <div className="w-full h-full text-white text-center absolute">
                     <div className="w-3/4 h-full mx-auto mt-[150px] max-sm:w-full max-sm:px-2">
-                        <h2 className="text-5xl font-bold">Our Vision</h2>
-                        <p className="mt-4 text-lg">We create a borderless and inclusive work environment, where individuals and teams can connect, collaborate, and thrive regardless of their physical location</p>
+                        <h2 className="md:text-4xl text-2xl font-bold">More Than a Desk: A Community of Possibilities</h2>
+                        <p className="mt-4 md:text-lg text-sm font-light">At SPACE S, we believe in more than just shared office space.
+                            We offer a dynamic community where diverse talents converge, ideas flourish, and connections thrive. Whether you're a freelancer, entrepreneur, or a growing team,
+                            our flexible workspaces provide the perfect environment for productivity and networking.</p>
                     </div>
                 </div>
             </div>
@@ -29,8 +31,9 @@ function Home() {
                         before proceeding in any booking. Signing in allows us to personalize your
                         experience and ensures that you have access to all available options tailored to your preferences. </p>
                 </div>
-                <Link className="text-[60px] cursor-pointer hidden md:block hover:text-gray-300" to="login">
-                    <BoxArrowInRight />
+                <Link className="cursor-pointer hidden md:block hover:text-gray-300 flex flex-col items-center text-center" to="login">
+                    <BoxArrowInRight className="text-[60px] " />
+                    <h2 className="text-md">Login</h2>
                 </Link>
             </div>
             <div className="w-4/5 mx-auto mt-[70px]">
