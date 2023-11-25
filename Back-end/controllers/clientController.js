@@ -2,6 +2,7 @@ const { Client } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
+const { validationResult } = require("express-validator");
 
 
 module.exports ={
@@ -31,7 +32,16 @@ module.exports ={
         }
     ),
     create: asyncWrapper(
-        async (req, res, next)=>{
+        async (req, res, next) => {
+            let errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                errors = errors.array()
+                let errorsList = []
+                for (let i = 0; i < errors.length; i++) {
+                    errorsList.push(errors[i].msg)
+                }
+                return res.status(400).json({ status: httpStatusCode.ERROR, errors: errorsList });
+            }
             const client = await Client.create(req.body.data)
             if(client){
                 return res.json({ status: httpStatusCode.SUCCESS, message: "Client is created successfully" })
