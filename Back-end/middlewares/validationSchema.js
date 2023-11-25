@@ -7,7 +7,6 @@ const appError = require('../utils/appError');
 const validateCw_space = (req) => {
     let data = req.body.data
     let phones = req.body.phones
-    console.log(data)
     let errors = []
     if(validator.isEmpty(data.name)){
         errors.push('name is required') 

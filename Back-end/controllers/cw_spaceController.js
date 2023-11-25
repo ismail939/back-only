@@ -2,9 +2,6 @@ const { Cw_space, Cw_spacePhone, Cw_spacePhoto, Room } = require('../models/mode
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-const { validationResult } = require("express-validator");
-const path = require('path')
-const fs = require('fs')
 const {validateCw_space} = require('../middlewares/validationSchema')
 
 module.exports = {
@@ -31,8 +28,6 @@ module.exports = {
                         cw_spaces[i].prices.push(rooms[j].hourPrice)
                         delete rooms[j]
                     }
-
-                    console.log("🚀 ~ file: cw_spaceController.js:35 ~ cw_spaces[i]:", cw_spaces[i])
                 }
             }
             if (cw_spaces.length === 0) {
@@ -55,7 +50,6 @@ module.exports = {
                     cwID: req.params.ID
                 }
             })
-
             const cw_spacePhones = await Cw_spacePhone.findAll({
                 where: {
                     cwSpaceCwID: req.params.ID
@@ -103,15 +97,10 @@ module.exports = {
             // newCw_space = newCw_space[0]
             let newCw_spacePhone = null;
             let newCw_spacePhoneList = req.body.phones.split(',')
-            // console.log(newCw_spacePhoneList)
             for (let i = 0; i < newCw_spacePhoneList.length; i++) {
                 newCw_spacePhone = await Cw_spacePhone.create({ phone: newCw_spacePhoneList[i], cwSpaceCwID: newCw_space.cwID })
             }
-
             newCw_space.phones = newCw_spacePhoneList
-
-
-            // console.log(req.file, req.body)
             return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newCw_space });
         }
     ),

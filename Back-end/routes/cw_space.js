@@ -1,28 +1,23 @@
 const express = require('express')
 const cw_spaceController = require('../controllers/cw_spaceController')
-const { validateCw_space } = require('../middlewares/validationSchema');
 const router = express.Router();
 const multer = require('multer')
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        console.log('req 1', req.body)
         cb(null, './public/images')
     },
     filename: function (req, file, cb) {
-        console.log('req 2', req.body)
-        // const acceptedFormats = ['png', 'jpg', 'jpeg']
-        // if(acceptedFormats.includes(file.originalname.split('.')[1])){
-            
-        // }else{ cb(new Error('wrong type')) }
-        console.log("lol")
-        const uniqueSuffix = Date.now() + '.' + file.originalname.split('.')[1]
-        req.body.data.imageName = uniqueSuffix
-        cb(null, uniqueSuffix)
+        const acceptedFormats = ['png', 'jpg', 'jpeg']
+        if(acceptedFormats.includes(file.originalname.split('.')[1])){
+            const uniqueSuffix =
+            Date.now() + "." + file.originalname.split(".")[1];
+            req.body.data.imageName = uniqueSuffix;
+            cb(null, uniqueSuffix);
+        }else{ cb(new Error('wrong type')) }
+        
     }
 })
-
 const upload = multer({ storage: storage })
-// const upload = multer({ dest: 'public/images/' }) 
 
 
 
