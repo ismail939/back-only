@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ExclamationCircleFill } from "react-bootstrap-icons";
-
+import Swal from "sweetalert2";
 function Login() {
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
@@ -13,6 +13,15 @@ function Login() {
     });
     function checkState() {
         remember ? console.log("checked") : console.log("not checked")
+    }
+    const success = () =>{
+        Swal.fire({
+            position:"center",
+            icon: "success",
+            title: "Login is successful",
+            showConfirmButton: false,
+            timer: 1500
+        });
     }
     const AddData = () => {
         fetch(`http://localhost:4000/login`, {
@@ -26,7 +35,10 @@ function Login() {
                     "password": password
                 },
             }),
-        }).then(res => res.json()).then((data) => { if (data.status === "error") setErrorMessage(data.message) })
+        }).then(res => res.json()).then((data) => { 
+            if (data.status === "error") 
+            setErrorMessage(data.message) 
+        else if(data.status === "success") success();})
     }
     const HandleError = (e) => {
         e.preventDefault();
@@ -37,7 +49,9 @@ function Login() {
             setDataErrors({ username: false, password: true })
         }
         else {
-            setDataErrors({ username: false, password: false }); checkState(); AddData()
+            setDataErrors({ username: false, password: false });
+            checkState();
+            AddData();
         }
     }
     return (
