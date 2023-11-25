@@ -1,7 +1,6 @@
 const express = require('express')
 const httpStatusCode = require("./utils/httpStatusText");
 const cors = require("cors");
-
 const app = express()
 app.use(express.json())
 
@@ -15,6 +14,19 @@ const ownerRouter = require("./routes/owner");
 const roomRouter = require("./routes/room");
 const reviewRouter = require("./routes/review");
 const eventPhotoRouter = require("./routes/eventPhoto");
+<<<<<<< HEAD
+||||||| ad11cdb
+const login_registerRouter = require("./routes/login_register");
+=======
+const login_registerRouter = require("./routes/login_register");
+const offerRouter = require('./routes/offer')
+
+const path = require('path')
+app.use(express.static(path.join(__dirname, 'public')));
+
+
+
+>>>>>>> imageHandling
 
 
 app.use(cors()) //to handle the request comes from other ports
@@ -28,6 +40,13 @@ app.use("/owners", ownerRouter);
 app.use("/rooms", roomRouter);
 app.use("/reviews", reviewRouter);
 app.use("/eventPhotos", eventPhotoRouter);
+<<<<<<< HEAD
+||||||| ad11cdb
+app.use(login_registerRouter);
+=======
+app.use(login_registerRouter);
+app.use('/offers', offerRouter)
+>>>>>>> imageHandling
 
 const db = require('./config/database')
 
@@ -37,9 +56,6 @@ db.authenticate()
 }).catch((err)=>{
     console.log('connection failed', err) 
 })
-//app.get('/', (req, res)=>{
-//    res.send('Hello there!')
-//})
 
 
 app.all("*", (req, res) => {

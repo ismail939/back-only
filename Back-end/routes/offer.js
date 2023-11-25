@@ -7,7 +7,7 @@ router.route("/")
     .get(offerController.get)
     .post(offerController.create);
 
-router.route("/:clientID/:cwSpaceID")
+router.route("/:offerID")
     .get(offerController.getOne)
     .patch(offerController.update)
     .delete(offerController.delete);

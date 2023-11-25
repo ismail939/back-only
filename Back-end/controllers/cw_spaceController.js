@@ -2,10 +2,7 @@ const { Cw_space, Cw_spacePhone, Cw_spacePhoto, Room } = require('../models/mode
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-const { validationResult } = require("express-validator");
-
-
-
+const {validateCw_space} = require('../middlewares/validationSchema')
 
 module.exports = {
     get: asyncWrapper(
@@ -13,9 +10,9 @@ module.exports = {
             let cw_spaces = await Cw_space.findAll({ raw: true })
             const cw_spacePhones = await Cw_spacePhone.findAll();
             let rooms = await Room.findAll({
-                raw:true,
+                raw: true,
                 where: {
-                    type: "shared room" 
+                    type: "shared room"
                 }
             });
             for (let i = 0; i < cw_spaces.length; i++) {
@@ -26,13 +23,11 @@ module.exports = {
                     }
                 }
                 cw_spaces[i].prices = []
-                for(let j = 0;j<rooms.length;j++){
-                    if (cw_spaces[i].cwID==rooms[j].cwSpaceCwID){
+                for (let j = 0; j < rooms.length; j++) {
+                    if (cw_spaces[i].cwID == rooms[j].cwSpaceCwID) {
                         cw_spaces[i].prices.push(rooms[j].hourPrice)
                         delete rooms[j]
                     }
-                    
-                    console.log("🚀 ~ file: cw_spaceController.js:35 ~ cw_spaces[i]:", cw_spaces[i])
                 }
             }
             if (cw_spaces.length === 0) {
@@ -50,12 +45,11 @@ module.exports = {
     getOne: asyncWrapper(
         async (req, res, next) => {
             const cw_space = await Cw_space.findAll({
-                raw:true,
+                raw: true,
                 where: {
                     cwID: req.params.ID
                 }
             })
-
             const cw_spacePhones = await Cw_spacePhone.findAll({
                 where: {
                     cwSpaceCwID: req.params.ID
@@ -74,7 +68,7 @@ module.exports = {
             //     const error = appError.create("Cw_spacePhotos not found", 404, httpStatusCode.ERROR);
             //     return next(error);
             // }
-            cw_space[0].phones=[]
+            cw_space[0].phones = []
             cw_spacePhones.forEach(phone => {
                 cw_space[0].phones.push(phone.phone)
             });
@@ -83,26 +77,29 @@ module.exports = {
     ),
     create: asyncWrapper(
         async (req, res, next) => {
-            let errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                errors = errors.array()
-                let errorsList = []
-                for (let i = 0; i < errors.length; i++) {
-                    errorsList.push(errors[i].msg)
-                }
-                return res.status(400).json({ status: httpStatusCode.ERROR, errors: errorsList });
+            let errors = validateCw_space(req)
+            if (errors.length!=0) {    
+                return res.status(400).json({ status: httpStatusCode.ERROR, errors: errors});
             }
-            let newCw_space = await Cw_space.create(req.body.data)
-            newCw_space = await Cw_space.findAll({ raw: true, where:{ cwID: newCw_space.cwID }})
-            newCw_space = newCw_space[0]
+            let newCw_space = (await Cw_space.create({
+                name: req.body.data.name,
+                email: req.body.data.email,
+                address: req.body.data.address,
+                fbPage: req.body.data.fbPage,
+                openingTime: req.body.data.openingTime,
+                closingTime: req.body.data.closingTime,
+                description: req.body.data.description,
+                rate: req.body.data.rate,
+                mainPhoto: req.body.data.imageName
+            })).get({ plain: true })
+            // console.log(newCw_space)
+            // newCw_space = await Cw_space.findAll({ raw: true, where: { cwID: newCw_space.cwID } })
+            // newCw_space = newCw_space[0]
             let newCw_spacePhone = null;
-            let newCw_spacePhoneList = []
-
-            for (let i = 0; i < req.body.phones.length; i++) {
-                newCw_spacePhone = await Cw_spacePhone.create({ phone: req.body.phones[i], cwSpaceCwID: newCw_space.cwID })
-                newCw_spacePhoneList.push(newCw_spacePhone.phone)
+            let newCw_spacePhoneList = req.body.phones.split(',')
+            for (let i = 0; i < newCw_spacePhoneList.length; i++) {
+                newCw_spacePhone = await Cw_spacePhone.create({ phone: newCw_spacePhoneList[i], cwSpaceCwID: newCw_space.cwID })
             }
-
             newCw_space.phones = newCw_spacePhoneList
             return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newCw_space });
         }
