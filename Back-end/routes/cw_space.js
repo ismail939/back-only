@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
             
         // }else{ cb(new Error('wrong type')) }
         console.log("jdjdjf")
-        const uniqueSuffix = Date().slice(0, 24) + '-' + file.originalname
+        const uniqueSuffix = Date.now() + '.' + file.originalname.split('.')[1]
         req.body.data.imageName = uniqueSuffix
         cb(null, uniqueSuffix)
     }
