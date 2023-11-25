@@ -1,9 +1,5 @@
 const { body } = require('express-validator')
 const validator = require('../utils/validators')
-const isValidTimeFormat = (timeString) => /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(timeString)
-const httpStatusCode = require("../utils/httpStatusText");
-const appError = require('../utils/appError');
-
 
 const validateClient = () => {
     return [
@@ -24,19 +20,23 @@ const validateCw_space = (req) => {
     if(validator.isEmpty(data.name)){
         errors.push('name is required') 
     }
+
     if(!validator.isEmpty(data.email)){
         if(!validator.isEmail(data.email)){
             errors.push("not in email format")
         }
     }
+
     if(validator.isEmpty(data.address)){
         errors.push('address is required') 
     }
+
     if(!validator.isEmpty(data.fbPage)){
         if(!validator.isURL(data.fbPage)){
             errors.push("not in url format")
         }
     }
+
     if(validator.isEmpty(data.openingTime)){
         errors.push('openingTime is required') 
     } else {
@@ -44,6 +44,7 @@ const validateCw_space = (req) => {
             errors.push('not in time format')
         }
     }
+
     if(validator.isEmpty(data.closingTime)){
         errors.push('closingTime is required') 
     } else {
@@ -51,10 +52,14 @@ const validateCw_space = (req) => {
             errors.push('not in time format')
         }
     }
+
     if(validator.isEmpty(data.description)){
         errors.push('description is required') 
     }
-    
+
+    if (validator.isEmpty(phones)) {
+        errors.push("phone is required");
+    }
     return errors
 }
 

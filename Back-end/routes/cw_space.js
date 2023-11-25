@@ -1,6 +1,5 @@
 const express = require('express')
 const cw_spaceController = require('../controllers/cw_spaceController')
-const { validateCwSpace } = require("../middlewares/validationSchema");
 const router = express.Router();
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -15,7 +14,6 @@ const storage = multer.diskStorage({
             req.body.data.imageName = uniqueSuffix;
             cb(null, uniqueSuffix);
         }else{ cb(new Error('wrong type')) }
-        
     }
 })
 const upload = multer({ storage: storage })
@@ -32,4 +30,3 @@ router.route("/:ID")
     .delete(cw_spaceController.delete);
 
 module.exports = router
-

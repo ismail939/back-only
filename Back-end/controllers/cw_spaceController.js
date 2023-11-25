@@ -92,9 +92,6 @@ module.exports = {
                 rate: req.body.data.rate,
                 mainPhoto: req.body.data.imageName
             })).get({ plain: true })
-            // console.log(newCw_space)
-            // newCw_space = await Cw_space.findAll({ raw: true, where: { cwID: newCw_space.cwID } })
-            // newCw_space = newCw_space[0]
             let newCw_spacePhone = null;
             let newCw_spacePhoneList = req.body.phones.split(',')
             for (let i = 0; i < newCw_spacePhoneList.length; i++) {
