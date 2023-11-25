@@ -1,6 +1,7 @@
 import Image1 from "../../components/images/cover.jpg"
 import Image2 from "../../components/images/offer1.jpg"
 import Slider from "../../components/Slider";
+import { BoxArrowInRight } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 function Home() {
     return (
@@ -15,6 +16,23 @@ function Home() {
                 </div>
             </div>
             <Slider />
+            <div className="w-4/5 mx-auto mt-[40px] rounded-xl px-8 py-4 bg-gradient-to-r from-[#1B262C] to-[#0F4C75] text-white
+            flex flex-col md:flex-row md:items-center justify-between ">
+                <div className="md:w-10/12">
+                    <div className="flex items-center justify-between">
+                        <h2 className="font-bold text-2xl">Sign-in to Save</h2>
+                        <Link className="text-[30px] cursor-pointer md:hidden hover:text-gray-300" to="login">
+                            <BoxArrowInRight />
+                        </Link>
+                    </div>
+                    <p className="text-md mt-4">To ensure a seamless booking experience, we kindly remind you to sign in to your account
+                        before proceeding in any booking. Signing in allows us to personalize your
+                        experience and ensures that you have access to all available options tailored to your preferences. </p>
+                </div>
+                <Link className="text-[60px] cursor-pointer hidden md:block hover:text-gray-300" to="login">
+                    <BoxArrowInRight />
+                </Link>
+            </div>
             <div className="w-4/5 mx-auto mt-[70px]">
                 <h2 className="text-left mb-8 text-4xl font-bold">Discover</h2>
                 <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
