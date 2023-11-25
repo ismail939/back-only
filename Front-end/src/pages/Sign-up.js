@@ -30,7 +30,7 @@ function SignUp() {
         else return true
     }
     const AddData = () => {
-        fetch(`http://localhost:4000/register`, {
+        fetch(`http://localhost:4000/clients/register`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

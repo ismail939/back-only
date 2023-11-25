@@ -24,7 +24,7 @@ function Login() {
         });
     }
     const AddData = () => {
-        fetch(`http://localhost:4000/login`, {
+        fetch(`http://localhost:4000/clients/login`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
