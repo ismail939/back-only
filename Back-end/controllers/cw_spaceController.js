@@ -5,7 +5,7 @@ const appError = require("../utils/appError");
 const { validationResult } = require("express-validator");
 const path = require('path')
 const fs = require('fs')
-let { imageName } = require('../routes/cw_space')
+const {validateCw_space} = require('../middlewares/validationSchema')
 
 module.exports = {
     get: asyncWrapper(
@@ -83,17 +83,10 @@ module.exports = {
     ),
     create: asyncWrapper(
         async (req, res, next) => {
-            console.log(req.body.data.name)
-            let errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                errors = errors.array()
-                let errorsList = []
-                for (let i = 0; i < errors.length; i++) {
-                    errorsList.push(errors[i].msg)
-                }
-                return res.status(400).json({ status: httpStatusCode.ERROR, errors: errorsList });
+            let errors = validateCw_space(req)
+            if (errors.length!=0) {    
+                return res.status(400).json({ status: httpStatusCode.ERROR, errors: errors});
             }
-
             let newCw_space = (await Cw_space.create({
                 name: req.body.data.name,
                 email: req.body.data.email,
@@ -105,12 +98,12 @@ module.exports = {
                 rate: req.body.data.rate,
                 mainPhoto: req.body.data.imageName
             })).get({ plain: true })
-            console.log(newCw_space)
+            // console.log(newCw_space)
             // newCw_space = await Cw_space.findAll({ raw: true, where: { cwID: newCw_space.cwID } })
             // newCw_space = newCw_space[0]
             let newCw_spacePhone = null;
             let newCw_spacePhoneList = req.body.phones.split(',')
-            console.log(newCw_spacePhoneList)
+            // console.log(newCw_spacePhoneList)
             for (let i = 0; i < newCw_spacePhoneList.length; i++) {
                 newCw_spacePhone = await Cw_spacePhone.create({ phone: newCw_spacePhoneList[i], cwSpaceCwID: newCw_space.cwID })
             }
@@ -118,7 +111,7 @@ module.exports = {
             newCw_space.phones = newCw_spacePhoneList
 
 
-            console.log(req.file, req.body)
+            // console.log(req.file, req.body)
             return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newCw_space });
         }
     ),

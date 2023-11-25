@@ -1,6 +1,6 @@
 const express = require('express')
 const cw_spaceController = require('../controllers/cw_spaceController')
-const { validationSchema } = require('../middlewares/validationSchema');
+const { validateCw_space } = require('../middlewares/validationSchema');
 const router = express.Router();
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -10,12 +10,13 @@ const storage = multer.diskStorage({
     },
     filename: function (req, file, cb) {
         // console.log('req 2', req.body)
-        const acceptedFormats = ['png', 'jpg', 'jpeg']
-        if(acceptedFormats.includes(file.originalname.split('.')[1])){
-            const uniqueSuffix = Date().slice(0, 24) + '-' + file.originalname
-            req.body.data.imageName = uniqueSuffix
-            cb(null, uniqueSuffix)
-        }else{ cb(new Error('wrong type')) }
+        // const acceptedFormats = ['png', 'jpg', 'jpeg']
+        // if(acceptedFormats.includes(file.originalname.split('.')[1])){
+            
+        // }else{ cb(new Error('wrong type')) }
+        const uniqueSuffix = Date().slice(0, 24) + '-' + file.originalname
+        req.body.data.imageName = uniqueSuffix
+        cb(null, uniqueSuffix)
     }
 })
 
@@ -26,7 +27,7 @@ const upload = multer({ storage: storage })
 
 router.route("/")
     .get(cw_spaceController.get)
-    .post(validationSchema(), upload.single('mainPhoto'), cw_spaceController.create);
+    .post(upload.single('mainPhoto'), cw_spaceController.create);
 
 router.route("/:ID")
     .get(cw_spaceController.getOne)

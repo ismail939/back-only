@@ -1,10 +1,10 @@
 module.exports = {
     isEmail: (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if(!emailRegex.test(email)){
-            return "not in email format"
+        if(emailRegex.test(email)){
+            return true
         }
-        return undefined
+        return false
     },
     
     isImage: (fileName) => {
@@ -16,40 +16,55 @@ module.exports = {
     
       // Check if the file extension is in the allowed list
       if(!allowedExtensions.includes(fileExtension)){
-        return `${fileExtension} is not allowed`
+        return true
       }
-      return undefined
+      return false
     },
     
     isURL: (url)=>{
         // Regular expression for a basic URL validation
         const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
       
-        if(!urlRegex.test(url)){
-            return "not in url format"
+        if(urlRegex.test(url)){
+            return true
         }
-        return undefined
+        return false
       },
     
-    isEmpty: (attribute, text) => {
-        if (!text) return `${attribute} is required`
-        return undefined
+    isEmpty: (value) => {
+        if (value === null || value === undefined) {
+            return true;
+          }
+        
+          if (typeof value === 'string' && value.trim() === '') {
+            return true;
+          }
+        
+          if (Array.isArray(value) && value.length === 0) {
+            return true;
+          }
+        
+          if (typeof value === 'object' && Object.keys(value).length === 0) {
+            return true;
+          }
+        
+          return false;
     },
     
     isTime: (time) => {
         const timePattern = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
-        if(!timePattern.test(time)){
-            return "not in time format"
+        if(timePattern.test(time)){
+            return true
         }
-        return undefined
+        return false
     },
     
     isDate: (date) => {
         const datePattern = /^\d{4}-\d{2}-\d{2}$/;
-        if (!datePattern.test(date)) {
-            return "not in date format"
+        if (datePattern.test(date)) {
+            return true
         }
-        return undefined
+        return false
     }
 }
 
