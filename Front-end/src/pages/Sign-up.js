@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ExclamationCircleFill } from "react-bootstrap-icons";
+import { ExclamationCircleFill , Eye , EyeSlash } from "react-bootstrap-icons";
 import { useNavigate } from 'react-router-dom';
 
 
 function SignUp() {
     const navigate = useNavigate();
+    const [showpassword, setShowPassword] = useState(false);
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -21,7 +22,8 @@ function SignUp() {
         email: false,
         phonenumber: false,
         password: false,
-        username: false
+        username: false,
+        confirmpassword: false
     });
     function compPassword() {
         if ((password !== confirmpassword) && (password !== "") && (confirmpassword !== "")) return false;
@@ -44,13 +46,12 @@ function SignUp() {
                 }
             }),
         }).then(res => res.json()).then((data) => {
-            console.log(data)
-            if(data.status === "success"){
+            if (data.status === "success") {
                 navigate("../login")
-            }else if(data.status === "error"){
+            } else if (data.status === "error") {
                 setResError(data.message)
-            }else if(data.status === "fail"){
-                setResError("")
+            } else if (data.status === "fail") {
+                setResError("oops, something wrong went on !")
             }
         })
     }
@@ -121,7 +122,7 @@ function SignUp() {
         if (nameError(firstName)) {
             setDataErrors({
                 firstName: true, lastName: false, email: false, phonenumber: false,
-                password: false, username: false
+                password: false, username: false, confirmpassword: false
             })
             setCheckError("please write your first name correctly")
             window.scrollTo(0, 100);
@@ -129,7 +130,7 @@ function SignUp() {
         else if (nameError(lastName)) {
             setDataErrors({
                 firstName: false, lastName: true, email: false, phonenumber: false,
-                password: false, username: false
+                password: false, username: false, confirmpassword: false
             })
             setCheckError("please write your last name correctly")
             window.scrollTo(0, 100);
@@ -137,32 +138,37 @@ function SignUp() {
         else if (UsernameError()) {
             setDataErrors({
                 firstName: false, lastName: false, email: false, phonenumber: false,
-                password: false, username: true
+                password: false, username: true, confirmpassword: false
             })
             setCheckError("please write a valid username")
             window.scrollTo(0, 200);
         } else if (emailError()) {
             setDataErrors({
                 firstName: false, lastName: false, email: true, phonenumber: false,
-                password: false, username: false
+                password: false, username: false, confirmpassword: false
             })
             setCheckError("please write a valid email address")
             window.scrollTo(0, 300);
         } else if (PhoneNumberError()) {
             setDataErrors({
                 firstName: false, lastName: false, email: false, phonenumber: true,
-                password: false, username: false
+                password: false, username: false, confirmpassword: false
             })
             setCheckError("please write a valid phonenumber")
             window.scrollTo(0, 400);
         } else if (PasswordError()) {
             setDataErrors({
                 firstName: false, lastName: false, email: false, phonenumber: false,
-                password: true, username: false
+                password: true, username: false, confirmpassword: false
             })
             window.scrollTo(0, 500);
-        } else if (!compPassword()) {
-            
+        } else if (confirmpassword === "" || !compPassword()) {
+            setDataErrors({
+                firstName: false, lastName: false, email: false, phonenumber: false,
+                password: false, username: false, confirmpassword: true
+            })
+            setCheckError("please confirm your password")
+            window.scrollTo(0, 600);
         } else {
             setCheckError("")
             AddData();
@@ -210,18 +216,23 @@ function SignUp() {
                             </div>
                             <div>
                                 <label htmlFor="Password" className="block mb-2 text-sm font-medium text-gray-900">Password</label>
-                                <input type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg  block w-full p-2.5" required
-                                    onChange={(e) => { setPassword(e.target.value) }}></input>
+                                <div className="relative">
+                                    <input type={showpassword ? "text" : "password"} name="password" id="password" placeholder="••••••••" className={`bg-gray-50 border ${dataerrors.password ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg  block w-full p-2.5`} required
+                                        onChange={(e) => { setPassword(e.target.value) }}></input>
+                                    <span className="absolute top-[30%] right-2 text-lg z-10 cursor-pointer text-center" onClick={() => setShowPassword(!showpassword)}>
+                                        {showpassword ? <EyeSlash/> : <Eye /> }
+                                    </span>
+                                </div>
                                 {dataerrors.password ? <span className="text-[12px] text-red-500">{checkerror}</span> : <p className="m-0 mt-1 text-xs text-gray-500">Note: Password must be at least 8 charachters long with one lowercase, one uppercase and a number</p>}
                             </div>
                             <div className="">
                                 <label htmlFor="confirmpassword" className="block mb-2 text-sm font-medium text-gray-900">Confirm Password</label>
-                                <input type="password" name="confirmpassword" id="confirmpassword" placeholder="••••••••" className={`bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg  block w-full p-2.5 ${!compPassword() ? "focus:outline-rose-600" : null}`} required
+                                <input type="password" name="confirmpassword" id="confirmpassword" placeholder="••••••••" className={`bg-gray-50 border ${dataerrors.confirmpassword || !compPassword() ? "border-red-500 focus:outline-rose-600" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg  block w-full p-2.5 `} required
                                     onChange={(e) => { setConfirmPassword(e.target.value) }}></input>
-                                {!compPassword() ? <p className="text-rose-600 text-xs mt-1 flex items-center gap-1 inline-block">Password doesn't match</p> : null}
+                                {!compPassword() || dataerrors.confirmpassword ? <p className="text-rose-600 text-xs mt-1 flex items-center gap-1 inline-block">Password doesn't match</p> : null}
                             </div>
                             <br></br>
-                            {reserror !== "" ? <span className="text-[12px] text-red-500">{reserror}</span> : null}
+                            {reserror !== ""  ? <span className="text-[14px] text-red-500 flex gap-2 items-center"><ExclamationCircleFill />{reserror}</span> : null}
                             <button type="submit" className="mt-3 w-full text-black bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 font-medium rounded-lg text-md px-5 py-2.5 text-center duration-300 ease-in-out"
                                 onClick={(e) => { HandleError(e); }}>Sign Up</button>
                             <p className="text-sm font-light text-gray-500">

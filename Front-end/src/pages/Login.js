@@ -38,7 +38,9 @@ function Login() {
         }).then(res => res.json()).then((data) => { 
             if (data.status === "error") 
             setErrorMessage(data.message) 
-        else if(data.status === "success") success();})
+        else if(data.status === "success") success();
+        else if(data.status === "fail") setErrorMessage("oops, something wrong went on !") ;
+    })
     }
     const HandleError = (e) => {
         e.preventDefault();
