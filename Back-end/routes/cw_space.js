@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
         // if(acceptedFormats.includes(file.originalname.split('.')[1])){
             
         // }else{ cb(new Error('wrong type')) }
-        console.log("jdjdjf")
+        console.log("lol")
         const uniqueSuffix = Date.now() + '.' + file.originalname.split('.')[1]
         req.body.data.imageName = uniqueSuffix
         cb(null, uniqueSuffix)
