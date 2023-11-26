@@ -1,4 +1,4 @@
-@media (max-width: 1024px) {
+@media not all and (min-width: 1024px) {
     .nv-response{
         display: fixed;
         flex-direction: column;
