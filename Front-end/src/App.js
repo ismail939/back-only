@@ -8,6 +8,7 @@ import WorkSpaces from './pages/mainpages/WorkSpaces';
 import Footer from './components/Footer';
 import CreateCoworkingSpace from './pages/CreateCoworkingSpace';
 import PageNotFound from './pages/PageNotFound';
+import OfferList from './pages/mainpages/OfferList';
 function App() {
   return (
     <>
@@ -17,6 +18,7 @@ function App() {
         <Route path='login' element={<Login />}></Route>
         <Route path='sign-up' element={<SignUp />}></Route>
         <Route path='workspaces' element={<WorkSpaces />}></Route>
+        <Route path='offers' element={<OfferList />}></Route>
         <Route path='createworkspace' element={<CreateCoworkingSpace />}></Route>
         <Route path="*" element={<PageNotFound />}></Route>
       </Routes>

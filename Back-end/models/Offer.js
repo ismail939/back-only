@@ -3,19 +3,27 @@ module.exports = (db, type)=>{
         offerID: {
             type: type.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
+        },
+        title: {
+            type: type.STRING,
+            allowNull: false
         },
         description: {
             type: type.STRING,
-            allowNull: false,
+            allowNull: false
         },
         start: {
             type: type.DATE,
-            allowNull: false,
+            allowNull: false
         },
         end: {
             type: type.DATE,
-            allowNull: false,
+            allowNull: false
+        },
+        img: {
+            type: type.TEXT,
+            allowNull: false
         }
     },{
         timestamps: false 
