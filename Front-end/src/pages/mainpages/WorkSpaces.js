@@ -22,7 +22,11 @@ function WorkSpaces() {
     const [searchData, setSearchData] = useState([]);
     const [searchlist, setSearchList] = useState(false);
     const [fetcherror, setFetchError] = useState(false);
+<<<<<<< HEAD
     let menuRef = useRef();
+=======
+    //const [sortedData,setSortedData] =useState();
+>>>>>>> sort-1
     useEffect(() => {
         getWorkSpaces();
         setDropDown(false);
@@ -53,6 +57,13 @@ function WorkSpaces() {
                 null : workspace.name.toLowerCase().includes(search.toLowerCase());
         }))
     }
+    function sortData(sortDir) {
+        const soretedData = [...cwspaces];
+        soretedData.sort((a, b) => {
+            return sortDir === "lowtohigh" ? a.rate - b.rate : b.rate - a.rate;
+        })
+        setCWSpaces(soretedData);
+    }
     return (
         <div className="flex relative min-h-screen">
             <div className="bg-gray-100 w-52 sticky h-[100dvh] hidden">
@@ -81,25 +92,25 @@ function WorkSpaces() {
                 <div className="w-full flex justify-between mt-8">
                     <button id="dropdownDefaultButton" className="md:w-36 w-32 mb-5 text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 justify-center items-center gap-2" type="button"><FunnelFill className="text-lg" /> Filters
                     </button>
+<<<<<<< HEAD
                     <div id="dropdown" className="relative md:w-36 w-32" onMouseLeave={() => { setDropDown(false) }}>
                         <button id="dropdownDefaultButton" className="w-full text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 justify-center items-center gap-2" type="button" onMouseEnter={() => { setDropDown(!dropdown) }}>Sort By <SortDownAlt className="text-lg" />
+=======
+                    <div id="dropdown" class="relative md:w-36 w-32" onMouseLeave={() => { setDropDown(false) }}>
+                        <button id="dropdownDefaultButton" class="w-full text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 justify-center items-center gap-2" type="button" onMouseEnter={() => { setDropDown(!dropdown) }} >Sort By <SortDownAlt className="text-lg" />
+>>>>>>> sort-1
                         </button>
                         <ul className={`w-full py-2 text-sm text-gray-700 z-10 bg-white rounded-lg shadow ${dropdown ? "absolute" : "hidden"}`}>
                             <li className="hover:bg-gray-100">
-                                <button className="px-4 py-2">Dashboard</button>
+                                <button className="px-4 py-2" value="low-to-high" onClick={() => { sortData("lowtohigh") }}>Low to High</button>
                             </li>
                             <li className="hover:bg-gray-100">
-                                <button className="block px-4 py-2">Settings</button>
-                            </li>
-                            <li className="hover:bg-gray-100">
-                                <button className="block px-4 py-2">Earnings</button>
-                            </li>
-                            <li className="hover:bg-gray-100">
-                                <button className="block px-4 py-2">Sign out</button>
+                                <button className="block px-4 py-2" value="high-to-low" onClick={() => sortData("hightolow")} >High to Low</button>
                             </li>
                         </ul>
                     </div>
                 </div>
+<<<<<<< HEAD
                 {!fetcherror ? <div>
                     {cwspaces ? <div className="flex flex-col gap-8">
                         {cwspaces.map((cwspace) => {
@@ -112,11 +123,21 @@ function WorkSpaces() {
                             </div>
                             </div>}
                     {/* <div className="mt-[50px] flex justify-center">
+=======
+                {
+                    !fetcherror ? <div>
+                        {cwspaces ? <div className="flex flex-col gap-8">
+                            {cwspaces.map((cwspace) => {
+                                return <Card cwspace={cwspace} />
+                            })}</div> : null}
+                        {/* <div className="mt-[50px] flex justify-center">
+>>>>>>> sort-1
                         <Pagination />
                     </div> */}
-                </div> : <ShowError />}
-            </div>
-        </div>
+                    </div> : <ShowError />
+                }
+            </div >
+        </div >
     )
 }
 
