@@ -22,11 +22,8 @@ function WorkSpaces() {
     const [searchData, setSearchData] = useState([]);
     const [searchlist, setSearchList] = useState(false);
     const [fetcherror, setFetchError] = useState(false);
-<<<<<<< HEAD
     let menuRef = useRef();
-=======
     //const [sortedData,setSortedData] =useState();
->>>>>>> sort-1
     useEffect(() => {
         getWorkSpaces();
         setDropDown(false);
@@ -92,13 +89,8 @@ function WorkSpaces() {
                 <div className="w-full flex justify-between mt-8">
                     <button id="dropdownDefaultButton" className="md:w-36 w-32 mb-5 text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 justify-center items-center gap-2" type="button"><FunnelFill className="text-lg" /> Filters
                     </button>
-<<<<<<< HEAD
                     <div id="dropdown" className="relative md:w-36 w-32" onMouseLeave={() => { setDropDown(false) }}>
                         <button id="dropdownDefaultButton" className="w-full text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 justify-center items-center gap-2" type="button" onMouseEnter={() => { setDropDown(!dropdown) }}>Sort By <SortDownAlt className="text-lg" />
-=======
-                    <div id="dropdown" class="relative md:w-36 w-32" onMouseLeave={() => { setDropDown(false) }}>
-                        <button id="dropdownDefaultButton" class="w-full text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 justify-center items-center gap-2" type="button" onMouseEnter={() => { setDropDown(!dropdown) }} >Sort By <SortDownAlt className="text-lg" />
->>>>>>> sort-1
                         </button>
                         <ul className={`w-full py-2 text-sm text-gray-700 z-10 bg-white rounded-lg shadow ${dropdown ? "absolute" : "hidden"}`}>
                             <li className="hover:bg-gray-100">
@@ -110,7 +102,6 @@ function WorkSpaces() {
                         </ul>
                     </div>
                 </div>
-<<<<<<< HEAD
                 {!fetcherror ? <div>
                     {cwspaces ? <div className="flex flex-col gap-8">
                         {cwspaces.map((cwspace) => {
@@ -123,7 +114,6 @@ function WorkSpaces() {
                             </div>
                             </div>}
                     {/* <div className="mt-[50px] flex justify-center">
-=======
                 {
                     !fetcherror ? <div>
                         {cwspaces ? <div className="flex flex-col gap-8">
@@ -131,7 +121,6 @@ function WorkSpaces() {
                                 return <Card cwspace={cwspace} />
                             })}</div> : null}
                         {/* <div className="mt-[50px] flex justify-center">
->>>>>>> sort-1
                         <Pagination />
                     </div> */}
                     </div> : <ShowError />
