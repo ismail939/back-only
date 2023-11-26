@@ -51,7 +51,7 @@ function CreateOffer() {
                     "start": startDate,
                     "end": endDate,
                     "description": Description,
-                    "image": offerImage
+
                 },
             }),
         }).then(res => res.json()).then((data) => { console.log(data) })
