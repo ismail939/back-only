@@ -22,11 +22,10 @@ function WorkSpaces() {
     const [searchData, setSearchData] = useState([]);
     const [searchlist, setSearchList] = useState(false);
     const [fetcherror, setFetchError] = useState(false);
-<<<<<<< HEAD
+
     let menuRef = useRef();
-=======
+
     //const [sortedData,setSortedData] =useState();
->>>>>>> sort-1
     useEffect(() => {
         getWorkSpaces();
         setDropDown(false);
@@ -90,15 +89,9 @@ function WorkSpaces() {
                     </div> : null}
                 </div>
                 <div className="w-full flex justify-between mt-8">
-                    <button id="dropdownDefaultButton" className="md:w-36 w-32 mb-5 text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 justify-center items-center gap-2" type="button"><FunnelFill className="text-lg" /> Filters
-                    </button>
-<<<<<<< HEAD
+                    <button id="dropdownDefaultButton" className="md:w-36 w-32 mb-5 text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 justify-center items-center gap-2" type="button"><FunnelFill className="text-lg" />Filters</button>
                     <div id="dropdown" className="relative md:w-36 w-32" onMouseLeave={() => { setDropDown(false) }}>
                         <button id="dropdownDefaultButton" className="w-full text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 justify-center items-center gap-2" type="button" onMouseEnter={() => { setDropDown(!dropdown) }}>Sort By <SortDownAlt className="text-lg" />
-=======
-                    <div id="dropdown" class="relative md:w-36 w-32" onMouseLeave={() => { setDropDown(false) }}>
-                        <button id="dropdownDefaultButton" class="w-full text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 justify-center items-center gap-2" type="button" onMouseEnter={() => { setDropDown(!dropdown) }} >Sort By <SortDownAlt className="text-lg" />
->>>>>>> sort-1
                         </button>
                         <ul className={`w-full py-2 text-sm text-gray-700 z-10 bg-white rounded-lg shadow ${dropdown ? "absolute" : "hidden"}`}>
                             <li className="hover:bg-gray-100">
@@ -110,7 +103,7 @@ function WorkSpaces() {
                         </ul>
                     </div>
                 </div>
-<<<<<<< HEAD
+
                 {!fetcherror ? <div>
                     {cwspaces ? <div className="flex flex-col gap-8">
                         {cwspaces.map((cwspace) => {
@@ -119,25 +112,23 @@ function WorkSpaces() {
                         <div className="flex gap-10 h-80 flex-col lg:flex-row items-center justify-center p-5 text-center font-medium mt-[50px]">
                             <img src={notFoundImage} alt="" className="max-h-[200px] max-w-[300px]"></img>
                             <div><p className="mt-8 uppercase  md:text-4xl text-2xl">{statusresponse}</p>
-                            <p className="mt-5 text-gray-500 text-md md:text-lg">Sorry for your inconvenience</p>
+                                <p className="mt-5 text-gray-500 text-md md:text-lg">Sorry for your inconvenience</p>
                             </div>
-                            </div>}
+                        </div>}
                     {/* <div className="mt-[50px] flex justify-center">
-=======
-                {
+                    {
                     !fetcherror ? <div>
                         {cwspaces ? <div className="flex flex-col gap-8">
                             {cwspaces.map((cwspace) => {
                                 return <Card cwspace={cwspace} />
                             })}</div> : null}
                         {/* <div className="mt-[50px] flex justify-center">
->>>>>>> sort-1
                         <Pagination />
                     </div> */}
-                    </div> : <ShowError />
+                </div> : <ShowError />
                 }
-            </div >
-        </div >
+            </div>
+        </div>
     )
 }
 
