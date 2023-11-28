@@ -1,11 +1,11 @@
-import image from "../components/images/NotFound.png"
+import pagenotfound from "../components/images/pagenotfound.svg"
 function PageNotFound() {
     return (
-        <div className="min-h-screen  flex flex-col md:flex-row gap-5 justify-center items-center font-medium text-center">
-            <img src={image} alt="" className="max-h-[250px] max-w-[250px] md:max-w-[350px] md:max-h-[350px]"></img>
+        <div className="min-h-screen flex flex-col gap-5 justify-center items-center font-medium text-center">
+            <img src={pagenotfound} alt="" className="h-[250px] w-[250px] w-[500px] h-[100px]"></img>
             <div>
-                <h2 className="uppercase md:text-3xl text-xl">Error 404 : Page Not Found</h2>
-                <p className="text-sm md:text-lg text-gray-400">Woops:Looks like this page doesn't exist</p>
+                <h2 className="uppercase md:text-3xl text-xl sec-font">Page Not Found</h2>
+                <p className="text-sm md:text-lg text-gray-400 sec-font">Woops:Looks like this page doesn't exist</p>
             </div>
         </div>
     )

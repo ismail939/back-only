@@ -3,15 +3,7 @@ import { Link } from "react-router-dom";
 import { Search,XCircleFill } from "react-bootstrap-icons";
 import Card from "../../components/Card";
 import notFoundImage from "../../components/images/WorkSpaceNotFound.png"
-function ShowError() {
-    return (
-        <div className="flex flex-col items-center mt-[100px] text-center">
-            <XCircleFill className="mb-4" style={{ fontSize: "100px", color: "red" }} />
-            {/* <h2 className="mt-4 text-2xl font-medium">Failed to fetch data</h2> */}
-            <p className="mt-8 text-2xl font-medium">oops, there is a problem at the moment. try again later</p>
-        </div>
-    )
-}
+import { NoDataError, ShowError } from "./WorkSpaces";
 function OfferList() {
     const [searchlist, setSearchList] = useState(false);
     const [searchData, setSearchData] = useState([]);
@@ -25,7 +17,7 @@ function OfferList() {
             .then(responsedata => {
                 setOffers(responsedata.data);
                 setFetchError(false)
-                if(responsedata.status === "error") setStatusResponse(responsedata.message);
+                if(responsedata.status === "error") setStatusResponse("Sorry, there are no offers currently");
                 else if(responsedata.status === "fail") setStatusResponse("Oops something went wrong !");
             }
             ).catch(error => { setFetchError(true); console.log(error) });
@@ -42,7 +34,7 @@ function OfferList() {
     }
     return (
         <div className="min-h-screen w-4/5 mx-auto md:mt-[30px] p-5">
-            <div className="relative lg:w-4/5 md:w-3/5" ref={menuRef}>
+            <div className="relative w-full" ref={menuRef}>
                 <div className="w-full h-10 flex items-center">
                     <input
                         type="search"
@@ -65,13 +57,7 @@ function OfferList() {
                     {offers ? <div className="flex flex-col gap-8">
                         {offers.map((offer) => {
                             return <Card cwspace={{cwID:offer.offerID , name:offer.title , description:offer.description , address:offer.name}} key={offer.offerID} />
-                        })}</div> :
-                        <div className="flex gap-10 h-80 flex-col lg:flex-row items-center justify-center p-5 text-center font-medium mt-[80px]">
-                            <img src={notFoundImage} alt="" className="max-h-[200px] max-w-[300px]"></img>
-                            <div><p className="mt-8 uppercase  md:text-4xl text-2xl">{statusresponse}</p>
-                            <p className="mt-5 text-gray-500 text-md md:text-lg">Sorry for your inconvenience</p>
-                            </div>
-                            </div>}
+                        })}</div> : <NoDataError response={statusresponse}/>}
                     {/* <div className="mt-[50px] flex justify-center">
                         <Pagination />
                     </div> */}

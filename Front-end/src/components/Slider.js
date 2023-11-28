@@ -16,7 +16,7 @@ function Slider(){
     },[])
     return(
         <div className="w-4/5 mx-auto mt-[70px] overflow-hidden mb-[100px] relative">
-            <h2 className="text-center mb-8 text-4xl font-bold">Offers</h2>
+            <h2 className="text-center mb-8 text-5xl main-font">Offers</h2>
             <div className="relative">
                 <div className="h-[500px] flex transition-transform ease-in-out duration-500" style={{transform: `translateX(-${current *100}%)`}}>
                     {images.map((image) =>{

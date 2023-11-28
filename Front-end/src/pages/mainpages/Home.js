@@ -22,22 +22,22 @@ function Home() {
             flex flex-col md:flex-row md:items-center justify-between ">
                 <div className="md:w-10/12">
                     <div className="flex items-center justify-between">
-                        <h2 className="font-bold text-2xl">Sign-in to Save</h2>
+                        <h2 className="font-bold text-2xl sec-font">Sign-in to Save</h2>
                         <Link className="text-[30px] cursor-pointer md:hidden hover:text-gray-300" to="login">
                             <BoxArrowInRight />
                         </Link>
                     </div>
-                    <p className="text-md mt-4">To ensure a seamless booking experience, we kindly remind you to sign in to your account
+                    <p className="text-md mt-4 sec-font">To ensure a seamless booking experience, we kindly remind you to sign in to your account
                         before proceeding in any booking. Signing in allows us to personalize your
                         experience and ensures that you have access to all available options tailored to your preferences. </p>
                 </div>
-                <Link className="cursor-pointer hidden md:block hover:text-gray-300 flex flex-col items-center text-center" to="login">
+                <Link className="cursor-pointer hidden md:block hover:text-[#1B262C] duration-300 flex flex-col items-center text-center" to="login">
                     <BoxArrowInRight className="text-[60px] " />
-                    <h2 className="text-md">Login</h2>
+                    <h2 className="text-md sec-font px-5">Login</h2>
                 </Link>
             </div>
             <div className="w-4/5 mx-auto mt-[70px]">
-                <h2 className="text-left mb-8 text-4xl font-bold">Discover</h2>
+                <h2 className="text-left mb-8 text-5xl main-font">Discover</h2>
                 <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
                     <div className="max-w-sm rounded-lg overflow-hidden shadow-lg">
                         <div className="w-full relative group">
@@ -47,8 +47,8 @@ function Home() {
                             group-hover:-translate-x-5 group-hover:opacity-100">New</h2>
                         </div>
                         <div className="px-6 py-4">
-                            <div className="font-bold text-xl mb-2">The Coldest Sunset</div>
-                            <p className="text-gray-700 text-base">
+                            <div className="font-bold text-xl mb-2 sec-font">The Coldest Sunset</div>
+                            <p className="text-gray-700 text-base sec-font">
                                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
                             </p>
                         </div>
@@ -61,8 +61,8 @@ function Home() {
                             group-hover:-translate-x-5 group-hover:opacity-100">New</h2>
                         </div>
                         <div className="px-6 py-4">
-                            <div className="font-bold text-xl mb-2">The Coldest Sunset</div>
-                            <p className="text-gray-700 text-base">
+                            <div className="font-bold text-xl mb-2 sec-font">The Coldest Sunset</div>
+                            <p className="text-gray-700 text-base sec-font">
                                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
                             </p>
                         </div>
@@ -75,8 +75,8 @@ function Home() {
                             group-hover:-translate-x-5 group-hover:opacity-100">Top-Rated</h2>
                         </div>
                         <div className="px-6 py-4">
-                            <div className="font-bold text-xl mb-2">The Coldest Sunset</div>
-                            <p className="text-gray-700 text-base">
+                            <div className="font-bold text-xl mb-2 sec-font">The Coldest Sunset</div>
+                            <p className="text-gray-700 text-base sec-font">
                                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
                             </p>
                         </div>
@@ -89,8 +89,8 @@ function Home() {
                             group-hover:-translate-x-5 group-hover:opacity-100">Top-Rated</h2>
                         </div>
                         <div className="px-6 py-4">
-                            <div className="font-bold text-xl mb-2">The Coldest Sunset</div>
-                            <p className="text-gray-700 text-base">
+                            <div className="font-bold text-xl mb-2 sec-font">The Coldest Sunset</div>
+                            <p className="text-gray-700 text-base sec-font">
                                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
                             </p>
                         </div>
@@ -103,8 +103,8 @@ function Home() {
                             group-hover:-translate-x-5 group-hover:opacity-100">Best-Seller</h2>
                         </div>
                         <div className="px-6 py-4">
-                            <div className="font-bold text-xl mb-2">The Coldest Sunset</div>
-                            <p className="text-gray-700 text-base">
+                            <div className="font-bold text-xl mb-2 sec-font">The Coldest Sunset</div>
+                            <p className="text-gray-700 text-base sec-font">
                                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
                             </p>
                         </div>
@@ -117,8 +117,8 @@ function Home() {
                             group-hover:-translate-x-5 group-hover:opacity-100">Best-Seller</h2>
                         </div>
                         <div className="px-6 py-4">
-                            <div className="font-bold text-xl mb-2">The Coldest Sunset</div>
-                            <p className="text-gray-700 text-base">
+                            <div className="font-bold text-xl mb-2 sec-font">The Coldest Sunset</div>
+                            <p className="text-gray-700 text-base sec-font">
                                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
                             </p>
                         </div>
