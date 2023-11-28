@@ -35,6 +35,12 @@
   background-color: #0c3d5e;
 }
 
+.main-font{
+  font-family:  "Franklin Gothic Medium";
+}
+.sec-font{
+  font-family: "Comic Sans MS";
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

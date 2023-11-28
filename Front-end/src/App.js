@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import CreateCoworkingSpace from './pages/CreateCoworkingSpace';
 import PageNotFound from './pages/PageNotFound';
 import CreateOffer from './pages/CreateOffer';
+import OfferList from './pages/mainpages/OfferList';
 function App() {
   return (
     <>
@@ -18,6 +19,7 @@ function App() {
         <Route path='login' element={<Login />}></Route>
         <Route path='sign-up' element={<SignUp />}></Route>
         <Route path='workspaces' element={<WorkSpaces />}></Route>
+        <Route path='offers' element={<OfferList />}></Route>
         <Route path='createworkspace' element={<CreateCoworkingSpace />}></Route>
         <Route path='createOffer' element={<CreateOffer />}></Route>
         <Route path="*" element={<PageNotFound />}></Route>

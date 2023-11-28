@@ -5,13 +5,24 @@ import Card from "../../components/Card";
 import Pagination from "../../components/Pagination";
 import { Search, SortDownAlt, FunnelFill, XCircleFill } from "react-bootstrap-icons";
 import Filters from "../../components/Filters";
-import notFoundImage from "../../components/images/WorkSpaceNotFound.png"
-function ShowError() {
+import notdata from "../../components/images/Nodata.svg"
+import servererror from "../../components/images/serverdown.svg"
+export function ShowError() {
     return (
-        <div className="flex flex-col items-center mt-[100px] text-center">
-            <XCircleFill className="mb-4" style={{ fontSize: "100px", color: "red" }} />
+        <div className="flex flex-col items-center text-center">
+            <img src={servererror} alt="" className="md:h-[450px] md:w-[500px] h-[300px] w-[300px]"></img>
             {/* <h2 className="mt-4 text-2xl font-medium">Failed to fetch data</h2> */}
-            <p className="mt-8 text-2xl font-medium">oops, there is a problem at the moment. try again later</p>
+            <p className="text-2xl text-[#1B262C] sec-font">Oops, there is a problem at the moment. try again later</p>
+        </div>
+    )
+}
+export function NoDataError(props) {
+    return (
+        <div className="flex flex-col items-center text-center">
+            <img src={notdata} alt="" className="md:h-[450px] md:w-[500px] h-[300px] w-[300px]"></img>
+            <div><p className="mt-8 uppercase  md:text-3xl text-xl sec-font">{props.response}</p>
+                <p className="mt-5 text-gray-500 text-md md:text-lg sec-font">Sorry for your inconvenience</p>
+            </div>
         </div>
     )
 }
@@ -23,6 +34,7 @@ function WorkSpaces() {
     const [searchlist, setSearchList] = useState(false);
     const [fetcherror, setFetchError] = useState(false);
     let menuRef = useRef();
+    //const [sortedData,setSortedData] =useState();
     useEffect(() => {
         getWorkSpaces();
         setDropDown(false);
@@ -42,7 +54,7 @@ function WorkSpaces() {
                 console.log(responsedata)
                 setCWSpaces(responsedata.data);
                 setFetchError(false)
-                setStatusResponse(responsedata.message)
+                setStatusResponse("Sorry, there are no Co-workspaces currently")
             }
             ).catch(error => { setFetchError(true); });
     }
@@ -53,18 +65,25 @@ function WorkSpaces() {
                 null : workspace.name.toLowerCase().includes(search.toLowerCase());
         }))
     }
+    function sortData(sortDir) {
+        const soretedData = [...cwspaces];
+        soretedData.sort((a, b) => {
+            return sortDir === "lowtohigh" ? a.rate - b.rate : b.rate - a.rate;
+        })
+        setCWSpaces(soretedData);
+    }
     return (
         <div className="flex relative min-h-screen">
             <div className="bg-gray-100 w-52 sticky h-[100dvh] hidden">
                 <Filters />
             </div>
             <div className="w-4/5 mx-auto md:mt-[30px] p-5">
-                <div className="relative lg:w-4/5 md:w-3/5" ref={menuRef}>
+                <div className="relative w-full" ref={menuRef}>
                     <div className="w-full h-10 flex items-center">
                         <input
                             type="search"
                             className="h-full w-full p-2 border-2 border-solid border-black border-r-0 rounded-l-md focus:border-[#0F4C75] focus:outline-none"
-                            placeholder="Search"
+                            placeholder="Search by workspace name"
                             aria-label="Search"
                             onChange={e => getSearchData(e)}
                             onClick={() => { setSearchList(true) }}
@@ -86,16 +105,10 @@ function WorkSpaces() {
                         </button>
                         <ul className={`w-full py-2 text-sm text-gray-700 z-10 bg-white rounded-lg shadow ${dropdown ? "absolute" : "hidden"}`}>
                             <li className="hover:bg-gray-100">
-                                <button className="px-4 py-2">Dashboard</button>
+                                <button className="px-4 py-2" value="low-to-high" onClick={() => { sortData("lowtohigh") }}>Low to High</button>
                             </li>
                             <li className="hover:bg-gray-100">
-                                <button className="block px-4 py-2">Settings</button>
-                            </li>
-                            <li className="hover:bg-gray-100">
-                                <button className="block px-4 py-2">Earnings</button>
-                            </li>
-                            <li className="hover:bg-gray-100">
-                                <button className="block px-4 py-2">Sign out</button>
+                                <button className="block px-4 py-2" value="high-to-low" onClick={() => sortData("hightolow")} >High to Low</button>
                             </li>
                         </ul>
                     </div>
@@ -104,19 +117,22 @@ function WorkSpaces() {
                     {cwspaces ? <div className="flex flex-col gap-8">
                         {cwspaces.map((cwspace) => {
                             return <Card cwspace={cwspace} key={cwspace.cwID} />
-                        })}</div> :
-                        <div className="flex gap-10 h-80 flex-col lg:flex-row items-center justify-center p-5 text-center font-medium mt-[50px]">
-                            <img src={notFoundImage} alt="" className="max-h-[200px] max-w-[300px]"></img>
-                            <div><p className="mt-8 uppercase  md:text-4xl text-2xl">{statusresponse}</p>
-                            <p className="mt-5 text-gray-500 text-md md:text-lg">Sorry for your inconvenience</p>
-                            </div>
-                            </div>}
+                        })}</div> : <NoDataError response={statusresponse}/>
+                        }
                     {/* <div className="mt-[50px] flex justify-center">
+                {
+                    !fetcherror ? <div>
+                        {cwspaces ? <div className="flex flex-col gap-8">
+                            {cwspaces.map((cwspace) => {
+                                return <Card cwspace={cwspace} />
+                            })}</div> : null}
+                        {/* <div className="mt-[50px] flex justify-center">
                         <Pagination />
                     </div> */}
-                </div> : <ShowError />}
-            </div>
-        </div>
+                </div> : <ShowError />
+                }
+            </div >
+        </div >
     )
 }
 
