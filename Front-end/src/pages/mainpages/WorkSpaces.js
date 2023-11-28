@@ -33,13 +33,7 @@ function WorkSpaces() {
     const [searchData, setSearchData] = useState([]);
     const [searchlist, setSearchList] = useState(false);
     const [fetcherror, setFetchError] = useState(false);
-<<<<<<< HEAD
-
     let menuRef = useRef();
-
-=======
-    let menuRef = useRef();
->>>>>>> f024e32f8d2e8de0d08874f8c94aff589151d417
     //const [sortedData,setSortedData] =useState();
     useEffect(() => {
         getWorkSpaces();
@@ -104,12 +98,8 @@ function WorkSpaces() {
                     </div> : null}
                 </div>
                 <div className="w-full flex justify-between mt-8">
-<<<<<<< HEAD
-                    <button id="dropdownDefaultButton" className="md:w-36 w-32 mb-5 text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 justify-center items-center gap-2" type="button"><FunnelFill className="text-lg" />Filters</button>
-=======
                     <button id="dropdownDefaultButton" className="md:w-36 w-32 mb-5 text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 justify-center items-center gap-2" type="button"><FunnelFill className="text-lg" /> Filters
                     </button>
->>>>>>> f024e32f8d2e8de0d08874f8c94aff589151d417
                     <div id="dropdown" className="relative md:w-36 w-32" onMouseLeave={() => { setDropDown(false) }}>
                         <button id="dropdownDefaultButton" className="w-full text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 justify-center items-center gap-2" type="button" onMouseEnter={() => { setDropDown(!dropdown) }}>Sort By <SortDownAlt className="text-lg" />
                         </button>
@@ -123,30 +113,14 @@ function WorkSpaces() {
                         </ul>
                     </div>
                 </div>
-<<<<<<< HEAD
-
-=======
->>>>>>> f024e32f8d2e8de0d08874f8c94aff589151d417
                 {!fetcherror ? <div>
                     {cwspaces ? <div className="flex flex-col gap-8">
                         {cwspaces.map((cwspace) => {
                             return <Card cwspace={cwspace} key={cwspace.cwID} />
-<<<<<<< HEAD
-                        })}</div> :
-                        <div className="flex gap-10 h-80 flex-col lg:flex-row items-center justify-center p-5 text-center font-medium mt-[50px]">
-                            <img src={notFoundImage} alt="" className="max-h-[200px] max-w-[300px]"></img>
-                            <div><p className="mt-8 uppercase  md:text-4xl text-2xl">{statusresponse}</p>
-                                <p className="mt-5 text-gray-500 text-md md:text-lg">Sorry for your inconvenience</p>
-                            </div>
-                        </div>}
-                    {/* <div className="mt-[50px] flex justify-center">
-                    {
-=======
                         })}</div> : <NoDataError response={statusresponse}/>
                         }
                     {/* <div className="mt-[50px] flex justify-center">
                 {
->>>>>>> f024e32f8d2e8de0d08874f8c94aff589151d417
                     !fetcherror ? <div>
                         {cwspaces ? <div className="flex flex-col gap-8">
                             {cwspaces.map((cwspace) => {
@@ -157,8 +131,8 @@ function WorkSpaces() {
                     </div> */}
                 </div> : <ShowError />
                 }
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }
 
