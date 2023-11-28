@@ -66,7 +66,7 @@ function Login() {
                                 <div className="flex items-start">
                                     <div className="flex items-center h-5">
                                         <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 cursor-pointer" required=""
-                                            onClick={() => { setRemeber(!remember); }}></input>
+                                            onClick={() => { setRemeber(!remember) }}></input>
                                     </div>
                                     <div className="ml-3 text-sm">
                                         <label className="text-gray-500">Remember me</label>
