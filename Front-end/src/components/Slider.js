@@ -5,6 +5,20 @@ import { Link } from "react-router-dom"
 
 function Slider(){
     const images = [Offer1, Offer2, Offer1,Offer2]
+    const [offers, setOffers] = useState([]);
+    const [fetcherror, setFetchError] = useState(false);
+    const getOfferImages = () => {
+        fetch("http://localhost:4000/offers/home")
+            .then(res => res.json())
+            .then(responsedata => {
+                console.log(responsedata)
+                setOffers(responsedata.data);
+            }
+            ).catch(error => { setFetchError(true); });
+    }
+    useEffect(() => {
+        getOfferImages();
+    }, [])
     const [current, setcurrent] = useState(0);
     const next = () =>{
         setcurrent((current) => current === images.length - 1 ? 0 : current + 1)
