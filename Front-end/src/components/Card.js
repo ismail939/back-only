@@ -3,7 +3,7 @@ import image from './images/offer1.jpg';
 
 function Card(props) {
     const cwspace = props.cwspace;
-    const imageUrl="http://localhost:4000/images/"+cwspace.mainPhoto;
+    const imageUrl="http://localhost:4000/images/"+cwspace.imageUrl;
 
     return (
         <div className="bg-white rounded-xl shadow-md overflow-hidden">
