@@ -29,4 +29,6 @@ router.route("/:ID")
     .patch(cw_spaceController.update)
     .delete(cw_spaceController.delete);
 
+router.route("/home").get(cw_spaceController.getHome);
+
 module.exports = router
