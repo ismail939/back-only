@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 function Dashboard() {
     const data = [
         { title: "To Create WorkSpace:", button:"Create WorkSpace" ,link: "../createworkspace" },
-        { title: "To Create Offer:", button:"Create Offer" ,link: "../createOffer" }
+        { title: "To Create Offer:", button:"Create Offer" ,link: "../createOffer" },
+        { title: "To Set Dicover Items:", button:"Discover" ,link: "../discoverEdit" }
     ]
     return (
         <div className="min-h-screen mt-[70px] w-4/5 mx-auto">

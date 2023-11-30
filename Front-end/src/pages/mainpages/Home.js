@@ -26,13 +26,15 @@ function DiscoverCard(props) {
 }
 function Home() {
     const [discoverData, setDiscover] = useState([]);
+    const [fetcherror, setFetchError] = useState(false);
     const getDicoverData = () => {
         fetch("http://localhost:4000/cw_spaces/home")
             .then(res => res.json())
             .then(responsedata => {
+                console.log(responsedata)
                 setDiscover(responsedata.data);
             }
-            );
+            ).catch(error => { setFetchError(true); });
     }
     useEffect(() => {
         getDicoverData();
@@ -56,7 +58,7 @@ function Home() {
                 <div className="md:w-10/12">
                     <div className="flex items-center justify-between">
                         <h2 className="font-bold text-2xl sec-font">Sign-in to Save</h2>
-                        <Link className="text-[30px] cursor-pointer md:hidden hover:text-gray-300" to="login">
+                        <Link className="text-[30px] cursor-pointer md:hidden hover:text-[#1B262C]" to="login">
                             <BoxArrowInRight />
                         </Link>
                     </div>
@@ -72,9 +74,9 @@ function Home() {
             <div className="w-4/5 mx-auto mt-[70px]">
                 <h2 className="text-left mb-8 text-5xl main-font">Discover</h2>
                 <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
-                    {discoverData.map((cwspace) => {
+                    {discoverData ? discoverData.map((cwspace) => {
                             return <DiscoverCard discover={cwspace} key={cwspace.cwID} />
-                        })}
+                        }) : null}
                 </div>
             </div>
         </>
