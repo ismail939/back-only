@@ -1,7 +1,9 @@
+const Sequelize = require('sequelize');
 const { Owner } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
+const { validationResult } = require("express-validator");
 
 
 module.exports ={
@@ -18,21 +20,48 @@ module.exports ={
     getOne: asyncWrapper(
         async (req, res, next) => {
             const owner = await Owner.findAll({
-                where: {
-                    username: req.params.username
+                raw: true, where: {
+                    username: req.body.data.username,
+                    password: req.body.data.password
                 }
             })
-            if (owner.length === 0) {
-                const error = appError.create("Owner not found", 404, httpStatusCode.ERROR);
-                return next(error);
+            if (Owner) {
+                return res.json({ status: httpStatusCode.SUCCESS, data: owner })
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: owner }) 
+            return res.status(404).json({ status: httpStatusCode.ERROR, message: "Username or password are incorrect"})
+
         }
     ),
     create: asyncWrapper(
         async (req, res, next) => {
-            const newOwner = await Owner.create(req.body)
-            return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newOwner });
+            let errors = validationResult(req);
+            const duplicates = await Owner.findOne({
+                raw: true, where: {
+                    [Sequelize.Op.or]: [
+                        { username: req.body.data.username },
+                        { email: req.body.data.email }
+                    ]
+                }
+            })
+            
+            if (!errors.isEmpty() || duplicates) {
+                let errorsList = []
+                if (errors.isEmpty()) {
+                    errorsList.push("Duplicate data");
+                } else {
+                    errors = errors.array()
+                    for (let i = 0; i < errors.length; i++) {
+                        errorsList.push(errors[i].msg)
+                    }
+                }
+                return res.status(400).json({ status: httpStatusCode.ERROR, errors: errorsList });
+            }
+
+            const newOwner = await Owner.create(req.body.data)
+            if(newOwner){
+                return res.json({ status: httpStatusCode.SUCCESS, message: "Owner is created successfully" })
+            }
+            return res.json({ status: httpStatusCode.ERROR , message: "There is something wrong with the inputs"})
         }
     ),
     update: asyncWrapper(

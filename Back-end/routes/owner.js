@@ -1,9 +1,16 @@
 const express = require('express')
 const ownerController = require('../controllers/ownerController')
+const { validateUser } = require("../middlewares/validationSchema");
 
 const router = express.Router();
 
-router.route("/owners")
+router.route("/login")
+    .post(validateUser(), ownerController.getOne);
+
+router.route("/register")
+    .post(validateUser(), ownerController.create);
+
+router.route("/")
     .get(ownerController.get)
     .post(ownerController.create);
 

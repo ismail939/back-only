@@ -1,14 +1,14 @@
 const express = require('express')
 const clientsController = require('../controllers/clientController')
-const { validateClient } = require("../middlewares/validationSchema");
+const { validateUser } = require("../middlewares/validationSchema");
 
 const router = express.Router();
 
 router.route("/login")
-    .post(validateClient(), clientsController.getOne);
+    .post(validateUser(), clientsController.getOne);
 
 router.route("/register")
-    .post(validateClient(), clientsController.create);
+    .post(validateUser(), clientsController.create);
 
 router.route("/")
     .get(clientsController.get)

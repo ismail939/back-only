@@ -1,7 +1,7 @@
 const { body } = require('express-validator')
 const validator = require('../utils/validators')
 
-const validateClient = () => {
+const validateUser = () => {
     return [
         body("data.fname").notEmpty().withMessage("first name is required"),
         body("data.lname").notEmpty().withMessage("last name is required"),
@@ -64,6 +64,6 @@ const validateCw_space = (req) => {
 }
 
 module.exports = {
-    validateClient,
+    validateUser,
     validateCw_space
 }
