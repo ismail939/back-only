@@ -15,10 +15,11 @@ const roomRouter = require("./routes/room");
 const reviewRouter = require("./routes/review");
 const eventPhotoRouter = require("./routes/eventPhoto");
 const offerRouter = require('./routes/offer')
-
+ 
 const path = require('path')
 app.use(express.static(path.join(__dirname, 'public')));
 
+// app.use(fileUpload())
 
 
 

@@ -2,7 +2,8 @@ const { Offer } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-
+const BSON = require('bson')
+const fs = require('fs')
 
 module.exports ={
     get: asyncWrapper(
@@ -28,10 +29,26 @@ module.exports ={
             }
             return res.json({ status: httpStatusCode.SUCCESS, data: offer }) 
         }
-    ),
+    ), 
     create: asyncWrapper(
-        async (req, res, next) => {
-            delete req.body.img;
+        async (req, res, next) => { 
+            console.log(req.body)
+            // if(!req.body.img.isEmpty()){
+                
+            //     const decodedImage = BSON.deserialize(req.body.img);
+            //     const uniqueSuffix = Date.now() + "." + req.body.imageName.split('.')[1];
+            //     const filePath = './public/images/' + uniqueSuffix;
+            //     fs.writeFileSync(filePath, decodedImage.data);
+            //     req.body.imageName = uniqueSuffix;
+            //     delete req.body.img; 
+            // }
+            console.log('create', req.body)
+            req.body.cwSpaceCwID = 1
+            
+            req.body.img = req.body.imageName 
+            delete req.body.imageName
+            console.log("🚀 ~ file: offerController.js:50 ~ req.body:", req.body)
+            
             const newOffer = await Offer.create(req.body)
             return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newOffer });
         }

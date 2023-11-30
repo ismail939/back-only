@@ -14,7 +14,7 @@ module.exports = (db, type)=>{
             allowNull: false
         },
         start: {
-            type: type.DATE,
+            type: type.DATE, 
             allowNull: false
         },
         end: {
