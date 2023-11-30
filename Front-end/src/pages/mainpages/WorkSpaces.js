@@ -47,6 +47,7 @@ function WorkSpaces() {
         }
         document.addEventListener("mousedown", handler)
     }, [])
+    
     const getWorkSpaces = () => {
         fetch("http://localhost:4000/cw_spaces")
             .then(res => res.json())
@@ -113,6 +114,8 @@ function WorkSpaces() {
                         </ul>
                     </div>
                 </div>
+                
+                <div ><img id="myImage"></img></div>
                 {!fetcherror ? <div>
                     {cwspaces ? <div className="flex flex-col gap-8">
                         {cwspaces.map((cwspace) => {
