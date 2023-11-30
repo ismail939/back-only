@@ -42,25 +42,38 @@ function CreateOffer() {
     }
     const addData = () => {
         if (isImage(offerImageName)) {
-            const formData = new FormData();
-            formData.append('img', img);
-            formData.append('imageName', offerImageName);
-            formData.append('title', title);
-            formData.append('description', description);
-            formData.append('start', start);
-            formData.append('end', end);
+            const formData={'img': img,'imageName': offerImageName,'title': title ,'description': description, 'start': start, 'end': end}
+            // const formData = new FormData();
+            // formData.append('img', img);
+            // formData.append('imageName', offerImageName);
+            // formData.append('title', title);
+            // formData.append('description', description);
+            // formData.append('start', start);
+            // formData.append('end', end);
             fetch('http://localhost:4000/offers', {
 
                 method: 'POST',
                 body: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
             })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.status === "error") { setErrorMessage(data.message) }
-                    else if (data.status === "success") { console.log(data) }
+                    if (data.status === "error") {
+                       
+                        setErrorMessage(data.message);
+                    } else if (data.status === "success") {
+                        console.log(data);
+                    }
                 })
+                .catch(error => {
+                    console.error('Error during fetch operation:', error);
+                    
+                });
         }
     }
+    
     // const titleError= (title) => {
     //     if (title.length === 0) {
     //         return true;

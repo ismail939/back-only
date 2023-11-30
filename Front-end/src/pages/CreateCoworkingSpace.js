@@ -34,7 +34,7 @@ function CreateCoworkingSpace() {
     });
   }
   function isImage(offerImageName) {
-    if (offerImageName.slice(-4) === ".jpg" || offerImageName.slice(-5) === ".jpeg" || offerImageName.slice(-4) === ".png"||offerImageName.length===0) return true;
+    if (offerImageName.slice(-4) === ".jpg" || offerImageName.slice(-5) === ".jpeg" || offerImageName.slice(-4) === ".png" ) return true;
     else {
       return false;
     }
@@ -99,38 +99,65 @@ function CreateCoworkingSpace() {
   const HandleError = (e) => {
     e.preventDefault();
     if (!isImage(offerImageName)) {
-      setDataErrors({"phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false, "description": false, "email": false ,"offerImageName":true })
+      setDataErrors({
+        "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false,
+        "description": false, "email": false, "offerImageName": true
+      })
       setCheckError("plaese enter an image accepted formats are png , jpg , jpeg"); window.scrollTo(0, 50);
     }
     else if (NameError(Name)) {
-      setDataErrors({ "phonenumber1": false, "startDate": false, "endDate": false, "name": true, "address": false, "description": false, "email": false ,"offerImageName":false})
+      setDataErrors({
+        "phonenumber1": false, "startDate": false, "endDate": false, "name": true, "address": false,
+        "description": false, "email": false, "offerImageName": false
+      })
       setCheckError("please fill in the name"); window.scrollTo(0, 100);
     }
     else if (NameError(Address)) {
-      setDataErrors({ "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": true, "description": false, "email": false ,"offerImageName":false})
+      setDataErrors({
+        "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": true,
+        "description": false, "email": false, "offerImageName": false
+      })
       setCheckError("please fill in the location"); window.scrollTo(0, 200);
     }
     else if (NameError(Description)) {
-      setDataErrors({ "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false, "description": true, "email": false ,"offerImageName":false})
+      setDataErrors({
+        "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false,
+        "description": true, "email": false, "offerImageName": false
+      })
       setCheckError("please fill in the description"); window.scrollTo(0, 300);
     }
     else if (email.length > 0 && emailError()) {
-      setDataErrors({ "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false, "description": false, "email": true,"offerImageName":false })
+      setDataErrors({
+        "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false,
+        "description": false, "email": true, "offerImageName": false
+      })
       setCheckError("please write a valid email address"); window.scrollTo(0, 300);
     }
     else if (PhoneNumberError(phonenumberOne)) {
-      setDataErrors({ "phonenumber1": true, "startDate": false, "endDate": false, "name": false, "address": false, "description": false, "email": false,"offerImageName":false })
+      setDataErrors({
+        "phonenumber1": true, "startDate": false, "endDate": false, "name": false, "address": false,
+        "description": false, "email": false, "offerImageName": false
+      })
       setCheckError("please write a correct phone number ex:010123456789"); window.scrollTo(0, 500);
     }
     else if (DateError(startDate)) {
-      setDataErrors({ "phonenumber1": false, "startDate": true, "endDate": false, "name": false, "address": false, "description": false, "email": false,"offerImageName":false })
+      setDataErrors({
+        "phonenumber1": false, "startDate": true, "endDate": false, "name": false, "address": false,
+        "description": false, "email": false, "offerImageName": false
+      })
       setCheckError("openinig Hour should be in this format 00:00"); window.scrollTo(0, 600);
     } else if (DateError(endDate)) {
-      setDataErrors({ "phonenumber1": false, "startDate": false, "endDate": true, "name": false, "address": false, "description": false, "email": false,"offerImageName":false })
+      setDataErrors({
+        "phonenumber1": false, "startDate": false, "endDate": true, "name": false, "address": false,
+        "description": false, "email": false, "offerImageName": false
+      })
       setCheckError("closing Hour should be in this format 00:00"); window.scrollTo(0, 600);
     } else {
       setCheckError("");
-      setDataErrors({ "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false, "description": false, "email": false,"offerImageName":false })
+      setDataErrors({
+        "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false,
+        "description": false, "email": false, "offerImageName": false
+      })
       addData();
       success();
       if (formRef.current) {
