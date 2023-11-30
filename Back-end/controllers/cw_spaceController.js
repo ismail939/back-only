@@ -78,10 +78,14 @@ module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
             console.log(req.body)
-            let errors = validateCw_space(req)
-            if (errors.length!=0) {    
-                return res.status(400).json({ status: httpStatusCode.ERROR, errors: errors});
-            }
+
+            // let errors = validateCw_space(req)
+            // if (errors.length!=0) {    
+            //     return res.status(400).json({ status: httpStatusCode.ERROR, errors: errors});
+            // }
+            req.body.mainPhoto = req.body.imageName
+            delete req.body.imageName
+            
             let newCw_space = (await Cw_space.create(req.body)).get({ plain: true })
             let newCw_spacePhone = null;
             let newCw_spacePhoneList = req.body.phones.split(',')

@@ -9,6 +9,7 @@ const storage = multer.diskStorage({
         cb(null, './public/images')
     },
     filename: function (req, file, cb) {
+        console.log(req.body)
         const acceptedFormats = ['png', 'jpg', 'jpeg']
         if(acceptedFormats.includes(req.body.imageName.split('.')[1])){
             const uniqueSuffix =Date.now() + "." + req.body.imageName.split('.')[1];

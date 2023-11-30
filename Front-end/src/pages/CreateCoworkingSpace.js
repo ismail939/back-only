@@ -41,15 +41,15 @@ function CreateCoworkingSpace() {
   }
   const addData = () => {
     if (isImage(offerImageName)) {
-      const formData = new FormData();
-      formData.append('img', img);
+      let formData = new FormData();
       formData.append('imageName', offerImageName);
       formData.append('name', Name);
-      formData.append('adress', Address);
+      formData.append('address', Address);
       formData.append('phones', [phonenumberOne]);
       formData.append('description', Description);
       formData.append('openingTime', startDate);
       formData.append('closingTime', endDate);
+      formData.append('mainPhoto', img);
       fetch('http://localhost:4000/cw_spaces', {
 
         method: 'POST',
@@ -202,7 +202,7 @@ function CreateCoworkingSpace() {
 
 
                     setImg(e.target.files[0]);
-                    setOfferImageName(e.target.value);
+                    setOfferImageName(e.target.files[0].name);
                   }}
                 ></input>
                 {dataerrors.offerImageName ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
