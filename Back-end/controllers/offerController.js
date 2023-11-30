@@ -30,8 +30,8 @@ module.exports ={
     ), 
     create: asyncWrapper(
         async (req, res, next) => {
-            console.log("ggggg", req.body)
-            req.body.cwSpaceCwID = 1
+            //console.log("ggggg", req.body)
+            //req.body.cwSpaceCwID = 1
             req.body.img = req.body.imageName 
             delete req.body.imageName
             const newOffer = await Offer.create(req.body)
