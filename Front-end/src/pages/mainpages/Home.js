@@ -3,7 +3,42 @@ import Image2 from "../../components/images/offer1.jpg"
 import Slider from "../../components/Slider";
 import { BoxArrowInRight } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+
+function DiscoverCard(props) {
+    const discover = props.discover;
+    return (
+        <div className="max-w-sm rounded-lg overflow-hidden shadow-lg">
+            <div className="w-full relative group">
+                <img className="w-full" src={Image2} alt="Sunset in the mountains"></img>
+                <Link to={`/workspaces/${discover.cwID}`}><div className="h-full w-full absolute inset-0 duration-500 hover:bg-black hover:opacity-50"></div></Link>
+                <h2 className="absolute top-3 right-1 font-extrabold text-lg text-white text-yellow-400 opacity-0 duration-500
+                            group-hover:-translate-x-5 group-hover:opacity-100">New</h2>
+            </div>
+            <div className="px-6 py-4">
+                <div className="font-bold text-xl mb-2 sec-font">{discover.name}</div>
+                <p className="text-gray-700 text-base sec-font">
+                    {discover.description}
+                </p>
+            </div>
+        </div>
+    )
+}
 function Home() {
+    const [discoverData, setDiscover] = useState([]);
+    const [fetcherror, setFetchError] = useState(false);
+    const getDicoverData = () => {
+        fetch("http://localhost:4000/cw_spaces/home")
+            .then(res => res.json())
+            .then(responsedata => {
+                console.log(responsedata)
+                setDiscover(responsedata.data);
+            }
+            ).catch(error => { setFetchError(true); });
+    }
+    useEffect(() => {
+        getDicoverData();
+    }, [])
     return (
         <>
             <div className="w-4/5 mx-auto mt-[70px] h-[500px] relative bg-cover" style={{ backgroundImage: `url(${Image1})` }}>
@@ -23,7 +58,7 @@ function Home() {
                 <div className="md:w-10/12">
                     <div className="flex items-center justify-between">
                         <h2 className="font-bold text-2xl sec-font">Sign-in to Save</h2>
-                        <Link className="text-[30px] cursor-pointer md:hidden hover:text-gray-300" to="login">
+                        <Link className="text-[30px] cursor-pointer md:hidden hover:text-[#1B262C]" to="login">
                             <BoxArrowInRight />
                         </Link>
                     </div>
@@ -39,90 +74,9 @@ function Home() {
             <div className="w-4/5 mx-auto mt-[70px]">
                 <h2 className="text-left mb-8 text-5xl main-font">Discover</h2>
                 <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
-                    <div className="max-w-sm rounded-lg overflow-hidden shadow-lg">
-                        <div className="w-full relative group">
-                            <img className="w-full" src={Image2} alt="Sunset in the mountains"></img>
-                            <Link><div className="h-full w-full absolute inset-0 duration-500 hover:bg-black hover:opacity-50"></div></Link>
-                            <h2 className="absolute top-3 right-1 font-extrabold text-lg text-white text-yellow-400 opacity-0 duration-500
-                            group-hover:-translate-x-5 group-hover:opacity-100">New</h2>
-                        </div>
-                        <div className="px-6 py-4">
-                            <div className="font-bold text-xl mb-2 sec-font">The Coldest Sunset</div>
-                            <p className="text-gray-700 text-base sec-font">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
-                            </p>
-                        </div>
-                    </div>
-                    <div className="max-w-sm rounded-lg overflow-hidden shadow-lg">
-                        <div className="w-full relative group">
-                            <img className="w-full" src={Image2} alt="Sunset in the mountains"></img>
-                            <Link><div className="h-full w-full absolute inset-0 duration-500 hover:bg-black hover:opacity-50"></div></Link>
-                            <h2 className="absolute top-3 right-1 font-extrabold text-lg text-white text-yellow-400 opacity-0 duration-500
-                            group-hover:-translate-x-5 group-hover:opacity-100">New</h2>
-                        </div>
-                        <div className="px-6 py-4">
-                            <div className="font-bold text-xl mb-2 sec-font">The Coldest Sunset</div>
-                            <p className="text-gray-700 text-base sec-font">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
-                            </p>
-                        </div>
-                    </div>
-                    <div className="max-w-sm rounded-lg overflow-hidden shadow-lg">
-                        <div className="w-full relative group">
-                            <img className="w-full" src={Image2} alt="Sunset in the mountains"></img>
-                            <Link><div className="h-full w-full absolute inset-0 duration-500 hover:bg-black hover:opacity-50"></div></Link>
-                            <h2 className="absolute top-3 right-1 font-extrabold text-lg text-orange-500 opacity-0 duration-500
-                            group-hover:-translate-x-5 group-hover:opacity-100">Top-Rated</h2>
-                        </div>
-                        <div className="px-6 py-4">
-                            <div className="font-bold text-xl mb-2 sec-font">The Coldest Sunset</div>
-                            <p className="text-gray-700 text-base sec-font">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
-                            </p>
-                        </div>
-                    </div>
-                    <div className="max-w-sm rounded-lg overflow-hidden shadow-lg">
-                        <div className="w-full relative group">
-                            <img className="w-full" src={Image2} alt="Sunset in the mountains"></img>
-                            <Link><div className="h-full w-full absolute inset-0 duration-500 hover:bg-black hover:opacity-50"></div></Link>
-                            <h2 className="absolute top-3 right-1 font-extrabold text-lg text-orange-500 opacity-0 duration-500
-                            group-hover:-translate-x-5 group-hover:opacity-100">Top-Rated</h2>
-                        </div>
-                        <div className="px-6 py-4">
-                            <div className="font-bold text-xl mb-2 sec-font">The Coldest Sunset</div>
-                            <p className="text-gray-700 text-base sec-font">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
-                            </p>
-                        </div>
-                    </div>
-                    <div className="max-w-sm rounded-lg overflow-hidden shadow-lg">
-                        <div className="w-full relative group">
-                            <img className="w-full" src={Image2} alt="Sunset in the mountains"></img>
-                            <Link><div className="h-full w-full absolute inset-0 duration-500 hover:bg-black hover:opacity-50"></div></Link>
-                            <h2 className="absolute top-3 right-1 font-extrabold text-lg text-sky-500 opacity-0 duration-500
-                            group-hover:-translate-x-5 group-hover:opacity-100">Best-Seller</h2>
-                        </div>
-                        <div className="px-6 py-4">
-                            <div className="font-bold text-xl mb-2 sec-font">The Coldest Sunset</div>
-                            <p className="text-gray-700 text-base sec-font">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
-                            </p>
-                        </div>
-                    </div>
-                    <div className="max-w-sm rounded-lg overflow-hidden shadow-lg">
-                        <div className="w-full relative group">
-                            <img className="w-full" src={Image2} alt="Sunset in the mountains"></img>
-                            <Link><div className="h-full w-full absolute inset-0 duration-500 hover:bg-black hover:opacity-50"></div></Link>
-                            <h2 className="absolute top-3 right-1 font-extrabold text-lg text-sky-500 opacity-0 duration-500
-                            group-hover:-translate-x-5 group-hover:opacity-100">Best-Seller</h2>
-                        </div>
-                        <div className="px-6 py-4">
-                            <div className="font-bold text-xl mb-2 sec-font">The Coldest Sunset</div>
-                            <p className="text-gray-700 text-base sec-font">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
-                            </p>
-                        </div>
-                    </div>
+                    {discoverData ? discoverData.map((cwspace) => {
+                            return <DiscoverCard discover={cwspace} key={cwspace.cwID} />
+                        }) : null}
                 </div>
             </div>
         </>
