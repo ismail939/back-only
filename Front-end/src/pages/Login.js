@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
+import {useState } from "react";
 import { Link } from "react-router-dom";
-import { ExclamationCircleFill } from "react-bootstrap-icons";
+import { ExclamationCircleFill, PatchCheckFill } from "react-bootstrap-icons";
 
 function Login() {
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [remember, setRemeber] = useState(false);
     const [errormessage, setErrorMessage] = useState("");
+    const [success, setSuccess] = useState(false);
     const [dataerrors, setDataErrors] = useState({
         username: false,
         password: false,
@@ -15,7 +16,7 @@ function Login() {
         remember ? console.log("checked") : console.log("not checked")
     }
     const AddData = () => {
-        fetch(`http://localhost:4000/login`, {
+        fetch(`http://localhost:4000/clients/login`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -26,7 +27,19 @@ function Login() {
                     "password": password
                 },
             }),
-        }).then(res => res.json()).then((data) => { if (data.status === "error") setErrorMessage(data.message) })
+        }).then(res => res.json()).then((data) => {
+            console.log(data)
+            if (data.status === "success") {
+                setErrorMessage("");
+                setSuccess(true);
+            } else if (data.status === "error") {
+                setSuccess(false);
+                setErrorMessage(data.message)
+            } else if (data.status === "fail") {
+                setSuccess(false);
+                setErrorMessage("oops, something wrong went on !")
+            }
+        })
     }
     const HandleError = (e) => {
         e.preventDefault();
@@ -62,6 +75,7 @@ function Login() {
                                 {dataerrors.password ? <span className="text-[12px] text-red-500">plaese enter your password</span> : null}
                             </div>
                             {errormessage !== "" ? <p className="text-rose-600 text-xs mt-1 flex items-center gap-1 inline-block"><ExclamationCircleFill />{errormessage}</p> : null}
+                            {success ? <p className="text-green-500 text-md mt-1 flex items-center gap-1 inline-block"><PatchCheckFill />Login is successful</p> : null}
                             <div className="flex items-center justify-between">
                                 <div className="flex items-start">
                                     <div className="flex items-center h-5">
