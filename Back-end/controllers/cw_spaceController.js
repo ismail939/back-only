@@ -47,7 +47,7 @@ module.exports = {
             const cw_spaceHome = await Cw_space.findAll({
                 raw: true,
                 where: {
-                    home: req.params.home
+                    home: "home"
                 }
             })
             if (cw_spaceHome) {
