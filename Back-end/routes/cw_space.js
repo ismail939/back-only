@@ -3,6 +3,7 @@ const cw_spaceController = require('../controllers/cw_spaceController')
 const router = express.Router();
 const multer = require('multer')
 const fs = require('fs')
+const BSON = require('bson')
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './public/images')
