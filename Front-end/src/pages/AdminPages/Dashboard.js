@@ -3,7 +3,8 @@ function Dashboard() {
     const data = [
         { title: "To Create WorkSpace:", button:"Create WorkSpace" ,link: "../createworkspace" },
         { title: "To Create Offer:", button:"Create Offer" ,link: "../createOffer" },
-        { title: "To Set Dicover Items:", button:"Discover" ,link: "../discoverEdit" }
+        { title: "To Set Dicover Items:", button:"Set Discover" ,link: "../discoverEdit" },
+        { title: "To Set Offer Images:", button:"Set Offer" ,link: "../offerEdit" }
     ]
     return (
         <div className="min-h-screen mt-[70px] w-4/5 mx-auto">
