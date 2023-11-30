@@ -24,6 +24,10 @@ module.exports = (db, type)=>{
         img: {
             type: type.TEXT,
             allowNull: false
+        },
+        home: {
+            type: type.STRING,
+            allowNull: true
         }
     },{
         timestamps: false 
