@@ -1,3 +1,4 @@
+const Sequelize = require('sequelize');
 const { Client } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
@@ -18,7 +19,7 @@ module.exports ={
     ),
     getOne: asyncWrapper(
         async (req, res, next) => {
-            const client = await Client.findOne({
+            const client = await Client.findAll({
                 raw: true, where: {
                     username: req.body.data.username,
                     password: req.body.data.password
@@ -34,14 +35,28 @@ module.exports ={
     create: asyncWrapper(
         async (req, res, next) => {
             let errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                errors = errors.array()
+            const duplicates = await Client.findOne({
+                raw: true, where: {
+                    [Sequelize.Op.or]: [
+                        { username: req.body.data.username },
+                        { email: req.body.data.email }
+                    ]
+                }
+            })
+            
+            if (!errors.isEmpty() || duplicates) {
                 let errorsList = []
-                for (let i = 0; i < errors.length; i++) {
-                    errorsList.push(errors[i].msg)
+                if (errors.isEmpty()) {
+                    errorsList.push("Duplicate data");
+                } else {
+                    errors = errors.array()
+                    for (let i = 0; i < errors.length; i++) {
+                        errorsList.push(errors[i].msg)
+                    }
                 }
                 return res.status(400).json({ status: httpStatusCode.ERROR, errors: errorsList });
             }
+
             const client = await Client.create(req.body.data)
             if(client){
                 return res.json({ status: httpStatusCode.SUCCESS, message: "Client is created successfully" })
