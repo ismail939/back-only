@@ -1,4 +1,4 @@
-import Image1 from "../../components/images/cover.jpg"
+import Image1 from "../../components/images/HomeImage.jpg"
 import Image2 from "../../components/images/offer1.jpg"
 import Slider from "../../components/Slider";
 import { BoxArrowInRight } from "react-bootstrap-icons";
@@ -41,7 +41,7 @@ function Home() {
     }, [])
     return (
         <>
-            <div className="w-4/5 mx-auto mt-[70px] h-[500px] relative bg-cover" style={{ backgroundImage: `url(${Image1})` }}>
+            <div className="w-4/5 mx-auto mt-[70px] h-[500px] relative bg-cover bg-center" style={{ backgroundImage: `url(${Image1})` }}>
                 <div className="bg-black w-full h-full opacity-50 absolute"></div>
                 <div className="w-full h-full text-white text-center absolute">
                     <div className="w-3/4 h-full mx-auto mt-[150px] max-sm:w-full max-sm:px-2">
