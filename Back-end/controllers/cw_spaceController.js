@@ -2,7 +2,7 @@ const { Cw_space, Cw_spacePhone, Cw_spacePhoto, Room } = require('../models/mode
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-const {validateCw_space} = require('../middlewares/validationSchema')
+
 
 module.exports = {
     get: asyncWrapper(
@@ -91,12 +91,6 @@ module.exports = {
     ),
     create: asyncWrapper(
         async (req, res, next) => {
-            console.log(req.body)
-
-            // let errors = validateCw_space(req)
-            // if (errors.length!=0) {    
-            //     return res.status(400).json({ status: httpStatusCode.ERROR, errors: errors});
-            // }
             req.body.mainPhoto = req.body.imageName
             delete req.body.imageName
             
