@@ -82,15 +82,15 @@ module.exports = {
                 return res.status(400).json({ status: httpStatusCode.ERROR, errors: errors});
             }
             let newCw_space = (await Cw_space.create({
-                name: req.body.data.name,
-                email: req.body.data.email,
-                address: req.body.data.address,
-                fbPage: req.body.data.fbPage,
-                openingTime: req.body.data.openingTime,
-                closingTime: req.body.data.closingTime,
-                description: req.body.data.description,
-                rate: req.body.data.rate,
-                mainPhoto: req.body.data.imageName
+                name: req.body.name,
+                email: req.body.email,
+                address: req.body.address,
+                fbPage: req.body.fbPage,
+                openingTime: req.body.openingTime,
+                closingTime: req.body.closingTime,
+                description: req.body.description,
+                rate: req.body.rate,
+                mainPhoto: req.body.imageName
             })).get({ plain: true })
             let newCw_spacePhone = null;
             let newCw_spacePhoneList = req.body.phones.split(',')
