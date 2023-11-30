@@ -41,7 +41,11 @@ module.exports = (db, type)=>{
             type: type.TEXT,
             allowNull: true
         },
-        homeType: {
+        home: {
+            type: type.STRING,
+            allowNull: true
+        },
+        discoverType: {
             type: type.STRING,
             allowNull: true
         }

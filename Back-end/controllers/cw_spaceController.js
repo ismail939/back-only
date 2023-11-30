@@ -42,6 +42,20 @@ module.exports = {
             return res.json({ status: httpStatusCode.SUCCESS, data: cw_spaces });
         }
     ),
+    getHome: asyncWrapper(
+        async (req, res, next) => {
+            const cw_spaceHome = await Cw_space.findAll({
+                raw: true,
+                where: {
+                    home: req.params.home
+                }
+            })
+            if (cw_spaceHome) {
+                return res.json({ status: httpStatusCode.SUCCESS, data: cw_space })
+            }
+            return res.status(404).json({ status: httpStatusCode.ERROR, message: "There are no available Co-working spaces available"})
+        }
+    ),
     getOne: asyncWrapper(
         async (req, res, next) => {
             const cw_space = await Cw_space.findAll({
