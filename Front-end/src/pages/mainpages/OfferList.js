@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Search,XCircleFill } from "react-bootstrap-icons";
-import Card from "../../components/Card";
+import Card2 from "../../components/card2";
 import notFoundImage from "../../components/images/WorkSpaceNotFound.png"
 import { NoDataError, ShowError } from "./WorkSpaces";
 function OfferList() {
@@ -56,8 +56,7 @@ function OfferList() {
             {!fetcherror ? <div>
                     {offers ? <div className="flex flex-col gap-8">
                         {offers.map((offer) => {
-                            const imageUrl = 'http://localhost:4000/images/'+offer.img;
-                            return <Card cwspace={{cwID:offer.offerID , name:offer.title , description:offer.description , address:offer.name,img:imageUrl}} key={offer.offerID} />
+                            return <Card2 offer={offer} key={offer.cwID} />
                         })}</div> : <NoDataError response={statusresponse}/>}
                     {/* <div className="mt-[50px] flex justify-center">
                         <Pagination />
