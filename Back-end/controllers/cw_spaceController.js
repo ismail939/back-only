@@ -77,6 +77,7 @@ module.exports = {
     ),
     create: asyncWrapper(
         async (req, res, next) => {
+            console.log(req.body)
             let errors = validateCw_space(req)
             if (errors.length!=0) {    
                 return res.status(400).json({ status: httpStatusCode.ERROR, errors: errors});
