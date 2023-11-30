@@ -11,6 +11,7 @@ import PageNotFound from './pages/PageNotFound';
 import CreateOffer from './pages/CreateOffer';
 import OfferList from './pages/mainpages/OfferList';
 import Dashboard from './pages/Dashboard';
+import DiscoverAdmin from './pages/DiscoverAdmin';
 function App() {
   return (
     <>
@@ -24,6 +25,7 @@ function App() {
         <Route path='createworkspace' element={<CreateCoworkingSpace />}></Route>
         <Route path='createOffer' element={<CreateOffer />}></Route>
         <Route path='dashboard' element={<Dashboard />}></Route>
+        <Route path='discoverEdit' element={<DiscoverAdmin />}></Route>
         <Route path="*" element={<PageNotFound />}></Route>
       </Routes>
       <Footer />
