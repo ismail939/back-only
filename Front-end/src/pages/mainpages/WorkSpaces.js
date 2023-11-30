@@ -47,24 +47,7 @@ function WorkSpaces() {
         }
         document.addEventListener("mousedown", handler)
     }, [])
-    const mango=()=>{
-        const imageUrl = 'http://localhost:4000/images/1701378824057.png';
-
-        
-        fetch(imageUrl)
-          .then(response => {
-            if (!response.ok) {
-              throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`);
-            }
-            return response.blob();
-          })
-          .then(blob => {
-            // Create a data URL and set it as the image source
-            const imageUrl = URL.createObjectURL(blob);
-            document.getElementById('myImage').src = imageUrl;
-          })
-          .catch(error => console.error('Error:', error));
-    }
+    
     const getWorkSpaces = () => {
         fetch("http://localhost:4000/cw_spaces")
             .then(res => res.json())
@@ -131,7 +114,7 @@ function WorkSpaces() {
                         </ul>
                     </div>
                 </div>
-                {mango()}
+                
                 <div ><img id="myImage"></img></div>
                 {!fetcherror ? <div>
                     {cwspaces ? <div className="flex flex-col gap-8">

@@ -56,7 +56,8 @@ function OfferList() {
             {!fetcherror ? <div>
                     {offers ? <div className="flex flex-col gap-8">
                         {offers.map((offer) => {
-                            return <Card cwspace={{cwID:offer.offerID , name:offer.title , description:offer.description , address:offer.name,img:offer.img}} key={offer.offerID} />
+                            const imageUrl = 'http://localhost:4000/images/'+offer.img;
+                            return <Card cwspace={{cwID:offer.offerID , name:offer.title , description:offer.description , address:offer.name,img:imageUrl}} key={offer.offerID} />
                         })}</div> : <NoDataError response={statusresponse}/>}
                     {/* <div className="mt-[50px] flex justify-center">
                         <Pagination />
