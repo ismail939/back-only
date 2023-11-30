@@ -10,9 +10,7 @@ const storage = multer.diskStorage({
         cb(null, './public/images')
     },
     filename: function (req, file, cb) {
-        console.log(file, req.body)
         const acceptedFormats = ['png', 'jpg', 'jpeg']
-        // const decodedImage = BSON.deserialize(req.body.img);
         if(acceptedFormats.includes(req.body.imageName.split('.')[1])){
             const uniqueSuffix =Date.now() + "." + req.body.imageName.split('.')[1];
             const filePath = './public/images/' + uniqueSuffix;
