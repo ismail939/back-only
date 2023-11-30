@@ -16,6 +16,8 @@ function CreateOffer() {
     const [start, setStart] = useState("");
     const [end, setEnd] = useState("");
     const [img, setImg] = useState([]);
+    const [path,setPath]=useState("");
+    const [binaryData, setBinaryData] = useState(null);
     const [errormessage, setErrorMessage] = useState("");
     const [offerImageName, setOfferImageName] = useState("");
     const [dataerrors, setDataErrors] = useState({
@@ -34,32 +36,53 @@ function CreateOffer() {
             showConfirmButton: false,
         });
     }
-    function isImage() {
+    function isImage(offerImage) {
         if (offerImageName.slice(-4) === ".jpg" || offerImageName.slice(-5) === ".jpeg" || offerImageName.slice(-4) === ".png") return true;
         else {
             return false;
         }
     }
     const addData = () => {
-        if (img) {
-            const formData = new FormData();
-            formData.append('img', img);
+        if (isImage(offerImageName)) {
+           
+            // console.log(img)
+            
+            
+            // let formData = { 'img': binaryData, 'imageName': offerImageName, 'title': title, 'description': description, 'start': start, 'end': end }
+            let formData = new FormData();
+            
+            formData.append('imageName', offerImageName);
             formData.append('title', title);
             formData.append('description', description);
             formData.append('start', start);
             formData.append('end', end);
+            formData.append('img', img);
+            // formData = JSON.stringify(formData)
+            // console.log(formData)
             fetch('http://localhost:4000/offers', {
-
                 method: 'POST',
                 body: formData,
+                // headers: {
+                //     'Content-Type': 'multipart/form-data',
+                // }
             })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.status === "error") { setErrorMessage(data.message) }
-                    else if (data.status === "success") { console.log(data) }
+                    if (data.status === "error") {
+
+                        setErrorMessage(data.message);
+                        console.log(errormessage);
+                    } else if (data.status === "success") {
+                        console.log(data);
+                    }
                 })
+                .catch(error => {
+                    console.error('Error during fetch operation:', error);
+
+                });
         }
     }
+
     // const titleError= (title) => {
     //     if (title.length === 0) {
     //         return true;
@@ -83,7 +106,7 @@ function CreateOffer() {
     // }
     const HandleError = (e) => {
         e.preventDefault();
-        if (!isImage()) {
+        if (!isImage(offerImageName)) {
             setDataErrors({ title: false, description: false, start: false, end: false, offerImageName: true })
         }
         else if (title.length === 0) {
@@ -128,10 +151,11 @@ function CreateOffer() {
                                     required
                                     accept=".png,.jpg,.jpeg"
                                     onChange={(e) => {
-
+                                        
 
                                         setImg(e.target.files[0]);
-                                        setOfferImageName(e.target.value);
+                                        setOfferImageName(e.target.files[0].name);
+                                        setPath(e.target.value)
                                     }}
                                 ></input>
                                 {dataerrors.offerImageName ? <span className="text-[12px] text-red-500">plaese enter an image accepted formats are png , jpg , jpeg</span> : null}
@@ -199,7 +223,7 @@ function CreateOffer() {
 
                                         value={start}
                                         min={getDate()}
-                                        max="2024-11-28"
+                                        max={end?end:"2024-11-28"}
                                         className={`bg-gray-50 border ${dataerrors.start ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
                                         required
                                         onChange={(e) => {
