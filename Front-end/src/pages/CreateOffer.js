@@ -16,6 +16,8 @@ function CreateOffer() {
     const [start, setStart] = useState("");
     const [end, setEnd] = useState("");
     const [img, setImg] = useState([]);
+    const [path,setPath]=useState("");
+    const [binaryData, setBinaryData] = useState(null);
     const [errormessage, setErrorMessage] = useState("");
     const [offerImageName, setOfferImageName] = useState("");
     const [dataerrors, setDataErrors] = useState({
@@ -42,27 +44,34 @@ function CreateOffer() {
     }
     const addData = () => {
         if (isImage(offerImageName)) {
-            const formData = { 'img': img, 'imageName': offerImageName, 'title': title, 'description': description, 'start': start, 'end': end }
-            // const formData = new FormData();
-            // formData.append('img', img);
-            // formData.append('imageName', offerImageName);
-            // formData.append('title', title);
-            // formData.append('description', description);
-            // formData.append('start', start);
-            // formData.append('end', end);
+           
+            // console.log(img)
+            
+            
+            // let formData = { 'img': binaryData, 'imageName': offerImageName, 'title': title, 'description': description, 'start': start, 'end': end }
+            let formData = new FormData();
+            
+            formData.append('imageName', offerImageName);
+            formData.append('title', title);
+            formData.append('description', description);
+            formData.append('start', start);
+            formData.append('end', end);
+            formData.append('img', img);
+            // formData = JSON.stringify(formData)
+            // console.log(formData)
             fetch('http://localhost:4000/offers', {
-
                 method: 'POST',
                 body: formData,
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                }
+                // headers: {
+                //     'Content-Type': 'multipart/form-data',
+                // }
             })
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === "error") {
 
                         setErrorMessage(data.message);
+                        console.log(errormessage);
                     } else if (data.status === "success") {
                         console.log(data);
                     }
@@ -142,10 +151,11 @@ function CreateOffer() {
                                     required
                                     accept=".png,.jpg,.jpeg"
                                     onChange={(e) => {
-
+                                        
 
                                         setImg(e.target.files[0]);
-                                        setOfferImageName(e.target.value);
+                                        setOfferImageName(e.target.files[0].name);
+                                        setPath(e.target.value)
                                     }}
                                 ></input>
                                 {dataerrors.offerImageName ? <span className="text-[12px] text-red-500">plaese enter an image accepted formats are png , jpg , jpeg</span> : null}
