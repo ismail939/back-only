@@ -19,6 +19,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 
+router.route("/home").get(cw_spaceController.getHome);
 
 router.route("/")
     .get(cw_spaceController.get)
@@ -28,5 +29,7 @@ router.route("/:ID")
     .get(cw_spaceController.getOne)
     .patch(cw_spaceController.update)
     .delete(cw_spaceController.delete);
+
+
 
 module.exports = router
