@@ -34,16 +34,17 @@ function CreateOffer() {
             showConfirmButton: false,
         });
     }
-    function isImage() {
+    function isImage(offerImage) {
         if (offerImageName.slice(-4) === ".jpg" || offerImageName.slice(-5) === ".jpeg" || offerImageName.slice(-4) === ".png") return true;
         else {
             return false;
         }
     }
     const addData = () => {
-        if (img) {
+        if (isImage(offerImageName)) {
             const formData = new FormData();
             formData.append('img', img);
+            formData.append('imageName', offerImageName);
             formData.append('title', title);
             formData.append('description', description);
             formData.append('start', start);
@@ -83,7 +84,7 @@ function CreateOffer() {
     // }
     const HandleError = (e) => {
         e.preventDefault();
-        if (!isImage()) {
+        if (!isImage(offerImageName)) {
             setDataErrors({ title: false, description: false, start: false, end: false, offerImageName: true })
         }
         else if (title.length === 0) {

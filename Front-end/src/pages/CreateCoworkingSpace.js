@@ -10,6 +10,9 @@ function CreateCoworkingSpace() {
   const [facebookLink, setFacebookLink] = useState("");
   const [checkerror, setCheckError] = useState("");
   const [startDate, setStartDate] = useState("");
+  const [offerImageName, setOfferImageName] = useState("");
+  const [errormessage, setErrorMessage] = useState("");
+  const [img, setImg] = useState([]);
   const [endDate, setEndDate] = useState("");
   const [dataerrors, setDataErrors] = useState({
     startDate: false,
@@ -18,7 +21,8 @@ function CreateCoworkingSpace() {
     name: false,
     address: false,
     description: false,
-    email: false
+    email: false,
+    offerImageName: false
   });
   const formRef = useRef(null);
   const success = () => {
@@ -29,24 +33,36 @@ function CreateCoworkingSpace() {
       showConfirmButton: false,
     });
   }
-  const AddData = () => {
-    fetch(`http://localhost:4000/cw_spaces`, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        "data": {
-          "name": Name,
-          "address": Address,
-          "openingTime": startDate,
-          "closingTime": endDate,
-          "description": Description,
-        },
-        "phones": [phonenumberOne]
-      }),
-    }).then(res => res.json()).then((data) => { console.log(data) })
+  function isImage(offerImageName) {
+    if (offerImageName.slice(-4) === ".jpg" || offerImageName.slice(-5) === ".jpeg" || offerImageName.slice(-4) === ".png"||offerImageName.length===0) return true;
+    else {
+      return false;
+    }
   }
+  const addData = () => {
+    if (isImage(offerImageName)) {
+      const formData = new FormData();
+      formData.append('img', img);
+      formData.append('imageName', offerImageName);
+      formData.append('name', Name);
+      formData.append('adress', Address);
+      formData.append('phones', [phonenumberOne]);
+      formData.append('description', Description);
+      formData.append('openingTime', startDate);
+      formData.append('closingTime', endDate);
+      fetch('http://localhost:4000/cw_spaces', {
+
+        method: 'POST',
+        body: formData,
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === "error") { setErrorMessage(data.message) }
+          else if (data.status === "success") { console.log(data) }
+        })
+    }
+  }
+
   const NameError = (name) => {
     if (name.length === 0) {
       return true;
@@ -82,36 +98,40 @@ function CreateCoworkingSpace() {
   };
   const HandleError = (e) => {
     e.preventDefault();
-    if (NameError(Name)) {
-      setDataErrors({ "phonenumber1": false, "startDate": false, "endDate": false, "name": true, "address": false, "description": false, "email": false })
+    if (!isImage(offerImageName)) {
+      setDataErrors({"phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false, "description": false, "email": false ,"offerImageName":true })
+      setCheckError("plaese enter an image accepted formats are png , jpg , jpeg"); window.scrollTo(0, 50);
+    }
+    else if (NameError(Name)) {
+      setDataErrors({ "phonenumber1": false, "startDate": false, "endDate": false, "name": true, "address": false, "description": false, "email": false ,"offerImageName":false})
       setCheckError("please fill in the name"); window.scrollTo(0, 100);
     }
     else if (NameError(Address)) {
-      setDataErrors({ "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": true, "description": false, "email": false })
+      setDataErrors({ "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": true, "description": false, "email": false ,"offerImageName":false})
       setCheckError("please fill in the location"); window.scrollTo(0, 200);
     }
     else if (NameError(Description)) {
-      setDataErrors({ "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false, "description": true, "email": false })
+      setDataErrors({ "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false, "description": true, "email": false ,"offerImageName":false})
       setCheckError("please fill in the description"); window.scrollTo(0, 300);
     }
     else if (email.length > 0 && emailError()) {
-      setDataErrors({ "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false, "description": false, "email": true })
+      setDataErrors({ "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false, "description": false, "email": true,"offerImageName":false })
       setCheckError("please write a valid email address"); window.scrollTo(0, 300);
     }
     else if (PhoneNumberError(phonenumberOne)) {
-      setDataErrors({ "phonenumber1": true, "startDate": false, "endDate": false, "name": false, "address": false, "description": false, "email": false })
+      setDataErrors({ "phonenumber1": true, "startDate": false, "endDate": false, "name": false, "address": false, "description": false, "email": false,"offerImageName":false })
       setCheckError("please write a correct phone number ex:010123456789"); window.scrollTo(0, 500);
     }
     else if (DateError(startDate)) {
-      setDataErrors({ "phonenumber1": false, "startDate": true, "endDate": false, "name": false, "address": false, "description": false, "email": false })
+      setDataErrors({ "phonenumber1": false, "startDate": true, "endDate": false, "name": false, "address": false, "description": false, "email": false,"offerImageName":false })
       setCheckError("openinig Hour should be in this format 00:00"); window.scrollTo(0, 600);
     } else if (DateError(endDate)) {
-      setDataErrors({ "phonenumber1": false, "startDate": false, "endDate": true, "name": false, "address": false, "description": false, "email": false })
+      setDataErrors({ "phonenumber1": false, "startDate": false, "endDate": true, "name": false, "address": false, "description": false, "email": false,"offerImageName":false })
       setCheckError("closing Hour should be in this format 00:00"); window.scrollTo(0, 600);
     } else {
       setCheckError("");
-      setDataErrors({ "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false, "description": false, "email": false })
-      AddData();
+      setDataErrors({ "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false, "description": false, "email": false,"offerImageName":false })
+      addData();
       success();
       if (formRef.current) {
         formRef.current.reset();
@@ -135,6 +155,32 @@ function CreateCoworkingSpace() {
               Create Co-Working Space
             </h1>
             <form className="space-y-4 md:space-y-6" action="#" ref={formRef}>
+              <div>
+                <label
+                  htmlFor="name"
+                  className="block mb-2 text-sm font-medium text-gray-900 "
+                >
+                  Offer Image<span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="file"
+                  name="offerImage"
+                  id="offerImage"
+
+                  className={`bg-gray-50 border ${dataerrors.offerImageName ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
+                  placeholder=""
+                  required
+                  accept=".png,.jpg,.jpeg"
+                  onChange={(e) => {
+
+
+                    setImg(e.target.files[0]);
+                    setOfferImageName(e.target.value);
+                  }}
+                ></input>
+                {dataerrors.offerImageName ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
+
+              </div>
               <div>
                 <label
                   htmlFor="name"
