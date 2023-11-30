@@ -3,7 +3,7 @@ import image from './images/offer1.jpg';
 
 function Card2(props) {
     const offer = props.offer;
-    const imageUrl="http://localhost:4000/images/"+offer.img;
+    const imageUrl = "http://localhost:4000/images/" + offer.img;
 
     return (
         <div className="bg-white rounded-xl shadow-md overflow-hidden">
@@ -14,7 +14,10 @@ function Card2(props) {
                 <div className="px-8 py-2">
                     <Link to={`/workspaces/${offer.offerID}`} className="capitalize block font-semibold text-lg leading-tight font-medium text-black hover:text-[#3282B8] duration-300 sec-font">{offer.title}</Link>
                     <div className="uppercase mt-1  tracking-wide text-sm text-[#0F4C75] font-semibold sec-font">{offer.name}</div>
-                    <p className="mt-2 text-slate-500 sec-font">{offer.description}</p>
+                    <p className="mt-2 text-slate-500 sec-font">{offer.description}
+                    </p>
+                    <p className="mt-2 text-slate-500 sec-font">start date : {offer.start.slice(0,10)}</p>
+                    <p className="mt-2 text-slate-500 sec-font">end date :{offer.end.slice(0,10)}</p>
                 </div>
             </div>
         </div>
