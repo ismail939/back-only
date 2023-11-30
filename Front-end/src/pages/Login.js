@@ -6,17 +6,22 @@ function Login() {
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [remember, setRemeber] = useState(false);
+    const [usertype, setUsertype] = useState("");
     const [errormessage, setErrorMessage] = useState("");
     const [success, setSuccess] = useState(false);
     const [dataerrors, setDataErrors] = useState({
         username: false,
         password: false,
+        usertype:false
     });
     function checkState() {
         remember ? console.log("checked") : console.log("not checked")
     }
     const AddData = () => {
-        fetch(`http://localhost:4000/clients/login`, {
+        let apitype;
+        if(usertype === "Client") apitype = "clients"
+        else apitype = "owners"
+        fetch(`http://localhost:4000/${apitype}/login`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -41,16 +46,22 @@ function Login() {
             }
         })
     }
+    const handleUserType = (event) => {
+        setUsertype(event.target.value);
+    };
     const HandleError = (e) => {
         e.preventDefault();
         if (username.length === 0) {
-            setDataErrors({ username: true, password: false })
+            setDataErrors({ username: true, password: false , usertype:false })
         }
         else if (password.length === 0) {
-            setDataErrors({ username: false, password: true })
+            setDataErrors({ username: false, password: true , usertype:false })
+        }else if(usertype.length === 0){
+            setDataErrors({ username: false, password: false , usertype:true });
+            setErrorMessage("please select user type")
         }
         else {
-            setDataErrors({ username: false, password: false }); checkState(); AddData()
+            setDataErrors({ username: false, password: false , usertype:false }); checkState(); AddData()
         }
     }
     return (
@@ -73,6 +84,31 @@ function Login() {
                                 <input type="password" name="password" id="password" placeholder="••••••••" className={`bg-gray-50 border ${dataerrors.password ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
                                     onChange={(e) => setPassword(e.target.value)}></input>
                                 {dataerrors.password ? <span className="text-[12px] text-red-500">plaese enter your password</span> : null}
+                            </div>
+                            <div>
+                                <label htmlFor="usertype" className="block mb-2 text-sm font-medium text-gray-900">User Type</label>
+                                <div name="usertype" className="text-gray-900 rounded-lg w-full py-2.5 flex gap-10 text-sm font-medium">
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="radio"
+                                            value="Client"
+                                            className="w-4 h-4 cursor-pointer"
+                                            checked={usertype === 'Client'}
+                                            onChange={handleUserType}
+                                        />
+                                        <span>Client</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="radio"
+                                            value="Owner"
+                                            className="w-4 h-4 cursor-pointer"
+                                            checked={usertype === 'Owner'}
+                                            onChange={handleUserType}
+                                        />
+                                        <span>Owner</span>
+                                    </div>
+                                </div>
                             </div>
                             {errormessage !== "" ? <p className="text-rose-600 text-xs mt-1 flex items-center gap-1 inline-block"><ExclamationCircleFill />{errormessage}</p> : null}
                             {success ? <p className="text-green-500 text-md mt-1 flex items-center gap-1 inline-block"><PatchCheckFill />Login is successful</p> : null}

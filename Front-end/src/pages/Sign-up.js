@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ExclamationCircleFill , Eye , EyeSlash } from "react-bootstrap-icons";
+import { ExclamationCircleFill, Eye, EyeSlash } from "react-bootstrap-icons";
 import { useNavigate } from 'react-router-dom';
 
 
@@ -14,6 +14,7 @@ function SignUp() {
     const [password, setPassword] = useState("");
     const [confirmpassword, setConfirmPassword] = useState("");
     const [username, setUserName] = useState("");
+    const [usertype, setUsertype] = useState("");
     const [checkerror, setCheckError] = useState("");
     const [reserror, setResError] = useState("");
     const [dataerrors, setDataErrors] = useState({
@@ -23,14 +24,18 @@ function SignUp() {
         phonenumber: false,
         password: false,
         username: false,
-        confirmpassword: false
+        confirmpassword: false,
+        usertype:false
     });
     function compPassword() {
         if ((password !== confirmpassword) && (password !== "") && (confirmpassword !== "")) return false;
         else return true
     }
     const AddData = () => {
-        fetch(`http://localhost:4000/clients/register`, {
+        let apitype;
+        if(usertype === "Client") apitype = "clients"
+        else apitype = "owners"
+        fetch(`http://localhost:4000/${apitype}/register`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -55,6 +60,9 @@ function SignUp() {
             }
         })
     }
+    const handleUserType = (event) => {
+        setUsertype(event.target.value);
+    };
     const nameError = (name) => {
         var letters = /^[A-Za-z]+$/;
         if (!name.match(letters)) {
@@ -122,7 +130,7 @@ function SignUp() {
         if (nameError(firstName)) {
             setDataErrors({
                 firstName: true, lastName: false, email: false, phonenumber: false,
-                password: false, username: false, confirmpassword: false
+                password: false, username: false, confirmpassword: false,usertype:false
             })
             setCheckError("please write your first name correctly")
             window.scrollTo(0, 100);
@@ -130,7 +138,7 @@ function SignUp() {
         else if (nameError(lastName)) {
             setDataErrors({
                 firstName: false, lastName: true, email: false, phonenumber: false,
-                password: false, username: false, confirmpassword: false
+                password: false, username: false, confirmpassword: false, usertype:false
             })
             setCheckError("please write your last name correctly")
             window.scrollTo(0, 100);
@@ -138,38 +146,49 @@ function SignUp() {
         else if (UsernameError()) {
             setDataErrors({
                 firstName: false, lastName: false, email: false, phonenumber: false,
-                password: false, username: true, confirmpassword: false
+                password: false, username: true, confirmpassword: false, usertype:false
             })
             setCheckError("please write a valid username")
             window.scrollTo(0, 200);
         } else if (emailError()) {
             setDataErrors({
                 firstName: false, lastName: false, email: true, phonenumber: false,
-                password: false, username: false, confirmpassword: false
+                password: false, username: false, confirmpassword: false, usertype:false
             })
             setCheckError("please write a valid email address")
             window.scrollTo(0, 300);
         } else if (PhoneNumberError()) {
             setDataErrors({
                 firstName: false, lastName: false, email: false, phonenumber: true,
-                password: false, username: false, confirmpassword: false
+                password: false, username: false, confirmpassword: false, usertype:false
             })
             setCheckError("please write a valid phonenumber")
             window.scrollTo(0, 400);
         } else if (PasswordError()) {
             setDataErrors({
                 firstName: false, lastName: false, email: false, phonenumber: false,
-                password: true, username: false, confirmpassword: false
+                password: true, username: false, confirmpassword: false, usertype:false
             })
             window.scrollTo(0, 500);
         } else if (confirmpassword === "" || !compPassword()) {
             setDataErrors({
                 firstName: false, lastName: false, email: false, phonenumber: false,
-                password: false, username: false, confirmpassword: true
+                password: false, username: false, confirmpassword: true , usertype:false
             })
             setCheckError("please confirm your password")
             window.scrollTo(0, 600);
+        }else if(usertype === ""){
+            setDataErrors({
+                firstName: false, lastName: false, email: false, phonenumber: false,
+                password: false, username: false, confirmpassword: false , usertype:true
+            })
+            window.scrollTo(0, 700);
+            setCheckError("please select user type")
         } else {
+            setDataErrors({
+                firstName: false, lastName: false, email: false, phonenumber: false,
+                password: false, username: false, confirmpassword: false , usertype:false
+            })
             setCheckError("")
             AddData();
         }
@@ -220,7 +239,7 @@ function SignUp() {
                                     <input type={showpassword ? "text" : "password"} name="password" id="password" placeholder="••••••••" className={`bg-gray-50 border ${dataerrors.password ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg  block w-full p-2.5`} required
                                         onChange={(e) => { setPassword(e.target.value) }}></input>
                                     <span className="absolute top-[30%] right-2 text-lg z-10 cursor-pointer text-center" onClick={() => setShowPassword(!showpassword)}>
-                                        {showpassword ? <EyeSlash/> : <Eye /> }
+                                        {showpassword ? <Eye /> : <EyeSlash />}
                                     </span>
                                 </div>
                                 {dataerrors.password ? <span className="text-[12px] text-red-500">{checkerror}</span> : <p className="m-0 mt-1 text-xs text-gray-500">Note: Password must be at least 8 charachters long with one lowercase, one uppercase and a number</p>}
@@ -231,8 +250,34 @@ function SignUp() {
                                     onChange={(e) => { setConfirmPassword(e.target.value) }}></input>
                                 {!compPassword() || dataerrors.confirmpassword ? <p className="text-rose-600 text-xs mt-1 flex items-center gap-1 inline-block">Password doesn't match</p> : null}
                             </div>
+                            <div>
+                                <label htmlFor="usertype" className="block mb-2 text-sm font-medium text-gray-900">User Type</label>
+                                <div name="usertype" className="text-gray-900 rounded-lg w-full py-2.5 flex gap-10 text-sm font-medium">
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="radio"
+                                            value="Client"
+                                            className="w-4 h-4 cursor-pointer"
+                                            checked={usertype === 'Client'}
+                                            onChange={handleUserType}
+                                        />
+                                        <span>Client</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="radio"
+                                            value="Owner"
+                                            className="w-4 h-4 cursor-pointer"
+                                            checked={usertype === 'Owner'}
+                                            onChange={handleUserType}
+                                        />
+                                        <span>Owner</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {dataerrors.usertype ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
                             <br></br>
-                            {reserror !== ""  ? <span className="text-[14px] text-red-500 flex gap-2 items-center"><ExclamationCircleFill />{reserror}</span> : null}
+                            {reserror !== "" ? <span className="text-[14px] text-red-500 flex gap-2 items-center"><ExclamationCircleFill />{reserror}</span> : null}
                             <button type="submit" className="mt-3 w-full text-black bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 font-medium rounded-lg text-md px-5 py-2.5 text-center duration-300 ease-in-out"
                                 onClick={(e) => { HandleError(e); }}>Sign Up</button>
                             <p className="text-sm font-light text-gray-500">
