@@ -9,7 +9,7 @@ module.exports = {
         async (req, res, next) => {
             let cw_spaces = await Cw_space.findAll({ raw: true })
             const cw_spacePhones = await Cw_spacePhone.findAll();
-            let rooms = await Room.findAll({
+            let room = await Room.findOne({
                 raw: true,
                 where: {
                     type: "shared room"
@@ -22,23 +22,17 @@ module.exports = {
                         cw_spaces[i].phones.push(cw_spacePhones[j].phone)
                     }
                 }
-                cw_spaces[i].prices = []
-                for (let j = 0; j < rooms.length; j++) {
-                    if (cw_spaces[i].cwID == rooms[j].cwSpaceCwID) {
-                        cw_spaces[i].prices.push(rooms[j].hourPrice)
-                        delete rooms[j]
-                    }
+                //the if condition for running correctly until rooms created
+                if (room) {
+                    cw_spaces[i].price = room.hourPrice;
                 }
             }
+            
             if (cw_spaces.length === 0) {
                 const error = appError.create("Co-working spaces not found", 404, httpStatusCode.ERROR);
                 return next(error);
             }
 
-            if (cw_spacePhones.length === 0) {
-                const error = appError.create("Cw_spacePhones not found", 404, httpStatusCode.ERROR);
-                return next(error);
-            }
             return res.json({ status: httpStatusCode.SUCCESS, data: cw_spaces });
         }
     ),
