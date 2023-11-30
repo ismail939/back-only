@@ -2,7 +2,8 @@ const { Offer } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-
+const BSON = require('bson')
+const fs = require('fs')
 
 module.exports ={
     get: asyncWrapper(
@@ -28,9 +29,12 @@ module.exports ={
             }
             return res.json({ status: httpStatusCode.SUCCESS, data: offer }) 
         }
-    ),
+    ), 
     create: asyncWrapper(
-        async (req, res, next) => {
+        async (req, res, next) => { 
+            req.body.cwSpaceCwID = 1
+            req.body.img = req.body.imageName 
+            delete req.body.imageName
             const newOffer = await Offer.create(req.body)
             return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newOffer });
         }

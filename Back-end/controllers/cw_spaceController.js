@@ -91,21 +91,16 @@ module.exports = {
     ),
     create: asyncWrapper(
         async (req, res, next) => {
-            let errors = validateCw_space(req)
-            if (errors.length!=0) {    
-                return res.status(400).json({ status: httpStatusCode.ERROR, errors: errors});
-            }
-            let newCw_space = (await Cw_space.create({
-                name: req.body.data.name,
-                email: req.body.data.email,
-                address: req.body.data.address,
-                fbPage: req.body.data.fbPage,
-                openingTime: req.body.data.openingTime,
-                closingTime: req.body.data.closingTime,
-                description: req.body.data.description,
-                rate: req.body.data.rate,
-                mainPhoto: req.body.data.imageName
-            })).get({ plain: true })
+            console.log(req.body)
+
+            // let errors = validateCw_space(req)
+            // if (errors.length!=0) {    
+            //     return res.status(400).json({ status: httpStatusCode.ERROR, errors: errors});
+            // }
+            req.body.mainPhoto = req.body.imageName
+            delete req.body.imageName
+            
+            let newCw_space = (await Cw_space.create(req.body)).get({ plain: true })
             let newCw_spacePhone = null;
             let newCw_spacePhoneList = req.body.phones.split(',')
             for (let i = 0; i < newCw_spacePhoneList.length; i++) {

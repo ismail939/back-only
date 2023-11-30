@@ -15,10 +15,9 @@ const roomRouter = require("./routes/room");
 const reviewRouter = require("./routes/review");
 const eventPhotoRouter = require("./routes/eventPhoto");
 const offerRouter = require('./routes/offer')
-
+ 
 const path = require('path')
 app.use(express.static(path.join(__dirname, 'public')));
-
 
 
 
@@ -52,7 +51,7 @@ app.all("*", (req, res) => {
 
 //global error handler
 app.use((error, req, res, next) => {
-    res.status(error.statusCode).json({ status: error.statusText || httpStatusCode.ERROR, message: error.message });
+    res.status(error.statusCode||500).json({ status: error.statusText || httpStatusCode.ERROR, message: error.message });
 })
 
 app.listen(process.env.PORT, ()=>{
