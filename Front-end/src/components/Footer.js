@@ -11,7 +11,7 @@ function Footer() {
                             <p>Get in touch for enquiries, feedback, complaints and compliments.</p>
                             <p>{"Phone: 13 QGOV (13 64 68)"}</p>
                             <p>Email: Space-s@contact.com</p>
-                            <button className="py-2 px-3 text-center border border-[#BBE1FA] mt-3 w-full">Contact Us</button>
+                            <Link to="dashboard"><button className="py-2 px-3 text-center border border-[#BBE1FA] mt-3 w-full">Contact Us</button></Link>
                         </div>
                     </div>
                     <div className="flex flex-col gap-2">

@@ -10,6 +10,7 @@ import CreateCoworkingSpace from './pages/CreateCoworkingSpace';
 import PageNotFound from './pages/PageNotFound';
 import CreateOffer from './pages/CreateOffer';
 import OfferList from './pages/mainpages/OfferList';
+import Dashboard from './pages/Dashboard';
 function App() {
   return (
     <>
@@ -22,6 +23,7 @@ function App() {
         <Route path='offers' element={<OfferList />}></Route>
         <Route path='createworkspace' element={<CreateCoworkingSpace />}></Route>
         <Route path='createOffer' element={<CreateOffer />}></Route>
+        <Route path='dashboard' element={<Dashboard />}></Route>
         <Route path="*" element={<PageNotFound />}></Route>
       </Routes>
       <Footer />
