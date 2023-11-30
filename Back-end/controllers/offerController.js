@@ -31,6 +31,7 @@ module.exports ={
     ),
     create: asyncWrapper(
         async (req, res, next) => {
+            delete req.body.img;
             const newOffer = await Offer.create(req.body)
             return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newOffer });
         }
