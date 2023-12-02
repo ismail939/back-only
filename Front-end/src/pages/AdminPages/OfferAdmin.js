@@ -51,7 +51,7 @@ function OfferAdmin(){
                         return (
                             <tr>
                                 <th scope="row">{++index}</th>
-                                <td>{offer.name}</td>
+                                <td>{offer.title}</td>
                                 <td className="min-w-100 flex gap-8 justify-center">
                                     <button className="px-3 py-2 bg-green-500" onClick={() => EditOffer(offer.offerID)}>Add</button>
                                     <button className="px-3 py-2 bg-red-500" onClick={() => removeOffer(offer.offerID)}>remove</button>

@@ -33,13 +33,18 @@ function Slider(){
             <h2 className="text-center mb-8 text-5xl main-font">Offers</h2>
             <div className="relative">
                 <div className="h-[500px] flex transition-transform ease-in-out duration-500" style={{transform: `translateX(-${current *100}%)`}}>
-                    {offers.map((image) =>{
+                    {offers ? offers.map((image) =>{
+                        return <img className="object-cover h-full w-full rounded-xl" src={image} alt="" style={{flexShrink:"0" , flexGrow:"0"}}></img>
+                    }) : images.map((image) =>{
                         return <img className="object-cover h-full w-full rounded-xl" src={image} alt="" style={{flexShrink:"0" , flexGrow:"0"}}></img>
                     })}
                 </div>
                 <div className="absolute bottom-4 right-0 left-0">
                     <div className="flex justify-center items-center gap-2">
-                        {offers.map((img , i) =>{
+                        {offers ? offers.map((img , i) =>{
+                            return <div className={`transiton-all cursor-pointer w-2 h-2 bg-white rounded-full 
+                            ${current === i ? "p-1.5" : "opacity-50" }`} onClick={() => setcurrent(i)}></div>
+                        }) : images.map((img , i) =>{
                             return <div className={`transiton-all cursor-pointer w-2 h-2 bg-white rounded-full 
                             ${current === i ? "p-1.5" : "opacity-50" }`} onClick={() => setcurrent(i)}></div>
                         })}
