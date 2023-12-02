@@ -51,7 +51,6 @@ function CreateCoworkingSpace() {
       formData.append('closingTime', endDate);
       formData.append('mainPhoto', img);
       fetch('http://localhost:4000/cw_spaces', {
-
         method: 'POST',
         body: formData,
       })
