@@ -1,4 +1,4 @@
-const { Offer } = require('../models/modelIndex')
+const { Offer, Cw_space } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
@@ -7,6 +7,12 @@ module.exports ={
     get: asyncWrapper(
         async (req, res, next) => {
             const offers = await Offer.findAll({raw: true})
+            for(let i = 0;i<offers.length;i++){
+                let cw_space = await Cw_space.findOne({raw: true},{ where: {
+                    cwID: offers[i].cwSpaceCwID
+                }})
+                offers[i].cwSpaceName = cw_space.name
+            }
             if (offers.length === 0) {
                 const error = appError.create("Offers not found", 404, httpStatusCode.ERROR);
                 return next(error);
@@ -46,6 +52,10 @@ module.exports ={
         async (req, res, next) => {
             //console.log("ggggg", req.body)
             //req.body.cwSpaceCwID = 1
+            if(req.body.imageName==undefined||req.body.img==null){
+                const error = appError.create("img is null", 400, httpStatusCode.ERROR);
+                return next(error);
+            }
             req.body.img = req.body.imageName 
             delete req.body.imageName
             const newOffer = await Offer.create(req.body)

@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
             return cb(new Error('Wrong file type'), null);
         }
         const uniqueSuffix = Date.now() + "." + file.originalname.split('.')[1];
-        req.body.imageName = uniqueSuffix     
+        req.body.imageName = uniqueSuffix
         cb(null, uniqueSuffix);       
     } 
 })
