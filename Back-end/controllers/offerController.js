@@ -4,7 +4,7 @@ const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 
 module.exports ={
-    get: asyncWrapper(
+    getAll: asyncWrapper(
         async (req, res, next) => {
             const offers = await Offer.findAll({raw: true})
             for(let i = 0;i<offers.length;i++){
@@ -13,11 +13,11 @@ module.exports ={
                 }})
                 offers[i].cwSpaceName = cw_space.name
             }
-            if (offers.length === 0) {
-                const error = appError.create("Offers not found", 404, httpStatusCode.ERROR);
-                return next(error);
+            if (offers.length != 0) {
+                return res.json({ status: httpStatusCode.SUCCESS, data: offers })
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: offers }); 
+            const error = appError.create("There Are No Available Offers", 404, httpStatusCode.ERROR);
+            return next(error);
         }
     ),
     getHome: asyncWrapper(
@@ -28,24 +28,25 @@ module.exports ={
                     home: "home"
                 }
             })
-            if (offerHome.length === 0) {
-                return res.status(404).json({ status: httpStatusCode.ERROR, message: "There are no available Co-working spaces available"})
+            if (offerHome.length != 0) {
+                return res.json({ status: httpStatusCode.SUCCESS, data: offerHome })
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: offerHome })
+            const error = appError.create("There Are No Available Offers", 404, httpStatusCode.ERROR);
+            return next(error);
         }
     ),
     getOne: asyncWrapper(
         async (req, res, next) => {
-            const offer = await Offer.findAll({
+            const offer = await Offer.findOne({
                 where: {
                     offerID: req.params.offerID
                 }
             })
-            if (offer.length === 0) {
-                const error = appError.create("Offer not found", 404, httpStatusCode.ERROR);
-                return next(error);
+            if (offer) {
+                return res.json({ status: httpStatusCode.SUCCESS, data: offer })
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: offer }) 
+            const error = appError.create("Offer Not Found", 404, httpStatusCode.ERROR);
+            return next(error);
         }
     ), 
     create: asyncWrapper(
@@ -56,48 +57,53 @@ module.exports ={
                 const error = appError.create("img is null", 400, httpStatusCode.ERROR);
                 return next(error);
             }
+
             req.body.img = req.body.imageName 
             delete req.body.imageName
             const newOffer = await Offer.create(req.body)
-            return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newOffer });
+            if(newOffer){
+                return res.json({ status: httpStatusCode.SUCCESS, message: "Offer is Created Successfully" })
+            }
+            const error = appError.create("Unexpected Error, Try Again Later", 400, httpStatusCode.ERROR)
+            return next(error)
         }
     ),
     update: asyncWrapper(
         async (req, res, next) => {
-            const updatedOffer = await Offer.findAll({
+            const updatedOffer = await Offer.findOne({
                 where: {
                     offerID: req.params.offerID
                 }
             });
-            if (updatedOffer.length === 0) {
-                const error = appError.create("Offer not found", 404, httpStatusCode.ERROR);
-                return next(error);
+            if (updatedOffer) {
+                await Offer.update(req.body, {
+                    where: {
+                        offerID: req.params.offerID
+                    }
+                })
+                return res.json({ status: httpStatusCode.SUCCESS, message: "Offer Updated Successfully" });
             }
-            await Offer.update(req.body, {
-                where: {
-                    offerID: req.params.offerID
-                }
-            });
-            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "updated successfully" });
+            const error = appError.create("Offer Not Found", 404, httpStatusCode.ERROR)
+            return next(error)
         }
     ),  
     delete: asyncWrapper(
         async (req, res, next) => {
-            const deletedOffer = await Offer.findAll({
-                where: {
-                    offerID: req.params.offerID
-                }
-            });
-            if (deletedOffer.length === 0) {
-                const error = appError.create("Offer not found", 404, httpStatusCode.ERROR);
-                return next(error);
-            }
-            await Offer.destroy({
+            const deletedOffer = await Offer.findOne({
                 where: {
                     offerID: req.params.offerID
                 }
             })
-            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "deleted successfully" });
+            if (deletedOffer) {
+                await Offer.destroy({
+                    where: {
+                        offerID: req.params.offerID
+                    }
+                })
+                return res.json({ status: httpStatusCode.SUCCESS, message: "Offer Deleted Successfully" });
+            }
+            const error = appError.create("Offer Not Found", 404, httpStatusCode.ERROR);
+            return next(error);
         }
     )
 } 
