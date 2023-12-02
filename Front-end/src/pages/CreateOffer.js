@@ -56,6 +56,7 @@ function CreateOffer() {
             formData.append('description', description);
             formData.append('start', start);
             formData.append('end', end);
+            formData.append('cwSpaceCwID', 1);
             formData.append('img', img);
             // formData = JSON.stringify(formData)
             // console.log(formData)

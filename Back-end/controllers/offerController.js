@@ -2,8 +2,6 @@ const { Offer } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-const BSON = require('bson')
-const fs = require('fs')
 
 module.exports ={
     get: asyncWrapper(
@@ -31,8 +29,9 @@ module.exports ={
         }
     ), 
     create: asyncWrapper(
-        async (req, res, next) => { 
-            req.body.cwSpaceCwID = 1
+        async (req, res, next) => {
+            //console.log("ggggg", req.body)
+            //req.body.cwSpaceCwID = 1
             req.body.img = req.body.imageName 
             delete req.body.imageName
             const newOffer = await Offer.create(req.body)

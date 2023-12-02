@@ -13,9 +13,30 @@ const validateUser = () => {
     ];
 }
 
+const validateOffer = (req) => {
+    let data = req.body
+    let errors = []
+    if(validator.isEmpty(data.title)){
+        errors.push("title is required"); 
+    }
+
+    if(validator.isEmpty(data.description)){
+        errors.push("description is required"); 
+    }
+
+    if(validator.isEmpty(data.start)){
+        errors.push("start date is required"); 
+    }
+    
+    if(validator.isEmpty(data.end)){
+        errors.push("end is required"); 
+    }
+
+    return errors
+}
+
 const validateCw_space = (req) => {
-    let data = req.body.data
-    let phones = req.body.phones
+    let data = req.body
     let errors = []
     if(validator.isEmpty(data.name)){
         errors.push('name is required') 
@@ -57,7 +78,7 @@ const validateCw_space = (req) => {
         errors.push('description is required') 
     }
 
-    if (validator.isEmpty(phones)) {
+    if (validator.isEmpty(data.phones)) {
         errors.push("phone is required");
     }
     return errors
@@ -65,5 +86,6 @@ const validateCw_space = (req) => {
 
 module.exports = {
     validateUser,
-    validateCw_space
+    validateCw_space,
+    validateOffer
 }
