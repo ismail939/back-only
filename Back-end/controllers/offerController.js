@@ -14,6 +14,20 @@ module.exports ={
             return res.json({ status: httpStatusCode.SUCCESS, data: offers }); 
         }
     ),
+    getHome: asyncWrapper(
+        async (req, res, next) => {
+            const offerHome = await Offer.findAll({
+                raw: true,
+                where: {
+                    home: "home"
+                }
+            })
+            if (offerHome.length === 0) {
+                return res.status(404).json({ status: httpStatusCode.ERROR, message: "There are no available Co-working spaces available"})
+            }
+            return res.json({ status: httpStatusCode.SUCCESS, data: offerHome })
+        }
+    ),
     getOne: asyncWrapper(
         async (req, res, next) => {
             const offer = await Offer.findAll({

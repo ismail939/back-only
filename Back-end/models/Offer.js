@@ -10,7 +10,7 @@ module.exports = (db, type)=>{
             allowNull: false
         },
         description: {
-            type: type.STRING,
+            type: type.TEXT,
             allowNull: false
         },
         start: {
