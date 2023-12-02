@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
         }
         const acceptedFormats = ['image/png', 'image/jpeg', 'image/jpg'];
         if (!acceptedFormats.includes(file.mimetype)) {
-            return cb(new Error('Wrong file type'), null);
+            return cb(new Error('Unacceptable Type Format'), null);
         }
         const uniqueSuffix = Date.now() + "." + file.originalname.split('.')[1];
         req.body.imageName = uniqueSuffix     
@@ -24,10 +24,11 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage: storage })
 
-router.route("/home").get(offerController.getHome);
+router.route("/home")
+    .get(offerController.getHome);
 
 router.route("/")
-    .get(offerController.get)
+    .get(offerController.getAll)
     .post(upload.single('img'), offerController.create);
 
 router.route("/:offerID")
