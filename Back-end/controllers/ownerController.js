@@ -33,6 +33,10 @@ module.exports ={
     ),
     addPhoto: asyncWrapper(
         async (req, res, next) => {
+            if(req.body.imageName==undefined||req.body.img==null){
+                const error = appError.create("There is NO Images Provided", 400, httpStatusCode.ERROR);
+                return next(error);
+            }
             req.body.profilePic = req.body.imageName;
             delete req.body.imageName;
             const updatedOwner = await Owner.findOne({
