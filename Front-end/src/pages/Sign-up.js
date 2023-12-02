@@ -41,14 +41,12 @@ function SignUp() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "data": {
-                    "fname": firstName,
-                    "lname": lastName,
-                    "email": email,
-                    "password": password,
-                    "username": username,
-                    "phone": phonenumber
-                }
+                "fname": firstName,
+                "lname": lastName,
+                "email": email,
+                "password": password,
+                "username": username,
+                "phone": phonenumber
             }),
         }).then(res => res.json()).then((data) => {
             if (data.status === "success") {

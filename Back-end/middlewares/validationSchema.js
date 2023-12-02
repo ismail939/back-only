@@ -1,16 +1,37 @@
-const { body } = require('express-validator')
 const validator = require('../utils/validators')
 
-const validateUser = () => {
-    return [
-        body("data.fname").notEmpty().withMessage("first name is required"),
-        body("data.lname").notEmpty().withMessage("last name is required"),
-        body("data.username").notEmpty().withMessage("username is required"),
-        body("data.email").notEmpty().withMessage("email is required").isEmail().withMessage("not in email format"),
-        body("data.password").notEmpty().withMessage("password is required"),
-        body("data.profilePic").optional(),
-        body("data.phone").notEmpty().withMessage("phone is required"),
-    ];
+const validateUser = (req) => {
+    let data = req.body
+    let errors = []
+    if(validator.isEmpty(data.fname)){
+        errors.push("first name is required"); 
+    }
+
+    if(validator.isEmpty(data.lname)){
+        errors.push("last name is required"); 
+    }
+
+    if(validator.isEmpty(data.username)){
+        errors.push("username is required"); 
+    }
+
+    if(validator.isEmpty(data.email)){
+        errors.push('email is required') 
+    } else {
+        if(!validator.isEmail(data.email)){
+            errors.push('not in email format')
+        }
+    }
+
+    if(validator.isEmpty(data.password)){
+        errors.push("password is required"); 
+    }
+
+    if(validator.isEmpty(data.phone)){
+        errors.push("phone is required"); 
+    }
+
+    return errors
 }
 
 const validateOffer = (req) => {

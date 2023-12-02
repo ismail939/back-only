@@ -5,10 +5,10 @@ const { validateUser } = require("../middlewares/validationSchema");
 const router = express.Router();
 
 router.route("/login")
-    .post(validateUser(), clientsController.getOne);
+    .post(clientsController.getOne);
 
 router.route("/register")
-    .post(validateUser(), clientsController.create);
+    .post(clientsController.create);
 
 router.route("/")
     .get(clientsController.get)

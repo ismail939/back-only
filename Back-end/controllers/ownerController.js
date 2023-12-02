@@ -1,20 +1,20 @@
 const Sequelize = require('sequelize');
-const { Owner } = require('../models/modelIndex')
+const { Owner } = require('../models/modelIndex');
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-const { validationResult } = require("express-validator");
+const { validateUser } = require("../middlewares/validationSchema");
 
 
 module.exports ={
-    get: asyncWrapper(
+    getAll: asyncWrapper(
         async (req, res, next) => {
             const owners = await Owner.findAll()
             if (owners.length === 0) {
-                const error = appError.create("Owners not found", 404, httpStatusCode.ERROR);
-                return next(error);
+                const error = appError.create("There Are NO Available Owners", 404, httpStatusCode.ERROR)
+                return next(error)
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: owners }); 
+            return res.json({ status: httpStatusCode.SUCCESS, data: owners })
         }
     ),
     getOne: asyncWrapper(
@@ -27,74 +27,70 @@ module.exports ={
             if (Owner) {
                 return res.json({ status: httpStatusCode.SUCCESS, data: owner })
             }
-            return res.status(404).json({ status: httpStatusCode.ERROR, message: "Username or password are incorrect"})
-
+            const error = appError.create("Owner Not Found", 404, httpStatusCode.ERROR)
+            return next(error)
         }
     ),
     login: asyncWrapper(
         async (req, res, next) => {
-            const owner = await Owner.findAll({
+            const owner = await Owner.findOne({
                 raw: true, where: {
-                    username: req.body.data.username,
-                    password: req.body.data.password
+                    username: req.body.username,
+                    password: req.body.password
                 }
             })
             if (Owner) {
                 return res.json({ status: httpStatusCode.SUCCESS, data: owner })
             }
-            return res.status(404).json({ status: httpStatusCode.ERROR, message: "Username or password are incorrect"})
-
+            const error = appError.create("Username or Password is Incorrect", 404, httpStatusCode.ERROR)
+            return next(error)
         }
     ),
     create: asyncWrapper(
         async (req, res, next) => {
-            let errors = validationResult(req);
+            let errors = validateUser(req)
+            if (errors.length != 0) {
+                const error = appError.create(errors, 400, httpStatusCode.ERROR)
+                return next(error)
+            }
             const duplicates = await Owner.findOne({
                 raw: true, where: {
                     [Sequelize.Op.or]: [
-                        { username: req.body.data.username },
-                        { email: req.body.data.email }
+                        { username: req.body.username },
+                        { email: req.body.email }
                     ]
                 }
             })
-            
-            if (!errors.isEmpty() || duplicates) {
-                let errorsList = []
-                if (errors.isEmpty()) {
-                    errorsList.push("Duplicate data");
-                } else {
-                    errors = errors.array()
-                    for (let i = 0; i < errors.length; i++) {
-                        errorsList.push(errors[i].msg)
-                    }
-                }
-                return res.status(400).json({ status: httpStatusCode.ERROR, errors: errorsList });
+            if (duplicates) {
+                const error = appError.create("Duplicate Data Not Allowed", 400, httpStatusCode.ERROR)
+                return next(error)
             }
 
-            const newOwner = await Owner.create(req.body.data)
+            const newOwner = await Owner.create(req.body)
             if(newOwner){
-                return res.json({ status: httpStatusCode.SUCCESS, message: "Owner is created successfully" })
+                return res.json({ status: httpStatusCode.SUCCESS, message: "Owner is Created Successfully" })
             }
-            return res.json({ status: httpStatusCode.ERROR , message: "There is something wrong with the inputs"})
+            const error = appError.create("Unexpected Error, Try Again Later", 400, httpStatusCode.ERROR)
+            return next(error)
         }
     ),
     update: asyncWrapper(
         async (req, res, next) => {
-            const updatedOwner = await Owner.findAll({
+            const updatedOwner = await Owner.findOne({
                 where: {
                     username: req.params.username
                 }
-            });
+            })
             if (updatedOwner.length === 0) {
-                const error = appError.create("Owner not found", 404, httpStatusCode.ERROR);
+                const error = appError.create("Owner Not Found", 404, httpStatusCode.ERROR);
                 return next(error);
             }
             await Owner.update(req.body, {
                 where: {
                     username: req.params.username
                 }
-            });
-            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "updated successfully" });
+            })
+            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Owner Updated Successfully" })
         }
     ),  
     delete: asyncWrapper(
@@ -105,7 +101,7 @@ module.exports ={
                 }
             });
             if (deletedOwner.length === 0) {
-                const error = appError.create("Owner not found", 404, httpStatusCode.ERROR);
+                const error = appError.create("Owner not found", 404, httpStatusCode.ERROR)
                 return next(error);
             }
             await Owner.destroy({
@@ -113,7 +109,7 @@ module.exports ={
                     username: req.params.username
                 }
             })
-            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "deleted successfully" });
+            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Owner Deleted Successfully" })
         }
     )
 } 

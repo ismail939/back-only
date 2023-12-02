@@ -27,10 +27,8 @@ function Login() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "data": {
-                    "username": username,
-                    "password": password
-                },
+                "username": username,
+                "password": password
             }),
         }).then(res => res.json()).then((data) => {
             console.log(data)
