@@ -6,22 +6,20 @@ const multer = require('multer')
 const fs = require('fs')
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, './public/images')
+        cb(null, './public/images/offers')
     },
     filename: function (req, file, cb) {
         let errors = validateOffer(req)
             if (errors.length!=0) {    
                 return cb(new Error(errors.join(', ')), null);
         }
-        const acceptedFormats = ['png', 'jpg', 'jpeg']
-        if(acceptedFormats.includes(req.body.imageName.split('.')[1])){
-            const uniqueSuffix =Date.now() + "." + req.body.imageName.split('.')[1];
-            const filePath = './public/images/' + uniqueSuffix;
-            fs.writeFileSync(filePath, uniqueSuffix);
-            req.body.imageName = uniqueSuffix;
-            cb(null, uniqueSuffix);
+        const acceptedFormats = ['image/png', 'image/jpeg', 'image/jpg'];
+        if (!acceptedFormats.includes(file.mimetype)) {
+            return cb(new Error('Wrong file type'), null);
         }
-        else{ cb(new Error('wrong type')) }
+        const uniqueSuffix = Date.now() + "." + file.originalname.split('.')[1];
+        req.body.imageName = uniqueSuffix     
+        cb(null, uniqueSuffix);       
     } 
 })
 const upload = multer({ storage: storage })
