@@ -19,6 +19,20 @@ module.exports ={
     ),
     getOne: asyncWrapper(
         async (req, res, next) => {
+            const owner = await Owner.findOne({
+                raw: true, where: {
+                    username: req.params.username
+                }
+            })
+            if (Owner) {
+                return res.json({ status: httpStatusCode.SUCCESS, data: owner })
+            }
+            return res.status(404).json({ status: httpStatusCode.ERROR, message: "Username or password are incorrect"})
+
+        }
+    ),
+    login: asyncWrapper(
+        async (req, res, next) => {
             const owner = await Owner.findAll({
                 raw: true, where: {
                     username: req.body.data.username,
