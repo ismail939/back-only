@@ -1,18 +1,19 @@
 import { useRef, useState } from "react";
 import { ExclamationCircleFill } from "react-bootstrap-icons";
+import { forwardRef , useImperativeHandle } from "react";
 import Swal from "sweetalert2";
-function CreateCoworkingSpace() {
+const CreateCoworkingSpace = forwardRef(({ name, address, description, email, phones, openingTime, closingTime, imageName, img, updateFields ,childRef }) => {
   const [Name, setName] = useState("");
   const [Address, setAddress] = useState("");
   const [Description, setDescription] = useState("");
-  const [email, setEmail] = useState("");
+  const [Email, setEmail] = useState("");
   const [phonenumberOne, setPhoneNumberOne] = useState("");
   const [facebookLink, setFacebookLink] = useState("");
   const [checkerror, setCheckError] = useState("");
   const [startDate, setStartDate] = useState("");
   const [offerImageName, setOfferImageName] = useState("");
   const [errormessage, setErrorMessage] = useState("");
-  const [img, setImg] = useState([]);
+  const [image, setImg] = useState([]);
   const [endDate, setEndDate] = useState("");
   const [dataerrors, setDataErrors] = useState({
     startDate: false,
@@ -22,7 +23,7 @@ function CreateCoworkingSpace() {
     address: false,
     description: false,
     email: false,
-    offerImageName: false
+    ImageName: false
   });
   const formRef = useRef(null);
   const success = () => {
@@ -34,7 +35,7 @@ function CreateCoworkingSpace() {
     });
   }
   function isImage(offerImageName) {
-    if (offerImageName.slice(-4) === ".jpg" || offerImageName.slice(-5) === ".jpeg" || offerImageName.slice(-4) === ".png" ) return true;
+    if (offerImageName.slice(-4) === ".jpg" || offerImageName.slice(-5) === ".jpeg" || offerImageName.slice(-4) === ".png") return true;
     else {
       return false;
     }
@@ -49,9 +50,8 @@ function CreateCoworkingSpace() {
       formData.append('description', Description);
       formData.append('openingTime', startDate);
       formData.append('closingTime', endDate);
-      formData.append('mainPhoto', img);
+      formData.append('mainPhoto', image);
       fetch('http://localhost:4000/cw_spaces', {
-
         method: 'POST',
         body: formData,
       })
@@ -62,7 +62,6 @@ function CreateCoworkingSpace() {
         })
     }
   }
-
   const NameError = (name) => {
     if (name.length === 0) {
       return true;
@@ -72,7 +71,7 @@ function CreateCoworkingSpace() {
   }
   const emailError = () => {
     const regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$"
-    if (!email.match(regex)) {
+    if (!Email.match(regex)) {
       return true;
     } else {
       return false;
@@ -96,289 +95,269 @@ function CreateCoworkingSpace() {
       return false;
     }
   };
-  const HandleError = (e) => {
-    e.preventDefault();
-    if (!isImage(offerImageName)) {
-      setDataErrors({
-        "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false,
-        "description": false, "email": false, "offerImageName": true
-      })
-      setCheckError("plaese enter an image accepted formats are png , jpg , jpeg"); window.scrollTo(0, 50);
-    }
-    else if (NameError(Name)) {
+  const HandleError = () => {
+    if (NameError(name)) {
       setDataErrors({
         "phonenumber1": false, "startDate": false, "endDate": false, "name": true, "address": false,
-        "description": false, "email": false, "offerImageName": false
+        "description": false, "email": false, "ImageName": false
       })
       setCheckError("please fill in the name"); window.scrollTo(0, 100);
     }
-    else if (NameError(Address)) {
+    else if (NameError(address)) {
       setDataErrors({
         "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": true,
-        "description": false, "email": false, "offerImageName": false
+        "description": false, "email": false, "ImageName": false
       })
       setCheckError("please fill in the location"); window.scrollTo(0, 200);
     }
-    else if (NameError(Description)) {
+    else if (NameError(description)) {
       setDataErrors({
         "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false,
-        "description": true, "email": false, "offerImageName": false
+        "description": true, "email": false, "ImageName": false
       })
       setCheckError("please fill in the description"); window.scrollTo(0, 300);
     }
     else if (email.length > 0 && emailError()) {
       setDataErrors({
         "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false,
-        "description": false, "email": true, "offerImageName": false
+        "description": false, "email": true, "ImageName": false
       })
       setCheckError("please write a valid email address"); window.scrollTo(0, 300);
     }
-    else if (PhoneNumberError(phonenumberOne)) {
+    else if (PhoneNumberError(phones[0])) {
       setDataErrors({
         "phonenumber1": true, "startDate": false, "endDate": false, "name": false, "address": false,
-        "description": false, "email": false, "offerImageName": false
+        "description": false, "email": false, "ImageName": false
       })
       setCheckError("please write a correct phone number ex:010123456789"); window.scrollTo(0, 500);
-    }
-    else if (DateError(startDate)) {
+    } else if (!isImage(imageName)) {
+      setDataErrors({
+        "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false,
+        "description": false, "email": false, "ImageName": true
+      })
+      setCheckError("plaese enter an image accepted formats are png , jpg , jpeg"); window.scrollTo(0, 600);
+    } else if (DateError(openingTime)) {
       setDataErrors({
         "phonenumber1": false, "startDate": true, "endDate": false, "name": false, "address": false,
-        "description": false, "email": false, "offerImageName": false
+        "description": false, "email": false, "ImageName": false
       })
       setCheckError("openinig Hour should be in this format 00:00"); window.scrollTo(0, 600);
-    } else if (DateError(endDate)) {
+    } else if (DateError(closingTime)) {
       setDataErrors({
         "phonenumber1": false, "startDate": false, "endDate": true, "name": false, "address": false,
-        "description": false, "email": false, "offerImageName": false
+        "description": false, "email": false, "ImageName": false
       })
       setCheckError("closing Hour should be in this format 00:00"); window.scrollTo(0, 600);
     } else {
       setCheckError("");
       setDataErrors({
         "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false,
-        "description": false, "email": false, "offerImageName": false
+        "description": false, "email": false, "ImageName": false
       })
-      addData();
-      success();
-      if (formRef.current) {
-        formRef.current.reset();
-      }
+      return true
+      // sentData();
+      // success();
+      // if (formRef.current) {
+      //   formRef.current.reset();
+      // }
     }
   };
+  useImperativeHandle(childRef , () =>({
+      HandleError
+  }))
   return (
-    <section className="">
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
-        <div className="w-full bg-white rounded-lg shadow mt-[100px] max-w-md xl:p-0] mb-[100px]">
-          <div className="p-6 space-y-4 p-8">
-            {/* {checkerror !== "" ? (
-              <div className="px-1 py-2 bg-rose-600 text-white text-sm rounded-md font-semibold">
-                <div className="flex items-center gap-2">
-                  <ExclamationCircleFill />{" "}
-                  <span>Please write your Inputs correctly</span>
-                </div>
-              </div>
-            ) : null} */}
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
-              Create Co-Working Space
-            </h1>
-            <form className="space-y-4 md:space-y-6" action="#" ref={formRef}>
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block mb-2 text-sm font-medium text-gray-900 "
-                >
-                  Offer Image<span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="file"
-                  name="offerImage"
-                  id="offerImage"
-
-                  className={`bg-gray-50 border ${dataerrors.offerImageName ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
-                  placeholder=""
-                  required
-                  accept=".png,.jpg,.jpeg"
-                  onChange={(e) => {
-
-
-                    setImg(e.target.files[0]);
-                    setOfferImageName(e.target.files[0].name);
-                  }}
-                ></input>
-                {dataerrors.offerImageName ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
-
-              </div>
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block mb-2 text-sm font-medium text-gray-900 "
-                >
-                  Name<span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  id="name"
-                  className={`bg-gray-50 border ${dataerrors.name ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
-                  placeholder="Enter your name"
-                  required
-                  onChange={(e) => {
-                    setName(e.target.value);
-                  }}
-                ></input>
-                {dataerrors.name ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
-              </div>
-              <div>
-                <label
-                  htmlFor="Location"
-                  className="block mb-2 text-sm font-medium text-gray-900 "
-                >
-                  Location<span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="Location"
-                  id="Location"
-                  className={`bg-gray-50 border ${dataerrors.address ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
-                  placeholder="Enter your Location"
-                  required
-                  onChange={(e) => {
-                    setAddress(e.target.value);
-                  }}
-                ></input>
-                {dataerrors.address ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
-              </div>
-              <div>
-                <label
-                  htmlFor="Description"
-                  className=" block mb-2 text-sm font-medium text-gray-900 "
-                >
-                  Description<span className="text-red-500">*</span>
-                </label>
-                <textarea
-                  type="text"
-                  name="Description"
-                  id="Description"
-                  className={`bg-gray-50 h-32 border  ${dataerrors.description ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
-                  placeholder="A breif description about your place"
-                  required
-                  onChange={(e) => {
-                    setDescription(e.target.value);
-                  }}
-                ></textarea>
-                {dataerrors.description ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
-              </div>
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block mb-2 text-sm font-medium text-gray-900 "
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  className={`bg-gray-50 border ${dataerrors.email ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
-                  placeholder="name@example.com"
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
-                ></input>
-                {dataerrors.email ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
-              </div>
-              <div>
-                <label
-                  htmlFor="phonenumber1"
-                  className="block mb-2 text-sm font-medium text-gray-900 "
-                >
-                  Phone Number<span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="phonenumber1"
-                  id="phonenumber1"
-                  className={`bg-gray-50 border ${dataerrors.phonenumber1 ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
-                  placeholder="please write a valid phonenumber "
-                  required
-                  onChange={(e) => {
-                    setPhoneNumberOne(e.target.value);
-                  }}
-                ></input>
-                {dataerrors.phonenumber1 ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
-              </div>
-              <div>
-                <label
-                  htmlFor="facebookLink"
-                  className="block mb-2 text-sm font-medium text-gray-900 "
-                >
-                  Facebook Link
-                </label>
-                <input
-                  type="text"
-                  name="facebookLink"
-                  id="facebookLink"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                  placeholder="facebook page"
-                  onChange={(e) => {
-                    setFacebookLink(e.target.value);
-                  }}
-                ></input>
-              </div>
-              <div className="flex justify-between gap-8">
-                <div>
-                  <label
-                    htmlFor="phonenumber1"
-                    className="block mb-2 text-sm font-medium text-gray-900 "
-                  >
-                    Opening hour<span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="startDate"
-                    id="startDate"
-                    className={`bg-gray-50 border ${dataerrors.startDate ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
-                    placeholder="24 hour format ex 09:30"
-                    required
-                    onChange={(e) => {
-                      setStartDate(e.target.value);
-                    }}
-                  ></input>
-                </div>
-                <div>
-                  <label
-                    htmlFor="phonenumber1"
-                    className="block mb-2 text-sm font-medium text-gray-900 "
-                  >
-                    Closing hour<span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="endDate"
-                    id="endDate"
-                    className={`bg-gray-50 border ${dataerrors.endDate ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
-                    placeholder="24 hour format ex 09:30"
-                    required
-                    onChange={(e) => {
-                      setEndDate(e.target.value);
-                    }}
-                  ></input>
-                </div>
-              </div>
-              {(dataerrors.endDate || dataerrors.startDate) ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
-              <br></br>
-              <button
-                type="submit"
-                onClick={e => HandleError(e)}
-                className="mt-3 w-full text-white bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 font-medium rounded-lg text-md px-5 py-2.5 text-center duration-300 ease-in-out"
-              >
-                Create Co-Work Space
-              </button>
-            </form>
-          </div>
+    <>
+      <div>
+        <label
+          htmlFor="name"
+          className="block mb-2 text-sm font-medium text-gray-900 "
+        >
+          Name<span className="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          name="name"
+          id="name"
+          value={name}
+          className={`bg-gray-50 border ${dataerrors.name ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
+          placeholder="Enter your name"
+          onChange={(e) => {
+            updateFields({ name: e.target.value })
+          }}
+        ></input>
+        {dataerrors.name ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
+      </div>
+      <div>
+        <label
+          htmlFor="Location"
+          className="block mb-2 text-sm font-medium text-gray-900 "
+        >
+          Location<span className="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          name="Location"
+          id="Location"
+          value={address}
+          className={`bg-gray-50 border ${dataerrors.address ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
+          placeholder="Enter your Location"
+          onChange={(e) => {
+            updateFields({ address: e.target.value })
+          }}
+        ></input>
+        {dataerrors.address ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
+      </div>
+      <div>
+        <label
+          htmlFor="Description"
+          className=" block mb-2 text-sm font-medium text-gray-900 "
+        >
+          Description<span className="text-red-500">*</span>
+        </label>
+        <textarea
+          type="text"
+          name="Description"
+          id="Description"
+          value={description}
+          className={`bg-gray-50 h-32 border  ${dataerrors.description ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
+          placeholder="A breif description about your place"
+          onChange={(e) => {
+            updateFields({ description: e.target.value })
+          }}
+        ></textarea>
+        {dataerrors.description ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
+      </div>
+      <div>
+        <label
+          htmlFor="email"
+          className="block mb-2 text-sm font-medium text-gray-900 "
+        >
+          Email
+        </label>
+        <input
+          type="email"
+          name="email"
+          id="email"
+          value={email}
+          className={`bg-gray-50 border ${dataerrors.email ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
+          placeholder="name@example.com"
+          onChange={(e) => {
+            updateFields({ email: e.target.value })
+          }}
+        ></input>
+        {dataerrors.email ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
+      </div>
+      <div>
+        <label
+          htmlFor="phonenumber1"
+          className="block mb-2 text-sm font-medium text-gray-900 "
+        >
+          Phone Number<span className="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          name="phonenumber1"
+          id="phonenumber1"
+          value={phones[0]}
+          className={`bg-gray-50 border ${dataerrors.phonenumber1 ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
+          placeholder="please write a valid phonenumber "
+          onChange={(e) => {
+            updateFields({ phones: [e.target.value] })
+          }}
+        ></input>
+        {dataerrors.phonenumber1 ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
+      </div>
+      <div>
+        <label
+          htmlFor="facebookLink"
+          className="block mb-2 text-sm font-medium text-gray-900 "
+        >
+          Facebook Link
+        </label>
+        <input
+          type="text"
+          name="facebookLink"
+          id="facebookLink"
+          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+          placeholder="facebook page"
+          onChange={(e) => {
+            setFacebookLink(e.target.value);
+          }}
+        ></input>
+      </div>
+      <div>
+        <label
+          htmlFor="name"
+          className="block mb-2 text-sm font-medium text-gray-900 "
+        >
+          Main Image<span className="text-red-500">*</span>
+        </label>
+        <input
+          type="file"
+          name="offerImage"
+          id="offerImage"
+          className={`bg-gray-50 border ${dataerrors.ImageName ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
+          placeholder=""
+          value={img.Name}
+          accept=".png,.jpg,.jpeg"
+          onChange={(e) => {
+            setImg(e.target.files[0]);
+            updateFields({ img: e.target.files[0], imageName: e.target.files[0].name })
+            setOfferImageName(e.target.files[0].name);
+          }}
+        ></input>
+        {dataerrors.ImageName ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
+      </div>
+      <div className="flex justify-between gap-8">
+        <div>
+          <label
+            htmlFor="phonenumber1"
+            className="block mb-2 text-sm font-medium text-gray-900 "
+          >
+            Opening hour<span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            name="openingTime"
+            id="openingTime"
+            value={openingTime}
+            className={`bg-gray-50 border ${dataerrors.startDate ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
+            placeholder="24 hour format ex 09:30"
+            onChange={(e) => {
+              updateFields({ openingTime: e.target.value })
+            }}
+          ></input>
+        </div>
+        <div>
+          <label
+            htmlFor="phonenumber1"
+            className="block mb-2 text-sm font-medium text-gray-900 "
+          >
+            Closing hour<span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            name="closingTime"
+            id="closingTime"
+            value={closingTime}
+            className={`bg-gray-50 border ${dataerrors.endDate ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
+            placeholder="24 hour format ex 09:30"
+            onChange={(e) => {
+              updateFields({ closingTime: e.target.value })
+            }}
+          ></input>
         </div>
       </div>
-    </section>
+      {(dataerrors.endDate || dataerrors.startDate) ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
+      <br></br>
+      {/* <button
+          type="button"
+          onClick={e => HandleError(e)}
+          className="mt-3 w-full text-white bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 font-medium rounded-lg text-md px-5 py-2.5 text-center duration-300 ease-in-out"
+        >
+          Create Co-Work Space
+        </button> */}
+    </>
   );
-}
+})
 export default CreateCoworkingSpace;
