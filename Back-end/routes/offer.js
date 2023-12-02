@@ -2,6 +2,7 @@ const express = require('express')
 const offerController = require('../controllers/offerController')
 const router = express.Router();
 const { validateOffer } = require("../middlewares/validationSchema");
+
 const multer = require('multer')
 const fs = require('fs')
 const storage = multer.diskStorage({
@@ -25,6 +26,8 @@ const storage = multer.diskStorage({
     } 
 })
 const upload = multer({ storage: storage })
+
+router.route("/home").get(offerController.getHome);
 
 router.route("/")
     .get(offerController.get)
