@@ -24,7 +24,7 @@ module.exports ={
                     username: req.params.username
                 }
             })
-            if (Owner) {
+            if (owner) {
                 return res.json({ status: httpStatusCode.SUCCESS, data: owner })
             }
             const error = appError.create("Owner Not Found", 404, httpStatusCode.ERROR)
@@ -39,7 +39,7 @@ module.exports ={
                     password: req.body.password
                 }
             })
-            if (Owner) {
+            if (owner) {
                 return res.json({ status: httpStatusCode.SUCCESS, data: owner })
             }
             const error = appError.create("Username or Password is Incorrect", 404, httpStatusCode.ERROR)
@@ -81,35 +81,35 @@ module.exports ={
                     username: req.params.username
                 }
             })
-            if (updatedOwner.length === 0) {
-                const error = appError.create("Owner Not Found", 404, httpStatusCode.ERROR);
-                return next(error);
-            }
-            await Owner.update(req.body, {
+            if (updatedOwner) {
+                await Owner.update(req.body, {
                 where: {
                     username: req.params.username
                 }
             })
             return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Owner Updated Successfully" })
+            }
+            const error = appError.create("Owner Not Found", 404, httpStatusCode.ERROR);
+            return next(error);
         }
     ),  
     delete: asyncWrapper(
         async (req, res, next) => {
-            const deletedOwner = await Owner.findAll({
+            const deletedOwner = await Owner.findOne({
                 where: {
                     username: req.params.username
                 }
             });
-            if (deletedOwner.length === 0) {
-                const error = appError.create("Owner not found", 404, httpStatusCode.ERROR)
-                return next(error);
+            if (deletedOwner) {
+                await Owner.destroy({
+                    where: {
+                        username: req.params.username
+                    }
+                })
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Owner Deleted Successfully" })     
             }
-            await Owner.destroy({
-                where: {
-                    username: req.params.username
-                }
-            })
-            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Owner Deleted Successfully" })
+            const error = appError.create("Owner Not Found", 404, httpStatusCode.ERROR)
+            return next(error);
         }
     )
 } 

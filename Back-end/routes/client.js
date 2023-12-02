@@ -1,22 +1,20 @@
 const express = require('express')
-const clientsController = require('../controllers/clientController')
-const { validateUser } = require("../middlewares/validationSchema");
-
+const clientController = require('../controllers/clientController')
 const router = express.Router();
 
 router.route("/login")
-    .post(clientsController.getOne);
+    .post(clientController.login);
 
 router.route("/register")
-    .post(clientsController.create);
+    .post(clientController.create);
 
 router.route("/")
-    .get(clientsController.get)
+    .get(clientController.getAll)
 
 router.route("/:username")
-    .get(clientsController.getOne)
-    .patch(clientsController.update)
-    .delete(clientsController.delete);
+    .get(clientController.getOne)
+    .patch(clientController.update)
+    .delete(clientController.delete);
 
 module.exports = router
 
