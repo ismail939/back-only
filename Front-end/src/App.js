@@ -13,6 +13,7 @@ import OfferList from './pages/mainpages/OfferList';
 import Dashboard from './pages/AdminPages/Dashboard';
 import DiscoverAdmin from './pages/AdminPages/DiscoverAdmin';
 import OfferAdmin from './pages/AdminPages/OfferAdmin';
+import DashboardProfile from './pages/DashboardProfile';
 function App() {
   return (
     <>
@@ -28,6 +29,7 @@ function App() {
         <Route path='dashboard' element={<Dashboard />}></Route>
         <Route path='discoverEdit' element={<DiscoverAdmin />}></Route>
         <Route path='offerEdit' element={<OfferAdmin />}></Route>
+        <Route path='dashboardProfile' element={<DashboardProfile />}></Route>
         <Route path="*" element={<PageNotFound />}></Route>
       </Routes>
       <Footer />
