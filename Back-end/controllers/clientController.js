@@ -31,6 +31,27 @@ module.exports ={
             return next(error)
         }
     ),
+    addPhoto: asyncWrapper(
+        async (req, res, next) => {
+            req.body.profilePic = req.body.imageName;
+            delete req.body.imageName;
+            const updatedClient = await Client.findOne({
+                where: {
+                    username: req.params.username
+                }
+            })
+            if (updatedClient) {
+                await Client.update(req.body, {
+                where: {
+                    username: req.params.username
+                }
+            })
+            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully" })
+            }
+            const error = appError.create("Client Not Found", 404, httpStatusCode.ERROR);
+            return next(error);
+        }
+    ),
     login: asyncWrapper(
         async (req, res, next) => {
             const client = await Client.findAll({

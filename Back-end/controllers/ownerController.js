@@ -31,6 +31,27 @@ module.exports ={
             return next(error)
         }
     ),
+    addPhoto: asyncWrapper(
+        async (req, res, next) => {
+            req.body.profilePic = req.body.imageName;
+            delete req.body.imageName;
+            const updatedOwner = await Owner.findOne({
+                where: {
+                    username: req.params.username
+                }
+            })
+            if (updatedOwner) {
+                await Owner.update(req.body, {
+                where: {
+                    username: req.params.username
+                }
+            })
+            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Owner Updated Successfully" })
+            }
+            const error = appError.create("Owner Not Found", 404, httpStatusCode.ERROR);
+            return next(error);
+        }
+    ),
     login: asyncWrapper(
         async (req, res, next) => {
             const owner = await Owner.findOne({
