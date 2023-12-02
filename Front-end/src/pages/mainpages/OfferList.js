@@ -54,7 +54,7 @@ function OfferList() {
                 </div> : null}
             </div>
             {!fetcherror ? <div>
-                    {offers ? <div className="flex flex-col gap-8">
+                    {offers ? <div className="flex flex-col gap-8 mt-8">
                         {offers.map((offer) => {
                             return <Card2 offer={offer} key={offer.cwID} />
                         })}</div> : <NoDataError response={statusresponse}/>}
