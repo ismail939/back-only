@@ -25,7 +25,7 @@ module.exports ={
             if (offerHome.length === 0) {
                 return res.status(404).json({ status: httpStatusCode.ERROR, message: "There are no available Co-working spaces available"})
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: cw_spaceHome })
+            return res.json({ status: httpStatusCode.SUCCESS, data: offerHome })
         }
     ),
     getOne: asyncWrapper(
