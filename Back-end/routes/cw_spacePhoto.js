@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 router.route("/")
     .get(cw_spacePhotoController.get)
-    .post(upload.any('file'), cw_spacePhotoController.create);
+    .post(upload.any('img'), cw_spacePhotoController.create);
 
 router.route("/:ID")
     .get(cw_spacePhotoController.getOne)

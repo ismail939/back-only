@@ -35,6 +35,58 @@ const validateOffer = (req) => {
     return errors
 }
 
+const validateRoom = (req) => {
+    let data = req.body
+    let errors = []
+    if(validator.isEmpty(data.type)){
+        errors.push("type is required"); 
+    }
+
+    if(validator.isEmpty(data.hourPrice)){
+        errors.push("hourPrice is required"); 
+    }
+    else if(validator.isNotNumber(data.hourPrice)){
+        errors.push("hourPrice is not in number format")
+    }
+
+    if(validator.isEmpty(data.dayPrice)){
+        errors.push("dayPrice is required"); 
+    }
+    else if(validator.isNotNumber(data.dayPrice)){
+        errors.push("dayPrice is not in number format")
+    }
+    
+    if(validator.isEmpty(data.minRoomSize)){
+        errors.push("minRoomSize is required"); 
+    }
+    else if(validator.isNotNumber(data.minRoomSize)){
+        errors.push("minRoomSize is not in number format")
+    }
+
+    if(validator.isEmpty(data.maxRoomSize)){
+        errors.push("maxRoomSize is required"); 
+    }
+    else if(validator.isNotNumber(data.maxRoomSize)){
+        errors.push("maxRoomSize is not in number format")
+    }
+
+    if(validator.isEmpty(data.cwSpaceCwID)){
+        errors.push("cwSpaceCwID is required"); 
+    }
+    else if(validator.isNotNumber(data.cwSpaceCwID)){
+        errors.push("cwSpaceCwID is not in number format")
+    }
+
+    if(validator.isEmpty(data.number)){
+        errors.push("number is required"); 
+    }
+    else if(validator.isNotNumber(data.number)){
+        errors.push("number is not in number format")
+    }
+    
+    return errors
+}
+
 const validateCw_space = (req) => {
     let data = req.body
     let errors = []
@@ -87,5 +139,6 @@ const validateCw_space = (req) => {
 module.exports = {
     validateUser,
     validateCw_space,
-    validateOffer
+    validateOffer,
+    validateRoom
 }
