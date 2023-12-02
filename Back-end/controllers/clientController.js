@@ -10,11 +10,11 @@ module.exports ={
     getAll: asyncWrapper(
         async (req, res, next) => {
             const clients = await Client.findAll()
-            if (clients.length === 0) {
-                const error = appError.create("There Are No Available Clients", 404, httpStatusCode.ERROR)
-                return next(error)
-            }
-            return res.json({ status: httpStatusCode.SUCCESS, data: clients })
+            if (clients.length != 0) {
+                return res.json({ status: httpStatusCode.SUCCESS, data: clients })
+                }
+            const error = appError.create("There Are No Available Clients", 404, httpStatusCode.ERROR)
+            return next(error)
         }
     ),
     getOne: asyncWrapper(

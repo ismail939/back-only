@@ -10,11 +10,11 @@ module.exports ={
     getAll: asyncWrapper(
         async (req, res, next) => {
             const owners = await Owner.findAll()
-            if (owners.length === 0) {
-                const error = appError.create("There Are NO Available Owners", 404, httpStatusCode.ERROR)
-                return next(error)
+            if (owners.length != 0) {
+                return res.json({ status: httpStatusCode.SUCCESS, data: owners })
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: owners })
+            const error = appError.create("There Are NO Available Owners", 404, httpStatusCode.ERROR)
+            return next(error)
         }
     ),
     getOne: asyncWrapper(
