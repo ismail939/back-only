@@ -121,7 +121,7 @@ function Login() {
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" className="w-full text-black bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 font-medium rounded-lg text-md px-5 py-2.5 text-center duration-300 ease-in-out"
+                            <button type="submit" className="w-full  btn-color hover:bg-blue-600 focus:bg-blue-700 font-medium rounded-lg text-md px-5 py-2.5 text-center duration-300 ease-in-out"
                                 onClick={(e) => { HandleError(e) }}>Sign in</button>
                             <p className="text-sm font-light text-gray-500">
                                 Don’t have an account yet? <Link to="../sign-up" className="font-medium text-primary-600 hover:underline">Sign up</Link>

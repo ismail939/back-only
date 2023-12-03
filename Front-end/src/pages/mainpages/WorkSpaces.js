@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import Card from "../../components/Card";
 import Pagination from "../../components/Pagination";
 import { Search, SortDownAlt, FunnelFill, XCircleFill } from "react-bootstrap-icons";
 import Filters from "../../components/Filters";
 import notdata from "../../components/images/Nodata.svg"
 import servererror from "../../components/images/serverdown.svg"
+import WorkSpaceCard from "../../components/WorkSpaceCard";
 export function ShowError() {
     return (
         <div className="flex flex-col items-center text-center">
@@ -119,7 +119,7 @@ function WorkSpaces() {
                 {!fetcherror ? <div>
                     {cwspaces ? <div className="flex flex-col gap-8">
                         {cwspaces.map((cwspace) => {
-                            return <Card cwspace={cwspace} key={cwspace.cwID} />
+                            return <WorkSpaceCard cwspace={cwspace} key={cwspace.cwID} />
                         })}</div> : <NoDataError response={statusresponse}/>
                         }
                     {/* <div className="mt-[50px] flex justify-center">

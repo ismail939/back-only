@@ -224,7 +224,7 @@ function CreateOffer() {
 
                                         value={start}
                                         min={getDate()}
-                                        max={end?end:"2024-11-28"}
+                                        max={end?end:"2030-03-05"}
                                         className={`bg-gray-50 border ${dataerrors.start ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
                                         required
                                         onChange={(e) => {
@@ -247,7 +247,7 @@ function CreateOffer() {
 
                                         value={end}
                                         min={start ? start : getDate()}
-                                        max="2024-11-28"
+                                        max="2030-03-05"
                                         className={`bg-gray-50 border ${dataerrors.end ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
                                         required
                                         onChange={(e) => {

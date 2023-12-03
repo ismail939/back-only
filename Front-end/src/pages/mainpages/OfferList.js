@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Search,XCircleFill } from "react-bootstrap-icons";
-import Card2 from "../../components/card2";
 import notFoundImage from "../../components/images/WorkSpaceNotFound.png"
 import { NoDataError, ShowError } from "./WorkSpaces";
+import OfferCard from "../../components/OfferCard";
 function OfferList() {
     const [searchlist, setSearchList] = useState(false);
     const [searchData, setSearchData] = useState([]);
@@ -56,7 +56,7 @@ function OfferList() {
             {!fetcherror ? <div>
                     {offers ? <div className="flex flex-col gap-8 mt-8">
                         {offers.map((offer) => {
-                            return <Card2 offer={offer} key={offer.cwID} />
+                            return <OfferCard offer={offer} key={offer.cwID} />
                         })}</div> : <NoDataError response={statusresponse}/>}
                     {/* <div className="mt-[50px] flex justify-center">
                         <Pagination />

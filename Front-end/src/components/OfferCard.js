@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import image from './images/offer1.jpg';
 
-function Card2(props) {
+function OfferCard(props) {
     const offer = props.offer;
     const imageUrl = "http://localhost:4000/images/" + offer.img;
 
@@ -24,4 +24,4 @@ function Card2(props) {
     )
 }
 
-export default Card2;
+export default OfferCard;

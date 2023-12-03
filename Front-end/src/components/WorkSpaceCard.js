@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import image from './images/offer1.jpg';
 
-function Card(props) {
+function WorkSpaceCard(props) {
     const cwspace = props.cwspace;
     const imageUrl="http://localhost:4000/images/"+cwspace.mainPhoto;
 
@@ -21,4 +21,4 @@ function Card(props) {
     )
 }
 
-export default Card;
+export default WorkSpaceCard;

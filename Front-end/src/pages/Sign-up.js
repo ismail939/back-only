@@ -276,7 +276,7 @@ function SignUp() {
                             {dataerrors.usertype ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
                             <br></br>
                             {reserror !== "" ? <span className="text-[14px] text-red-500 flex gap-2 items-center"><ExclamationCircleFill />{reserror}</span> : null}
-                            <button type="submit" className="mt-3 w-full text-black bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 font-medium rounded-lg text-md px-5 py-2.5 text-center duration-300 ease-in-out"
+                            <button type="submit" className="mt-3 w-full  btn-color  hover:bg-blue-600 focus:bg-blue-700 font-medium rounded-lg text-md px-5 py-2.5 text-center duration-300 ease-in-out"
                                 onClick={(e) => { HandleError(e); }}>Sign Up</button>
                             <p className="text-sm font-light text-gray-500">
                                 Already have an account? <Link to="../login" className="font-medium text-primary-600 hover:underline">Login</Link>

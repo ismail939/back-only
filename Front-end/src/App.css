@@ -30,9 +30,11 @@
 
 .btn-color{
   background-color: #0F4C75;
+  color : white
 }
 .btn-color:hover{
   background-color: #0c3d5e;
+  
 }
 
 .main-font{
