@@ -5,7 +5,7 @@ import { CheckLg , ExclamationCircleFill } from "react-bootstrap-icons";
 import WorkSpaceImages from "../components/WorkSpaceForm/WorkSpaceImages";
 import Swal from "sweetalert2";
 function CreateFullWorkSpace() {
-    const [data, setData] = useState({
+    const IntitialValue ={
         name: "",
         address: "",
         description: "",
@@ -17,7 +17,9 @@ function CreateFullWorkSpace() {
         mainImgName: "",
         mainimg: [],
         photos: []
-    })
+    }
+    const [data, setData] = useState(IntitialValue)
+    const [dataSuccess, setDataSuccess] = useState(false)
     const stepNames = ["Main Data", "Photos"]
     const beforeStyle = `before:ml-0.5  before:absolute before:h-[2px] before:w-full before:right-2/4 before:top-1/3 before:z-[-5] before:content-['']`
     const childRef = useRef(null);
@@ -82,12 +84,20 @@ function CreateFullWorkSpace() {
             showConfirmButton: false,
         });
     }
-    function Validation() {
+    function HandleNext() {
         if (isFirstStep && childRef.current.HandleError()) next();
         else if (isLastStep && childRef.current.checkImages()) {
-            if (!data.photos) {
-                console.log(data)
-            }
+            console.log(data)
+            setDataSuccess(true)
+        }
+    }
+    function HandleBack() {
+        if(success){
+            setDataSuccess(false)
+            setData(IntitialValue)
+            back()
+        }else{
+            back()
         }
     }
     return (
@@ -97,9 +107,9 @@ function CreateFullWorkSpace() {
                     return (
                         <div key={index} className={`flex flex-col relative items-center w-full gap-2 justify-between ${index > 0 ? beforeStyle : null}
                         ${currentStepIndex === 1 ? "before:bg-green-500" : "before:bg-red-500"}`}>
-                            <div className={`flex justify-center items-center w-10 h-10 rounded-full text-white ${currentStepIndex > index ?
+                            <div className={`flex justify-center items-center w-10 h-10 rounded-full text-white ${currentStepIndex > index || (isLastStep && dataSuccess) ?
                                 "bg-green-500" : "bg-[#0F4C75] }"} `}>
-                                {currentStepIndex > index ? <CheckLg /> : index + 1}</div>
+                                {currentStepIndex > index || (isLastStep && dataSuccess) ? <CheckLg /> : index + 1}</div>
                             <p className="uppercase font-medium text-sm">{stepNames[index]}</p>
                         </div>
                     )
@@ -114,10 +124,10 @@ function CreateFullWorkSpace() {
                         <form className="space-y-4 md:space-y-6" action="#" >
                             {step}
                             <div className="flex gap-4 flex-row-reverse justify-between text-white">
-                                <button type="button" className="py-2 px-3 btn-color rounded-md" onClick={Validation}>
+                                <button type="button" className="py-2 px-3 btn-color rounded-md" onClick={HandleNext}>
                                     {isLastStep ? "Submit" : "Next"}
                                 </button >
-                                {!isFirstStep ? <button type="button" className="py-2 px-3 btn-color rounded-md" onClick={back}>
+                                {!isFirstStep ? <button type="button" className="py-2 px-3 btn-color rounded-md" onClick={HandleBack}>
                                     Back
                                 </button> : null}
                             </div>
