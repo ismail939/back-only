@@ -7,11 +7,12 @@ import { useState, useEffect } from "react";
 
 function DiscoverCard(props) {
     const discover = props.discover;
+    const imageUrl="http://localhost:4000/images/cw_spaces/"+discover.mainPhoto;
     return (
         <div className="max-w-sm rounded-lg overflow-hidden shadow-lg">
-            <div className="w-full relative group">
-                <img className="w-full" src={Image2} alt="Sunset in the mountains"></img>
-                <Link to={`/workspaces/${discover.cwID}`}><div className="h-full w-full absolute inset-0 duration-500 hover:bg-black hover:opacity-50"></div></Link>
+            <div className="w-full relative group h-64">
+                <img className="w-full h-full" src={imageUrl} alt={discover.name}></img>
+                <Link to={`/workspaces/${discover.cwID}`}><div className=" w-full absolute inset-0 duration-500 hover:bg-black hover:opacity-50"></div></Link>
                 <h2 className="absolute top-3 right-1 font-extrabold text-lg text-white text-yellow-400 opacity-0 duration-500
                             group-hover:-translate-x-5 group-hover:opacity-100">New</h2>
             </div>

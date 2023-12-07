@@ -3,7 +3,7 @@ const { Client } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-const { validateUser } = require("../middlewares/validationSchema");
+const { validateUser , validateUpdatedUser} = require("../middlewares/validationSchema");
 const bcrypt = require('bcrypt')
 const generateJWT = require('../utils/generateJWT')
 
@@ -86,7 +86,6 @@ module.exports = {
                 const error = appError.create("There is NO Images Provided", 400, httpStatusCode.ERROR);
                 return next(error);
             }
-            
             req.body.profilePic = req.body.imageName;
             delete req.body.imageName;
             const updatedClient = await Client.findOne({
@@ -108,6 +107,13 @@ module.exports = {
     ),
     update: asyncWrapper(
         async (req, res, next) => {
+            let errors = validateUpdatedUser(req);
+            console.log(errors)
+            if (errors.length != 0) {
+                console.log(errors)
+                const error = appError.create(errors, 400, httpStatusCode.ERROR)
+                return next(error)
+            }
             const updatedClient = await Client.findOne({
                 where: {
                     clientID: req.params.ID
