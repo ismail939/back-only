@@ -28,6 +28,10 @@ module.exports = (db, type) => {
         number: {
             type: type.INTEGER,
             allowNull: false
+        },
+        image:{
+            type: type.TEXT,
+            allowNUll: false
         }
     },{
         timestamps: false 

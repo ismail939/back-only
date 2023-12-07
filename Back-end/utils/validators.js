@@ -51,5 +51,8 @@ module.exports = {
             return true
         }
         return false
+    },
+    isNotNumber: (data) => {
+        return isNaN(data)
     }
 }

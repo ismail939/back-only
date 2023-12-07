@@ -31,7 +31,14 @@ module.exports ={
     ),
     create: asyncWrapper(
         async (req, res, next) => {
-            const newCw_spacePhoto = await Cw_spacePhoto.create(req.body)
+            let newCw_spacePhoto=[]
+            for(let i = 0 ;i<req.body.photos.length;i++){
+                let newPhoto = (await Cw_spacePhoto.create({
+                    photo: req.body.photos[i],
+                    cwSpaceCwID: req.body.ID
+                })).get({plain: true})
+                newCw_spacePhoto.push(newPhoto)
+            }
             return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newCw_spacePhoto });
         }
     ),
