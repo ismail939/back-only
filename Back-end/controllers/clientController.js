@@ -67,19 +67,16 @@ module.exports = {
                 const enteredPassword = req.body.password;
                 const savedHashedPassword = client.password; // Retrieved from the database
                 bcrypt.compare(enteredPassword, savedHashedPassword, (err, result) => {
-                    if (err) {
-                        console.error('Error comparing passwords:', err);
-                    } else if (result) {
-                        // Passwords match, login successful
+                    if (result) {
                         return res.json({ status: httpStatusCode.SUCCESS, data: client })
-                    } else {
-                        // Passwords don't match, login failed
-                        const error = appError.create("Username or Password is Incorrect", 404, httpStatusCode.ERROR)
-                        return next(error)
                     }
                 });
+                
+            } else {
+                const error = appError.create("Username or Password is Incorrect", 404, httpStatusCode.ERROR)
+                return next(error)
             }
-
+            
         }
     ),
     create: asyncWrapper(
@@ -101,13 +98,11 @@ module.exports = {
                 const error = appError.create("Duplicate Data Not Allowed", 400, httpStatusCode.ERROR)
                 return next(error)
             }
-            const saltRounds = 10; // Number of salt rounds for bcrypt
+            
 
             const plainTextPassword = req.body.password;
 
-            bcrypt.hash(plainTextPassword, saltRounds, async (err, hash) => {
-                err;
-    
+            bcrypt.hash(plainTextPassword, Number(process.env.SALT_ROUND), async (err, hash) => {
                 const newClient = await Client.create({
                     fname: req.body.fname,
                     lname: req.body.lname,
@@ -122,7 +117,7 @@ module.exports = {
                 }
                 const error = appError.create("Unexpected Error, Try Again Later", 400, httpStatusCode.ERROR)
                 return next(error)
-            }            
+            });
         }
     ),
     update: asyncWrapper(
