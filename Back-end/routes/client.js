@@ -2,6 +2,8 @@ const express = require('express')
 const clientController = require('../controllers/clientController')
 const router = express.Router();
 const verifyToken = require('../middlewares/verifyToken')
+const httpStatusCode = require("../utils/httpStatusText");
+const appError = require("../utils/appError");
 
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -11,7 +13,8 @@ const storage = multer.diskStorage({
     filename: function (req, file, cb) {
         const acceptedFormats = ['image/png', 'image/jpeg', 'image/jpg'];
         if (!acceptedFormats.includes(file.mimetype)) {
-            return cb(new Error('Unacceptable Type Format'), null);
+            const error = appError.create("Unacceptable Type Format", 415, httpStatusCode.ERROR)
+            return cb(next(error));
         }
         const uniqueSuffix = Date.now() + "." + file.originalname.split('.')[1];
         req.body.imageName = uniqueSuffix     

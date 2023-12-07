@@ -5,6 +5,7 @@ const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 const { validateUser } = require("../middlewares/validationSchema");
 const bcrypt = require("bcrypt")
+const generateJWT = require("../utils/generateJWT");
 
 module.exports ={
     getAll: asyncWrapper(
@@ -25,7 +26,7 @@ module.exports ={
                 }
             })
             if (owner) {
-                return res.json({ status: httpStatusCode.SUCCESS, data: owner })
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: owner })
             }
             const error = appError.create("Owner Not Found", 404, httpStatusCode.ERROR)
             return next(error)
@@ -65,10 +66,13 @@ module.exports ={
             })
             if (owner) {
                 const enteredPassword = req.body.password;
-                const savedHashedPassword = owner.password; // Retrieved from the database
-                bcrypt.compare(enteredPassword, savedHashedPassword, (err, result) => {
+                const savedHashedPassword = owner.password;
+                bcrypt.compare(enteredPassword, savedHashedPassword, async (err, result) => {
                     if (result) {
-                        return res.json({ status: httpStatusCode.SUCCESS, data: owner })
+                        delete client.password
+                        delete client.token
+                        const token = await generateJWT(client)
+                        return res.status(200).json({ status: httpStatusCode.SUCCESS, data: { token } })
                     }
                 });
                 
@@ -95,7 +99,7 @@ module.exports ={
                 }
             })
             if (duplicates) {
-                const error = appError.create("Duplicate Data Not Allowed", 400, httpStatusCode.ERROR)
+                const error = appError.create("Owner Already Exists", 400, httpStatusCode.ERROR)
                 return next(error)
             }
             
@@ -111,7 +115,7 @@ module.exports ={
                 phone: req.body.phone
             })
             if (newOwner) {
-                return res.json({ status: httpStatusCode.SUCCESS, message: "Owner is Created Successfully" })
+                return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Owner is Created Successfully" })
             }
             const error = appError.create("Unexpected Error, Try Again Later", 400, httpStatusCode.ERROR)
             return next(error)

@@ -12,7 +12,7 @@ module.exports = {
         async (req, res, next) => {
             const clients = await Client.findAll()
             if (clients.length != 0) {
-                return res.json({ status: httpStatusCode.SUCCESS, data: clients })
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: clients })
             }
             const error = appError.create("There Are No Available Clients", 404, httpStatusCode.ERROR)
             return next(error)
@@ -26,7 +26,7 @@ module.exports = {
                 }
             })
             if (client) {
-                return res.json({ status: httpStatusCode.SUCCESS, data: client })
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: client })
             }
             const error = appError.create("Client Not Found", 404, httpStatusCode.ERROR)
             return next(error)
@@ -66,13 +66,13 @@ module.exports = {
             })
             if (client) {
                 const enteredPassword = req.body.password;
-                const savedHashedPassword = client.password; // Retrieved from the database
+                const savedHashedPassword = client.password;
                 bcrypt.compare(enteredPassword, savedHashedPassword, async (err, result) => {
                     if (result) {
                         delete client.password
                         delete client.token
                         const token = await generateJWT(client)
-                        return res.json({ status: httpStatusCode.SUCCESS, data: token })
+                        return res.status(200).json({ status: httpStatusCode.SUCCESS, data: { token } })
                     }
                 });
                 
@@ -99,7 +99,7 @@ module.exports = {
                 }
             })
             if (duplicates) {
-                const error = appError.create("Duplicate Data Not Allowed", 400, httpStatusCode.ERROR)
+                const error = appError.create("Client Already Exists", 400, httpStatusCode.ERROR)
                 return next(error)
             }
             
@@ -113,11 +113,11 @@ module.exports = {
                 password: hashedPassword,
                 profilePic: req.body.profilePic,
                 phone: req.body.phone
-            })).get({plain:true})
+            }))
             if (newClient) {
-                return res.json({ status: httpStatusCode.SUCCESS, message: "Client is Created Successfully" })
+                return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Client is Created Successfully" })
             }
-            const error = appError.create("Unexpected Error, Try Again Later", 400, httpStatusCode.ERROR)
+            const error = appError.create("Unexpected Error, Try Again Later", 500, httpStatusCode.FAIL)
             return next(error)
         }
     ),

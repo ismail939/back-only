@@ -1,6 +1,7 @@
 const express = require('express')
 const ownerController = require('../controllers/ownerController')
 const router = express.Router();
+const verifyToken = require("../middlewares/verifyToken");
 
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -10,7 +11,8 @@ const storage = multer.diskStorage({
     filename: function (req, file, cb) {
         const acceptedFormats = ['image/png', 'image/jpeg', 'image/jpg'];
         if (!acceptedFormats.includes(file.mimetype)) {
-            return cb(new Error('Unacceptable Type Format'), null);
+            const error = appError.create("Unacceptable Type Format", 415, httpStatusCode.ERROR)
+            return cb(next(error));
         }
         const uniqueSuffix = Date.now() + "." + file.originalname.split('.')[1];
         req.body.imageName = uniqueSuffix     
@@ -29,8 +31,7 @@ router.route("/register")
     .post(ownerController.create);
 
 router.route("/")
-    .get(ownerController.getAll)
-    .post(ownerController.create);
+    .get(verifyToken, ownerController.getAll)
 
 router.route("/:username")
     .get(ownerController.getOne)
