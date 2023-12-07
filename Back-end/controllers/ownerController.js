@@ -4,7 +4,7 @@ const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 const { validateUser } = require("../middlewares/validationSchema");
-
+const bcrypt = require("bcrypt")
 
 module.exports ={
     getAll: asyncWrapper(
@@ -16,8 +16,8 @@ module.exports ={
             const error = appError.create("There Are NO Available Owners", 404, httpStatusCode.ERROR)
             return next(error)
         }
-    ),
-    getOne: asyncWrapper(
+    ),  
+    getOne: asyncWrapper( 
         async (req, res, next) => {
             const owner = await Owner.findOne({
                 raw: true, where: {
@@ -60,20 +60,28 @@ module.exports ={
         async (req, res, next) => {
             const owner = await Owner.findOne({
                 raw: true, where: {
-                    username: req.body.username,
-                    password: req.body.password
+                    username: req.body.username
                 }
             })
             if (owner) {
-                return res.json({ status: httpStatusCode.SUCCESS, data: owner })
+                const enteredPassword = req.body.password;
+                const savedHashedPassword = owner.password; // Retrieved from the database
+                bcrypt.compare(enteredPassword, savedHashedPassword, (err, result) => {
+                    if (result) {
+                        return res.json({ status: httpStatusCode.SUCCESS, data: owner })
+                    }
+                });
+                
+            } else {
+                const error = appError.create("Username or Password is Incorrect", 404, httpStatusCode.ERROR)
+                return next(error)
             }
-            const error = appError.create("Username or Password is Incorrect", 404, httpStatusCode.ERROR)
-            return next(error)
+            
         }
     ),
     create: asyncWrapper(
         async (req, res, next) => {
-            let errors = validateUser(req)
+            let errors = validateUser(req);
             if (errors.length != 0) {
                 const error = appError.create(errors, 400, httpStatusCode.ERROR)
                 return next(error)
@@ -90,9 +98,19 @@ module.exports ={
                 const error = appError.create("Duplicate Data Not Allowed", 400, httpStatusCode.ERROR)
                 return next(error)
             }
-
-            const newOwner = await Owner.create(req.body)
-            if(newOwner){
+            
+            const plainTextPassword = req.body.password;
+            const hashedPassword = await bcrypt.hash(plainTextPassword, Number(process.env.SALT_ROUND))
+            const newOwner = await Owner.create({
+                fname: req.body.fname,
+                lname: req.body.lname,
+                username: req.body.username,
+                email: req.body.email,
+                password: hashedPassword,
+                profilePic: req.body.profilePic,
+                phone: req.body.phone
+            })
+            if (newOwner) {
                 return res.json({ status: httpStatusCode.SUCCESS, message: "Owner is Created Successfully" })
             }
             const error = appError.create("Unexpected Error, Try Again Later", 400, httpStatusCode.ERROR)
