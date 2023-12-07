@@ -50,7 +50,7 @@ function CreateFullWorkSpace() {
         formData.append('description', data.description);
         formData.append('openingTime', data.openingTime);
         formData.append('closingTime', data.closingTime);
-        formData.append('mainPhoto', data.img[0]);
+        formData.append('mainPhoto', data.mainimg);
         fetch('http://localhost:4000/cw_spaces', {
             method: 'POST',
             body: formData,
@@ -59,6 +59,7 @@ function CreateFullWorkSpace() {
             .then(data => {
                 // if (data.status === "error") { setErrorMessage(data.message) }
                 // else if (data.status === "success") { console.log(data) }
+                console.log(data)
             })
     }
     const addPhotos = () => {
@@ -74,6 +75,7 @@ function CreateFullWorkSpace() {
             .then(data => {
                 // if (data.status === "error") { setErrorMessage(data.message) }
                 // else if (data.status === "success") { console.log(data) }
+                console.log(data)
             })
     }
     const success = () => {
@@ -87,12 +89,14 @@ function CreateFullWorkSpace() {
     function HandleNext() {
         if (isFirstStep && childRef.current.HandleError()) next();
         else if (isLastStep && childRef.current.checkImages()) {
-            console.log(data)
+            addMainData();
+            addPhotos();
+            success();
             setDataSuccess(true)
         }
     }
     function HandleBack() {
-        if(success){
+        if(dataSuccess){
             setDataSuccess(false)
             setData(IntitialValue)
             back()
