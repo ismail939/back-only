@@ -22,7 +22,7 @@ module.exports = (db, type) => {
             allowNull: false
         },
         password: {
-            type: type.STRING,
+            type: type.TEXT,
             allowNull: false
         },
         profilePic: {
