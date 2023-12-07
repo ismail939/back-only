@@ -106,28 +106,23 @@ module.exports = {
             const plainTextPassword = req.body.password;
 
             bcrypt.hash(plainTextPassword, saltRounds, async (err, hash) => {
-                if (err) {
-                    console.error('Error hashing password:', err);
-                    // Handle the error
-                } else {
-                    const newClient = await Client.create({
-                        fname: req.body.fname,
-                        lname: req.body.lname,
-                        username: req.body.username,
-                        email: req.body.email,
-                        password: hash,
-                        profilePic: req.body.profilePic,
-                        phone: req.body.phone
-                    })
-                    if (newClient) {
-                        return res.json({ status: httpStatusCode.SUCCESS, message: "Client is Created Successfully" })
-                    }
-                    const error = appError.create("Unexpected Error, Try Again Later", 400, httpStatusCode.ERROR)
-                    return next(error)
+                err;
+    
+                const newClient = await Client.create({
+                    fname: req.body.fname,
+                    lname: req.body.lname,
+                    username: req.body.username,
+                    email: req.body.email,
+                    password: hash,
+                    profilePic: req.body.profilePic,
+                    phone: req.body.phone
+                })
+                if (newClient) {
+                    return res.json({ status: httpStatusCode.SUCCESS, message: "Client is Created Successfully" })
                 }
-            });
-            console.log(req.body)
-
+                const error = appError.create("Unexpected Error, Try Again Later", 400, httpStatusCode.ERROR)
+                return next(error)
+            }            
         }
     ),
     update: asyncWrapper(
