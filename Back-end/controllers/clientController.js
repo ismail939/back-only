@@ -8,82 +8,7 @@ const bcrypt = require('bcrypt')
 const generateJWT = require('../utils/generateJWT')
 
 module.exports = {
-    getAll: asyncWrapper(
-        async (req, res, next) => {
-            const clients = await Client.findAll()
-            if (clients.length != 0) {
-                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: clients })
-            }
-            const error = appError.create("There Are No Available Clients", 404, httpStatusCode.ERROR)
-            return next(error)
-        }
-    ),
-    getOne: asyncWrapper(
-        async (req, res, next) => {
-            const client = await Client.findOne({
-                raw: true, where: {
-                    username: req.params.username
-                }
-            })
-            if (client) {
-                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: client })
-            }
-            const error = appError.create("Client Not Found", 404, httpStatusCode.ERROR)
-            return next(error)
-        }
-    ),
-    addPhoto: asyncWrapper(
-        async (req, res, next) => {
-            if (req.body.imageName == undefined || req.body.img == null) {
-                const error = appError.create("There is NO Images Provided", 400, httpStatusCode.ERROR);
-                return next(error);
-            }
-            req.body.profilePic = req.body.imageName;
-            delete req.body.imageName;
-            const updatedClient = await Client.findOne({
-                where: {
-                    username: req.params.username
-                }
-            })
-            if (updatedClient) {
-                await Client.update(req.body, {
-                    where: {
-                        username: req.params.username
-                    }
-                })
-                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully" })
-            }
-            const error = appError.create("Client Not Found", 404, httpStatusCode.ERROR);
-            return next(error);
-        }
-    ),
-    login: asyncWrapper(
-        async (req, res, next) => {
-            const client = await Client.findOne({
-                raw: true, where: {
-                    username: req.body.username
-                }
-            })
-            if (client) {
-                const enteredPassword = req.body.password;
-                const savedHashedPassword = client.password;
-                bcrypt.compare(enteredPassword, savedHashedPassword, async (err, result) => {
-                    if (result) {
-                        delete client.password
-                        delete client.token
-                        const token = await generateJWT(client)
-                        return res.status(200).json({ status: httpStatusCode.SUCCESS, data: { token } })
-                    }
-                });
-                
-            } else {
-                const error = appError.create("Username or Password is Incorrect", 404, httpStatusCode.ERROR)
-                return next(error)
-            }
-            
-        }
-    ),
-    create: asyncWrapper(
+    register: asyncWrapper(
         async (req, res, next) => {
             let errors = validateUser(req);
             if (errors.length != 0) {
@@ -103,8 +28,8 @@ module.exports = {
                 return next(error)
             }
             
-            const plainTextPassword = req.body.password;
-            const hashedPassword = await bcrypt.hash(plainTextPassword, Number(process.env.SALT_ROUND))
+            const password = req.body.password;
+            const hashedPassword = await bcrypt.hash(password, Number(process.env.SALT_ROUND))
             const newClient = (await Client.create({
                 fname: req.body.fname,
                 lname: req.body.lname,
@@ -121,17 +46,77 @@ module.exports = {
             return next(error)
         }
     ),
+    login: asyncWrapper(
+        async (req, res, next) => {
+            const client = await Client.findOne({
+                raw: true, where: {
+                    username: req.body.username
+                }
+            })
+            if (client) {
+                const enteredPassword = req.body.password;
+                bcrypt.compare(enteredPassword, client.password, async (err, result) => {
+                    if (result) {
+                        delete client.password
+                        const token = await generateJWT(client)
+                        return res.status(200).json({ status: httpStatusCode.SUCCESS, data: { token } })
+                    }
+                });
+                
+            } else {
+                const error = appError.create("Username or Password is Incorrect", 404, httpStatusCode.ERROR)
+                return next(error)
+            }
+            
+        }
+    ),
+    getAll: asyncWrapper(
+        async (req, res, next) => {
+            const clients = await Client.findAll()
+            if (clients.length != 0) {
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: clients })
+            }
+            const error = appError.create("There Are No Available Clients", 404, httpStatusCode.ERROR)
+            return next(error)
+        }
+    ),
+    updatePhoto: asyncWrapper(
+        async (req, res, next) => {
+            if (req.body.imageName == undefined) {
+                const error = appError.create("There is NO Images Provided", 400, httpStatusCode.ERROR);
+                return next(error);
+            }
+            
+            req.body.profilePic = req.body.imageName;
+            delete req.body.imageName;
+            const updatedClient = await Client.findOne({
+                where: {
+                    clientID: req.params.ID
+                }
+            })
+            if (updatedClient) {
+                await Client.update(req.body, {
+                    where: {
+                        clientID: req.params.ID
+                    }
+                })
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully" })
+            }
+            const error = appError.create("Client Not Found", 404, httpStatusCode.ERROR);
+            return next(error);
+        }
+    ),
     update: asyncWrapper(
         async (req, res, next) => {
             const updatedClient = await Client.findOne({
                 where: {
-                    username: req.params.username
+                    clientID: req.params.ID
                 }
             });
             if (updatedClient) {
                 await Client.update(req.body, {
                     where: {
-                        username: req.params.username
+                        clientID: req.params.ID
                     }
                 });
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully" });
@@ -144,13 +129,13 @@ module.exports = {
         async (req, res, next) => {
             const deletedClient = await Client.findOne({
                 where: {
-                    username: req.params.username
+                    clientID: req.params.ID
                 }
             });
             if (deletedClient) {
                 await Client.destroy({
                     where: {
-                        username: req.params.username
+                        clientID: req.params.ID
                     }
                 })
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Deleted Successfully" });

@@ -32,6 +32,11 @@ module.exports = (db, type)=>{
         phone: {
             type: type.STRING,
             allowNull: false
+        },
+        role: {
+            type: type.STRING,
+            defaultValue: 'owner',
+            readOnly: true
         }
     },{
         timestamps: false 

@@ -33,9 +33,10 @@ module.exports = (db, type) => {
             type: type.TEXT,
             allowNull: false
         },
-        token: {
-            type: type.TEXT,
-            allowNUll: true
+        role: {
+            type: type.STRING,
+            defaultValue: 'client',
+            readOnly: true
         }
     }, {
         timestamps: false

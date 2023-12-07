@@ -4,6 +4,7 @@ const router = express.Router();
 const verifyToken = require('../middlewares/verifyToken')
 const httpStatusCode = require("../utils/httpStatusText");
 const appError = require("../utils/appError");
+const allowedTo = require("../middlewares/allowedTo")
 
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -23,22 +24,23 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage: storage })
 
-router.route("/addPhoto/:username")
-    .patch(upload.single('profilePic'), clientController.addPhoto);
+
+router.route("/register")
+    .post(clientController.register);
 
 router.route("/login")
     .post(clientController.login);
 
-router.route("/register")
-    .post(clientController.create);
+router.route("/updatePhoto/:ID")
+    .patch(verifyToken, allowedTo('client'), upload.single('profilePic'), clientController.updatePhoto);
+
+router.route("/:ID")
+    .patch(verifyToken, allowedTo('client'), clientController.update)
+    .delete(verifyToken, allowedTo('admin'), clientController.delete);
 
 router.route("/")
-    .get(verifyToken, clientController.getAll)
+    .get(verifyToken, allowedTo('admin'), clientController.getAll)
 
-router.route("/:username")
-    .get(clientController.getOne)
-    .patch(clientController.update)
-    .delete(clientController.delete);
 
 module.exports = router
 
