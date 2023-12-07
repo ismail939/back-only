@@ -22,7 +22,6 @@ const validateUser = (req) => {
             errors.push('not in email format')
         }
     }
-
     if(validator.isEmpty(data.password)){
         errors.push("password is required"); 
     }
@@ -30,7 +29,43 @@ const validateUser = (req) => {
     if(validator.isEmpty(data.phone)){
         errors.push("phone is required"); 
     }
+    return errors
+}
 
+const validateUpdatedUser = (req) =>{
+    let data = req.body
+    let errors = []
+    if(data.fname){
+        if(validator.isEmpty(data.fname))
+            errors.push("first name is empty"); 
+    }
+
+    if(data.lname){
+        if(validator.isEmpty(data.lname))
+            errors.push("last name is empty"); 
+    }
+
+    if(data.username){
+        if(validator.isEmpty(data.username))
+            errors.push("username is empty"); 
+    }
+
+    if(data.email){
+        if(validator.isEmpty(data.email))
+            errors.push('email is empty') 
+        else if (!validator.isEmail(data.email)){
+            errors.push('not in email format')
+        }
+    }
+    if(data.password){
+        if(validator.isEmpty(data.password))
+            errors.push("password is empty"); 
+    }
+
+    if(data.phone){
+        if(validator.isEmpty(data.phone))
+            errors.push("phone is empty"); 
+    }
     return errors
 }
 
@@ -169,5 +204,6 @@ module.exports = {
     validateUser,
     validateCw_space,
     validateOffer,
-    validateRoom
+    validateRoom,
+    validateUpdatedUser
 }
