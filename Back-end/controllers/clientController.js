@@ -4,15 +4,15 @@ const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 const { validateUser } = require("../middlewares/validationSchema");
+const bcrypt = require('bcrypt')
 
-
-module.exports ={
+module.exports = {
     getAll: asyncWrapper(
         async (req, res, next) => {
             const clients = await Client.findAll()
             if (clients.length != 0) {
                 return res.json({ status: httpStatusCode.SUCCESS, data: clients })
-                }
+            }
             const error = appError.create("There Are No Available Clients", 404, httpStatusCode.ERROR)
             return next(error)
         }
@@ -33,7 +33,7 @@ module.exports ={
     ),
     addPhoto: asyncWrapper(
         async (req, res, next) => {
-            if(req.body.imageName==undefined||req.body.img==null){
+            if (req.body.imageName == undefined || req.body.img == null) {
                 const error = appError.create("There is NO Images Provided", 400, httpStatusCode.ERROR);
                 return next(error);
             }
@@ -46,11 +46,11 @@ module.exports ={
             })
             if (updatedClient) {
                 await Client.update(req.body, {
-                where: {
-                    username: req.params.username
-                }
-            })
-            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully" })
+                    where: {
+                        username: req.params.username
+                    }
+                })
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully" })
             }
             const error = appError.create("Client Not Found", 404, httpStatusCode.ERROR);
             return next(error);
@@ -58,17 +58,28 @@ module.exports ={
     ),
     login: asyncWrapper(
         async (req, res, next) => {
-            const client = await Client.findAll({
+            const client = await Client.findOne({
                 raw: true, where: {
-                    username: req.body.username,
-                    password: req.body.password
+                    username: req.body.username
                 }
             })
             if (client) {
-                return res.json({ status: httpStatusCode.SUCCESS, data: client })
+                const enteredPassword = req.body.password;
+                const savedHashedPassword = client.password; // Retrieved from the database
+                bcrypt.compare(enteredPassword, savedHashedPassword, (err, result) => {
+                    if (err) {
+                        console.error('Error comparing passwords:', err);
+                    } else if (result) {
+                        // Passwords match, login successful
+                        return res.json({ status: httpStatusCode.SUCCESS, data: client })
+                    } else {
+                        // Passwords don't match, login failed
+                        const error = appError.create("Username or Password is Incorrect", 404, httpStatusCode.ERROR)
+                        return next(error)
+                    }
+                });
             }
-            const error = appError.create("Username or Password is Incorrect", 404, httpStatusCode.ERROR)
-            return next(error)
+
         }
     ),
     create: asyncWrapper(
@@ -90,13 +101,33 @@ module.exports ={
                 const error = appError.create("Duplicate Data Not Allowed", 400, httpStatusCode.ERROR)
                 return next(error)
             }
-            
-            const newClient = await Client.create(req.body)
-            if(newClient){
-                return res.json({ status: httpStatusCode.SUCCESS, message: "Client is Created Successfully" })
-            }
-            const error = appError.create("Unexpected Error, Try Again Later", 400, httpStatusCode.ERROR)
-            return next(error)
+            const saltRounds = 10; // Number of salt rounds for bcrypt
+
+            const plainTextPassword = req.body.password;
+
+            bcrypt.hash(plainTextPassword, saltRounds, async (err, hash) => {
+                if (err) {
+                    console.error('Error hashing password:', err);
+                    // Handle the error
+                } else {
+                    const newClient = await Client.create({
+                        fname: req.body.fname,
+                        lname: req.body.lname,
+                        username: req.body.username,
+                        email: req.body.email,
+                        password: hash,
+                        profilePic: req.body.profilePic,
+                        phone: req.body.phone
+                    })
+                    if (newClient) {
+                        return res.json({ status: httpStatusCode.SUCCESS, message: "Client is Created Successfully" })
+                    }
+                    const error = appError.create("Unexpected Error, Try Again Later", 400, httpStatusCode.ERROR)
+                    return next(error)
+                }
+            });
+            console.log(req.body)
+
         }
     ),
     update: asyncWrapper(
@@ -111,13 +142,13 @@ module.exports ={
                     where: {
                         username: req.params.username
                     }
-            });
-            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully" });
+                });
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully" });
             }
             const error = appError.create("Client Not Found", 404, httpStatusCode.ERROR);
-                return next(error);
+            return next(error);
         }
-    ),  
+    ),
     delete: asyncWrapper(
         async (req, res, next) => {
             const deletedClient = await Client.findOne({
@@ -134,7 +165,7 @@ module.exports ={
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Deleted Successfully" });
             }
             const error = appError.create("Client Not Found", 404, httpStatusCode.ERROR);
-                return next(error);
+            return next(error);
         }
     )
 }
