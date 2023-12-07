@@ -1,6 +1,7 @@
 const express = require('express')
 const clientController = require('../controllers/clientController')
 const router = express.Router();
+const verifyToken = require('../middlewares/verifyToken')
 
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -29,7 +30,7 @@ router.route("/register")
     .post(clientController.create);
 
 router.route("/")
-    .get(clientController.getAll)
+    .get(verifyToken, clientController.getAll)
 
 router.route("/:username")
     .get(clientController.getOne)

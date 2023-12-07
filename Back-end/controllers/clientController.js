@@ -5,7 +5,7 @@ const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 const { validateUser } = require("../middlewares/validationSchema");
 const bcrypt = require('bcrypt')
-const jwt = require("jsonwebtoken")
+const generateJWT = require('../utils/generateJWT')
 
 module.exports = {
     getAll: asyncWrapper(
@@ -67,9 +67,12 @@ module.exports = {
             if (client) {
                 const enteredPassword = req.body.password;
                 const savedHashedPassword = client.password; // Retrieved from the database
-                bcrypt.compare(enteredPassword, savedHashedPassword, (err, result) => {
+                bcrypt.compare(enteredPassword, savedHashedPassword, async (err, result) => {
                     if (result) {
-                        return res.json({ status: httpStatusCode.SUCCESS, data: client })
+                        delete client.password
+                        delete client.token
+                        const token = await generateJWT(client)
+                        return res.json({ status: httpStatusCode.SUCCESS, data: token })
                     }
                 });
                 
@@ -102,7 +105,7 @@ module.exports = {
             
             const plainTextPassword = req.body.password;
             const hashedPassword = await bcrypt.hash(plainTextPassword, Number(process.env.SALT_ROUND))
-            const newClient = await Client.create({
+            const newClient = (await Client.create({
                 fname: req.body.fname,
                 lname: req.body.lname,
                 username: req.body.username,
@@ -110,7 +113,7 @@ module.exports = {
                 password: hashedPassword,
                 profilePic: req.body.profilePic,
                 phone: req.body.phone
-            })
+            })).get({plain:true})
             if (newClient) {
                 return res.json({ status: httpStatusCode.SUCCESS, message: "Client is Created Successfully" })
             }

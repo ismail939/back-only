@@ -32,6 +32,10 @@ module.exports = (db, type) => {
         phone: {
             type: type.TEXT,
             allowNull: false
+        },
+        token: {
+            type: type.TEXT,
+            allowNUll: true
         }
     }, {
         timestamps: false
