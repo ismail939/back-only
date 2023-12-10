@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import ProfileSettings from "../components/ProfileSettings";
 import OwnerAccountSettings from "../components/OwnerAccountSettings";
 function DashboardProfile() {
@@ -6,8 +7,18 @@ function DashboardProfile() {
     const [profileData, setProfileData] = useState([]);
     const buttonStyle = "w-48 font-semibold px-8 py-3 hover:border-blue-500 border rounded-2xl"
     const activeStyle= "bg-[#0F4C75] text-white hover:bg-[#197ec2] duration-200"
+    const [cwSpace,setCwSpace]=useState([]);
+    const GetSpaceData = () => {
+        fetch("http://localhost:4000/owners/se7s")
+            .then(res => res.json())
+            .then(responseData => {
+                console.log(responseData)
+                setCwSpace(responseData.data);
+            })
+            .catch(error => console.log(error))
+    }
     const GetProfileData = () => {
-        fetch("http://localhost:4000/owners/owner123")
+        fetch("http://localhost:4000/owners/se7s")
             .then(res => res.json())
             .then(responseData => {
                 console.log(responseData)
@@ -17,6 +28,9 @@ function DashboardProfile() {
     }
     useEffect(() => {
         GetProfileData();
+    }, [])
+    useEffect(() => {
+        GetSpaceData();
     }, [])
     
     
@@ -35,7 +49,14 @@ function DashboardProfile() {
                 </div>
                 {active === "account settings" && <OwnerAccountSettings profileData={profileData}/>
                 }
-                {active === "space settings" &&
+                {active === "space settings" && profileData.cwSpaceCwID===null &&
+                    <div>
+                        you didnt create a coworking space yet 
+                        <br></br>
+                        <Link to="../createworkspace" className="font-medium text-primary-600 hover:underline"> create working space </Link>
+                    </div>
+                }
+                {active === "space settings" && profileData.cwSpaceCwID!==null &&
                     <div>
                     </div>
                 }

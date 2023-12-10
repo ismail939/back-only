@@ -25,18 +25,19 @@ function OwnerAccountSettings(props) {
     const addImg = () => {
         const formData = new FormData();
         formData.append('profilePic', img);
-        fetch('http://localhost:4000/owners/addPhoto/owner123', {
+        fetch('http://localhost:4000/owners/addPhoto/se7s', {
             method: 'PATCH',
             body: formData,
         })
             .then(response => response.json())
             .then(data => {
                 if (data.status === "error") { console.log(data.message) }
+                else if (data.status === "fail") { console.log(data.message) }
                 else if (data.status === "success") { console.log(data) }
             })
     }
     const addData = () => {
-        fetch('http://localhost:4000/owners/mango', {
+        fetch('http://localhost:4000/owners/se7s', {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -50,10 +51,12 @@ function OwnerAccountSettings(props) {
             .then(response => response.json())
             .then(data => {
                 if (data.status === "success") { console.log(data) }
+                else if (data.status === "error") { console.log(data.message) }
+                else if (data.status === "fail") { console.log(data.message) }
             })
     }
     const addPhone = () => {
-        fetch('http://localhost:4000/owners/mango', {
+        fetch('http://localhost:4000/owners/se7s', {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -65,10 +68,12 @@ function OwnerAccountSettings(props) {
             .then(response => response.json())
             .then(data => {
                 if (data.status === "success") { console.log(data) }
+                else if (data.status === "error") { console.log(data.message) }
+                else if (data.status === "fail") { console.log(data.message) }
             })
     }
     const addPassword = () => {
-        fetch('http://localhost:4000/owners/mango', {
+        fetch('http://localhost:4000/owners/se7s', {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -80,6 +85,8 @@ function OwnerAccountSettings(props) {
             .then(response => response.json())
             .then(data => {
                 if (data.status === "success") { console.log(data) }
+                else if (data.status === "error") { console.log(data.message) }
+                else if (data.status === "fail") { console.log(data.message) }
             })
     }
     const imageUrl = "http://localhost:4000/images/owners/" + profileData.profilePic;
@@ -253,7 +260,7 @@ function OwnerAccountSettings(props) {
                         <div className="my-4 w-full flex justify-between items-center" >
                             <label className="block mb-2 cursor-icon w-1/4 gap-2">First Name</label>
                             <div className="w-full">
-                                <input className={`bg-gray-50 border ${dataerrors.fname ? "border-red-500" : "border-gray-300"}
+                                <input className={`bg-gray-50 border placeholder-gray-900 ${dataerrors.fname ? "border-red-500" : "border-gray-300"}
                             text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 w-full`}
                                     onChange={(e) => setFirstName(e.target.value)} type="text" placeholder={profileData.fname} ></input>
                                 {dataerrors.fname ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
@@ -262,7 +269,7 @@ function OwnerAccountSettings(props) {
                         <div className="my-4 w-full flex justify-between items-center">
                             <label className="block mb-2 cursor-icon w-1/4 gap-2">Last Name</label>
                             <div className="w-full">
-                                <input className={`bg-gray-50 border ${dataerrors.lname ? "border-red-500" : "border-gray-300"} 
+                                <input className={`bg-gray-50 border placeholder-gray-900 ${dataerrors.lname ? "border-red-500" : "border-gray-300"} 
                             text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
                                     onChange={(e) => setLastName(e.target.value)} type="text" placeholder={profileData.lname}></input>
                                 {dataerrors.lname ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
@@ -271,7 +278,7 @@ function OwnerAccountSettings(props) {
                         <div className="my-4 w-full flex justify-between items-center">
                             <label className="block mb-2 cursor-icon w-1/4 gap-2">Email</label>
                             <div className="w-full">
-                                <input className={`bg-gray-50 border ${dataerrors.email ? "border-red-500" : "border-gray-300"} 
+                                <input className={`bg-gray-50 border placeholder-gray-900 ${dataerrors.email ? "border-red-500" : "border-gray-300"} 
                             text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
                                     type="email" onChange={(e) => setEmail(e.target.value)} placeholder={profileData.email}></input>
                                 {dataerrors.email ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
@@ -287,7 +294,7 @@ function OwnerAccountSettings(props) {
                 <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">PhoneNumber</h2>
                 <div className="my-4 border  border-black-90 rounded-3xl max-w-3xl mx-auto mt-4">
                     <div className="flex justify-between items-center py-4 px-16 gap-8">
-                        <input className={`bg-gray-50 border ${dataerrors.phonenumber ? "border-red-500" : "border-gray-300"} 
+                        <input className={`bg-gray-50 border placeholder-gray-900 ${dataerrors.phonenumber ? "border-red-500" : "border-gray-300"} 
                         text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
                             onChange={(e) => setPhoneNumber(e.target.value)} type="text"
                             placeholder={profileData.phone} ></input>
