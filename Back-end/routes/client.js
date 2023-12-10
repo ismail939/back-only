@@ -18,9 +18,9 @@ const storage = multer.diskStorage({
             return cb(next(error));
         }
         const uniqueSuffix = Date.now() + "." + file.originalname.split('.')[1];
-        req.body.imageName = uniqueSuffix     
-        cb(null, uniqueSuffix);       
-    } 
+        req.body.imageName = uniqueSuffix
+        cb(null, uniqueSuffix);
+    }
 })
 const upload = multer({ storage: storage })
 
@@ -39,7 +39,7 @@ router.route("/:ID")
     .delete(verifyToken, allowedTo('client'), clientController.delete);
 
 router.route("/")
-    .get(verifyToken, allowedTo('owner'), clientController.getAll)
+    .get(verifyToken, allowedTo('admin'), clientController.getAll)
 
 
 module.exports = router
