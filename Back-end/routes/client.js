@@ -39,7 +39,7 @@ router.route("/:ID")
     .delete(verifyToken, allowedTo('admin'), clientController.delete);
 
 router.route("/")
-    .get(verifyToken, allowedTo('admin', 'not client'), clientController.getAll)
+    .get(verifyToken, allowedTo('admin'), clientController.getAll)
 
 
 module.exports = router
