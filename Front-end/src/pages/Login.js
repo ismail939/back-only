@@ -1,8 +1,11 @@
-import {useState } from "react";
+import {useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ExclamationCircleFill, PatchCheckFill } from "react-bootstrap-icons";
-
+import { useDispatch , useSelector } from "react-redux";
+import { setCredentials } from "../components/reduxtoolkit/Slices/authSlice";
 function Login() {
+    const client = useSelector((state) => state.user)
+    const dispatch = useDispatch();
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [remember, setRemeber] = useState(false);
@@ -34,6 +37,8 @@ function Login() {
             console.log(data)
             if (data.status === "success") {
                 setErrorMessage("");
+                dispatch(setCredentials({user : username , token:null}))
+                console.log(client)
                 setSuccess(true);
             } else if (data.status === "error") {
                 setSuccess(false);
