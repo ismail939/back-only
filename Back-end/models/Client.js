@@ -22,7 +22,7 @@ module.exports = (db, type) => {
             allowNull: false
         },
         password: {
-            type: type.STRING,
+            type: type.TEXT,
             allowNull: false
         },
         profilePic: {
@@ -32,6 +32,11 @@ module.exports = (db, type) => {
         phone: {
             type: type.TEXT,
             allowNull: false
+        },
+        role: {
+            type: type.STRING,
+            defaultValue: 'client',
+            readOnly: true
         }
     }, {
         timestamps: false
