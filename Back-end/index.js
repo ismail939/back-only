@@ -8,6 +8,7 @@ const bookRouter = require("./routes/book");
 const clientRouter = require('./routes/client')
 const cw_spaceRouter = require("./routes/cw_space");
 const cw_spacePhoneRouter = require("./routes/cw_spacePhone");
+const cw_spacePhotoRouter = require('./routes/cw_spacePhoto');
 const eventRouter = require("./routes/event");
 const subscribeRouter = require("./routes/subscribe");
 const ownerRouter = require("./routes/owner");
@@ -24,7 +25,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors()) //to handle the request comes from other ports
 app.use("/books", bookRouter);
 app.use("/cw_spaces", cw_spaceRouter);
-app.use("/cw_spacePhone", cw_spacePhoneRouter);
+app.use("/cw_spacePhones", cw_spacePhoneRouter);
+app.use("/cw_spacePhotos", cw_spacePhotoRouter);
 app.use("/events", eventRouter);
 app.use("/subscribe", subscribeRouter);
 app.use("/clients", clientRouter);
@@ -35,7 +37,8 @@ app.use("/eventPhotos", eventPhotoRouter);
 app.use('/offers', offerRouter)
 
 
-const db = require('./config/database')
+const db = require('./config/database');
+const cw_spacePhotoController = require('./controllers/cw_spacePhotoController');
 
 db.authenticate()
 .then(()=>{

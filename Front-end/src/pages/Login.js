@@ -1,8 +1,14 @@
-import {useState } from "react";
-import { Link } from "react-router-dom";
+import {useState, useEffect } from "react";
+import { Link, useNavigate , useLocation } from "react-router-dom";
 import { ExclamationCircleFill, PatchCheckFill } from "react-bootstrap-icons";
-
+import { useDispatch , useSelector } from "react-redux";
+import { setCredentials } from "../components/reduxtoolkit/Slices/authSlice";
 function Login() {
+    const client = useSelector((state) => state.auth)
+    const dispatch = useDispatch();
+    const location = useLocation();
+    const navigate = useNavigate();
+    const prevPage = location?.state?.from.pathname || "/"
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [remember, setRemeber] = useState(false);
@@ -30,15 +36,17 @@ function Login() {
                 "username": username,
                 "password": password
             }),
-        }).then(res => res.json()).then((data) => {
-            console.log(data)
-            if (data.status === "success") {
+        }).then(res => res.json()).then((resdata) => {
+            console.log(resdata)
+            if (resdata.status === "success") {
                 setErrorMessage("");
+                dispatch(setCredentials({user : username , token: resdata.data.token}))
                 setSuccess(true);
-            } else if (data.status === "error") {
+                navigate(prevPage, {replace : true})
+            } else if (resdata.status === "error") {
                 setSuccess(false);
-                setErrorMessage(data.message)
-            } else if (data.status === "fail") {
+                setErrorMessage(resdata.message)
+            } else if (resdata.status === "fail") {
                 setSuccess(false);
                 setErrorMessage("oops, something wrong went on !")
             }

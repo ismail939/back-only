@@ -1,6 +1,10 @@
 const express = require('express')
 const ownerController = require('../controllers/ownerController')
 const router = express.Router();
+const verifyToken = require("../middlewares/verifyToken");
+const httpStatusCode = require("../utils/httpStatusText");
+const appError = require("../utils/appError");
+const allowedTo = require("../middlewares/allowedTo");
 
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -10,7 +14,8 @@ const storage = multer.diskStorage({
     filename: function (req, file, cb) {
         const acceptedFormats = ['image/png', 'image/jpeg', 'image/jpg'];
         if (!acceptedFormats.includes(file.mimetype)) {
-            return cb(new Error('Unacceptable Type Format'), null);
+            const error = appError.create("Unacceptable Type Format", 415, httpStatusCode.ERROR)
+            return cb(next(error));
         }
         const uniqueSuffix = Date.now() + "." + file.originalname.split('.')[1];
         req.body.imageName = uniqueSuffix     
@@ -19,22 +24,23 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage: storage })
 
-router.route("/addPhoto/:username")
-    .patch(upload.single('profilePic'), ownerController.addPhoto);
+
+
+router.route("/register")
+    .post(ownerController.register);
 
 router.route("/login")
     .post(ownerController.login);
 
-router.route("/register")
-    .post(ownerController.create);
+router.route("/updatePhoto/:ID")
+    .patch(verifyToken, allowedTo('owner'), upload.single('profilePic'), ownerController.updatePhoto);
+
+router.route("/:ID")
+    .patch(verifyToken, allowedTo('owner'), ownerController.update)
+    .delete(verifyToken, allowedTo('admin'), ownerController.delete);
 
 router.route("/")
-    .get(ownerController.getAll)
-    .post(ownerController.create);
+    .get(verifyToken, allowedTo('admin'), ownerController.getAll)
 
-router.route("/:username")
-    .get(ownerController.getOne)
-    .patch(ownerController.update)
-    .delete(ownerController.delete);
 
 module.exports = router

@@ -2,7 +2,7 @@ const { Room } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-
+const Sequelize = require('sequelize')
 
 module.exports ={
     get: asyncWrapper(
@@ -31,6 +31,22 @@ module.exports ={
     ),
     create: asyncWrapper(
         async (req, res, next) => {
+            req.body.image = req.body.imageName
+            delete req.body.imageName
+            const duplicates = await Room.findOne({
+                raw: true, where: {
+                    [Sequelize.Op.and]: [
+                        { type: req.body.type },
+                        { cwSpaceCwID: req.body.cwSpaceCwID },
+                        {number: req.body.number}
+                    ]
+                }
+            })
+            console.log(duplicates)
+            if (duplicates) {
+                const error = appError.create("Duplicate data", 400, httpStatusCode.ERROR)
+                return next(error)
+            }
             const newRoom = await Room.create(req.body)
             return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newRoom });
         }

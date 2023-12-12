@@ -17,7 +17,7 @@ function NavBar() {
                     <li><Link  className="hover:text-[#BBE1FA] duration-200 flex gap-2 items-center" to="/"><HouseDoorFill className="lg:hidden block"/>Home</Link></li>
                     <li><Link className="hover:text-[#BBE1FA] duration-200 flex gap-2 items-center" to="workspaces"><PersonWorkspace className="lg:hidden block"/>Co-Working Spaces</Link></li>
                     <li><Link className="hover:text-[#BBE1FA] duration-200 flex gap-2 items-center" to="offers"><GiftFill className="lg:hidden block"/>Offers</Link></li>
-                    <li><Link className="hover:text-[#BBE1FA] duration-200 flex gap-2 items-center" ><CalendarEventFill className="lg:hidden block"/>Events & Workshops</Link></li>
+                    <li><Link className="hover:text-[#BBE1FA] duration-200 flex gap-2 items-center" ><CalendarEventFill className="lg:hidden block"/>Events&Workshops</Link></li>
                 </ul>
                 <div className="flex max-lg:w-[75px] max-lg:justify-between rounded-full">
                     <Link className="text-2xl bg-[#BBE1FA] text-[#0F4C75] p-1 rounded-full hover:bg-[#AAD1DA] duration-200 ease-in-out" to="login"><PersonFill/></Link>
