@@ -40,7 +40,7 @@ function Login() {
             console.log(resdata)
             if (resdata.status === "success") {
                 setErrorMessage("");
-                dispatch(setCredentials({user : username , token: resdata.data.token}))
+                dispatch(setCredentials({user : username , token: resdata.data.token , usertype: usertype.toLocaleLowerCase()}))
                 setSuccess(true);
                 navigate(prevPage, {replace : true})
             } else if (resdata.status === "error") {

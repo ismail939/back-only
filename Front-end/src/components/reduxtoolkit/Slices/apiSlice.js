@@ -40,15 +40,22 @@ export const apiSlice = createApi({
     endpoints: builder => ({
         updateClient: builder.mutation({
             query: credentials =>({
-                url: `/clients/${credentials.id}`,
+                url: `/${credentials.usertype}s/${credentials.id}`,
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: credentials.credentials
             })
+        }),
+        updatePhoto: builder.mutation({
+            query: credentials =>({
+                url: `/${credentials.usertype}s/updatePhoto/${credentials.id}`,
+                method: 'PATCH',
+                body: credentials.credentials
+            })
         })
     })
 })
 
-export const {useUpdateClientMutation} = apiSlice;
+export const {useUpdateClientMutation , useUpdatePhotoMutation} = apiSlice;

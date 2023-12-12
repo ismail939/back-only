@@ -12,9 +12,9 @@ import OfferList from './pages/mainpages/OfferList';
 import Dashboard from './pages/AdminPages/Dashboard';
 import DiscoverAdmin from './pages/AdminPages/DiscoverAdmin';
 import OfferAdmin from './pages/AdminPages/OfferAdmin';
-import DashboardProfile from './pages/DashboardProfile';
 import CreateFullWorkSpace from './pages/CreateFullWorkSpace';
 import RequireAuth from './components/RequireAuth';
+import DashboardProfile from './pages/AdminPages/DashboardProfile';
 function App() {
   return (
     <>

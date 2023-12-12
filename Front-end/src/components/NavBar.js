@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
 import { PersonFill, List, X, HouseDoorFill, PersonWorkspace, GiftFill,CalendarEventFill } from "react-bootstrap-icons";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import logo from "../components/images/Spaces logo.png"
 import './NavBar.css';
 function NavBar() {
     const [listActive, setlistActive] = useState(false);
+    const client = useSelector(store => store.auth);
+    const directory = client.user ? "dashboardProfile" : "login";
     function clicked(){
         setlistActive(!listActive)
     }
@@ -20,7 +23,7 @@ function NavBar() {
                     <li><Link className="hover:text-[#BBE1FA] duration-200 flex gap-2 items-center" ><CalendarEventFill className="lg:hidden block"/>Events&Workshops</Link></li>
                 </ul>
                 <div className="flex max-lg:w-[75px] max-lg:justify-between rounded-full">
-                    <Link className="text-2xl bg-[#BBE1FA] text-[#0F4C75] p-1 rounded-full hover:bg-[#AAD1DA] duration-200 ease-in-out" to="login"><PersonFill/></Link>
+                    <Link className="text-2xl bg-[#BBE1FA] text-[#0F4C75] p-1 rounded-full hover:bg-[#AAD1DA] duration-200 ease-in-out" to={directory}><PersonFill/></Link>
                     <List className="text-3xl cursor-pointer lg:hidden block rounded-full hover:text-[#BBE1FA] duration-200 ease-in-out" onClick={() => clicked()}/>
                 </div>
             </div>

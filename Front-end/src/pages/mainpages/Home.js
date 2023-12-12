@@ -4,6 +4,7 @@ import Slider from "../../components/Slider";
 import { BoxArrowInRight } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 function DiscoverCard(props) {
     const discover = props.discover;
@@ -28,6 +29,7 @@ function DiscoverCard(props) {
 function Home() {
     const [discoverData, setDiscover] = useState([]);
     const [fetcherror, setFetchError] = useState(false);
+    const client = useSelector(store => store.auth);
     const getDicoverData = () => {
         fetch("http://localhost:4000/cw_spaces/home")
             .then(res => res.json())
@@ -54,7 +56,7 @@ function Home() {
                 </div>
             </div>
             <Slider />
-            <div className="w-4/5 mx-auto mt-[40px] rounded-xl px-8 py-4 bg-gradient-to-r from-[#1B262C] to-[#0F4C75] text-white
+            {!client?.user ? <div className="w-4/5 mx-auto mt-[40px] rounded-xl px-8 py-4 bg-gradient-to-r from-[#1B262C] to-[#0F4C75] text-white
             flex flex-col md:flex-row md:items-center justify-between ">
                 <div className="md:w-10/12">
                     <div className="flex items-center justify-between">
@@ -71,7 +73,7 @@ function Home() {
                     <BoxArrowInRight className="text-[60px] " />
                     <h2 className="text-md sec-font px-5">Login</h2>
                 </Link>
-            </div>
+            </div> : null}
             <div className="w-4/5 mx-auto mt-[70px]">
                 <h2 className="text-left mb-8 text-5xl main-font">Discover</h2>
                 <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
