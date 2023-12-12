@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
 import ProfileSettings from "../../components/ProfileSettings";
 import OwnerAccountSettings from "../../components/OwnerAccountSettings";
+import { Link} from "react-router-dom";
 function DashboardProfile() {
     const [active, setActive] = useState("account settings");
     const user = useSelector(store => store.auth);
@@ -26,7 +27,14 @@ function DashboardProfile() {
                 </div>
                 {active === "account settings" && <OwnerAccountSettings profileData={profileData}/>
                 }
-                {active === "space settings" &&
+                {active === "space settings" && profileData.cwSpaceCwID===null &&
+                    <div>
+                        you didnt create a coworking space yet 
+                        <br></br>
+                        <Link to="../createworkspace" className="font-medium text-primary-600 hover:underline"> create working space </Link>
+                    </div>
+                }
+                {active === "space settings" && profileData.cwSpaceCwID!==null &&
                     <div>
                     </div>
                 }

@@ -51,7 +51,7 @@ function OwnerAccountSettings(props) {
     const addPhone = () => {
         try {
             const data = JSON.stringify({
-                "phone": phoneNumber ? phoneNumber : profileData.phone,
+                "phone": phoneNumber ? phoneNumber : profileData.phone
             })
             updateData({ id: profileData.clientID, credentials: data , usertype: usertype })
         } catch (error) {
@@ -236,7 +236,7 @@ function OwnerAccountSettings(props) {
                         <div className="my-4 w-full flex justify-between items-center" >
                             <label className="block mb-2 cursor-icon w-1/4 gap-2">First Name</label>
                             <div className="w-full">
-                                <input className={`bg-gray-50 border ${dataerrors.fname ? "border-red-500" : "border-gray-300"}
+                                <input className={`bg-gray-50 border placeholder-gray-900 ${dataerrors.fname ? "border-red-500" : "border-gray-300"}
                             text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 w-full`}
                                     onChange={(e) => setFirstName(e.target.value)} type="text" value={firstName} ></input>
                                 {dataerrors.fname ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
@@ -245,7 +245,7 @@ function OwnerAccountSettings(props) {
                         <div className="my-4 w-full flex justify-between items-center">
                             <label className="block mb-2 cursor-icon w-1/4 gap-2">Last Name</label>
                             <div className="w-full">
-                                <input className={`bg-gray-50 border ${dataerrors.lname ? "border-red-500" : "border-gray-300"} 
+                                <input className={`bg-gray-50 border placeholder-gray-900 ${dataerrors.lname ? "border-red-500" : "border-gray-300"} 
                             text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
                                     onChange={(e) => setLastName(e.target.value)} type="text" value={lastName}></input>
                                 {dataerrors.lname ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
@@ -254,7 +254,7 @@ function OwnerAccountSettings(props) {
                         <div className="my-4 w-full flex justify-between items-center">
                             <label className="block mb-2 cursor-icon w-1/4 gap-2">Email</label>
                             <div className="w-full">
-                                <input className={`bg-gray-50 border ${dataerrors.email ? "border-red-500" : "border-gray-300"} 
+                                <input className={`bg-gray-50 border placeholder-gray-900 ${dataerrors.email ? "border-red-500" : "border-gray-300"} 
                             text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
                                     type="email" onChange={(e) => setEmail(e.target.value)} value={email}></input>
                                 {dataerrors.email ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
