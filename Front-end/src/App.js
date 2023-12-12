@@ -2,19 +2,19 @@ import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import NavBar from './components/NavBar';
 import Home from './pages/mainpages/Home';
-import Login from './pages/Login';
-import SignUp from './pages/Sign-up';
+import Login from './pages/Forms/Login';
+import SignUp from './pages/Forms/Sign-up';
 import WorkSpaces from './pages/mainpages/WorkSpaces';
 import Footer from './components/Footer';
 import PageNotFound from './pages/PageNotFound';
-import CreateOffer from './pages/CreateOffer';
+import CreateOffer from './pages/Forms/CreateOffer';
 import OfferList from './pages/mainpages/OfferList';
 import Dashboard from './pages/AdminPages/Dashboard';
 import DiscoverAdmin from './pages/AdminPages/DiscoverAdmin';
 import OfferAdmin from './pages/AdminPages/OfferAdmin';
-import CreateFullWorkSpace from './pages/CreateFullWorkSpace';
+import CreateFullWorkSpace from './pages/Forms/CreateFullWorkSpace';
 import RequireAuth from './components/RequireAuth';
-import DashboardProfile from './pages/AdminPages/DashboardProfile';
+import DashboardProfile from './pages/DashboardProfile';
 function App() {
   return (
     <>

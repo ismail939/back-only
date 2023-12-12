@@ -2,7 +2,7 @@ import {useState, useEffect } from "react";
 import { Link, useNavigate , useLocation } from "react-router-dom";
 import { ExclamationCircleFill, PatchCheckFill } from "react-bootstrap-icons";
 import { useDispatch , useSelector } from "react-redux";
-import { setCredentials } from "../components/reduxtoolkit/Slices/authSlice";
+import { setCredentials } from "../../components/reduxtoolkit/Slices/authSlice";
 function Login() {
     const client = useSelector((state) => state.auth)
     const dispatch = useDispatch();

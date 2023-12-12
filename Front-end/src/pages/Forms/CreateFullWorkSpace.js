@@ -1,8 +1,8 @@
-import { useMultiStepForm } from "../components/WorkSpaceForm/useMultistepForm";
-import CreateCoworkingSpace from "../components/WorkSpaceForm/CreateCoworkingSpace"
+import { useMultiStepForm } from "../../components/WorkSpaceForm/useMultistepForm";
+import CreateCoworkingSpace from "../../components/WorkSpaceForm/CreateCoworkingSpace"
 import { useState, useRef } from "react";
 import { CheckLg , ExclamationCircleFill } from "react-bootstrap-icons";
-import WorkSpaceImages from "../components/WorkSpaceForm/WorkSpaceImages";
+import WorkSpaceImages from "../../components/WorkSpaceForm/WorkSpaceImages";
 import Swal from "sweetalert2";
 function CreateFullWorkSpace() {
     const IntitialValue ={

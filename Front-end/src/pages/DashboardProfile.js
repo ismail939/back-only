@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
-import ProfileSettings from "../../components/ProfileSettings";
-import OwnerAccountSettings from "../../components/OwnerAccountSettings";
+import ProfileSettings from "../components/ProfileSettings";
+import OwnerAccountSettings from "../components/OwnerAccountSettings";
 import { Link} from "react-router-dom";
 function DashboardProfile() {
     const [active, setActive] = useState("account settings");
