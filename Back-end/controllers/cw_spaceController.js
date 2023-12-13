@@ -132,10 +132,29 @@ module.exports = {
                     cwID: req.params.ID
                 }
             });
-            if (deletedCw_space.length === 0) {
+            if (!deletedCw_space) {
                 const error = appError.create("cw_space not found", 404, httpStatusCode.ERROR);
                 return next(error);
             }
+
+            let photos = await Cw_spacePhoto.findAll({
+                where: {
+                    cwSpaceCwID: req.params.ID
+                }
+            }, { raw: true })
+            
+            for (const photo of photos) {
+                let filePath = `./public/images/cw_spaces/${photo.photo}`;
+                console.log(filePath)
+                fs.unlink(filePath, () => { })
+            }
+
+            await Cw_spacePhoto.destroy({
+                where: {
+                    cwSpaceCwID: req.params.ID
+                }
+            })
+
             await Cw_space.destroy({
                 where: {
                     cwID: req.params.ID
