@@ -145,7 +145,6 @@ module.exports = {
             
             for (const photo of photos) {
                 let filePath = `./public/images/cw_spaces/${photo.photo}`;
-                console.log(filePath)
                 fs.unlink(filePath, () => { })
             }
 
