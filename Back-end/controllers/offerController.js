@@ -2,6 +2,7 @@ const { Offer, Cw_space } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
+const fs = require('fs')
 
 module.exports ={
     getAll: asyncWrapper(
@@ -51,9 +52,7 @@ module.exports ={
     ), 
     create: asyncWrapper(
         async (req, res, next) => {
-            //console.log("ggggg", req.body)
-            //req.body.cwSpaceCwID = 1
-            if(req.body.imageName==undefined||req.body.img==null){
+            if(req.body.imageName==undefined||req.body.img==''){
                 const error = appError.create("img is null", 400, httpStatusCode.ERROR);
                 return next(error);
             }
@@ -81,6 +80,8 @@ module.exports ={
                         offerID: req.params.offerID
                     }
                 })
+                const filePath = `./public/images/offers/${updatedOffer.img}`
+                fs.unlink(filePath, ()=>{})
                 return res.json({ status: httpStatusCode.SUCCESS, message: "Offer Updated Successfully" });
             }
             const error = appError.create("Offer Not Found", 404, httpStatusCode.ERROR)
@@ -100,6 +101,8 @@ module.exports ={
                         offerID: req.params.offerID
                     }
                 })
+                const filePath = `./public/images/offers/${deletedOffer.img}`
+                fs.unlink(filePath, ()=>{})
                 return res.json({ status: httpStatusCode.SUCCESS, message: "Offer Deleted Successfully" });
             }
             const error = appError.create("Offer Not Found", 404, httpStatusCode.ERROR);
