@@ -37,10 +37,10 @@ router.route("/updatePhoto/:ID")
 
 router.route("/:ID")
     .patch(verifyToken, allowedTo('owner'), ownerController.update)
-    .delete(verifyToken, allowedTo('admin'), ownerController.delete);
+    .delete(verifyToken, allowedTo('admin', 'owner'), ownerController.delete);
 
 router.route("/")
-    .get(verifyToken, allowedTo('admin'), ownerController.getAll)
+    .get(verifyToken, allowedTo('admin', 'owner'), ownerController.getAll)
 
 
 module.exports = router
