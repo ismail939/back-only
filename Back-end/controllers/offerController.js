@@ -4,14 +4,16 @@ const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 const fs = require('fs')
 
-module.exports ={
+module.exports = {
     getAll: asyncWrapper(
         async (req, res, next) => {
-            const offers = await Offer.findAll({raw: true})
-            for(let i = 0;i<offers.length;i++){
-                let cw_space = await Cw_space.findOne({raw: true},{ where: {
-                    cwID: offers[i].cwSpaceCwID
-                }})
+            const offers = await Offer.findAll({ raw: true })
+            for (let i = 0; i < offers.length; i++) {
+                let cw_space = await Cw_space.findOne({ raw: true }, {
+                    where: {
+                        cwID: offers[i].cwSpaceCwID
+                    }
+                })
                 offers[i].cwSpaceName = cw_space.name
             }
             if (offers.length != 0) {
@@ -49,18 +51,18 @@ module.exports ={
             const error = appError.create("Offer Not Found", 404, httpStatusCode.ERROR);
             return next(error);
         }
-    ), 
+    ),
     create: asyncWrapper(
         async (req, res, next) => {
-            if(req.body.imageName==undefined||req.body.img==''){
+            if (req.body.imageName == undefined || req.body.img == '') {
                 const error = appError.create("img is null", 400, httpStatusCode.ERROR);
                 return next(error);
             }
 
-            req.body.img = req.body.imageName 
+            req.body.img = req.body.imageName
             delete req.body.imageName
             const newOffer = await Offer.create(req.body)
-            if(newOffer){
+            if (newOffer) {
                 return res.json({ status: httpStatusCode.SUCCESS, message: "Offer is Created Successfully" })
             }
             const error = appError.create("Unexpected Error, Try Again Later", 400, httpStatusCode.ERROR)
@@ -75,19 +77,25 @@ module.exports ={
                 }
             });
             if (updatedOffer) {
+                if(req.body.imageName){
+                    req.body.img = req.body.imageName
+                    delete req.body.imageName
+                }
                 await Offer.update(req.body, {
                     where: {
                         offerID: req.params.offerID
                     }
                 })
-                const filePath = `./public/images/offers/${updatedOffer.img}`
-                fs.unlink(filePath, ()=>{})
+                if (req.body.img) {
+                    const filePath = `./public/images/offers/${updatedOffer.img}`
+                    fs.unlink(filePath, () => { })
+                }
                 return res.json({ status: httpStatusCode.SUCCESS, message: "Offer Updated Successfully" });
             }
             const error = appError.create("Offer Not Found", 404, httpStatusCode.ERROR)
             return next(error)
         }
-    ),  
+    ),
     delete: asyncWrapper(
         async (req, res, next) => {
             const deletedOffer = await Offer.findOne({
@@ -102,7 +110,7 @@ module.exports ={
                     }
                 })
                 const filePath = `./public/images/offers/${deletedOffer.img}`
-                fs.unlink(filePath, ()=>{})
+                fs.unlink(filePath, () => { })
                 return res.json({ status: httpStatusCode.SUCCESS, message: "Offer Deleted Successfully" });
             }
             const error = appError.create("Offer Not Found", 404, httpStatusCode.ERROR);

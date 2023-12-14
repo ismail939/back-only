@@ -118,7 +118,7 @@ module.exports = {
                     cwID: req.params.ID
                 }
             });
-            if (updatedCw_space.mainPhoto) {
+            if (req.body.mainPhoto) {
                 const filePath = `./public/images/cw_spaces/${updatedCw_space.mainPhoto}`;
                 fs.unlink(filePath, () => { })
             }

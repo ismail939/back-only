@@ -1,7 +1,7 @@
 const express = require('express')
 const offerController = require('../controllers/offerController')
 const router = express.Router();
-const { validateOffer } = require("../middlewares/validationSchema");
+const { validateOffer, validateUpdatedOffer } = require("../middlewares/validationSchema");
 
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -9,7 +9,13 @@ const storage = multer.diskStorage({
         cb(null, './public/images/offers')
     },
     filename: function (req, file, cb) {
-        let errors = validateOffer(req)
+        let errors
+        if(req.method == "POST"){
+            errors = validateOffer(req)
+        }
+        else if(req.method == "PATCH"){
+            errors = validateUpdatedOffer(req)
+        }
         if (errors.length != 0) {
             return cb(new Error(errors.join(', ')), null);
         }

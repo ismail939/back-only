@@ -99,6 +99,41 @@ const validateOffer = (req) => {
     return errors
 }
 
+const validateUpdatedOffer = (req) => {
+    let data = req.body
+    let errors = []
+
+    if (data.title) {
+        if (validator.isEmpty(data.title)) {
+            errors.push("Offer Title is empty");
+        }
+    }
+
+    if (data.description) {
+        if (validator.isEmpty(data.description)) {
+            errors.push("Offer Description is empty");
+        }
+    }
+
+    if (data.start) {
+        if (validator.isEmpty(data.start)) {
+            errors.push("Offer Start Date is empty");
+        } else if (!validator.isDate(data.start)) {
+            errors.push('Offer Start Date Not in Date Format')
+        }
+    }
+
+    if (data.end) {
+        if (validator.isEmpty(data.end)) {
+            errors.push("Offer End Date is empty");
+        } else if (!validator.isDate(data.end)) {
+            errors.push('Offer End Date Not in Date Format')
+        }
+    }
+
+    return errors
+}
+
 const validateRoom = (req) => {
     let data = req.body
     let errors = []
@@ -218,56 +253,57 @@ const validateUpdatedCw_space = (req) => {
             errors.push("Co-working Space Email Not in email format")
         }
     }
-    if(data.address){
+    if (data.address) {
         if (validator.isEmpty(data.address)) {
             errors.push("Co-working Space Address is empty");
         }
     }
-    
-    if(data.fbPage){
+
+    if (data.fbPage) {
         if (validator.isEmpty(data.fbPage)) {
             errors.push("Co-working Space fbPage is empty");
-        }else if (!validator.isURL(data.fbPage)) {
+        } else if (!validator.isURL(data.fbPage)) {
             errors.push("Co-working Space fbPage Not in URL Format");
         }
     }
-    
-    if(data.openingTime){
+
+    if (data.openingTime) {
         if (validator.isEmpty(data.openingTime)) {
             errors.push("Co-working Space Opening Time is empty");
-        } else if(!validator.isTime(data.openingTime)){
+        } else if (!validator.isTime(data.openingTime)) {
             errors.push("Co-working Space Opening Time not in Time Format");
         }
     }
-    
 
-    if(data.closingTime){
+
+    if (data.closingTime) {
         if (validator.isEmpty(data.closingTime)) {
             errors.push("Co-working Space closing Time is empty");
-        } else if(!validator.isTime(data.closingTime)){
+        } else if (!validator.isTime(data.closingTime)) {
             errors.push("Co-working Space closing Time not in Time Format");
         }
     }
-    
-    if(data.description){
+
+    if (data.description) {
         if (validator.isEmpty(data.description)) {
             errors.push("Co-working Space Description is empty");
-        }    
+        }
     }
-    
-    if(data.phones){
+
+    if (data.phones) {
         if (validator.isEmpty(data.phones)) {
             errors.push("Co-working Space phone number is empty");
-        }    
+        }
     }
     return errors
 }
 
 module.exports = {
     validateUser,
-    validateCw_space,
-    validateOffer,
-    validateRoom,
     validateUpdatedUser,
-    validateUpdatedCw_space
+    validateCw_space,
+    validateUpdatedCw_space, 
+    validateRoom,
+    validateOffer,
+    validateUpdatedOffer
 }
