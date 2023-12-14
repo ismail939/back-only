@@ -109,16 +109,21 @@ module.exports = {
                 const error = appError.create("cw_space not found", 404, httpStatusCode.ERROR);
                 return next(error);
             }
-            if (req.body.imageName) {
+            let deleteOld = false
+            if (req.body.imageName) { // there is a file
                 req.body.mainPhoto = req.body.imageName
                 delete req.body.imageName
+                deleteOld = true
+            }else if(req.body.mainPhoto==''){ // the photo to be removed
+                deleteOld = true
+                req.body.mainPhoto = null
             }
             await Cw_space.update(req.body, {
                 where: {
                     cwID: req.params.ID
                 }
             });
-            if (req.body.mainPhoto) {
+            if (deleteOld&&updatedCw_space.mainPhoto) {
                 const filePath = `./public/images/cw_spaces/${updatedCw_space.mainPhoto}`;
                 fs.unlink(filePath, () => { })
             }

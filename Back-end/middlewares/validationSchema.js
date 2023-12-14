@@ -186,6 +186,68 @@ const validateRoom = (req) => {
     return errors
 }
 
+const validateUpdatedRoom = (req) => {
+    let data = req.body
+    let errors = []
+    if (data.type) {
+        if (validator.isEmpty(data.type)) {
+            errors.push("Room Type is empty");
+        }
+    }
+
+    if (data.hourPrice) {
+        if (validator.isEmpty(data.hourPrice)) {
+            errors.push("Room HourPrice is empty");
+        }
+        else if (validator.isNotNumber(data.hourPrice)) {
+            errors.push("Room HourPrice Not in Price Format")
+        }
+    }
+
+    if (data.dayPrice) {
+        if (validator.isEmpty(data.dayPrice)) {
+            errors.push("Room DayPrice is empty");
+        }
+        else if (validator.isNotNumber(data.dayPrice)) {
+            errors.push("Room DayPrice Not in Price Format")
+        }
+    }
+    if (data.minRoomSize) {
+        if (validator.isEmpty(data.minRoomSize)) {
+            errors.push("Minimum Room Size is empty");
+        }
+        else if (validator.isNotNumber(data.minRoomSize)) {
+            errors.push("Minimum Room Size Not in Number Format")
+        }
+    }
+    if (data.maxRoomSize) {
+        if (validator.isEmpty(data.maxRoomSize)) {
+            errors.push("Maximum Room Size is empty");
+        }
+        else if (validator.isNotNumber(data.maxRoomSize)) {
+            errors.push("Maximum Room Size Not in Number Format")
+        }
+    }
+    if (data.cwSpaceCwID) {
+        if (validator.isEmpty(data.cwSpaceCwID)) {
+            errors.push("Co-working Space ID is empty");
+        }
+        else if (validator.isNotNumber(data.cwSpaceCwID)) {
+            errors.push("Co-working Space ID Not in Number Format");
+        }
+    }
+    if (data.number) {
+        if (validator.isEmpty(data.number)) {
+            errors.push("Room Number is empty");
+        }
+        else if (validator.isNotNumber(data.number)) {
+            errors.push("Room Number Not in Number Format")
+        }
+    }
+
+    return errors
+}
+
 const validateCw_space = (req) => {
     let data = req.body
     let errors = []
@@ -302,8 +364,9 @@ module.exports = {
     validateUser,
     validateUpdatedUser,
     validateCw_space,
-    validateUpdatedCw_space, 
+    validateUpdatedCw_space,
     validateRoom,
+    validateUpdatedRoom,
     validateOffer,
     validateUpdatedOffer
 }

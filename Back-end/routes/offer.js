@@ -10,10 +10,10 @@ const storage = multer.diskStorage({
     },
     filename: function (req, file, cb) {
         let errors
-        if(req.method == "POST"){
+        if (req.method == "POST") {
             errors = validateOffer(req)
         }
-        else if(req.method == "PATCH"){
+        else if (req.method == "PATCH") {
             errors = validateUpdatedOffer(req)
         }
         if (errors.length != 0) {

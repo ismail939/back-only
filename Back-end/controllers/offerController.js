@@ -77,16 +77,21 @@ module.exports = {
                 }
             });
             if (updatedOffer) {
-                if(req.body.imageName){
+                let deleteOld = false
+                if (req.body.imageName) { // there is a file
                     req.body.img = req.body.imageName
                     delete req.body.imageName
+                    deleteOld = true
+                } else if (req.body.img == '') { // the photo to be removed
+                    deleteOld = true
+                    req.body.img = null
                 }
                 await Offer.update(req.body, {
                     where: {
                         offerID: req.params.offerID
                     }
                 })
-                if (req.body.img) {
+                if (deleteOld&&updatedOffer.img) {
                     const filePath = `./public/images/offers/${updatedOffer.img}`
                     fs.unlink(filePath, () => { })
                 }
@@ -109,8 +114,10 @@ module.exports = {
                         offerID: req.params.offerID
                     }
                 })
-                const filePath = `./public/images/offers/${deletedOffer.img}`
-                fs.unlink(filePath, () => { })
+                if (deletedOffer.img) {
+                    const filePath = `./public/images/offers/${deletedOffer.img}`
+                    fs.unlink(filePath, () => { })
+                }
                 return res.json({ status: httpStatusCode.SUCCESS, message: "Offer Deleted Successfully" });
             }
             const error = appError.create("Offer Not Found", 404, httpStatusCode.ERROR);
