@@ -12,7 +12,7 @@ function NavBar() {
         <div className="mx-auto px-1 py-3 w-[95%] mt-3 rounded-3xl" style={{ backgroundColor: "#1B262C" }}>
             <div className="mx-auto w-11/12 flex justify-between items-center text-white">
                 <Link to="/"><img src={logo} alt ="space s logo" className="w-[150px] h-[30px] object-cover cursor-pointer"></img></Link>
-                <ul className={`flex w-[500px] justify-between text-lg nv-response main-font ${listActive ? "max-lg:right-[-50%]" : "max-lg:right-[0%]"}`}>
+                <ul className={`flex w-[500px] justify-between text-lg nv-response main-font ${listActive ? "max-lg:right-[0%]" : "max-lg:right-[-50%]"}`}>
                     <li className="lg:hidden block"><X className="cursor-pointer text-3xl hover:text-[#BBE1FA] duration-200 ease-in-out" onClick={() => clicked()} /></li>
                     <li><Link  className="hover:text-[#BBE1FA] duration-200 flex gap-2 items-center" to="/"><HouseDoorFill className="lg:hidden block"/>Home</Link></li>
                     <li><Link className="hover:text-[#BBE1FA] duration-200 flex gap-2 items-center" to="workspaces"><PersonWorkspace className="lg:hidden block"/>Co-Working Spaces</Link></li>
