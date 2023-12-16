@@ -7,6 +7,9 @@ router.route("/")
     .get(reviewController.get)
     .post(reviewController.create);
 
+router.route("/:cwSpaceID")
+    .get(reviewController.getCw_spaceReviews)
+
 router.route("/:clientID/:cwSpaceID")
     .get(reviewController.getOne)
     .patch(reviewController.update)

@@ -15,6 +15,20 @@ module.exports ={
             return res.json({ status: httpStatusCode.SUCCESS, data: reviews }); 
         }
     ),
+    getCw_spaceReviews: asyncWrapper(
+        async (req, res, next) => {
+            const reviews = await Review.findAll({raw: true}, {
+                where: {
+                    cwSpaceCwID: req.params.cwSpaceID
+                }
+            })
+            if (reviews.length === 0) {
+                const error = appError.create("Reviews not found", 404, httpStatusCode.ERROR);
+                return next(error);
+            }
+            return res.json({ status: httpStatusCode.SUCCESS, data: reviews }); 
+        }
+    ),
     getOne: asyncWrapper(
         async (req, res, next) => {
             const review = await Review.findAll({
