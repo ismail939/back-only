@@ -1,7 +1,7 @@
 const express = require('express')
 const offerController = require('../controllers/offerController')
 const router = express.Router();
-const { validateOffer } = require("../middlewares/validationSchema");
+const { validateOffer, validateUpdatedOffer } = require("../middlewares/validationSchema");
 
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -9,9 +9,15 @@ const storage = multer.diskStorage({
         cb(null, './public/images/offers')
     },
     filename: function (req, file, cb) {
-        let errors = validateOffer(req)
-            if (errors.length!=0) {    
-                return cb(new Error(errors.join(', ')), null);
+        let errors
+        if (req.method == "POST") {
+            errors = validateOffer(req)
+        }
+        else if (req.method == "PATCH") {
+            errors = validateUpdatedOffer(req)
+        }
+        if (errors.length != 0) {
+            return cb(new Error(errors.join(', ')), null);
         }
         const acceptedFormats = ['image/png', 'image/jpeg', 'image/jpg'];
         if (!acceptedFormats.includes(file.mimetype)) {
@@ -19,8 +25,8 @@ const storage = multer.diskStorage({
         }
         const uniqueSuffix = Date.now() + "." + file.originalname.split('.')[1];
         req.body.imageName = uniqueSuffix
-        cb(null, uniqueSuffix);       
-    } 
+        cb(null, uniqueSuffix);
+    }
 })
 const upload = multer({ storage: storage })
 
@@ -33,8 +39,8 @@ router.route("/")
 
 router.route("/:offerID")
     .get(offerController.getOne)
-    .patch(offerController.update)
+    .patch(upload.single('img'), offerController.update)
     .delete(offerController.delete);
 
-module.exports = router  
+module.exports = router
 

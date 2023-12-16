@@ -3,46 +3,46 @@ const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 const Sequelize = require('sequelize')
+const fs = require('fs')
 
-module.exports ={
+module.exports = {
     get: asyncWrapper(
-        async (req, res, next) => { 
+        async (req, res, next) => {
             const rooms = await Room.findAll()
             if (rooms.length === 0) {
                 const error = appError.create("Rooms not found", 404, httpStatusCode.ERROR);
                 return next(error);
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: rooms }); 
+            return res.json({ status: httpStatusCode.SUCCESS, data: rooms });
         }
     ),
     getOne: asyncWrapper(
         async (req, res, next) => {
             const room = await Room.findAll({
                 where: {
-                    ID: req.params.ID
+                    roomID: req.params.ID
                 }
             })
             if (room.length === 0) {
                 const error = appError.create("Room not found", 404, httpStatusCode.ERROR);
                 return next(error);
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: room }) 
+            return res.json({ status: httpStatusCode.SUCCESS, data: room })
         }
     ),
     create: asyncWrapper(
         async (req, res, next) => {
-            req.body.image = req.body.imageName
+            req.body.img = req.body.imageName
             delete req.body.imageName
             const duplicates = await Room.findOne({
                 raw: true, where: {
                     [Sequelize.Op.and]: [
                         { type: req.body.type },
                         { cwSpaceCwID: req.body.cwSpaceCwID },
-                        {number: req.body.number}
+                        { number: req.body.number }
                     ]
                 }
             })
-            console.log(duplicates)
             if (duplicates) {
                 const error = appError.create("Duplicate data", 400, httpStatusCode.ERROR)
                 return next(error)
@@ -53,39 +53,56 @@ module.exports ={
     ),
     update: asyncWrapper(
         async (req, res, next) => {
-            const updatedRoom = await Room.findAll({
+            const updatedRoom = await Room.findOne({
                 where: {
-                    ID: req.params.ID
+                    roomID: req.params.ID
                 }
             });
-            if (updatedRoom.length === 0) {
+            if (!updatedRoom) {
                 const error = appError.create("Room not found", 404, httpStatusCode.ERROR);
                 return next(error);
             }
+            let deleteOld = false
+            if (req.body.imageName) { // there is a file
+                req.body.img = req.body.imageName
+                delete req.body.imageName
+                deleteOld = true
+            } else if (req.body.img == '') { // the photo to be removed
+                deleteOld = true
+                req.body.img = null
+            }
             await Room.update(req.body, {
                 where: {
-                    ID: req.params.ID
+                    roomID: req.params.ID
                 }
             });
+            if (deleteOld&&updatedRoom.img) {
+                const filePath = `./public/images/rooms/${updatedRoom.img}`
+                fs.unlink(filePath, () => { })
+            }
             return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "updated successfully" });
         }
-    ),  
+    ),
     delete: asyncWrapper(
         async (req, res, next) => {
-            const deletedRoom = await Room.findAll({
+            const deletedRoom = await Room.findOne({
                 where: {
-                    ID: req.params.ID
+                    roomID: req.params.ID
                 }
             });
-            if (deletedRoom.length === 0) {
+            if (!deletedRoom) {
                 const error = appError.create("Room not found", 404, httpStatusCode.ERROR);
                 return next(error);
             }
             await Room.destroy({
                 where: {
-                    ID: req.params.ID
+                    roomID: req.params.ID
                 }
             })
+            if (deletedRoom.img) {
+                const filePath = `./public/images/rooms/${deletedRoom.img}`
+                fs.unlink(filePath, () => { })
+            }
             return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "deleted successfully" });
         }
     )

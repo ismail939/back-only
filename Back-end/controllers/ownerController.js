@@ -6,6 +6,7 @@ const appError = require("../utils/appError");
 const { validateUser , validateUpdatedUser} = require("../middlewares/validationSchema");
 const bcrypt = require("bcrypt")
 const generateJWT = require("../utils/generateJWT");
+const fs = require('fs')
 
 module.exports = {
     register: asyncWrapper(
@@ -99,6 +100,10 @@ module.exports = {
                     ownerID: req.params.ID
                 }
             })
+            if (updatedOwner.profilePic) {
+                const filePath = `./public/images/owners/${updatedOwner.profilePic}`;
+                fs.unlink(filePath, ()=>{})
+            }
             return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Owner Updated Successfully" })
             }
             const error = appError.create("Owner Not Found", 404, httpStatusCode.ERROR);
@@ -108,7 +113,6 @@ module.exports = {
     update: asyncWrapper(
         async (req, res, next) => {
             let errors = validateUpdatedUser(req);
-            console.log(errors)
             if (errors.length != 0) {
                 console.log(errors)
                 const error = appError.create(errors, 400, httpStatusCode.ERROR)
@@ -144,6 +148,10 @@ module.exports = {
                         ownerID: req.params.ID
                     }
                 })
+                if (deletedOwner.profilePic) {
+                    const filePath = `./public/images/owners/${deletedOwner.profilePic}`;
+                    fs.unlink(filePath, ()=>{})
+                }
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Owner Deleted Successfully" })     
             }
             const error = appError.create("Owner Not Found", 404, httpStatusCode.ERROR)

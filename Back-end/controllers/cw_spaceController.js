@@ -2,7 +2,7 @@ const { Cw_space, Cw_spacePhone, Cw_spacePhoto, Room } = require('../models/mode
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-
+const fs = require('fs')
 
 module.exports = {
     get: asyncWrapper(
@@ -27,7 +27,7 @@ module.exports = {
                     cw_spaces[i].price = room.hourPrice;
                 }
             }
-            
+
             if (cw_spaces.length === 0) {
                 const error = appError.create("Co-working spaces not found", 404, httpStatusCode.ERROR);
                 return next(error);
@@ -45,7 +45,7 @@ module.exports = {
                 }
             })
             if (cw_spaceHome.length === 0) {
-                return res.status(404).json({ status: httpStatusCode.ERROR, message: "There are no available Co-working spaces available"})
+                return res.status(404).json({ status: httpStatusCode.ERROR, message: "There are no available Co-working spaces available" })
             }
             return res.json({ status: httpStatusCode.SUCCESS, data: cw_spaceHome })
         }
@@ -87,7 +87,7 @@ module.exports = {
         async (req, res, next) => {
             req.body.mainPhoto = req.body.imageName
             delete req.body.imageName
-            
+
             let newCw_space = (await Cw_space.create(req.body)).get({ plain: true })
             let newCw_spacePhone = null;
             let newCw_spacePhoneList = req.body.phones.split(',')
@@ -100,39 +100,75 @@ module.exports = {
     ),
     update: asyncWrapper(
         async (req, res, next) => {
-            const updatedCw_space = await Cw_space.findAll({
+            const updatedCw_space = await Cw_space.findOne({
                 where: {
                     cwID: req.params.ID
                 }
             });
-            if (updatedCw_space.length === 0) {
+            if (!updatedCw_space) {
                 const error = appError.create("cw_space not found", 404, httpStatusCode.ERROR);
                 return next(error);
+            }
+            let deleteOld = false
+            if (req.body.imageName) { // there is a file
+                req.body.mainPhoto = req.body.imageName
+                delete req.body.imageName
+                deleteOld = true
+            }else if(req.body.mainPhoto==''){ // the photo to be removed
+                deleteOld = true
+                req.body.mainPhoto = null
             }
             await Cw_space.update(req.body, {
                 where: {
                     cwID: req.params.ID
                 }
             });
+            if (deleteOld&&updatedCw_space.mainPhoto) {
+                const filePath = `./public/images/cw_spaces/${updatedCw_space.mainPhoto}`;
+                fs.unlink(filePath, () => { })
+            }
             return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "updated successfully" });
         }
     ),
     delete: asyncWrapper(
         async (req, res, next) => {
-            const deletedCw_space = await Cw_space.findAll({
+            const deletedCw_space = await Cw_space.findOne({
                 where: {
                     cwID: req.params.ID
                 }
             });
-            if (deletedCw_space.length === 0) {
+            if (!deletedCw_space) {
                 const error = appError.create("cw_space not found", 404, httpStatusCode.ERROR);
                 return next(error);
             }
+
+            let photos = await Cw_spacePhoto.findAll({
+                where: {
+                    cwSpaceCwID: req.params.ID
+                }
+            }, { raw: true })
+            
+            for (const photo of photos) {
+                let filePath = `./public/images/cw_spaces/${photo.photo}`;
+                fs.unlink(filePath, () => { })
+            }
+
+            await Cw_spacePhoto.destroy({
+                where: {
+                    cwSpaceCwID: req.params.ID
+                }
+            })
+
             await Cw_space.destroy({
                 where: {
                     cwID: req.params.ID
                 }
             })
+            if (deletedCw_space.mainPhoto) {
+                const filePath = `./public/images/cw_spaces/${deletedCw_space.mainPhoto}`;
+                fs.unlink(filePath, () => { })
+            }
+
             return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "deleted successfully" });
         }
     )

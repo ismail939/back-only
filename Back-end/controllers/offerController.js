@@ -2,15 +2,18 @@ const { Offer, Cw_space } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
+const fs = require('fs')
 
-module.exports ={
+module.exports = {
     getAll: asyncWrapper(
         async (req, res, next) => {
-            const offers = await Offer.findAll({raw: true})
-            for(let i = 0;i<offers.length;i++){
-                let cw_space = await Cw_space.findOne({raw: true},{ where: {
-                    cwID: offers[i].cwSpaceCwID
-                }})
+            const offers = await Offer.findAll({ raw: true })
+            for (let i = 0; i < offers.length; i++) {
+                let cw_space = await Cw_space.findOne({ raw: true }, {
+                    where: {
+                        cwID: offers[i].cwSpaceCwID
+                    }
+                })
                 offers[i].cwSpaceName = cw_space.name
             }
             if (offers.length != 0) {
@@ -48,20 +51,18 @@ module.exports ={
             const error = appError.create("Offer Not Found", 404, httpStatusCode.ERROR);
             return next(error);
         }
-    ), 
+    ),
     create: asyncWrapper(
         async (req, res, next) => {
-            //console.log("ggggg", req.body)
-            //req.body.cwSpaceCwID = 1
-            if(req.body.imageName==undefined||req.body.img==null){
+            if (req.body.imageName == undefined || req.body.img == '') {
                 const error = appError.create("img is null", 400, httpStatusCode.ERROR);
                 return next(error);
             }
 
-            req.body.img = req.body.imageName 
+            req.body.img = req.body.imageName
             delete req.body.imageName
             const newOffer = await Offer.create(req.body)
-            if(newOffer){
+            if (newOffer) {
                 return res.json({ status: httpStatusCode.SUCCESS, message: "Offer is Created Successfully" })
             }
             const error = appError.create("Unexpected Error, Try Again Later", 400, httpStatusCode.ERROR)
@@ -76,17 +77,30 @@ module.exports ={
                 }
             });
             if (updatedOffer) {
+                let deleteOld = false
+                if (req.body.imageName) { // there is a file
+                    req.body.img = req.body.imageName
+                    delete req.body.imageName
+                    deleteOld = true
+                } else if (req.body.img == '') { // the photo to be removed
+                    deleteOld = true
+                    req.body.img = null
+                }
                 await Offer.update(req.body, {
                     where: {
                         offerID: req.params.offerID
                     }
                 })
+                if (deleteOld&&updatedOffer.img) {
+                    const filePath = `./public/images/offers/${updatedOffer.img}`
+                    fs.unlink(filePath, () => { })
+                }
                 return res.json({ status: httpStatusCode.SUCCESS, message: "Offer Updated Successfully" });
             }
             const error = appError.create("Offer Not Found", 404, httpStatusCode.ERROR)
             return next(error)
         }
-    ),  
+    ),
     delete: asyncWrapper(
         async (req, res, next) => {
             const deletedOffer = await Offer.findOne({
@@ -100,6 +114,10 @@ module.exports ={
                         offerID: req.params.offerID
                     }
                 })
+                if (deletedOffer.img) {
+                    const filePath = `./public/images/offers/${deletedOffer.img}`
+                    fs.unlink(filePath, () => { })
+                }
                 return res.json({ status: httpStatusCode.SUCCESS, message: "Offer Deleted Successfully" });
             }
             const error = appError.create("Offer Not Found", 404, httpStatusCode.ERROR);
