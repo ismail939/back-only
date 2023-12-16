@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
         const acceptedFormats = ['image/png', 'image/jpeg', 'image/jpg'];
         if (!acceptedFormats.includes(file.mimetype)) {
             const error = appError.create("Unacceptable Type Format", 415, httpStatusCode.ERROR)
-            return cb(next(error));
+            return cb(error);
         }
         const uniqueSuffix = Date.now() + "." + file.originalname.split('.')[1];
         req.body.imageName = uniqueSuffix     

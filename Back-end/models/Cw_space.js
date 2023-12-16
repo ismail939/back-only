@@ -21,6 +21,10 @@ module.exports = (db, type)=>{
             type: type.TEXT,
             allowNull: true
         },
+        phone: {
+            type: type.STRING,
+                allowNull: false
+        },
         openingTime: {
             type: type.TIME,
             allowNull: false
