@@ -36,10 +36,10 @@ router.route("/updatePhoto/:ID")
 
 router.route("/:ID")
     .patch(verifyToken, allowedTo('client'), clientController.update)
-    .delete(verifyToken, allowedTo('admin', 'client'), clientController.delete);
+    .delete(verifyToken, allowedTo('admin'), clientController.delete);
 
 router.route("/")
-    .get(verifyToken, allowedTo('admin', 'client'), clientController.getAll)///////////////////////////fjdfjdfkdfk
+    .get(verifyToken, allowedTo('admin'), clientController.getAll)
 
 
 module.exports = router
