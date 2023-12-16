@@ -1,15 +1,15 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import PageNotFound from "./PageNotFound";
+import PageNotFound from "../PageNotFound";
 import { Stars, StarFill, Star, StarHalf, PersonCircle, HouseDoorFill } from "react-bootstrap-icons"
 import { ClockFill, TelephoneFill } from "react-bootstrap-icons"
-import Image1 from "../components/images/cover.jpg"
-import Image2 from "../components/images/offer1.jpg"
-import Image3 from "../components/images/offer2.jpg"
-import Image4 from "../components/images/HomeImage.jpg"
-import Image5 from "../components/images/cover.jpg";
-import profilePic from "../components/images/cover.jpg";
+import Image1 from "../../components/images/cover.jpg"
+import Image2 from "../../components/images/offer1.jpg"
+import Image3 from "../../components/images/offer2.jpg"
+import Image4 from "../../components/images/HomeImage.jpg"
+import Image5 from "../../components/images/cover.jpg";
+import profilePic from "../../components/images/cover.jpg";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, EffectCoverflow } from 'swiper/modules';
 import 'swiper/css';
@@ -174,11 +174,9 @@ function WorkSpaceProfile() {
                 <div className="mt-[50px]">
                     <h2 className="text-center main-font md:text-4xl text-2xl flex items-center justify-center gap-2 mb-[50px]">
                         <Stars />Reviews</h2>
-                    <Review review={{ name: "Ismail Salama", rate: 2.5, dateTime: "2023-11-23T18:08:23.684Z", body: "This pleace I really enjoyed it. It was great and the rooms were very quite and comfy which helped me to focus a lot.This pleace I really enjoyed it. It was great and the rooms were very quite and comfy which helped me to focus a lot." }} />
-                    <Review review={{ name: "Abdelrahman Modather", rate: 4, dateTime: "2023-11-23T18:08:23.684Z", body: "This pleace I really enjoyed it. It was great and the rooms were very quite and comfy which helped me to focus a lot." }} />
                     {reviews ? reviews.map((review) => {
                         return <Review review={review} key={review.clientClientID + "/" + review.cwSpaceCwID}/>
-                    }) : <p className="text-center my-[100px] sec-font text-xl">Currently there are now reviews</p>}
+                    }) : <p className="text-center my-[100px] sec-font md:text-xl text-lg">Currently there are now reviews</p>}
                 </div>
             </div>
         )

@@ -15,7 +15,7 @@ import OfferAdmin from './pages/AdminPages/OfferAdmin';
 import DashboardProfile from './pages/DashboardProfile';
 import CreateFullWorkSpace from './pages/CreateFullWorkSpace';
 import RequireAuth from './components/RequireAuth';
-import WorkSpaceProfile from './pages/WorkSpaceProfile';
+import WorkSpaceProfile from './pages/WorkSpaceProfile/WorkSpaceProfile';
 function App() {
   return (
     <>
