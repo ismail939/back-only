@@ -29,7 +29,7 @@ module.exports = (db, type) => {
             type: type.INTEGER,
             allowNull: false
         },
-        image:{
+        img:{
             type: type.TEXT,
             allowNUll: false
         }
