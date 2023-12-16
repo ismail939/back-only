@@ -291,7 +291,7 @@ const validateCw_space = (req) => {
         errors.push("Co-working Space Description is Required");
     }
 
-    if (validator.isEmpty(data.phones)) {
+    if (validator.isEmpty(data.phone)) {
         errors.push("Co-working Space Phone Number is Required");
     }
     return errors
