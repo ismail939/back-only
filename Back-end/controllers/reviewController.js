@@ -17,11 +17,11 @@ module.exports = {
     ),
     getCw_spaceReviews: asyncWrapper(
         async (req, res, next) => {
-            const reviews = await Review.findAll({ raw: true }, {
+            const reviews = await Review.findAll({
                 where: {
                     cwSpaceCwID: req.params.cwSpaceID
                 }
-            })
+            }, { raw: true })
             if (reviews.length === 0) {
                 const error = appError.create("Reviews not found", 404, httpStatusCode.ERROR);
                 return next(error);
