@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import PageNotFound from "./PageNotFound";
 import { Stars, StarFill, Star, StarHalf, PersonCircle, HouseDoorFill } from "react-bootstrap-icons"
-import { ClockFill,TelephoneFill } from "react-bootstrap-icons"
+import { ClockFill, TelephoneFill } from "react-bootstrap-icons"
 import Image1 from "../components/images/cover.jpg"
 import Image2 from "../components/images/offer1.jpg"
 import Image3 from "../components/images/offer2.jpg"
@@ -32,6 +32,13 @@ function ReviewStars(props) {
 }
 function Review(props) {
     const review = props.review
+    const months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    const date = new Date(review.dateTime)
+    console.log(date.getMonth())
+    const reviewDate = date.getDate().toString()+ " " + months[date.getMonth()] + " " + date.getFullYear().toString();
     return (
         <div className="md:px-10 lg:w-3/4 my-10">
             <div className="flex items-center justify-between">
@@ -42,6 +49,7 @@ function Review(props) {
                 <ReviewStars rate={review.rate} />
             </div>
             <p className="mt-6">{review.body}</p>
+            <p className="text-sm py-4 text-gray-600">{reviewDate}</p>
         </div>
     )
 }
@@ -49,6 +57,7 @@ function WorkSpaceProfile() {
     const params = useParams();
     const [cwSpace, setCWSpace] = useState(null);
     const [cwSpacePhotos, setCWSpacePhotos] = useState(null);
+    const [reviews, setReviews] = useState(null);
     const [found, setFound] = useState(false);
     const [loading, setLodaing] = useState(true);
     const client = useSelector(state => state.auth)
@@ -70,12 +79,23 @@ function WorkSpaceProfile() {
             );
     }
     const getWorkSpaceImages = () => {
-        fetch(`http://localhost:4000//cw_spacePhotos/${params.cwID}`)
+        fetch(`http://localhost:4000/cw_spacePhotos/${params.cwID}`)
             .then(res => res.json())
             .then(responsedata => {
                 if (responsedata.status === "error") {
                 } else if (responsedata.status === "success") {
-                    setCWSpacePhotos(responsedata.data[0]);
+                    setCWSpacePhotos(responsedata.data);
+                }
+            }
+            );
+    }
+    const getReviews = () => {
+        fetch(`http://localhost:4000/reviews/${params.cwID}`)
+            .then(res => res.json())
+            .then(responsedata => {
+                if (responsedata.status === "error") {
+                } else if (responsedata.status === "success") {
+                    setReviews(responsedata.data);
                 }
             }
             );
@@ -83,6 +103,7 @@ function WorkSpaceProfile() {
     useEffect(() => {
         getWorkSpace();
         getWorkSpaceImages();
+        getReviews();
     }, [])
     if (found) {
         return (
@@ -118,28 +139,28 @@ function WorkSpaceProfile() {
                 </Swiper>
                 <div className="mt-[100px] grid lg:grid-cols-4 grid-cols-2 gap-5 justify-items-center">
                     <div className="flex items-center gap-2 text-lg">
-                        <HouseDoorFill className="text-3xl"/>
+                        <HouseDoorFill className="text-3xl" />
                         <span>
                             <h2 className="text-sm">Address</h2>
                             <p>{cwSpace.address}</p>
                         </span>
                     </div>
                     <div className="flex items-center gap-2 text-lg">
-                        <TelephoneFill className="text-3xl"/>
+                        <TelephoneFill className="text-3xl" />
                         <span>
                             <h2 className="text-sm">Phone Number</h2>
                             <p>{cwSpace.phones[0]}</p>
                         </span>
                     </div>
                     <div className="flex items-center gap-2 text-lg">
-                        <ClockFill className="text-3xl"/>
+                        <ClockFill className="text-3xl" />
                         <span>
                             <h2 className="text-sm">Opening Time</h2>
                             <p>{cwSpace.openingTime}</p>
                         </span>
                     </div>
                     <div className="flex items-center gap-2 text-lg">
-                        <ClockFill className="text-3xl"/>
+                        <ClockFill className="text-3xl" />
                         <span>
                             <h2 className="text-sm">Closing Time</h2>
                             <p>{cwSpace.closingTime}</p>
@@ -151,12 +172,12 @@ function WorkSpaceProfile() {
                 <div className="mt-[50px]">
                     <h2 className="text-center main-font md:text-4xl text-2xl flex items-center justify-center gap-2 mb-[50px]">
                         <Stars />Reviews</h2>
-                    <Review review={{ name: "Ismail Salama", rate: 2.5, dateTime: "", body: "This pleace I really enjoyed it. It was great and the rooms were very quite and comfy which helped me to focus a lot.This pleace I really enjoyed it. It was great and the rooms were very quite and comfy which helped me to focus a lot." }} />
-                    <Review review={{ name: "Abdelrahman Modather", rate: 4, dateTime: "", body: "This pleace I really enjoyed it. It was great and the rooms were very quite and comfy which helped me to focus a lot." }} />
-                    <Review review={{ name: "Youssef Hesham", rate: 4.5, dateTime: "", body: "This pleace I really enjoyed it. It was great and the rooms were very quite and comfy which helped me to focus a lot." }} />
-                    <Review review={{ name: "Tarek Ahmed", rate: 1.5, dateTime: "", body: "Please upgrade your business" }} />
-                    <Review review={{ name: "Ismail Youssef", rate: 2.5, dateTime: "", body: "This pleace I really enjoyed it. It was great and the rooms were very quite and comfy which helped me to focus a lot." }} />
-                    <Review review={{ name: "Abdelrahman Tarek", rate: 3.7, dateTime: "", body: "This pleace I really enjoyed it. It was great and the rooms were very quite and comfy which helped me to focus a lot." }} />
+                    <Review review={{ name: "Ismail Salama", rate: 2.5, dateTime: "2023-11-23T18:08:23.684Z", body: "This pleace I really enjoyed it. It was great and the rooms were very quite and comfy which helped me to focus a lot.This pleace I really enjoyed it. It was great and the rooms were very quite and comfy which helped me to focus a lot." }} />
+                    <Review review={{ name: "Abdelrahman Modather", rate: 4, dateTime: "2023-11-23T18:08:23.684Z", body: "This pleace I really enjoyed it. It was great and the rooms were very quite and comfy which helped me to focus a lot." }} />
+                    <Review review={{ name: "Youssef Hesham", rate: 4.5, dateTime: "2023-01-23T18:08:23.684Z", body: "This pleace I really enjoyed it. It was great and the rooms were very quite and comfy which helped me to focus a lot." }} />
+                    <Review review={{ name: "Tarek Ahmed", rate: 0.5, dateTime: "2023-03-23T18:08:23.684Z", body: "Please upgrade your business" }} />
+                    <Review review={{ name: "Ismail Youssef", rate: 2.5, dateTime: "2023-11-23T18:08:23.684Z", body: "This pleace I really enjoyed it. It was great and the rooms were very quite and comfy which helped me to focus a lot." }} />
+                    <Review review={{ name: "Abdelrahman Tarek", rate: 3.7, dateTime: "2023-12-23T18:08:23.684Z", body: "This pleace I really enjoyed it. It was great and the rooms were very quite and comfy which helped me to focus a lot." }} />
                 </div>
             </div>
         )
