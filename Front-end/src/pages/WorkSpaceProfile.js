@@ -9,6 +9,7 @@ import Image2 from "../components/images/offer1.jpg"
 import Image3 from "../components/images/offer2.jpg"
 import Image4 from "../components/images/HomeImage.jpg"
 import Image5 from "../components/images/cover.jpg";
+import profilePic from "../components/images/cover.jpg";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, EffectCoverflow } from 'swiper/modules';
 import 'swiper/css';
@@ -37,13 +38,13 @@ function Review(props) {
         'July', 'August', 'September', 'October', 'November', 'December'
     ];
     const date = new Date(review.dateTime)
-    console.log(date.getMonth())
     const reviewDate = date.getDate().toString()+ " " + months[date.getMonth()] + " " + date.getFullYear().toString();
     return (
         <div className="md:px-10 lg:w-3/4 my-10">
             <div className="flex items-center justify-between">
                 <div className="flex items-center md:gap-5 gap-2">
                     <PersonCircle className="text-[40px]" />
+                    {/* <img src={profilePic} className="h-[50px] w-[50px] rounded-full object-cover"></img> */}
                     <h2 className="md:text-2xl main-font">{review.name}</h2>
                 </div>
                 <ReviewStars rate={review.rate} />
@@ -95,6 +96,7 @@ function WorkSpaceProfile() {
             .then(responsedata => {
                 if (responsedata.status === "error") {
                 } else if (responsedata.status === "success") {
+                    console.log(responsedata.data)
                     setReviews(responsedata.data);
                 }
             }
@@ -174,10 +176,9 @@ function WorkSpaceProfile() {
                         <Stars />Reviews</h2>
                     <Review review={{ name: "Ismail Salama", rate: 2.5, dateTime: "2023-11-23T18:08:23.684Z", body: "This pleace I really enjoyed it. It was great and the rooms were very quite and comfy which helped me to focus a lot.This pleace I really enjoyed it. It was great and the rooms were very quite and comfy which helped me to focus a lot." }} />
                     <Review review={{ name: "Abdelrahman Modather", rate: 4, dateTime: "2023-11-23T18:08:23.684Z", body: "This pleace I really enjoyed it. It was great and the rooms were very quite and comfy which helped me to focus a lot." }} />
-                    <Review review={{ name: "Youssef Hesham", rate: 4.5, dateTime: "2023-01-23T18:08:23.684Z", body: "This pleace I really enjoyed it. It was great and the rooms were very quite and comfy which helped me to focus a lot." }} />
-                    <Review review={{ name: "Tarek Ahmed", rate: 0.5, dateTime: "2023-03-23T18:08:23.684Z", body: "Please upgrade your business" }} />
-                    <Review review={{ name: "Ismail Youssef", rate: 2.5, dateTime: "2023-11-23T18:08:23.684Z", body: "This pleace I really enjoyed it. It was great and the rooms were very quite and comfy which helped me to focus a lot." }} />
-                    <Review review={{ name: "Abdelrahman Tarek", rate: 3.7, dateTime: "2023-12-23T18:08:23.684Z", body: "This pleace I really enjoyed it. It was great and the rooms were very quite and comfy which helped me to focus a lot." }} />
+                    {reviews ? reviews.map((review) => {
+                        return <Review review={review} key={review.clientClientID + "/" + review.cwSpaceCwID}/>
+                    }) : <p className="text-center my-[100px] sec-font text-xl">Currently there are now reviews</p>}
                 </div>
             </div>
         )
