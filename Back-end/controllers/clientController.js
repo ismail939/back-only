@@ -3,9 +3,10 @@ const { Client } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-const { validateUser , validateUpdatedUser} = require("../middlewares/validationSchema");
+const { validateUser, validateUpdatedUser } = require("../middlewares/validationSchema");
 const bcrypt = require('bcrypt')
 const generateJWT = require('../utils/generateJWT')
+const fs = require('fs')
 
 module.exports = {
     register: asyncWrapper(
@@ -27,7 +28,7 @@ module.exports = {
                 const error = appError.create("Client Already Exists", 400, httpStatusCode.ERROR)
                 return next(error)
             }
-            
+
             const password = req.body.password;
             const hashedPassword = await bcrypt.hash(password, Number(process.env.SALT_ROUND))
             const newClient = (await Client.create({
@@ -62,12 +63,12 @@ module.exports = {
                         return res.status(200).json({ status: httpStatusCode.SUCCESS, data: { token } })
                     }
                 });
-                
+
             } else {
                 const error = appError.create("Username or Password is Incorrect", 404, httpStatusCode.ERROR)
                 return next(error)
             }
-            
+
         }
     ),
     getAll: asyncWrapper(
@@ -99,6 +100,10 @@ module.exports = {
                         clientID: req.params.ID
                     }
                 })
+                if (updatedClient.profilePic) {
+                    const filePath = `./public/images/clients/${updatedClient.profilePic}`;
+                    fs.unlink(filePath, ()=>{})
+                }
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully" })
             }
             const error = appError.create("Client Not Found", 404, httpStatusCode.ERROR);
@@ -108,9 +113,7 @@ module.exports = {
     update: asyncWrapper(
         async (req, res, next) => {
             let errors = validateUpdatedUser(req);
-            console.log(errors)
             if (errors.length != 0) {
-                console.log(errors)
                 const error = appError.create(errors, 400, httpStatusCode.ERROR)
                 return next(error)
             }
@@ -144,6 +147,10 @@ module.exports = {
                         clientID: req.params.ID
                     }
                 })
+                if (deletedClient.profilePic) {
+                    const filePath = `./public/images/clients/${deletedClient.profilePic}`;
+                    fs.unlink(filePath, ()=>{})
+                }
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Deleted Successfully" });
             }
             const error = appError.create("Client Not Found", 404, httpStatusCode.ERROR);
