@@ -26,6 +26,7 @@ function OwnerAccountSettings(props) {
         newpassword: false,
         confrimpassword: false
     });
+    
     const imageUrl = `http://localhost:4000/images/${usertype}s/` + profileData.profilePic;
     const addImg = () => {
         const formData = new FormData();
@@ -187,14 +188,7 @@ function OwnerAccountSettings(props) {
     }
     const handlePassword = (e) => {
         e.preventDefault();
-        if (profileData.password != oldPassword) {
-            setDataErrors({
-                "fname": false, "lname": false,
-                "email": false, "imgName": false, "phonenumber": false, oldpassword: true, newpassword: false, confrimpassword: false
-            })
-            setCheckError("old password is not correct")
-        }
-        else if (newPasswordError()) {
+        if (newPasswordError()) {
             setDataErrors({
                 "fname": false, "lname": false,
                 "email": false, "imgName": false, "phonenumber": false, oldpassword: false, newpassword: true, confrimpassword: false
@@ -212,8 +206,10 @@ function OwnerAccountSettings(props) {
             addPassword();
         }
     }
+    {console.log(profileData.profilePic)}
     return (
         <>
+        
             <div className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4 " >
                 <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Profile Photo</h2>
                 <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4" >
@@ -261,9 +257,9 @@ function OwnerAccountSettings(props) {
                             </div>
                         </div>
                         <div className="flex flex-row-reverse w-full">
-                            <button disabled={!firstName.trim() && !lastName.trim() && !email.trim()}
-                                onClick={e => HandleError(e)} className="py-2 px-8 my-2 text-base font-medium text-indigo-100 btn-color rounded-lg border border-indigo-200 
-                                    " >Save</button>
+                            <button disabled={firstName===profileData.fname&&lastName===profileData.lname&&email===profileData.email}
+                                onClick={e => HandleError(e)} className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${firstName===profileData.fname&&lastName===profileData.lname&&email===profileData.email ? "bg-gray-500" :  "btn-color border-indigo-200"}
+                                rounded-lg border`} >Save</button>
                         </div>
                     </div>
                 </div>
@@ -274,9 +270,8 @@ function OwnerAccountSettings(props) {
                         text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
                             onChange={(e) => setPhoneNumber(e.target.value)} type="text"
                             value={phoneNumber} ></input>
-                        <button className="py-2 px-8 text-base font-medium text-indigo-100 w-28
-                        btn-color rounded-lg border border-indigo-200  
-                                    " disabled={!phoneNumber.trim()}
+                        <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${phoneNumber===profileData.phone ? "bg-gray-500" :  "btn-color border-indigo-200"}
+                                rounded-lg border`} disabled={phoneNumber===profileData.phone}
                             onClick={e => handlePhone(e)} >Save</button>
                     </div>
                     <div className="px-16 mb-3">
@@ -312,8 +307,8 @@ function OwnerAccountSettings(props) {
                             </div>
                         </div>
                         <div className="flex flex-row-reverse w-full">
-                            <button className="py-2 px-8 my-2  text-base font-medium text-indigo-100 btn-color
-                        rounded-lg border border-indigo-200" disabled={!oldPassword.trim() && !newPassword.trim() && !confrimPassword.trim()} onClick={(e) => handlePassword(e)} >Save</button>
+                            <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${!oldPassword.trim() || !newPassword.trim() || !confrimPassword.trim() ? "bg-gray-500" :  "btn-color border-indigo-200"}
+                                rounded-lg border`} disabled={!oldPassword.trim() || !newPassword.trim() || !confrimPassword.trim()} onClick={(e) => handlePassword(e)} >Save</button>
                         </div>
                     </div>
                 </div>
