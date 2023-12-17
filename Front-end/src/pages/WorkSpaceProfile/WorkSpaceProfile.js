@@ -72,7 +72,7 @@ function WorkSpaceProfile() {
                     setFound(false);
                     setLodaing(false)
                 } else if (responsedata.status === "success") {
-                    setCWSpace(responsedata.data[0]);
+                    setCWSpace(responsedata.data);
                     setFound(true)
                     setLodaing(false)
                 }
@@ -151,7 +151,7 @@ function WorkSpaceProfile() {
                         <TelephoneFill className="text-3xl" />
                         <span>
                             <h2 className="text-sm">Phone Number</h2>
-                            <p>{cwSpace.phones[0]}</p>
+                            <p>{cwSpace.phone}</p>
                         </span>
                     </div>
                     <div className="flex items-center gap-2 text-lg">
