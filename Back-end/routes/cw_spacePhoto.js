@@ -9,7 +9,8 @@ const storage = multer.diskStorage({
     filename: function (req, file, cb) {
         const acceptedFormats = ['image/png', 'image/jpeg', 'image/jpg'];
         if (!acceptedFormats.includes(file.mimetype)) {
-            return cb(new Error('Wrong file type'), null);
+            const error = appError.create("Unacceptable Type Format For Image", 415, httpStatusCode.ERROR)
+            return cb(error);
         }
         if(req.body.photos==undefined){
             req.body.photos = []
@@ -22,13 +23,12 @@ const storage = multer.diskStorage({
 }
 )
 const upload = multer({ storage: storage })
-router.route("/")
-    .get(cw_spacePhotoController.get)
+router.route("/:cwID")
+    .get(cw_spacePhotoController.getAll)
     .post(upload.any('img'), cw_spacePhotoController.create);
 
-router.route("/:ID")
+router.route("/:cwID/:ID")
     .get(cw_spacePhotoController.getOne)
-    .patch(cw_spacePhotoController.update)
     .delete(cw_spacePhotoController.delete);
 
 module.exports = router
