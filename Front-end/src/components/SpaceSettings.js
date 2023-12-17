@@ -3,11 +3,6 @@ import { Trash3Fill } from "react-bootstrap-icons";
 function SpaceSettings(props) {
     const cwspace = props.cwspace;
     const cwSpacePhotos = props.cwSpacePhotos;
-    useEffect(
-        ()=>{console.log(cwspace)
-        console.log(cwSpacePhotos)
-        }
-    )
     const [img, setImg] = useState([]);
     const [imgName, setImgName] = useState("");
     const [description, setDescription] = useState(cwspace.description);
@@ -16,7 +11,7 @@ function SpaceSettings(props) {
     const [closingTime, setClosingTime] = useState(cwspace.closingTime);
     const [fbPage, setFbPage] = useState(cwspace.fbPage);
     const [address, setAddress] = useState(cwspace.address);
-    const [phone, setPhone] = useState(cwspace.phones[0]);
+    const [phone, setPhone] = useState(cwspace.phone);
     const [secImg, setSecImg] = useState([]);
     const [secImgName, setSecImgName] = useState("");
     const [checkerror, setCheckError] = useState("");

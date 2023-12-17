@@ -25,7 +25,6 @@ function DashboardProfile() {
         fetch("http://localhost:4000/cw_spaces/4")
             .then(res => res.json())
             .then(responsedata => {
-                console.log("1",responsedata.data)
                 setCWSpace(responsedata.data);
             }
             ).catch(error => { console.log(error); });
@@ -34,14 +33,12 @@ function DashboardProfile() {
         fetch(`http://localhost:4000/cw_spacePhotos/4`)
             .then(res => res.json())
             .then(responsedata => {
-                
                 setCwSpacePhotos(responsedata.data);
             }
             ).catch(error => { console.log(error); });
     }
     return (
         < >
-        {console.log("2",cwspace)}
             <div className="flex flex-col gap-5 px-3 md:px-16 lg:px-28 md:flex-row mx-8 md:mx-auto">
                 <div className="  mx-8 ">
                     <div className="my-8">
