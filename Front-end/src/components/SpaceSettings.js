@@ -2,18 +2,23 @@ import { useState, useEffect } from "react";
 import { Trash3Fill } from "react-bootstrap-icons";
 function SpaceSettings(props) {
     const cwspace = props.cwspace;
+    const cwSpacePhotos = props.cwSpacePhotos;
+    useEffect(
+        ()=>{console.log(cwspace)
+        console.log(cwSpacePhotos)
+        }
+    )
     const [img, setImg] = useState([]);
     const [imgName, setImgName] = useState("");
-    const [name, setName] = useState(cwspace.name);
     const [description, setDescription] = useState(cwspace.description);
     const [email, setEmail] = useState(cwspace.email);
     const [openingTime, setOpeningTime] = useState(cwspace.openingTime);
     const [closingTime, setClosingTime] = useState(cwspace.closingTime);
     const [fbPage, setFbPage] = useState(cwspace.fbPage);
     const [address, setAddress] = useState(cwspace.address);
-    const [phone, setPhone] = useState(cwspace.phones[0])
-    const [secImg,setSecImg]=useState([]);
-    const [secImgName,setSecImgName]=useState("")
+    const [phone, setPhone] = useState(cwspace.phones[0]);
+    const [secImg, setSecImg] = useState([]);
+    const [secImgName, setSecImgName] = useState("");
     const [checkerror, setCheckError] = useState("");
     const [dataerrors, setDataErrors] = useState({
         address: false,
@@ -24,9 +29,9 @@ function SpaceSettings(props) {
         start: false,
         end: false,
         img: false,
-        secImg:false
+        secImg: false
     });
-    const imageUrl = `http://localhost:4000/images/cwspaces/1`;
+    const imageUrl = `http://localhost:4000/images/cw_spaces/${cwspace.mainPhoto}`;
     // const getCworkingSpaceData=()=>{
     //     fetch(`http://localhost:4000/cw_spaces/1`)
     //     .then(res => {
@@ -53,10 +58,30 @@ function SpaceSettings(props) {
     const addImg = () => {
         if (isImage(imgName)) {
             let formData = new FormData();
-            formData.append('imgName',imgName);
-            formData.append('img', img);
-            fetch(`http://localhost:4000/cw_spaces/1`, {
-                method: 'Patch',
+            formData.append('mainPhoto', img);
+            fetch(`http://localhost:4000/cw_spaces/4`, {
+                method: 'PATCH',
+                body: formData,
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "error") {
+                        console.log(data.message)
+                    } else if (data.status === "success") {
+                        console.log(data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during fetch operation:', error);
+                });
+        }
+    }
+    const addSecImg = () => {
+        if (isImage(secImgName)) {
+            let formData = new FormData();
+            formData.append('', secImg);
+            fetch(`http://localhost:4000/cw_spaces/4`, {
+                method: 'POST',
                 body: formData,
             })
                 .then(response => response.json())
@@ -83,7 +108,7 @@ function SpaceSettings(props) {
         e.preventDefault();
         if (!isImage(imgName)) {
             setDataErrors({
-                address: false, email: false, imgName: false, phonenumber: false, description: false, start: false, end: false, img: true,secImg:false
+                address: false, email: false, imgName: false, phonenumber: false, description: false, start: false, end: false, img: true, secImg: false
             })
             setCheckError("accepted formats are png,jpg,jpeg");
         }
@@ -119,8 +144,7 @@ function SpaceSettings(props) {
         }
     };
     const AddData = () => {
-
-        fetch(`http://localhost:4000/cw_spaces/1`, {
+        fetch(`http://localhost:4000/cw_spaces/4`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
@@ -142,58 +166,56 @@ function SpaceSettings(props) {
         e.preventDefault();
         if (address.length === 0) {
             setDataErrors({
-                address: true, email: false, imgName: false, phonenumber: false, description: false, start: false, end: false, img: false,secImg:false
+                address: true, email: false, imgName: false, phonenumber: false, description: false, start: false, end: false, img: false, secImg: false
             })
             setCheckError("please fill in the address correctly");
         }
         else if (description.length === 0) {
             setDataErrors({
-                address: false, email: false, imgName: false, phonenumber: false, description: true, start: false, end: false, img: false,secImg:false
+                address: false, email: false, imgName: false, phonenumber: false, description: true, start: false, end: false, img: false, secImg: false
             })
             setCheckError("please fill in the description correctly");
         }
         else if (email !== null && emailError()) {
             setDataErrors({
-                address: false, email: true, imgName: false, phonenumber: false, description: false, start: false, end: false, img: false,secImg:false
+                address: false, email: true, imgName: false, phonenumber: false, description: false, start: false, end: false, img: false, secImg: false
             })
             setCheckError("please write a valid email address");
         }
         else if (PhoneNumberError(phone)) {
             setDataErrors({
-                address: false, email: false, imgName: false, phonenumber: true, description: false, start: false, end: false, img: false,secImg:false
+                address: false, email: false, imgName: false, phonenumber: true, description: false, start: false, end: false, img: false, secImg: false
             })
             setCheckError("Please write a correct phone number ex:010123456789");
         }
         else if (DateError(openingTime)) {
             setDataErrors({
-                address: false, email: false, imgName: false, phonenumber: false, description: false, start: true, end: false, img: false,secImg:false
+                address: false, email: false, imgName: false, phonenumber: false, description: false, start: true, end: false, img: false, secImg: false
             })
             setCheckError("Openinig Hour should be in this format 00:00:00");
         }
         else if (DateError(closingTime)) {
             setDataErrors({
-                address: false, email: false, imgName: false, phonenumber: false, description: false, start: false, end: true, img: false,secImg:false
+                address: false, email: false, imgName: false, phonenumber: false, description: false, start: false, end: true, img: false, secImg: false
             })
             setCheckError("Closing Hour should be in this format 00:00:00");
         }
         else {
             setCheckError("");
             setDataErrors({
-                address: false, email: false, imgName: false, phonenumber: false, description: false, start: false, end: false, img: false,secImg:false
+                address: false, email: false, imgName: false, phonenumber: false, description: false, start: false, end: false, img: false, secImg: false
             })
             AddData();
         }
     };
-    const deletethisimg = () => {
+    const deletethisimg = (wantedImg) => {
         try {
-            fetch(`http://localhost:4000//cw_spacePhotos/1/`, {
+            fetch(`http://localhost:4000//cw_spacePhotos/1/${wantedImg}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    
                 },
             });
-
         } catch (error) {
             console.error('Error deleting image:', error);
         }
@@ -202,39 +224,39 @@ function SpaceSettings(props) {
         e.preventDefault();
         if (!isImage(secImgName)) {
             setDataErrors({
-                address: false, email: false, imgName: false, phonenumber: false, description: false, start: false, end: false, img:false,secImg:true
+                address: false, email: false, imgName: false, phonenumber: false, description: false, start: false, end: false, img: false, secImg: true
             })
             setCheckError("accepted formats are png,jpg,jpeg");
         }
         else {
-            addImg();
+            addSecImg();
             setCheckError("");
         }
     }
     function PhotoCard(props) {
         const PhotoName = props.photo;
-        const ImageUrl = "http://localhost:4000/images/cw_spaces/" + PhotoName;
+        const ImageUrl = "http://localhost:4000/images/cw_spacesPhotos/4/" + PhotoName;
         return (
             <>
-            <div className="max-w-sm rounded-lg overflow-hidden shadow-lg">
-                <div className="w-full relative group h-64">
-                    <img className="w-full h-full" src={ImageUrl} alt="mfrood hena feh sora "></img>
-                    <button onClick={() => deletethisimg()} className="absolute top-3 right-1 font-extrabold text-lg text-red-400 opacity-0 duration-500
+                <div className="max-w-sm rounded-lg overflow-hidden shadow-lg">
+                    <div className="w-full relative group h-64">
+                        <img className="w-full h-full" src={ImageUrl} alt="mfrood hena feh sora "></img>
+                        <button onClick={() => deletethisimg(props.id)} className="absolute top-3 right-1 font-extrabold text-lg text-red-400 opacity-0 duration-500
                                 group-hover:-translate-x-5 group-hover:opacity-100"><Trash3Fill /></button>
+                    </div>
+
                 </div>
-                
-            </div>
-            <div>
-            <input className={`bg-gray-50 mt-4 border px-4  ${dataerrors.img ? "border-red-500" : "border-gray-300"}
+                <div>
+                    <input className={`bg-gray-50 mt-4 border px-4  ${dataerrors.img ? "border-red-500" : "border-gray-300"}
                         text-gray-900 sm:text-sm rounded-lg focus:border-primary-600 block max-w-2xl  p-2.5`}
-                            onChange={(e) => { setSecImg(e.target.files[0]); setSecImgName(e.target.files[0].name) }}
-                            accept=".png,.jpg,.jpeg" type="file" ></input>
-                        {dataerrors.secImg ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
-                        <div className="flex flex-row-reverse w-full">
-                            <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${!secImgName.trim() ? "bg-gray-500" : "btn-color border-indigo-200"}
+                        onChange={(e) => { setSecImg(e.target.files[0]); setSecImgName(e.target.files[0].name) }}
+                        accept=".png,.jpg,.jpeg" type="file" ></input>
+                    {dataerrors.secImg ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
+                    <div className="flex flex-row-reverse w-full">
+                        <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${!secImgName.trim() ? "bg-gray-500" : "btn-color border-indigo-200"}
                         rounded-lg border`} disabled={!secImgName.trim()} onClick={(e) => handleSecImage(e)}>Save</button>
-                        </div>
-            </div>
+                    </div>
+                </div>
             </>
         )
     }
@@ -294,7 +316,7 @@ function SpaceSettings(props) {
                             <div className="w-full">
                                 <input className={`bg-gray-50 border placeholder-gray-900 ${dataerrors.fbPage ? "border-red-500" : "border-gray-300"}
                             text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 w-full`}
-                                    onChange={(e) => setName(e.target.value)} type="text" value={fbPage} ></input>
+                                    onChange={(e) => setFbPage(e.target.value)} type="text" value={fbPage} ></input>
                                 {dataerrors.fbPage ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
                             </div>
                         </div>
@@ -335,7 +357,11 @@ function SpaceSettings(props) {
                 <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">photos</h2>
                 <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4" >
                     <div className="w-full md:px-16 px-4">
-                        <PhotoCard cwspace={cwspace} />
+                        <div>
+                            {cwSpacePhotos?.map((cwSpacePhoto) => {
+                                return <SpaceSettings cwSpacePhoto={cwSpacePhoto} key={cwSpacePhoto.id} />
+                            })}
+                        </div>
                     </div>
                 </div>
             </div>

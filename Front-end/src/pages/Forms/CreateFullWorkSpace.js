@@ -50,6 +50,7 @@ function CreateFullWorkSpace() {
         formData.append('description', data.description);
         formData.append('openingTime', data.openingTime);
         formData.append('closingTime', data.closingTime);
+        //we want to add the owner id with the form
         formData.append('mainPhoto', data.mainimg);
         fetch('http://localhost:4000/cw_spaces', {
             method: 'POST',
