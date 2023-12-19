@@ -57,7 +57,7 @@ function Review(props) {
 function WorkSpaceProfile() {
     const params = useParams();
     const [cwSpace, setCWSpace] = useState(null);
-    const [cwSpacePhotos, setCWSpacePhotos] = useState(null);
+    const [cwSpacePhotos, setCWSpacePhotos] = useState([]);
     const [reviews, setReviews] = useState(null);
     const [found, setFound] = useState(false);
     const [loading, setLodaing] = useState(true);
@@ -116,8 +116,8 @@ function WorkSpaceProfile() {
                     effect={'coverflow'}
                     centeredSlides={true}
                     grabCursor={true}
-                    loop={images.length > 2 ? true : false}
-                    slidesPerView={2}
+                    loop={cwSpacePhotos.length > 2 ? true : false}
+                    slidesPerView={cwSpacePhotos?.length > 2 ? 2 : 1}
                     modules={[EffectCoverflow, Navigation]}
                     coverflowEffect={
                         {
@@ -131,10 +131,10 @@ function WorkSpaceProfile() {
                     <SwiperSlide >
                         <img src={imageUrl + cwSpace.mainPhoto} className="w-full h-full object-cover" />
                     </SwiperSlide>
-                    {images.map((image, index) => {
+                    {cwSpacePhotos?.map((image, index) => {
                         return (
                             <SwiperSlide >
-                                <img src={image} className="w-full h-full object-cover" />
+                                <img src={imageUrl+image.photo} className="w-full h-full object-cover" />
                             </SwiperSlide>
                         )
                     })}
