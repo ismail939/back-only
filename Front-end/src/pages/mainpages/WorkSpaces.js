@@ -33,6 +33,7 @@ function WorkSpaces() {
     const [searchData, setSearchData] = useState([]);
     const [searchlist, setSearchList] = useState(false);
     const [fetcherror, setFetchError] = useState(false);
+    const [showFilter, setShowFilter] = useState(false);
     let menuRef = useRef();
     //const [sortedData,setSortedData] =useState();
     useEffect(() => {
@@ -73,11 +74,15 @@ function WorkSpaces() {
         })
         setCWSpaces(soretedData);
     }
+    function handleFilter(){
+        console.log("handled")
+        setShowFilter(!showFilter)
+    }
     return (
         <div className="flex relative min-h-screen">
-            <div className="bg-gray-100 w-52 sticky h-[100dvh] hidden">
-                <Filters />
-            </div>
+            {showFilter && <div className="fixed top-0 left-0 w-full h-[100vh] flex items-center justify-center bg-black/[.2] z-20">
+                <Filters handleFilter={handleFilter}/>
+            </div>}
             <div className="w-4/5 mx-auto md:mt-[30px] p-5">
                 <div className="relative w-full" ref={menuRef}>
                     <div className="w-full h-10 flex items-center">
@@ -99,7 +104,8 @@ function WorkSpaces() {
                     </div> : null}
                 </div>
                 <div className="w-full flex justify-between mt-8">
-                    <button id="dropdownDefaultButton" className="md:w-36 w-32 mb-5 text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 justify-center items-center gap-2" type="button"><FunnelFill className="text-lg" /> Filters
+                    <button id="dropdownDefaultButton" className="md:w-36 w-32 mb-5 text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 justify-center items-center gap-2" 
+                    onClick={() => handleFilter()} type="button"><FunnelFill className="text-lg" /> Filters
                     </button>
                     <div id="dropdown" className="relative md:w-36 w-32" onMouseLeave={() => { setDropDown(false) }}>
                         <button id="dropdownDefaultButton" className="w-full text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 justify-center items-center gap-2" type="button" onMouseEnter={() => { setDropDown(!dropdown) }}>Sort By <SortDownAlt className="text-lg" />
