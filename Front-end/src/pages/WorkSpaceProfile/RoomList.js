@@ -1,9 +1,7 @@
 import { useState,useEffect } from "react";
+
 function RoomList(){
     const [rooms,setRooms]=useState([]);
-    const [shared,setShared]=useState([]);
-    const [privatee,setPrivate]=useState([]);
-    const [meeting,setMeeting]=useState([]);
     const getRooms = () => {
         fetch("http://localhost:4000/rooms")
             .then(res => res.json())
@@ -16,44 +14,49 @@ function RoomList(){
     }
     useEffect(()=>{
         getRooms();
-    })
-    const result1=rooms.filter(room=>room.type==="shared");
-    setShared(result1);
-    const result2=rooms.filter(room=>room.type==="private");
-    setPrivate(result2);
-    const result3=rooms.filter(room=>room.type==="meeting");
-    setMeeting(result3);
-    function photoRow(props){
+    },[])
+    const shared=rooms.filter(room=>room.type==="shared");
+    const privatee=rooms.filter(room=>room.type==="private");
+    const meeting=rooms.filter(room=>room.type==="meeting");
+    function PhotoRow(props){
         const roomData=props.room;
-        const imageurl=``;
+        const imageurl=`http://localhost:4000/images/rooms/${roomData.img}`;
         return(
             <>
-                <div>
-                    <img src={imageurl} alt="no image found"></img>
+                <div className="m-4 ">
+                    <img className="w-full h-[300px] object-cover rounded-xl" src={imageurl} alt="no image found"></img>
                 </div>
             </>
         )
     }
     return(
         <>
-            <div>
-                <div>
+            <div className="w-4/5 mx-auto mt-[50px] ">
+                <div >
                     <h2>Shared Rooms</h2>
-                    {shared?.map((room) => {
-                                return <photoRow room={room} key={rooms.roomid} />
-                            })}
+                    <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
+                        {
+                        shared?.map((room) => {
+                                return <PhotoRow room={room} key={rooms.roomid} />
+                        })}
+                    </div>
+                    
                 </div>
                 <div>
                     <h2>Private Rooms</h2>
+                    <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
                     {privatee?.map((room) => {
-                                return <photoRow room={room} key={rooms.roomid} />
+                                return <PhotoRow room={room} key={rooms.roomid} />
                             })}
+                    </div>
                 </div>
                 <div>
                     <h2>Meeting Rooms</h2>
+                    <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
                     {meeting?.map((room) => {
-                                return <photoRow room={room} key={rooms.roomid} />
+                                return <PhotoRow room={room} key={rooms.roomid} />
                             })}
+                    </div>
                 </div>
             </div>
         </>
