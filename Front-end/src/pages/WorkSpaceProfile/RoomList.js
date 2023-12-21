@@ -23,7 +23,7 @@ function RoomList(){
         const imageurl=`http://localhost:4000/images/rooms/${roomData.img}`;
         return(
             <>
-                <div className="m-4 ">
+                <div className="">
                     <img className="w-full h-[300px] object-cover rounded-xl" src={imageurl} alt="no image found"></img>
                 </div>
             </>
@@ -33,8 +33,8 @@ function RoomList(){
         <>
             <div className="w-4/5 mx-auto mt-[50px] ">
                 <div >
-                    <h2>Shared Rooms</h2>
-                    <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
+                    <h2 className="text-2xl main-font ">Shared Rooms</h2>
+                    <div className="grid my-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
                         {
                         shared?.map((room) => {
                                 return <PhotoRow room={room} key={rooms.roomid} />
@@ -42,17 +42,17 @@ function RoomList(){
                     </div>
                     
                 </div>
-                <div>
-                    <h2>Private Rooms</h2>
-                    <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
+                <div className="mt-10">
+                    <h2 className="text-2xl main-font ">Private Rooms</h2>
+                    <div className="grid my-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
                     {privatee?.map((room) => {
                                 return <PhotoRow room={room} key={rooms.roomid} />
                             })}
                     </div>
                 </div>
-                <div>
-                    <h2>Meeting Rooms</h2>
-                    <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
+                <div className="mt-10">
+                    <h2 className="text-2xl main-font ">Meeting Rooms</h2>
+                    <div className="grid my-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
                     {meeting?.map((room) => {
                                 return <PhotoRow room={room} key={rooms.roomid} />
                             })}
