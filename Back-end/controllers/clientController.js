@@ -102,12 +102,45 @@ module.exports = {
                 })
                 if (updatedClient.profilePic) {
                     const filePath = `./public/images/clients/${updatedClient.profilePic}`;
-                    fs.unlink(filePath, ()=>{})
+                    fs.unlink(filePath, () => { })
                 }
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully" })
             }
             const error = appError.create("Client Not Found", 404, httpStatusCode.ERROR);
             return next(error);
+        }
+    ),
+    updatePassword: asyncWrapper(
+        async (req, res, next) => {
+            const client = await Client.findOne({
+                raw: true, where: {
+                    clientID: req.params.ID
+                }
+            })
+            if (client) {
+                const oldPassword = req.body.oldPassword; 
+                bcrypt.compare(oldPassword, client.password, async (err, result) => {
+                    if (result) {
+                        const hashedPassword = await bcrypt.hash(req.body.newPassword, Number(process.env.SALT_ROUND))
+                        await Client.update(
+                            { password: hashedPassword }, {
+                            where: {
+                                clientID: req.params.ID
+                            }
+                        }
+                        )
+                        return res.status(200).json({status:httpStatusCode.SUCCESS, message: "Password is updated successfully!"})
+                    }
+                    else {
+                        const error = appError.create("Old password is incorrect ", 404, httpStatusCode.ERROR);
+                        return next(error);
+                    }
+                });
+
+            } else {
+                const error = appError.create("Username or Password is Incorrect", 404, httpStatusCode.ERROR)
+                return next(error)
+            }
         }
     ),
     update: asyncWrapper(
@@ -149,7 +182,7 @@ module.exports = {
                 })
                 if (deletedClient.profilePic) {
                     const filePath = `./public/images/clients/${deletedClient.profilePic}`;
-                    fs.unlink(filePath, ()=>{})
+                    fs.unlink(filePath, () => { })
                 }
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Deleted Successfully" });
             }
