@@ -23,7 +23,7 @@ module.exports = (db, type)=>{
         },
         phone: {
             type: type.STRING,
-                allowNull: false
+            allowNull: false
         },
         openingTime: {
             type: type.TIME,

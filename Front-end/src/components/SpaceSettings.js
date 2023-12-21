@@ -75,7 +75,7 @@ function SpaceSettings(props) {
         if (isImage(secImgName)) {
             let formData = new FormData();
             formData.append('', secImg);
-            fetch(`http://localhost:4000/cw_spaces/4`, {
+            fetch(`http://localhost:4000/cw_spacePhotos/4`, {
                 method: 'POST',
                 body: formData,
             })
@@ -150,7 +150,7 @@ function SpaceSettings(props) {
                 "email": email,
                 "openingTime": openingTime,
                 "closingTime": closingTime,
-                "phone": phone[0],
+                "phone": phone,
                 "fbPage": fbPage
             }),
         }).then(res => res.json()).then((data) => {
@@ -205,7 +205,7 @@ function SpaceSettings(props) {
     };
     const deletethisimg = (wantedImg) => {
         try {
-            fetch(`http://localhost:4000//cw_spacePhotos/1/${wantedImg}`, {
+            fetch(`http://localhost:4000/cw_spacePhotos/4/${wantedImg}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -229,29 +229,19 @@ function SpaceSettings(props) {
         }
     }
     function PhotoCard(props) {
-        const PhotoName = props.photo;
-        const ImageUrl = "http://localhost:4000/images/cw_spacesPhotos/4/" + PhotoName;
+        const PhotoName = props.cwSpacePhoto.photo;
+        const ImageUrl = "http://localhost:4000/images/cw_spaces/" + PhotoName;
         return (
             <>
                 <div className="max-w-sm rounded-lg overflow-hidden shadow-lg">
                     <div className="w-full relative group h-64">
                         <img className="w-full h-full" src={ImageUrl} alt="mfrood hena feh sora "></img>
-                        <button onClick={() => deletethisimg(props.id)} className="absolute top-3 right-1 font-extrabold text-lg text-red-400 opacity-0 duration-500
+                        <button onClick={() => deletethisimg(props.cwSpacePhoto.id)} className="absolute top-3 right-1 font-extrabold text-lg text-red-400 opacity-0 duration-500
                                 group-hover:-translate-x-5 group-hover:opacity-100"><Trash3Fill /></button>
                     </div>
 
                 </div>
-                <div>
-                    <input className={`bg-gray-50 mt-4 border px-4  ${dataerrors.img ? "border-red-500" : "border-gray-300"}
-                        text-gray-900 sm:text-sm rounded-lg focus:border-primary-600 block max-w-2xl  p-2.5`}
-                        onChange={(e) => { setSecImg(e.target.files[0]); setSecImgName(e.target.files[0].name) }}
-                        accept=".png,.jpg,.jpeg" type="file" ></input>
-                    {dataerrors.secImg ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
-                    <div className="flex flex-row-reverse w-full">
-                        <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${!secImgName.trim() ? "bg-gray-500" : "btn-color border-indigo-200"}
-                        rounded-lg border`} disabled={!secImgName.trim()} onClick={(e) => handleSecImage(e)}>Save</button>
-                    </div>
-                </div>
+                
             </>
         )
     }
@@ -354,8 +344,19 @@ function SpaceSettings(props) {
                     <div className="w-full md:px-16 px-4">
                         <div>
                             {cwSpacePhotos?.map((cwSpacePhoto) => {
-                                return <SpaceSettings cwSpacePhoto={cwSpacePhoto} key={cwSpacePhoto.id} />
+                                return <PhotoCard cwSpacePhoto={cwSpacePhoto} key={cwSpacePhoto.id} />
                             })}
+                            <div>
+                    <input className={`bg-gray-50 mt-4 border px-4  ${dataerrors.img ? "border-red-500" : "border-gray-300"}
+                        text-gray-900 sm:text-sm rounded-lg focus:border-primary-600 block max-w-2xl  p-2.5`}
+                        onChange={(e) => { setSecImg(e.target.files[0]); setSecImgName(e.target.files[0].name) }}
+                        accept=".png,.jpg,.jpeg" type="file" ></input>
+                    {dataerrors.secImg ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
+                    <div className="flex flex-row-reverse w-full">
+                        <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${!secImgName.trim() ? "bg-gray-500" : "btn-color border-indigo-200"}
+                        rounded-lg border`} disabled={!secImgName.trim()} onClick={(e) => handleSecImage(e)}>Save</button>
+                    </div>
+                </div>
                         </div>
                     </div>
                 </div>
