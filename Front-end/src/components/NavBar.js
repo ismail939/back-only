@@ -13,6 +13,10 @@ function NavBar() {
     const profileBtn = useRef();
     const loggedIn = [{ name: "Login", link: "login" }, { name: "Sign-Up", link: "sign-up" }];
     function clicked() {
+<<<<<<< HEAD
+=======
+
+>>>>>>> f31ec4be73b74461dbe7a10cf3639c4ae148b0c7
         setlistActive(!listActive)
     }
     function ShowSubMenu() {
