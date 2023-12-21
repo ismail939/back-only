@@ -214,7 +214,7 @@ function OwnerAccountSettings(props) {
                 <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Profile Photo</h2>
                 <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4" >
                     <div className="w-full md:px-16 px-4">
-                        <img className=" object-cover w-40 h-40 p-1 rounded-full ring-2 ring-indigo-300 m-8 " src={imageUrl} alt="no-picture-added"></img>
+                        <img  className=" object-cover w-40 h-40 p-1 rounded-full ring-2 ring-indigo-300 m-8 " src={imageUrl} alt="no-picture-added"></img>
                         <input className={`bg-gray-50 border px-4  ${dataerrors.imgName ? "border-red-500" : "border-gray-300"}
                         text-gray-900 sm:text-sm rounded-lg focus:border-primary-600 block max-w-2xl  p-2.5`}
                             onChange={(e) => { setImg(e.target.files[0]); setImgName(e.target.files[0].name) }}

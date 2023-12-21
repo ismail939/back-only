@@ -18,11 +18,11 @@ function DashboardProfile() {
     const activeStyle = "bg-[#0F4C75] text-white hover:bg-[#197ec2] duration-200"
     
     useEffect(() => {
-        getCworkingSpaceData();
-        getCworkingSpacePhotos();
+        if(usertype==="owner"){getCworkingSpaceData();
+            getCworkingSpacePhotos();}
     }, [])
     const getCworkingSpaceData = () => {
-        fetch("http://localhost:4000/cw_spaces/4")
+        fetch(`http://localhost:4000/cw_spaces/${profileData.cwSpaceCwID}`)
             .then(res => res.json())
             .then(responsedata => {
                 setCWSpace(responsedata.data);
@@ -30,7 +30,7 @@ function DashboardProfile() {
             ).catch(error => { console.log(error); });
     }
     const getCworkingSpacePhotos = () => {
-        fetch(`http://localhost:4000/cw_spacePhotos/4`)
+        fetch(`http://localhost:4000/cw_spacePhotos/${profileData.cwSpaceCwID}`)
             .then(res => res.json())
             .then(responsedata => {
                 setCwSpacePhotos(responsedata.data);
@@ -45,21 +45,21 @@ function DashboardProfile() {
                         <button onClick={() => setActive("account settings")}
                             className={`${buttonStyle} ${active === "account settings" ? activeStyle : "hover:text-indigo-900"}`} >Account Settings</button>
                     </div>
-                    <div className="my-8">
+                    {usertype==="owner"&&<div className="my-8">
                         <button className={`${buttonStyle} ${active === "space settings" ? activeStyle : "hover:text-indigo-900"}`}
                             onClick={() => setActive("space settings")}>Space Settings</button>
-                    </div>
+                    </div>}
                 </div>
                 {active === "account settings" && <OwnerAccountSettings profileData={profileData} />
                 }
-                {/* {active === "space settings" && profileData.cwSpaceCwID===null &&
+                {active === "space settings" && profileData.cwSpaceCwID===null &&
                     <div>
                         you didnt create a coworking space yet 
                         <br></br>
                         <Link to="../createworkspace" className="font-medium text-primary-600 hover:underline"> create working space </Link>
                     </div>
-                } */}
-                {active === "space settings" && cwspace !== null &&
+                }
+                {active === "space settings" &&  profileData.cwSpaceCwID!== null &&
                     <SpaceSettings cwspace={cwspace} cwSpacePhotos={cwSpacePhotos}/>
                 }
             </div>
