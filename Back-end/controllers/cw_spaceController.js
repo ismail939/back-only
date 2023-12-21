@@ -2,38 +2,48 @@ const { Cw_space, Cw_spacePhone, Cw_spacePhoto, Room } = require('../models/mode
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
+const fs = require('fs')
+const { validateUpdatedCw_space } = require("../middlewares/validationSchema");
 
 
 module.exports = {
-    get: asyncWrapper(
+    create: asyncWrapper(
+        async (req, res, next) => {
+            req.body.mainPhoto = req.body.imageName;
+            delete req.body.imageName;
+            let newCw_space = (await Cw_space.create(req.body)).get({ plain: true })
+            if (newCw_space) {
+                return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Co-working Space is Created Successfully" });
+            }
+            const error = appError.create("Unexpected Error, Try Again Later", 500, httpStatusCode.FAIL)
+            const filePath = `./public/images/cw_spaces/${req.body.mainPhoto}`;
+            fs.unlink(filePath, () => {});
+            return next(error)
+        }
+    ),
+    getAll: asyncWrapper(
         async (req, res, next) => {
             let cw_spaces = await Cw_space.findAll({ raw: true })
-            const cw_spacePhones = await Cw_spacePhone.findAll();
-            let room = await Room.findOne({
+            if (cw_spaces.length != 0) {
+                let rooms = await Room.findAll({
                 raw: true,
                 where: {
                     type: "shared room"
                 }
             });
-            for (let i = 0; i < cw_spaces.length; i++) {
-                cw_spaces[i].phones = []
-                for (let j = 0; j < cw_spacePhones.length; j++) {
-                    if (cw_spaces[i].cwID == cw_spacePhones[j].cwSpaceCwID) {
-                        cw_spaces[i].phones.push(cw_spacePhones[j].phone)
+            if (rooms.length != 0) {
+                for (let i = 0; i < cw_spaces.length; i++) {
+                    for (let j = 0; j < rooms.length; j++) {
+                        if (cw_spaces[i].cwID == rooms[j].cwSpaceCwID) {
+                            cw_spaces[i].price = rooms[j].hourPrice
+                        }
                     }
                 }
-                //the if condition for running correctly until rooms created
-                if (room) {
-                    cw_spaces[i].price = room.hourPrice;
-                }
             }
-            
-            if (cw_spaces.length === 0) {
-                const error = appError.create("Co-working spaces not found", 404, httpStatusCode.ERROR);
-                return next(error);
+            return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_spaces });
             }
-
-            return res.json({ status: httpStatusCode.SUCCESS, data: cw_spaces });
+            const error = appError.create("There Are No Available Co-working Spaces", 404, httpStatusCode.ERROR);
+            return next(error);
         }
     ),
     getHome: asyncWrapper(
@@ -44,96 +54,115 @@ module.exports = {
                     home: "home"
                 }
             })
-            if (cw_spaceHome.length === 0) {
-                return res.status(404).json({ status: httpStatusCode.ERROR, message: "There are no available Co-working spaces available"})
+            if (cw_spaceHome.length != 0) {
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_spaceHome })
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: cw_spaceHome })
+            const error = appError.create("There Are No Available Co-working Spaces", 404, httpStatusCode.ERROR);
+            return next(error)
         }
     ),
     getOne: asyncWrapper(
         async (req, res, next) => {
-            const cw_space = await Cw_space.findAll({
-                raw: true,
+            const cw_space = await Cw_space.findOne({
                 where: {
                     cwID: req.params.ID
                 }
             })
-            const cw_spacePhones = await Cw_spacePhone.findAll({
-                where: {
-                    cwSpaceCwID: req.params.ID
-                }
-            })
-            if (cw_spacePhones.length === 0) {
-                const error = appError.create("Cw_spacePhones not found", 404, httpStatusCode.ERROR);
-                return next(error);
+            if (cw_space) {
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_space })
             }
-            // const cw_spacePhotos = await Cw_spacePhoto.findAll({
-            //     where: {
-            //         cwSpaceCwID: req.params.ID
-            //     }
-            // })
-            // if (cw_spacePhotos.length === 0) {
-            //     const error = appError.create("Cw_spacePhotos not found", 404, httpStatusCode.ERROR);
-            //     return next(error);
-            // }
-            cw_space[0].phones = []
-            cw_spacePhones.forEach(phone => {
-                cw_space[0].phones.push(phone.phone)
-            });
-            return res.json({ status: httpStatusCode.SUCCESS, data: cw_space })
+            const error = appError.create("This Co-working Spaces Not Found", 404, httpStatusCode.ERROR);
+            return next(error)
         }
     ),
-    create: asyncWrapper(
+    updatePhoto: asyncWrapper(
         async (req, res, next) => {
-            req.body.mainPhoto = req.body.imageName
-            delete req.body.imageName
-            
-            let newCw_space = (await Cw_space.create(req.body)).get({ plain: true })
-            let newCw_spacePhone = null;
-            let newCw_spacePhoneList = req.body.phones.split(',')
-            for (let i = 0; i < newCw_spacePhoneList.length; i++) {
-                newCw_spacePhone = await Cw_spacePhone.create({ phone: newCw_spacePhoneList[i], cwSpaceCwID: newCw_space.cwID })
+            if (req.body.mainPhoto == '') {
+                const error = appError.create("There is NO Images Provided", 400, httpStatusCode.ERROR);
+                return next(error);
             }
-            newCw_space.phones = newCw_spacePhoneList
-            return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newCw_space });
+            req.body.mainPhoto = req.body.imageName;
+            delete req.body.imageName;
+            const updatedCw_space = await Cw_space.findOne({
+                where: {
+                    cwID: req.params.ID
+                }
+            })
+            if (updatedCw_space) {
+                await Cw_space.update(req.body, {
+                    where: {
+                        cwID: req.params.ID
+                    }
+                })
+                if (updatedCw_space.mainPhoto) {
+                    const filePath = `./public/images/cw_spaces/${updatedCw_space.mainPhoto}`;
+                    fs.unlink(filePath, ()=>{})
+                }
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Co-working Space Updated Successfully" })
+            }
+            const error = appError.create("Co-Working Space Not Found", 404, httpStatusCode.ERROR);
+            const filePath = `./public/images/cw_spaces/${req.body.mainPhoto}`;
+            fs.unlink(filePath, () => {});
+            return next(error);
         }
     ),
     update: asyncWrapper(
         async (req, res, next) => {
-            const updatedCw_space = await Cw_space.findAll({
-                where: {
-                    cwID: req.params.ID
-                }
-            });
-            if (updatedCw_space.length === 0) {
-                const error = appError.create("cw_space not found", 404, httpStatusCode.ERROR);
-                return next(error);
+            let errors = validateUpdatedCw_space(req)
+            if (errors.length != 0) {
+                const error = appError.create(errors, 400, httpStatusCode.ERROR)
+                return next(error)
             }
-            await Cw_space.update(req.body, {
+            const updatedCw_space = await Cw_space.findOne({
                 where: {
                     cwID: req.params.ID
                 }
             });
-            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "updated successfully" });
+            if (updatedCw_space) {
+                await Cw_space.update(req.body, {
+                where: {
+                    cwID: req.params.ID
+                }
+                });
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Co-working Space Updated Successfully" });
+            }
+            const error = appError.create("Co-Working Space Not Found", 404, httpStatusCode.ERROR);
+            return next(error);
         }
     ),
     delete: asyncWrapper(
         async (req, res, next) => {
-            const deletedCw_space = await Cw_space.findAll({
+            const deletedCw_space = await Cw_space.findOne({
                 where: {
                     cwID: req.params.ID
                 }
             });
-            if (deletedCw_space.length === 0) {
-                const error = appError.create("cw_space not found", 404, httpStatusCode.ERROR);
-                return next(error);
-            }
-            await Cw_space.destroy({
-                where: {
-                    cwID: req.params.ID
+            if (deletedCw_space) {
+                const filePath = `./public/images/cw_spaces/${deletedCw_space.mainPhoto}`;
+                fs.unlink(filePath, () => {});
+                let photos = await Cw_spacePhoto.findAll({
+                    where: {
+                        cwSpaceCwID: req.params.ID
+                    }
+                }, { raw: true })
+                for (const photo of photos) {
+                    let filePath = `./public/images/cw_spaces/${photo.photo}`;
+                    fs.unlink(filePath, () => { })
                 }
-            })
-            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "deleted successfully" });
+                await Cw_spacePhoto.destroy({
+                    where: {
+                        cwSpaceCwID: req.params.ID
+                    }
+                })
+                await Cw_space.destroy({
+                    where: {
+                        cwID: req.params.ID
+                    }
+                })
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Co-working Space Deleted Successfully" })
+            }
+            const error = appError.create("Co-working Space Not Found", 404, httpStatusCode.ERROR);
+            return next(error);
         }
     )
 } 

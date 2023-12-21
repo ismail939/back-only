@@ -1,10 +1,10 @@
-const { Review } = require('../models/modelIndex')
+const { Review, Client } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 
 
-module.exports ={
+module.exports = {
     get: asyncWrapper(
         async (req, res, next) => {
             const reviews = await Review.findAll()
@@ -12,7 +12,30 @@ module.exports ={
                 const error = appError.create("Reviews not found", 404, httpStatusCode.ERROR);
                 return next(error);
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: reviews }); 
+            return res.json({ status: httpStatusCode.SUCCESS, data: reviews });
+        }
+    ),
+    getCw_spaceReviews: asyncWrapper(
+        async (req, res, next) => {
+            const reviews = await Review.findAll({
+                where: {
+                    cwSpaceCwID: req.params.cwSpaceID
+                }
+            }, { raw: true })
+            if (reviews.length === 0) {
+                const error = appError.create("Reviews not found", 404, httpStatusCode.ERROR);
+                return next(error);
+            }
+            for (let i = 0; i < reviews.length; i++) {
+                let client = await Client.findOne({
+                    where: {
+                        clientID: reviews[i].clientClientID
+                    }
+                })
+                reviews[i].name = client.fname + " " + client.lname
+                reviews[i].profilePic = client.profilePic
+            }
+            return res.json({ status: httpStatusCode.SUCCESS, data: reviews });
         }
     ),
     getOne: asyncWrapper(
@@ -27,7 +50,7 @@ module.exports ={
                 const error = appError.create("Review not found", 404, httpStatusCode.ERROR);
                 return next(error);
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: review }) 
+            return res.json({ status: httpStatusCode.SUCCESS, data: review })
         }
     ),
     create: asyncWrapper(
@@ -56,7 +79,7 @@ module.exports ={
             });
             return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "updated successfully" });
         }
-    ),  
+    ),
     delete: asyncWrapper(
         async (req, res, next) => {
             const deletedReview = await Review.findAll({
