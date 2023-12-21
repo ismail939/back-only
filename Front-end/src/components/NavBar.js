@@ -4,6 +4,7 @@ import { PersonFill, List, X, HouseDoorFill, PersonWorkspace, GiftFill, Calendar
 import { useRef, useState, useEffect } from "react";
 import logo from "../components/images/Spaces logo.png"
 import './NavBar.css';
+import { logOut } from "./reduxtoolkit/Slices/authSlice";
 function NavBar() {
     const [listActive, setlistActive] = useState(false);
     const [subMenu, setSubMenu] = useState(false);
@@ -49,9 +50,9 @@ function NavBar() {
                             {index !== loggedIn.length - 1 ? <hr className="border-[#BBE1FA]"></hr> : null}</>
                     }) : (
                         <>
-                            <Link to="" onClick={() => ShowSubMenu()}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">My Profile</li></Link>
+                            <Link to="dashboardProfile" onClick={() => ShowSubMenu()}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">My Profile</li></Link>
                             <hr className="border-[#BBE1FA]"></hr>
-                            <Link to="" onClick={() => ShowSubMenu()}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">Sign-Out</li></Link>
+                            <Link to="" onClick={() => {ShowSubMenu() ; dispatch(logOut())}}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">Sign-Out</li></Link>
                         </>
                     )
                     }
