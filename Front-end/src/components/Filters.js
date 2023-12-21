@@ -5,12 +5,12 @@ import Slider from '@mui/material/Slider';
 function Filters({handleFilter}) {
     const [catdropdown, setCatDropDown] = useState(false)
     const [pricedropdown, setPRiceDropDown] = useState(false)
-    const [value, setValue] = useState([20, 37]);
+    const [value, setValue] = useState([100, 500]);
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
     return (
-        <div className="bg-white shadow rounded-xl p-5 w-3/4 sm:w-1/2">
+        <div className="bg-white shadow rounded-md p-5 w-3/4 sm:w-1/2">
             <h2 className="text-xl font-bold mb-5">Filters</h2>
             <div className="my-3">
                 <div className="flex items-center justify-between font-medium hover:cursor-pointer" onClick={() => setCatDropDown(!catdropdown)}>
