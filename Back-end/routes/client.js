@@ -35,7 +35,7 @@ router.route("/updatePhoto/:ID")
     .patch(verifyToken, allowedTo('client'), upload.single('profilePic'), clientController.updatePhoto);
 
 router.route("/updatePassword/:ID")
-    .patch(clientController.updatePassword);
+    .patch(verifyToken, allowedTo('client'), clientController.updatePassword);
 
 
 router.route("/:ID")

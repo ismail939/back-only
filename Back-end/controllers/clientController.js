@@ -62,6 +62,8 @@ module.exports = {
                         const token = await generateJWT(client)
                         return res.status(200).json({ status: httpStatusCode.SUCCESS, data: { token } })
                     }
+                    const error = appError.create("Username or Password is Incorrect", 404, httpStatusCode.ERROR)
+                    return next(error)
                 });
 
             } else {
