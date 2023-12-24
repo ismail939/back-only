@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "./reduxtoolkit/Slices/authSlice";
 import { useUpdateClientMutation, useUpdatePhotoMutation } from "./reduxtoolkit/Slices/apiSlice";
 function OwnerAccountSettings(props) {
+    const dispatch = useDispatch();
     const profileData = props.profileData;
     const usertype = useSelector(store => store.auth).usertype;
+    const auth=useSelector(store=>store.auth);
     const [updateData] = useUpdateClientMutation();
     const [updatePhoto] = useUpdatePhotoMutation();
     const [firstName, setFirstName] = useState(profileData.fname);
@@ -44,7 +48,8 @@ function OwnerAccountSettings(props) {
                 "lname": lastName ? lastName : profileData.lname,
                 "email": email ? email : profileData.email
             })
-            updateData({ id: profileData.clientID, credentials: data , usertype: usertype })
+            updateData({ id: profileData.ownerID, credentials: data , usertype: usertype }).then(res=>res.JSON)
+            .then(data=>dispatch(setCredentials({...auth,token:data.token})))
         } catch (error) {
             console.log(error)
         }
