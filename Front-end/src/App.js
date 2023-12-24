@@ -16,6 +16,7 @@ import CreateFullWorkSpace from './pages/Forms/CreateFullWorkSpace';
 import RequireAuth from './components/RequireAuth';
 import DashboardProfile from './pages/DashboardProfile';
 import WorkSpaceProfile from './pages/WorkSpaceProfile/WorkSpaceProfile';
+import RoomList from './pages/WorkSpaceProfile/RoomList';
 function App() {
   return (
     <>
@@ -35,6 +36,7 @@ function App() {
           <Route path='createOffer' element={<CreateOffer />}></Route>
           <Route path='discoverEdit' element={<DiscoverAdmin />}></Route>
           <Route path='offerEdit' element={<OfferAdmin />}></Route>
+          <Route path='workspaces/:cwID/rooms' element={<RoomList />}></Route>
         </Route>
         <Route path='dashboard' element={<Dashboard />}></Route>
         <Route path="*" element={<PageNotFound />}></Route>
