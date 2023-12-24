@@ -34,6 +34,10 @@ router.route("/login")
 router.route("/updatePhoto/:ID")
     .patch(verifyToken, allowedTo('client'), upload.single('profilePic'), clientController.updatePhoto);
 
+router.route("/updatePassword/:ID")
+    .patch(verifyToken, allowedTo('client'), clientController.updatePassword);
+
+
 router.route("/:ID")
     .patch(verifyToken, allowedTo('client'), clientController.update)
     .delete(verifyToken, allowedTo('admin'), clientController.delete);
