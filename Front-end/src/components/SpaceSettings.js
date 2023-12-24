@@ -228,7 +228,7 @@ function SpaceSettings(props) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-            });
+            })
         } catch (error) {
             console.error('Error deleting image:', error);
         }
