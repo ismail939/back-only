@@ -29,11 +29,11 @@ const storage = multer.diskStorage({
     }
 })
 const upload = multer({ storage: storage })
-router.route("/")
-    .get(roomController.get)
+router.route("/:cwID")
+    .get(roomController.getAll)
     .post(upload.single('img'), roomController.create);
 
-router.route("/:ID")
+router.route("/:cwID/:ID")
     .get(roomController.getOne)
     .patch(upload.single('img'), roomController.update)
     .delete(roomController.delete);
