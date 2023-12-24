@@ -7,8 +7,8 @@ function SpaceSettings(props) {
     const [imgName, setImgName] = useState("");
     const [description, setDescription] = useState(cwspace.description);
     const [email, setEmail] = useState(cwspace.email);
-    const [openingTime, setOpeningTime] = useState(cwspace.openingTime);
-    const [closingTime, setClosingTime] = useState(cwspace.closingTime);
+    const [openingTime, setOpeningTime] = useState(cwspace.openingTime.substring(0, 5));
+    const [closingTime, setClosingTime] = useState(cwspace.closingTime.substring(0, 5));
     const [fbPage, setFbPage] = useState(cwspace.fbPage);
     const [address, setAddress] = useState(cwspace.address);
     const [phone, setPhone] = useState(cwspace.phone);
@@ -54,7 +54,7 @@ function SpaceSettings(props) {
         if (isImage(imgName)) {
             let formData = new FormData();
             formData.append('mainPhoto', img);
-            fetch(`http://localhost:4000/cw_spaces/4`, {
+            fetch(`http://localhost:4000/cw_spaces/updatePhoto/4`, {
                 method: 'PATCH',
                 body: formData,
             })
@@ -64,6 +64,7 @@ function SpaceSettings(props) {
                         console.log(data.message)
                     } else if (data.status === "success") {
                         console.log(data);
+                        window.location.reload(false);
                     }
                 })
                 .catch(error => {
@@ -85,6 +86,7 @@ function SpaceSettings(props) {
                         console.log(data.message)
                     } else if (data.status === "success") {
                         console.log(data);
+                        window.location.reload(false);
                     }
                 })
                 .catch(error => {
@@ -129,15 +131,24 @@ function SpaceSettings(props) {
         }
     };
     const DateError = (date) => {
-        var regex = "([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]";
+        var regex = "([01]?[0-9]|2[0-3]):[0-5][0-9]";
         if (!date.match(regex)) {
-            return true;
-        } else if (date.length !== 8) {
-            return true;
+        return true;
+        } else if (date.length !== 5) {
+        return true;
         } else {
-            return false;
+        return false;
         }
     };
+    const urlError=(fbPage)=>{
+        var regex =/^(https?:\/\/)?([\w-]+(\.[\w-]+)+\/?)|localhost(:\d+)?(\/[.\w-]*)*(\?[\w%&=-]*)?(#[\w-]*)?$/;
+        if(!fbPage.match(regex)){
+            return true ;
+        }
+        else {
+            return false;
+        }
+    }
     const AddData = () => {
         fetch(`http://localhost:4000/cw_spaces/4`, {
             method: "PATCH",
@@ -155,50 +166,57 @@ function SpaceSettings(props) {
             }),
         }).then(res => res.json()).then((data) => {
             console.log(data);
+            window.location.reload(false);
         })
     }
     const HandleError = (e) => {
         e.preventDefault();
         if (address.length === 0) {
             setDataErrors({
-                address: true, email: false, imgName: false, phonenumber: false, description: false, start: false, end: false, img: false, secImg: false
+                address: true, email: false, imgName: false, phonenumber: false, description: false, start: false, end: false, img: false, secImg: false,fbPage:false
             })
             setCheckError("please fill in the address correctly");
         }
         else if (description.length === 0) {
             setDataErrors({
-                address: false, email: false, imgName: false, phonenumber: false, description: true, start: false, end: false, img: false, secImg: false
+                address: false, email: false, imgName: false, phonenumber: false, description: true, start: false, end: false, img: false, secImg: false,fbPage:false
             })
             setCheckError("please fill in the description correctly");
         }
         else if (email !== null && emailError()) {
             setDataErrors({
-                address: false, email: true, imgName: false, phonenumber: false, description: false, start: false, end: false, img: false, secImg: false
+                address: false, email: true, imgName: false, phonenumber: false, description: false, start: false, end: false, img: false, secImg: false,fbPage:false
             })
             setCheckError("please write a valid email address");
         }
+        else if (urlError(fbPage)) {
+            setDataErrors({
+                address: false, email: false, imgName: false, phonenumber: false, description: false, start: false, end: false, img: false, secImg: false,fbPage:true
+            })
+            setCheckError("please write a correct url");
+        }
         else if (PhoneNumberError(phone)) {
             setDataErrors({
-                address: false, email: false, imgName: false, phonenumber: true, description: false, start: false, end: false, img: false, secImg: false
+                address: false, email: false, imgName: false, phonenumber: true, description: false, start: false, end: false, img: false, secImg: false,fbPage:false
             })
             setCheckError("Please write a correct phone number ex:010123456789");
         }
         else if (DateError(openingTime)) {
             setDataErrors({
-                address: false, email: false, imgName: false, phonenumber: false, description: false, start: true, end: false, img: false, secImg: false
+                address: false, email: false, imgName: false, phonenumber: false, description: false, start: true, end: false, img: false, secImg: false,fbPage:false
             })
-            setCheckError("Openinig Hour should be in this format 00:00:00");
+            setCheckError("Openinig Hour should be in this format 00:00");
         }
         else if (DateError(closingTime)) {
             setDataErrors({
-                address: false, email: false, imgName: false, phonenumber: false, description: false, start: false, end: true, img: false, secImg: false
+                address: false, email: false, imgName: false, phonenumber: false, description: false, start: false, end: true, img: false, secImg: false,fbPage:false
             })
-            setCheckError("Closing Hour should be in this format 00:00:00");
+            setCheckError("Closing Hour should be in this format 00:00");
         }
         else {
             setCheckError("");
             setDataErrors({
-                address: false, email: false, imgName: false, phonenumber: false, description: false, start: false, end: false, img: false, secImg: false
+                address: false, email: false, imgName: false, phonenumber: false, description: false, start: false, end: false, img: false, secImg: false,fbPage:false
             })
             AddData();
         }
@@ -286,7 +304,6 @@ function SpaceSettings(props) {
                                 {dataerrors.description ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
                             </div>
                         </div >
-
                         <div className="my-4 w-full flex justify-between items-center">
                             <label className="block mb-2 cursor-icon w-1/4 gap-2">Email</label>
                             <div className="w-full">

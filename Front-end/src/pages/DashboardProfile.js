@@ -22,7 +22,7 @@ function DashboardProfile() {
             getCworkingSpacePhotos();}
     }, [])
     const getCworkingSpaceData = () => {
-        fetch(`http://localhost:4000/cw_spaces/${profileData.cwSpaceCwID}`)
+        fetch(`http://localhost:4000/cw_spaces/4`)
             .then(res => res.json())
             .then(responsedata => {
                 setCWSpace(responsedata.data);
@@ -30,7 +30,7 @@ function DashboardProfile() {
             ).catch(error => { console.log(error); });
     }
     const getCworkingSpacePhotos = () => {
-        fetch(`http://localhost:4000/cw_spacePhotos/${profileData.cwSpaceCwID}`)
+        fetch(`http://localhost:4000/cw_spacePhotos/4`)
             .then(res => res.json())
             .then(responsedata => {
                 setCwSpacePhotos(responsedata.data);
@@ -52,14 +52,14 @@ function DashboardProfile() {
                 </div>
                 {active === "account settings" && <OwnerAccountSettings profileData={profileData} />
                 }
-                {active === "space settings" && profileData.cwSpaceCwID===null &&
+                {/* {active === "space settings" && profileData.cwSpaceCwID===null &&
                     <div>
                         you didnt create a coworking space yet 
                         <br></br>
                         <Link to="../createworkspace" className="font-medium text-primary-600 hover:underline"> create working space </Link>
                     </div>
-                }
-                {active === "space settings" &&  profileData.cwSpaceCwID!== null &&
+                } */}
+                {active === "space settings" &&  
                     <SpaceSettings cwspace={cwspace} cwSpacePhotos={cwSpacePhotos}/>
                 }
             </div>
