@@ -5,10 +5,29 @@ const appError = require("../utils/appError");
 const fs = require('fs')
 
 module.exports = {
+    create: asyncWrapper(
+        async (req, res, next) => {
+            if (req.body.imageName == undefined || req.body.img == '') {
+                const error = appError.create("There is NO Images Provided", 400, httpStatusCode.ERROR);
+                return next(error);
+            }
+            req.body.img = req.body.imageName
+            delete req.body.imageName
+            const newOffer = await Offer.create(req.body)
+            if (newOffer) {
+                return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Offer is Created Successfully" })
+            }
+            const error = appError.create("Unexpected Error, Try Again Later", 400, httpStatusCode.ERROR)
+            const filePath = `./public/images/offers/${req.body.img}`;
+            fs.unlink(filePath, () => {});
+            return next(error)
+        }
+    ),
     getAll: asyncWrapper(
         async (req, res, next) => {
             const offers = await Offer.findAll({ raw: true })
-            for (let i = 0; i < offers.length; i++) {
+            if (offers.length != 0) {
+                for (let i = 0; i < offers.length; i++) {
                 let cw_space = await Cw_space.findOne({ raw: true }, {
                     where: {
                         cwID: offers[i].cwSpaceCwID
@@ -16,10 +35,9 @@ module.exports = {
                 })
                 offers[i].cwSpaceName = cw_space.name
             }
-            if (offers.length != 0) {
-                return res.json({ status: httpStatusCode.SUCCESS, data: offers })
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: offers })
             }
-            const error = appError.create("There Are No Available Offers", 404, httpStatusCode.ERROR);
+            const error = appError.create("There are No Available Offers", 404, httpStatusCode.ERROR);
             return next(error);
         }
     ),
@@ -32,9 +50,9 @@ module.exports = {
                 }
             })
             if (offerHome.length != 0) {
-                return res.json({ status: httpStatusCode.SUCCESS, data: offerHome })
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: offerHome })
             }
-            const error = appError.create("There Are No Available Offers", 404, httpStatusCode.ERROR);
+            const error = appError.create("There are No Available Offers", 404, httpStatusCode.ERROR);
             return next(error);
         }
     ),
@@ -46,27 +64,10 @@ module.exports = {
                 }
             })
             if (offer) {
-                return res.json({ status: httpStatusCode.SUCCESS, data: offer })
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: offer })
             }
             const error = appError.create("Offer Not Found", 404, httpStatusCode.ERROR);
             return next(error);
-        }
-    ),
-    create: asyncWrapper(
-        async (req, res, next) => {
-            if (req.body.imageName == undefined || req.body.img == '') {
-                const error = appError.create("img is null", 400, httpStatusCode.ERROR);
-                return next(error);
-            }
-
-            req.body.img = req.body.imageName
-            delete req.body.imageName
-            const newOffer = await Offer.create(req.body)
-            if (newOffer) {
-                return res.json({ status: httpStatusCode.SUCCESS, message: "Offer is Created Successfully" })
-            }
-            const error = appError.create("Unexpected Error, Try Again Later", 400, httpStatusCode.ERROR)
-            return next(error)
         }
     ),
     update: asyncWrapper(
