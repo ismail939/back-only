@@ -23,7 +23,6 @@ module.exports = {
                 const error = appError.create("Room Already Exists", 400, httpStatusCode.ERROR)
                 return next(error)
             }
-            req.body.cwSpaceCwID = req.params.cwID
             const newRoom = await Room.create(req.body)
             if (newRoom) {
                 return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Rooms Created Successfully" });

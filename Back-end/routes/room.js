@@ -29,9 +29,11 @@ const storage = multer.diskStorage({
     }
 })
 const upload = multer({ storage: storage })
+
+router.route("/")
+    .post(upload.single("img"), roomController.create);
 router.route("/:cwID")
     .get(roomController.getAll)
-    .post(upload.single('img'), roomController.create);
 
 router.route("/:cwID/:ID")
     .get(roomController.getOne)

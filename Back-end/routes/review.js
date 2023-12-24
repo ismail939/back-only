@@ -4,7 +4,7 @@ const reviewController = require('../controllers/reviewController')
 const router = express.Router();
 
 router.route("/")
-    .get(reviewController.get)
+    .get(reviewController.getAll)
     .post(reviewController.create);
 
 router.route("/:cwSpaceID")
