@@ -1,4 +1,4 @@
-const { Review, Client } = require('../models/modelIndex')
+const { Review, Client, Cw_space } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
@@ -7,11 +7,32 @@ const appError = require("../utils/appError");
 module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
-            const newReview = await Review.create(req.body)
-            if (newReview) {
-                return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Review is Created Successfully" });
+            const review = await Review.findOne({
+                where: {
+                    clientClientID: req.body.clientClientID,
+                    cwSpaceCwID: req.body.cwSpaceCwID
+                }
+            })
+            if (review) {
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "You have Already Reviewed this Co-working Space" })
             }
-            const error = appError.create("Unexpected Error, Try Again Later", 500, httpStatusCode.FAIL);
+            const client = await Client.findOne({
+                where: {
+                    clientID : req.body.clientClientID
+                }
+            })
+            const cw_space = await Cw_space.findOne({
+                where: {
+                    cwID: req.body.cwSpaceCwID
+                }
+            })
+            if (client && cw_space) {
+                const newReview = await Review.create(req.body);
+                if (newReview) {
+                    return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Review is Created Successfully" });
+                }
+            }
+            const error = appError.create("Client or Co-working Space does not exist", 400, httpStatusCode.ERROR);
             return next(error);
         }
     ),
@@ -27,15 +48,15 @@ module.exports = {
     ),
     getCw_spaceReviews: asyncWrapper(
         async (req, res, next) => {
-            const reviews = await Review.findAll({
-                where: {
+            let reviews = await Review.findAll({
+                raw: true, where: {
                     cwSpaceCwID: req.params.cwSpaceID
                 }
             }, { raw: true })
             if (reviews.length != 0) {
                 for (let i = 0; i < reviews.length; i++) {
                     let client = await Client.findOne({
-                        where: {
+                        raw: true, where: {
                             clientID: reviews[i].clientClientID
                         }
                     })

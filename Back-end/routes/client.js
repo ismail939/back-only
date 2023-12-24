@@ -37,7 +37,6 @@ router.route("/updatePhoto/:ID")
 router.route("/updatePassword/:ID")
     .patch(verifyToken, allowedTo('client'), clientController.updatePassword);
 
-
 router.route("/:ID")
     .patch(verifyToken, allowedTo('client'), clientController.update)
     .delete(verifyToken, allowedTo('admin'), clientController.delete);
@@ -47,4 +46,3 @@ router.route("/")
 
 
 module.exports = router
-

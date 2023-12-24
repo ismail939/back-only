@@ -7,13 +7,18 @@ const fs = require('fs')
 module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
-            for (let i = 0; i < req.body.photos.length; i++) {
+            if (req.body.photos == undefined) {
+                const error = appError.create("There are No Provided Photos", 404, httpStatusCode.ERROR);
+                return next(error);
+            } else {
+                for (let i = 0; i < req.body.photos.length; i++) {
                 await Cw_spacePhoto.create({
                     photo: req.body.photos[i],
                     cwSpaceCwID: req.params.cwID
                 })
             }
             return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Photos are Added Successfully" });
+            }
         }
     ),
     getAll: asyncWrapper(

@@ -25,7 +25,7 @@ module.exports = {
             }
             const newRoom = await Room.create(req.body)
             if (newRoom) {
-                return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Rooms Created Successfully" });
+                return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Room Created Successfully" });
             }
             const error = appError.create("Unexpected Error, Try Again Later", 500, httpStatusCode.FAIL);
             return next(error);
