@@ -103,8 +103,10 @@ module.exports = {
             if (updatedOwner.profilePic) {
                 const filePath = `./public/images/owners/${updatedOwner.profilePic}`;
                 fs.unlink(filePath, ()=>{})
-            }
-            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Owner Updated Successfully" })
+                }
+                delete updatedOwner.password;
+                const token = await generateJWT(updatedOwner);
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Owner Updated Successfully", data: { token } });
             }
             const error = appError.create("Owner Not Found", 404, httpStatusCode.ERROR);
             return next(error);
@@ -129,7 +131,9 @@ module.exports = {
                             }
                         }
                         )
-                        return res.status(200).json({status:httpStatusCode.SUCCESS, message: "Password is updated successfully!"})
+                        delete owner.password;
+                        const token = await generateJWT(owner);
+                        return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Password is updated successfully!", data: { token } })
                     }
                     else {
                         const error = appError.create("Old password is incorrect ", 404, httpStatusCode.ERROR);
@@ -161,8 +165,10 @@ module.exports = {
                 where: {
                     ownerID: req.params.ID
                 }
-            })
-            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Owner Updated Successfully" })
+                })
+                delete updatedOwner.password;
+                const token = await generateJWT(updatedOwner);
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Owner Updated Successfully", data: { token } })
             }
             const error = appError.create("Owner Not Found", 404, httpStatusCode.ERROR);
             return next(error);

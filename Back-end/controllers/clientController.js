@@ -106,7 +106,9 @@ module.exports = {
                     const filePath = `./public/images/clients/${updatedClient.profilePic}`;
                     fs.unlink(filePath, () => { })
                 }
-                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully" })
+                delete updatedClient.password;
+                const token = await generateJWT(updatedClient);
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully", data: token });
             }
             const error = appError.create("Client Not Found", 404, httpStatusCode.ERROR);
             return next(error);
@@ -131,7 +133,9 @@ module.exports = {
                             }
                         }
                         )
-                        return res.status(200).json({status:httpStatusCode.SUCCESS, message: "Password is updated successfully!"})
+                        delete client.password;
+                        const token = await generateJWT(client);
+                        return res.status(200).json({status:httpStatusCode.SUCCESS, message: "Password is updated successfully!", data: token});
                     }
                     else {
                         const error = appError.create("Old password is incorrect ", 404, httpStatusCode.ERROR);
@@ -162,8 +166,10 @@ module.exports = {
                     where: {
                         clientID: req.params.ID
                     }
-                });
-                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully" });
+                })
+                delete updatedClient.password;
+                const token = await generateJWT(updatedClient);
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully", data: token });
             }
             const error = appError.create("Client Not Found", 404, httpStatusCode.ERROR);
             return next(error);
