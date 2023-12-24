@@ -103,11 +103,48 @@ module.exports = {
             if (updatedOwner.profilePic) {
                 const filePath = `./public/images/owners/${updatedOwner.profilePic}`;
                 fs.unlink(filePath, ()=>{})
-            }
-            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Owner Updated Successfully" })
+                }
+                delete updatedOwner.password;
+                const token = await generateJWT(updatedOwner);
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Owner Updated Successfully", data: { token } });
             }
             const error = appError.create("Owner Not Found", 404, httpStatusCode.ERROR);
             return next(error);
+        }
+    ),
+    updatePassword: asyncWrapper(
+        async (req, res, next) => {
+            const owner = await Owner.findOne({
+                raw: true, where: {
+                    ownerID: req.params.ID
+                }
+            })
+            if (owner) {
+                const oldPassword = req.body.oldPassword; 
+                bcrypt.compare(oldPassword, owner.password, async (err, result) => {
+                    if (result) {
+                        const hashedPassword = await bcrypt.hash(req.body.newPassword, Number(process.env.SALT_ROUND))
+                        await Owner.update(
+                            { password: hashedPassword }, {
+                            where: {
+                                ownerID: req.params.ID
+                            }
+                        }
+                        )
+                        delete owner.password;
+                        const token = await generateJWT(owner);
+                        return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Password is updated successfully!", data: { token } })
+                    }
+                    else {
+                        const error = appError.create("Old password is incorrect ", 404, httpStatusCode.ERROR);
+                        return next(error);
+                    }
+                });
+
+            } else {
+                const error = appError.create("Username or Password is Incorrect", 404, httpStatusCode.ERROR)
+                return next(error)
+            }
         }
     ),
     update: asyncWrapper(
@@ -128,8 +165,10 @@ module.exports = {
                 where: {
                     ownerID: req.params.ID
                 }
-            })
-            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Owner Updated Successfully" })
+                })
+                delete updatedOwner.password;
+                const token = await generateJWT(updatedOwner);
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Owner Updated Successfully", data: { token } })
             }
             const error = appError.create("Owner Not Found", 404, httpStatusCode.ERROR);
             return next(error);

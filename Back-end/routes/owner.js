@@ -18,9 +18,9 @@ const storage = multer.diskStorage({
             return cb(error);
         }
         const uniqueSuffix = Date.now() + "." + file.originalname.split('.')[1];
-        req.body.imageName = uniqueSuffix     
-        cb(null, uniqueSuffix);       
-    } 
+        req.body.imageName = uniqueSuffix
+        cb(null, uniqueSuffix);
+    }
 })
 const upload = multer({ storage: storage })
 
@@ -34,6 +34,9 @@ router.route("/login")
 
 router.route("/updatePhoto/:ID")
     .patch(verifyToken, allowedTo('owner'), upload.single('profilePic'), ownerController.updatePhoto);
+
+router.route("/updatePassword/:ID")
+    .patch(verifyToken, allowedTo('owner'), ownerController.updatePassword);
 
 router.route("/:ID")
     .patch(verifyToken, allowedTo('owner'), ownerController.update)
