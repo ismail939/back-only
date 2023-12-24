@@ -24,7 +24,7 @@ module.exports = {
                 }
             })
             if (cw_spacePhotos.length != 0) {
-                return res.json({ status: httpStatusCode.SUCCESS, data: cw_spacePhotos });
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_spacePhotos });
             }
             const error = appError.create("There are No Available Photos", 404, httpStatusCode.ERROR);
             return next(error);

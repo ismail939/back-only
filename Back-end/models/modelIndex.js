@@ -56,7 +56,7 @@ Room.belongsTo(Cw_space)
 Cw_space.hasMany(Cw_spacePhone)
 Cw_spacePhone.belongsTo(Cw_space)
 
-// cw-space & cw-space phones (1-> many)
+// cw-space & cw-space photos (1-> many)
 Cw_space.hasMany(Cw_spacePhoto)
 Cw_spacePhoto.belongsTo(Cw_space)
 
