@@ -1,9 +1,28 @@
 import { useState,useEffect } from "react";
+import { useParams } from "react-router-dom";
+import PageNotFound from "../PageNotFound";
 
 function RoomList(){
     const [rooms,setRooms]=useState([]);
+    const params = useParams();
+    const [found, setFound] = useState(false);
+    const [loading, setLodaing] = useState(true);
+    const getWorkSpace = () => {
+        fetch(`http://localhost:4000/cw_spaces/${params.cwID}`)
+            .then(res => res.json())
+            .then(responsedata => {
+                if (responsedata.status === "error") {
+                    setFound(false);
+                    setLodaing(false)
+                } else if (responsedata.status === "success") {
+                    setFound(true)
+                    setLodaing(false)
+                }
+            }
+            );
+    }
     const getRooms = () => {
-        fetch("http://localhost:4000/rooms")
+        fetch(`http://localhost:4000/rooms/${params.cwID}`)
             .then(res => res.json())
             .then(responsedata => {
                 setRooms(responsedata.data);
@@ -13,6 +32,7 @@ function RoomList(){
             ).catch(error => { console.log(error) });
     }
     useEffect(()=>{
+        getWorkSpace();
         getRooms();
     },[])
     const shared=rooms.filter(room=>room.type==="shared");
@@ -29,7 +49,7 @@ function RoomList(){
             </>
         )
     }
-    return(
+    if(found){ return(
         <>
             <div className="w-4/5 mx-auto mt-[50px] ">
                 <div >
@@ -60,6 +80,12 @@ function RoomList(){
                 </div>
             </div>
         </>
-    )
+    )}else if (!loading && !found) {
+        return (
+            <>
+                <PageNotFound />
+            </>
+        )
+    }
 }
 export default RoomList;
