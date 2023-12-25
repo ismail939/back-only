@@ -91,8 +91,8 @@ module.exports = {
             }
             req.body.profilePic = req.body.imageName;
             delete req.body.imageName;
-            const updatedClient = await Client.findOne({
-                where: {
+            let updatedClient = await Client.findOne({
+                raw: true, where: {
                     clientID: req.params.ID
                 }
             })
@@ -106,7 +106,14 @@ module.exports = {
                     const filePath = `./public/images/clients/${updatedClient.profilePic}`;
                     fs.unlink(filePath, () => { })
                 }
-                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully" })
+                updatedClient = await Client.findOne({
+                    raw: true, where: {
+                        clientID: req.params.ID
+                    }
+                });
+                delete updatedClient.password;
+                const token = await generateJWT(updatedClient);
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully", data: { token } });
             }
             const error = appError.create("Client Not Found", 404, httpStatusCode.ERROR);
             return next(error);
@@ -114,14 +121,14 @@ module.exports = {
     ),
     updatePassword: asyncWrapper(
         async (req, res, next) => {
-            const client = await Client.findOne({
+            let updatedClient = await Client.findOne({
                 raw: true, where: {
                     clientID: req.params.ID
                 }
             })
-            if (client) {
+            if (updatedClient) {
                 const oldPassword = req.body.oldPassword; 
-                bcrypt.compare(oldPassword, client.password, async (err, result) => {
+                bcrypt.compare(oldPassword, updatedClient.password, async (err, result) => {
                     if (result) {
                         const hashedPassword = await bcrypt.hash(req.body.newPassword, Number(process.env.SALT_ROUND))
                         await Client.update(
@@ -131,10 +138,10 @@ module.exports = {
                             }
                         }
                         )
-                        return res.status(200).json({status:httpStatusCode.SUCCESS, message: "Password is updated successfully!"})
+                        return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Password is Updated Successfully!" });
                     }
                     else {
-                        const error = appError.create("Old password is incorrect ", 404, httpStatusCode.ERROR);
+                        const error = appError.create("Old Password is Incorrect ", 404, httpStatusCode.ERROR);
                         return next(error);
                     }
                 });
@@ -152,18 +159,25 @@ module.exports = {
                 const error = appError.create(errors, 400, httpStatusCode.ERROR)
                 return next(error)
             }
-            const updatedClient = await Client.findOne({
+            let updatedClient = await Client.findOne({
                 where: {
                     clientID: req.params.ID
                 }
             });
             if (updatedClient) {
                 await Client.update(req.body, {
-                    where: {
+                    raw: true, where: {
+                        clientID: req.params.ID
+                    }
+                })
+                updatedClient = await Client.findOne({
+                    raw: true, where: {
                         clientID: req.params.ID
                     }
                 });
-                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully" });
+                delete updatedClient.password;
+                const token = await generateJWT(updatedClient);
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully", data: { token } });
             }
             const error = appError.create("Client Not Found", 404, httpStatusCode.ERROR);
             return next(error);

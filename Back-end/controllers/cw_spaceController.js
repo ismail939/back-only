@@ -9,6 +9,10 @@ const { validateUpdatedCw_space } = require("../middlewares/validationSchema");
 module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
+            if (req.body.imageName == undefined || req.body.img == '') {
+                const error = appError.create("There is NO Images Provided", 400, httpStatusCode.ERROR);
+                return next(error);
+            }
             req.body.mainPhoto = req.body.imageName;
             delete req.body.imageName;
             let newCw_space = (await Cw_space.create(req.body)).get({ plain: true })
@@ -26,21 +30,21 @@ module.exports = {
             let cw_spaces = await Cw_space.findAll({ raw: true })
             if (cw_spaces.length != 0) {
                 let rooms = await Room.findAll({
-                raw: true,
-                where: {
-                    type: "shared room"
-                }
-            });
-            if (rooms.length != 0) {
-                for (let i = 0; i < cw_spaces.length; i++) {
-                    for (let j = 0; j < rooms.length; j++) {
-                        if (cw_spaces[i].cwID == rooms[j].cwSpaceCwID) {
-                            cw_spaces[i].price = rooms[j].hourPrice
+                    raw: true,
+                    where: {
+                        type: "shared room"
+                    }
+                });
+                if (rooms.length != 0) {
+                    for (let i = 0; i < cw_spaces.length; i++) {
+                        for (let j = 0; j < rooms.length; j++) {
+                            if (cw_spaces[i].cwID == rooms[j].cwSpaceCwID) {
+                                cw_spaces[i].price = rooms[j].hourPrice
+                            }
                         }
                     }
                 }
-            }
-            return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_spaces });
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_spaces });
             }
             const error = appError.create("There Are No Available Co-working Spaces", 404, httpStatusCode.ERROR);
             return next(error);
