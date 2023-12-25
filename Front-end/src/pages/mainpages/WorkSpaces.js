@@ -37,7 +37,7 @@ function WorkSpaces() {
     const [fetcherror, setFetchError] = useState(false);
     const [showFilter, setShowFilter] = useState(false);
     const [pageNumber, setPageNumber] = useState(0)
-    const cwSpacesPerPage = 1;
+    const cwSpacesPerPage = 10;
     const pagesVisited = pageNumber * cwSpacesPerPage;
     const pageCount = Math.ceil(displayedCwspaces.length / cwSpacesPerPage);
     let menuRef = useRef();
@@ -92,7 +92,7 @@ function WorkSpaces() {
         return <WorkSpaceCard cwspace={cwspace} key={cwspace.cwID} />
     })
     return (
-        <div className="flex relative min-h-screen">
+        <div className="flex flex-col relative min-h-screen justify-between">
             {showFilter && <div className="fixed top-0 left-0 w-full h-[100vh] flex items-center justify-center bg-black/[.2] z-20">
                 <Filters handleFilter={handleFilter} />
             </div>}
@@ -133,21 +133,19 @@ function WorkSpaces() {
                         </ul>
                     </div>
                 </div>
-
-
                 {!fetcherror ? <div>
                     {cwspaces ? <div className="flex flex-col gap-8">
                         {displayPages}</div> : <NoDataError response={statusresponse} />
                     }
-                    <div className="mt-[50px] flex justify-center">
-                        <Pagination
-                            count={pageCount}
-                            onChange={changePage}
-                        />
-                    </div>
                 </div> : <ShowError />
                 }
             </div >
+            {!fetcherror && cwspaces ? <div className="mt-[50px] flex justify-center">
+                <Pagination
+                    count={pageCount}
+                    onChange={changePage}
+                />
+            </div> : null}
         </div >
     )
 }
