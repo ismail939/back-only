@@ -1,12 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import Pagination from "../../components/Pagination";
 import { Search, SortDownAlt, FunnelFill, XCircleFill } from "react-bootstrap-icons";
 import Filters from "../../components/Filters";
 import notdata from "../../components/images/Nodata.svg"
 import servererror from "../../components/images/serverdown.svg"
 import WorkSpaceCard from "../../components/WorkSpaceCard";
+import { Pagination, PaginationItem } from "@mui/material";
+
 export function ShowError() {
     return (
         <div className="flex flex-col items-center text-center">
@@ -29,10 +30,16 @@ export function NoDataError(props) {
 function WorkSpaces() {
     const [dropdown, setDropDown] = useState(false);
     const [cwspaces, setCWSpaces] = useState([]);
+    const [displayedCwspaces, setDisplayedCwspaces] = useState([]);
     const [statusresponse, setStatusResponse] = useState("");
     const [searchData, setSearchData] = useState([]);
     const [searchlist, setSearchList] = useState(false);
     const [fetcherror, setFetchError] = useState(false);
+    const [showFilter, setShowFilter] = useState(false);
+    const [pageNumber, setPageNumber] = useState(0)
+    const cwSpacesPerPage = 1;
+    const pagesVisited = pageNumber * cwSpacesPerPage;
+    const pageCount = Math.ceil(displayedCwspaces.length / cwSpacesPerPage);
     let menuRef = useRef();
     //const [sortedData,setSortedData] =useState();
     useEffect(() => {
@@ -47,13 +54,14 @@ function WorkSpaces() {
         }
         document.addEventListener("mousedown", handler)
     }, [])
-    
+
     const getWorkSpaces = () => {
         fetch("http://localhost:4000/cw_spaces")
             .then(res => res.json())
             .then(responsedata => {
                 console.log(responsedata)
                 setCWSpaces(responsedata.data);
+                setDisplayedCwspaces(responsedata.data)
                 setFetchError(false)
                 setStatusResponse("Sorry, there are no Co-workspaces currently")
             }
@@ -71,13 +79,23 @@ function WorkSpaces() {
         soretedData.sort((a, b) => {
             return sortDir === "lowtohigh" ? a.rate - b.rate : b.rate - a.rate;
         })
-        setCWSpaces(soretedData);
+        setDisplayedCwspaces(soretedData);
     }
+    function handleFilter() {
+        console.log("handled")
+        setShowFilter(!showFilter)
+    }
+    function changePage(event, value) {
+        setPageNumber(value - 1)
+    }
+    const displayPages = displayedCwspaces.slice(pagesVisited, pagesVisited + cwSpacesPerPage).map((cwspace) => {
+        return <WorkSpaceCard cwspace={cwspace} key={cwspace.cwID} />
+    })
     return (
         <div className="flex relative min-h-screen">
-            <div className="bg-gray-100 w-52 sticky h-[100dvh] hidden">
-                <Filters />
-            </div>
+            {showFilter && <div className="fixed top-0 left-0 w-full h-[100vh] flex items-center justify-center bg-black/[.2] z-20">
+                <Filters handleFilter={handleFilter} />
+            </div>}
             <div className="w-4/5 mx-auto md:mt-[30px] p-5">
                 <div className="relative w-full" ref={menuRef}>
                     <div className="w-full h-10 flex items-center">
@@ -90,7 +108,7 @@ function WorkSpaces() {
                             onClick={() => { setSearchList(true) }}
                         ></input>
                         <button className="duration-200 ease-in-out btn-color h-full p-4 flex items-center rounded-r-md  text-white"
-                            onClick={() => { if (searchData.length > 0) setCWSpaces(searchData) }}><Search className="text-lg" /></button>
+                            onClick={() => { if (searchData.length > 0) setDisplayedCwspaces(searchData) }}><Search className="text-lg" /></button>
                     </div>
                     {(searchData.length > 0 && searchlist) ? <div className="flex flex-col max-h-60 w-full mt-1 shadow-md rounded-md bg-[#fafafa] overflow-x-hidden absolute z-[90]" >
                         {searchData.map((workspace) => {
@@ -99,10 +117,11 @@ function WorkSpaces() {
                     </div> : null}
                 </div>
                 <div className="w-full flex justify-between mt-8">
-                    <button id="dropdownDefaultButton" className="md:w-36 w-32 mb-5 text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 justify-center items-center gap-2" type="button"><FunnelFill className="text-lg" /> Filters
+                    <button id="dropdownDefaultButton" className="md:w-36 w-28 mb-5 text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm md:px-5 px-2 py-2.5 justify-center items-center gap-2"
+                        onClick={() => handleFilter()} type="button"><FunnelFill className="text-lg" /> Filters
                     </button>
-                    <div id="dropdown" className="relative md:w-36 w-32" onMouseLeave={() => { setDropDown(false) }}>
-                        <button id="dropdownDefaultButton" className="w-full text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 justify-center items-center gap-2" type="button" onMouseEnter={() => { setDropDown(!dropdown) }}>Sort By <SortDownAlt className="text-lg" />
+                    <div id="dropdown" className="relative md:w-36 w-28" onMouseLeave={() => { setDropDown(false) }}>
+                        <button id="dropdownDefaultButton" className="w-full text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm md:px-5 px-2 py-2.5 justify-center items-center gap-2" type="button" onMouseEnter={() => { setDropDown(!dropdown) }}>Sort By <SortDownAlt className="text-lg" />
                         </button>
                         <ul className={`w-full py-2 text-sm text-gray-700 z-10 bg-white rounded-lg shadow ${dropdown ? "absolute" : "hidden"}`}>
                             <li className="hover:bg-gray-100">
@@ -114,24 +133,18 @@ function WorkSpaces() {
                         </ul>
                     </div>
                 </div>
-                
-                
+
+
                 {!fetcherror ? <div>
                     {cwspaces ? <div className="flex flex-col gap-8">
-                        {cwspaces.map((cwspace) => {
-                            return <WorkSpaceCard cwspace={cwspace} key={cwspace.cwID} />
-                        })}</div> : <NoDataError response={statusresponse}/>
-                        }
-                    {/* <div className="mt-[50px] flex justify-center">
-                {
-                    !fetcherror ? <div>
-                        {cwspaces ? <div className="flex flex-col gap-8">
-                            {cwspaces.map((cwspace) => {
-                                return <Card cwspace={cwspace} />
-                            })}</div> : null}
-                        {/* <div className="mt-[50px] flex justify-center">
-                        <Pagination />
-                    </div> */}
+                        {displayPages}</div> : <NoDataError response={statusresponse} />
+                    }
+                    <div className="mt-[50px] flex justify-center">
+                        <Pagination
+                            count={pageCount}
+                            onChange={changePage}
+                        />
+                    </div>
                 </div> : <ShowError />
                 }
             </div >

@@ -5,7 +5,7 @@ function Footer() {
         <div className="w-full mt-[100px] py-5 min-h-[150px] flex items-center" style={{ backgroundColor: "#1B262C" }}>
             <div className="md:w-4/6 w-4/5 mx-auto my-auto">
                 <div className="flex text-white justify-between flex-col md:flex-row gap-5">
-                    <div className="flex flex-col gap-2 w-1/3">
+                    <div className="flex flex-col gap-2 md:w-1/3 w-2/3">
                         <h2 className="main-font">Contact Info</h2>
                         <div className="w-full text-sm">
                             <p>Get in touch for enquiries, feedback, complaints and compliments.</p>
@@ -16,7 +16,7 @@ function Footer() {
                     </div>
                     <div className="flex flex-col gap-2">
                         <h2 className="main-font">Navigation Links</h2>
-                        <ul className="flex flex-col list-disc text-sm">
+                        <ul className="flex flex-col text-sm">
                             <li><Link>Home</Link></li>
                             <li><Link>Co-Working Spaces</Link></li>
                             <li><Link>Offers</Link></li>
@@ -24,9 +24,9 @@ function Footer() {
                             <li><Link>About Us</Link></li>
                         </ul>
                     </div>
-                    <div className="flex flex-col gap-2 list-disc">
+                    <div className="flex flex-col gap-2">
                         <h2 className="main-font">Quick Links</h2>
-                        <ul className="flex flex-col list-disc text-sm">
+                        <ul className="flex flex-col text-sm">
                             <li><Link>FAQ</Link></li>
                             <li><Link>Terms of Service</Link></li>
                             <li><Link>Privacy Policy</Link></li>
