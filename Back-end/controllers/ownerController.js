@@ -89,8 +89,8 @@ module.exports = {
             }
             req.body.profilePic = req.body.imageName;
             delete req.body.imageName;
-            const updatedOwner = await Owner.findOne({
-                where: {
+            let updatedOwner = await Owner.findOne({
+                raw: true, where: {
                     ownerID: req.params.ID
                 }
             })
@@ -99,11 +99,16 @@ module.exports = {
                 where: {
                     ownerID: req.params.ID
                 }
-            })
-            if (updatedOwner.profilePic) {
-                const filePath = `./public/images/owners/${updatedOwner.profilePic}`;
-                fs.unlink(filePath, ()=>{})
+                })
+                if (updatedOwner.profilePic) {
+                    const filePath = `./public/images/owners/${updatedOwner.profilePic}`;
+                    fs.unlink(filePath, ()=>{})
                 }
+                updatedOwner = await Owner.findOne({
+                    raw: true, where: {
+                        ownerID: req.params.ID
+                    }
+                });
                 delete updatedOwner.password;
                 const token = await generateJWT(updatedOwner);
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Owner Updated Successfully", data: { token } });
@@ -114,14 +119,14 @@ module.exports = {
     ),
     updatePassword: asyncWrapper(
         async (req, res, next) => {
-            const owner = await Owner.findOne({
+            let updatedOwner = await Owner.findOne({
                 raw: true, where: {
                     ownerID: req.params.ID
                 }
             })
-            if (owner) {
+            if (updatedOwner) {
                 const oldPassword = req.body.oldPassword; 
-                bcrypt.compare(oldPassword, owner.password, async (err, result) => {
+                bcrypt.compare(oldPassword, updatedOwner.password, async (err, result) => {
                     if (result) {
                         const hashedPassword = await bcrypt.hash(req.body.newPassword, Number(process.env.SALT_ROUND))
                         await Owner.update(
@@ -131,12 +136,10 @@ module.exports = {
                             }
                         }
                         )
-                        delete owner.password;
-                        const token = await generateJWT(owner);
-                        return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Password is updated successfully!", data: { token } })
+                        return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Password is Updated Successfully!"})
                     }
                     else {
-                        const error = appError.create("Old password is incorrect ", 404, httpStatusCode.ERROR);
+                        const error = appError.create("Old Password is Incorrect ", 404, httpStatusCode.ERROR);
                         return next(error);
                     }
                 });
@@ -155,7 +158,7 @@ module.exports = {
                 const error = appError.create(errors, 400, httpStatusCode.ERROR)
                 return next(error)
             }
-            const updatedOwner = await Owner.findOne({
+            let updatedOwner = await Owner.findOne({
                 where: {
                     ownerID: req.params.ID
                 }
@@ -166,6 +169,11 @@ module.exports = {
                     ownerID: req.params.ID
                 }
                 })
+                updatedOwner = await Owner.findOne({
+                    raw: true, where: {
+                        ownerID: req.params.ID
+                    }
+                });
                 delete updatedOwner.password;
                 const token = await generateJWT(updatedOwner);
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Owner Updated Successfully", data: { token } })

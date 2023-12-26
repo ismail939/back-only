@@ -56,7 +56,7 @@ function OfferList() {
             {!fetcherror ? <div>
                     {offers ? <div className="flex flex-col gap-8 mt-8">
                         {offers.map((offer) => {
-                            return <OfferCard offer={offer} key={offer.cwID} />
+                            return <OfferCard offer={offer} key={offer.offerID} />
                         })}</div> : <NoDataError response={statusresponse}/>}
                     {/* <div className="mt-[50px] flex justify-center">
                         <Pagination />

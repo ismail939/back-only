@@ -2,16 +2,16 @@ import { ChevronDown, ChevronUp } from "react-bootstrap-icons";
 import { useState } from "react";
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
-function Filters() {
+function Filters({handleFilter}) {
     const [catdropdown, setCatDropDown] = useState(false)
     const [pricedropdown, setPRiceDropDown] = useState(false)
-    const [value, setValue] = useState([20, 37]);
+    const [value, setValue] = useState([100, 500]);
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
     return (
-        <div className="p-4 pt-8 w-full h-full">
-            <h2 className="text-xl font-bold">Filters</h2>
+        <div className="bg-white shadow rounded-md p-5 w-3/4 sm:w-1/2">
+            <h2 className="text-xl font-bold mb-5">Filters</h2>
             <div className="my-3">
                 <div className="flex items-center justify-between font-medium hover:cursor-pointer" onClick={() => setCatDropDown(!catdropdown)}>
                     <h2 className="text-md">Category</h2>
@@ -38,18 +38,26 @@ function Filters() {
                     <div>
                         <Box sx={{ width: "100%" }}>
                             <Slider
-                            size="small"
+                                size="small"
                                 getAriaLabel={() => 'Temperature range'}
                                 value={value}
                                 onChange={handleChange}
                                 valueLabelDisplay="auto"
                                 min={100}
                                 max={1000}
+                                disableSwap
                             />
                         </Box>
                     </div>
                 </div>
-                <hr class="solid my-3"></hr>
+                <div className="mt-10 flex items-center justify-between">
+                    <button className="btn-color px-4 py-2 rounded-lg">
+                        Apply
+                    </button>
+                    <button className="btn-color px-4 py-2 rounded-lg" onClick={()=> handleFilter()}>
+                        Close
+                    </button>
+                </div>
             </div>
         </div>
     )

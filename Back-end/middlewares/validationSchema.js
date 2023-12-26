@@ -255,8 +255,8 @@ const validateCw_space = (req) => {
         errors.push('Co-working Space Name is Required')
     }
 
-    if (validator.isEmpty(data.pho)) {
-        errors.push('Co-working Space Name is Required')
+    if (validator.isEmpty(data.phone)) {
+        errors.push('Co-working Space phone is Required')
     }
 
     if (!validator.isEmpty(data.email)) {

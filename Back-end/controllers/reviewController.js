@@ -1,104 +1,129 @@
-const { Review, Client } = require('../models/modelIndex')
+const { Review, Client, Cw_space } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 
 
 module.exports = {
-    get: asyncWrapper(
+    create: asyncWrapper(
+        async (req, res, next) => {
+            const review = await Review.findOne({
+                where: {
+                    clientClientID: req.body.clientClientID,
+                    cwSpaceCwID: req.body.cwSpaceCwID
+                }
+            })
+            if (review) {
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "You have Already Reviewed this Co-working Space" })
+            }
+            const client = await Client.findOne({
+                where: {
+                    clientID : req.body.clientClientID
+                }
+            })
+            const cw_space = await Cw_space.findOne({
+                where: {
+                    cwID: req.body.cwSpaceCwID
+                }
+            })
+            if (client && cw_space) {
+                const newReview = await Review.create(req.body);
+                if (newReview) {
+                    return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Review is Created Successfully" });
+                }
+            }
+            const error = appError.create("Client or Co-working Space does not exist", 400, httpStatusCode.ERROR);
+            return next(error);
+        }
+    ),
+    getAll: asyncWrapper(
         async (req, res, next) => {
             const reviews = await Review.findAll()
-            if (reviews.length === 0) {
-                const error = appError.create("Reviews not found", 404, httpStatusCode.ERROR);
-                return next(error);
+            if (reviews.length != 0) {
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: reviews });
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: reviews });
+            const error = appError.create("There are No Available Reviews", 404, httpStatusCode.ERROR);
+            return next(error);
         }
     ),
     getCw_spaceReviews: asyncWrapper(
         async (req, res, next) => {
-            const reviews = await Review.findAll({
-                where: {
+            let reviews = await Review.findAll({
+                raw: true, where: {
                     cwSpaceCwID: req.params.cwSpaceID
                 }
             }, { raw: true })
-            if (reviews.length === 0) {
-                const error = appError.create("Reviews not found", 404, httpStatusCode.ERROR);
-                return next(error);
-            }
-            for (let i = 0; i < reviews.length; i++) {
-                let client = await Client.findOne({
-                    where: {
-                        clientID: reviews[i].clientClientID
+            if (reviews.length != 0) {
+                for (let i = 0; i < reviews.length; i++) {
+                    let client = await Client.findOne({
+                        raw: true, where: {
+                            clientID: reviews[i].clientClientID
+                        }
+                    })
+                    reviews[i].name = client.fname + " " + client.lname
+                    reviews[i].profilePic = client.profilePic
                     }
-                })
-                reviews[i].name = client.fname + " " + client.lname
-                reviews[i].profilePic = client.profilePic
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: reviews });
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: reviews });
+            const error = appError.create("There are No Available Reviews", 404, httpStatusCode.ERROR);
+            return next(error);
         }
     ),
     getOne: asyncWrapper(
         async (req, res, next) => {
-            const review = await Review.findAll({
+            const review = await Review.findOne({
                 where: {
-                    clientID: req.params.clientID,
-                    cwSpaceID: req.params.cwSpaceID
+                    clientClientID: req.params.clientID,
+                    cwSpaceCwID: req.params.cwSpaceID
                 }
             })
-            if (review.length === 0) {
-                const error = appError.create("Review not found", 404, httpStatusCode.ERROR);
-                return next(error);
+            if (review) {
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: review })
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: review })
-        }
-    ),
-    create: asyncWrapper(
-        async (req, res, next) => {
-            const newReview = await Review.create(req.body)
-            return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newReview });
+            const error = appError.create("Review Not Found", 404, httpStatusCode.ERROR);
+            return next(error);
         }
     ),
     update: asyncWrapper(
         async (req, res, next) => {
-            const updatedReview = await Review.findAll({
+            const updatedReview = await Review.findOne({
                 where: {
-                    clientID: req.params.clientID,
-                    cwSpaceID: req.params.cwSpaceID
+                    clientClientID: req.params.clientID,
+                    cwSpaceCwID: req.params.cwSpaceID
                 }
             });
-            if (updatedReview.length === 0) {
-                const error = appError.create("Review not found", 404, httpStatusCode.ERROR);
-                return next(error);
+            if (updatedReview) {
+                await Review.update(req.body, {
+                where: {
+                    clientClientID: req.params.clientID,
+                    cwSpaceCwID: req.params.cwSpaceID
+                }
+                });
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Review Updated Successfully" });
             }
-            await Review.update(req.body, {
-                where: {
-                    clientID: req.params.clientID,
-                    cwSpaceID: req.params.cwSpaceID
-                }
-            });
-            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "updated successfully" });
+            const error = appError.create("Review Not Found", 404, httpStatusCode.ERROR);
+            return next(error);
         }
     ),
     delete: asyncWrapper(
         async (req, res, next) => {
-            const deletedReview = await Review.findAll({
+            const deletedReview = await Review.findOne({
                 where: {
-                    clientID: req.params.clientID,
-                    cwSpaceID: req.params.cwSpaceID
+                    clientClientID: req.params.clientID,
+                    cwSpaceCwID: req.params.cwSpaceID
                 }
             });
-            if (deletedReview.length === 0) {
-                const error = appError.create("Review not found", 404, httpStatusCode.ERROR);
-                return next(error);
-            }
-            await Review.destroy({
+            if (deletedReview) {
+                await Review.destroy({
                 where: {
-                    clientID: req.params.clientID,
-                    cwSpaceID: req.params.cwSpaceID
-                }
-            })
-            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "deleted successfully" });
+                    clientClientID: req.params.clientID,
+                    cwSpaceCwID: req.params.cwSpaceID
+                    }
+                })
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Review Deleted Successfully" });
+            }
+            const error = appError.create("Review Not Found", 404, httpStatusCode.ERROR);
+            return next(error);
         }
     )
 } 
