@@ -35,9 +35,9 @@ function RoomList(){
         getWorkSpace();
         getRooms();
     },[])
-    const shared=rooms.filter(room=>room.type==="shared");
-    const privatee=rooms.filter(room=>room.type==="private");
-    const meeting=rooms.filter(room=>room.type==="meeting");
+    const shared=rooms?.filter(room=>room.type==="shared");
+    const privatee=rooms?.filter(room=>room.type==="private");
+    const meeting=rooms?.filter(room=>room.type==="meeting");
     function PhotoRow(props){
         const roomData=props.room;
         const imageurl=`http://localhost:4000/images/rooms/${roomData.img}`;
@@ -51,7 +51,7 @@ function RoomList(){
     }
     if(found){ return(
         <>
-            <div className="w-4/5 mx-auto mt-[50px] ">
+            <div className="w-4/5 mx-auto mt-[50px] min-h-screen">
                 <div >
                     <h2 className="text-2xl main-font ">Shared Rooms</h2>
                     <div className="grid my-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
@@ -70,14 +70,14 @@ function RoomList(){
                             })}
                     </div>
                 </div>
-                <div className="mt-10">
+                {meeting ? <div className="mt-10">
                     <h2 className="text-2xl main-font ">Meeting Rooms</h2>
                     <div className="grid my-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
                     {meeting?.map((room) => {
                                 return <PhotoRow room={room} key={rooms.roomid} />
                             })}
                     </div>
-                </div>
+                </div> : null}
             </div>
         </>
     )}else if (!loading && !found) {

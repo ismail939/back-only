@@ -4,6 +4,7 @@ import { PersonFill, List, X, HouseDoorFill, PersonWorkspace, GiftFill, Calendar
 import { useRef, useState, useEffect } from "react";
 import logo from "../components/images/Spaces logo.png"
 import './NavBar.css';
+import { logOut } from "./reduxtoolkit/Slices/authSlice";
 function NavBar() {
     const [listActive, setlistActive] = useState(false);
     const [subMenu, setSubMenu] = useState(false);
@@ -13,7 +14,6 @@ function NavBar() {
     const profileBtn = useRef();
     const loggedIn = [{ name: "Login", link: "login" }, { name: "Sign-Up", link: "sign-up" }];
     function clicked() {
-
         setlistActive(!listActive)
     }
     function ShowSubMenu() {
@@ -39,7 +39,6 @@ function NavBar() {
                     <li><Link className="hover:text-[#BBE1FA] duration-200 flex gap-2 items-center" ><CalendarEventFill className="lg:hidden block" />Events&Workshops</Link></li>
                 </ul>
                 <div className="flex max-lg:w-[75px] max-lg:justify-between rounded-full">
-
                     <Link className="text-2xl bg-[#BBE1FA] text-[#0F4C75] p-1 rounded-full hover:bg-[#AAD1DA] duration-200 ease-in-out" onClick={() => ShowSubMenu()} ref={profileBtn}><PersonFill /></Link>
                     <List className="text-3xl cursor-pointer lg:hidden block rounded-full hover:text-[#BBE1FA] duration-200 ease-in-out" onClick={() => clicked()} />
                 </div>
@@ -51,9 +50,9 @@ function NavBar() {
                             {index !== loggedIn.length - 1 ? <hr className="border-[#BBE1FA]"></hr> : null}</>
                     }) : (
                         <>
-                            <Link to="" onClick={() => ShowSubMenu()}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">My Profile</li></Link>
+                            <Link to="dashboardProfile" onClick={() => ShowSubMenu()}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">My Profile</li></Link>
                             <hr className="border-[#BBE1FA]"></hr>
-                            <Link to="" onClick={() => ShowSubMenu()}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">Sign-Out</li></Link>
+                            <Link to="" onClick={() => {ShowSubMenu() ; dispatch(logOut())}}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">Sign-Out</li></Link>
                         </>
                     )
                     }

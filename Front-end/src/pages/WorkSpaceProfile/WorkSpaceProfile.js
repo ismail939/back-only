@@ -1,6 +1,5 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import PageNotFound from "../PageNotFound";
 import { Stars, StarFill, Star, StarHalf, PersonCircle, HouseDoorFill } from "react-bootstrap-icons"
 import { ClockFill, TelephoneFill } from "react-bootstrap-icons"
@@ -61,7 +60,6 @@ function WorkSpaceProfile() {
     const [reviews, setReviews] = useState(null);
     const [found, setFound] = useState(false);
     const [loading, setLodaing] = useState(true);
-    const client = useSelector(state => state.auth)
     const imageUrl = "http://localhost:4000/images/cw_spaces/";
     const images = [Image1, Image2, Image3, Image4, Image5]
     const getWorkSpace = () => {
@@ -117,7 +115,7 @@ function WorkSpaceProfile() {
                     centeredSlides={true}
                     grabCursor={true}
                     loop={cwSpacePhotos.length > 2 ? true : false}
-                    slidesPerView={cwSpacePhotos?.length > 2 ? 2 : 1}
+                    slidesPerView={cwSpacePhotos?.length >= 1 ? 2 : 1}
                     modules={[EffectCoverflow, Navigation]}
                     coverflowEffect={
                         {
@@ -170,7 +168,7 @@ function WorkSpaceProfile() {
                     </div>
                 </div>
                 <p className="mt-10 mb-[30px] sec-font bg-gray-100 rounded-xl p-10">{cwSpace.description}</p>
-                <Link to={client?.user ? "rooms" : "../../login"}><button className="mx-auto my-[100px] main-font btn-color py-2 px-6 sm:text-2xl text-xl w-48 flex justify-center">BOOK</button></Link>
+                <Link to="rooms"><button className="mx-auto my-[100px] main-font btn-color py-2 px-6 sm:text-2xl text-xl w-48 flex justify-center">BOOK</button></Link>
                 <div className="mt-[50px]">
                     <h2 className="text-center main-font md:text-4xl text-2xl flex items-center justify-center gap-2 mb-[50px]">
                         <Stars />Reviews</h2>
