@@ -52,14 +52,14 @@ function DashboardProfile() {
                 </div>
                 {active === "account settings" && <OwnerAccountSettings profileData={profileData} />
                 }
-                {/* {active === "space settings" && profileData.cwSpaceCwID===null &&
+                {active === "space settings" && profileData.cwSpaceCwID===null &&
                     <div>
                         you didnt create a coworking space yet 
                         <br></br>
                         <Link to="../createworkspace" className="font-medium text-primary-600 hover:underline"> create working space </Link>
                     </div>
-                } */}
-                {active === "space settings" &&  
+                }
+                {active === "space settings" &&  profileData.cwSpaceCwID!==null &&
                     <SpaceSettings cwspace={cwspace} cwSpacePhotos={cwSpacePhotos}/>
                 }
             </div>
