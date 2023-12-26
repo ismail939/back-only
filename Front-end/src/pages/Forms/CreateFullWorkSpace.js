@@ -1,5 +1,7 @@
 import { useMultiStepForm } from "../../components/WorkSpaceForm/useMultistepForm";
 import CreateCoworkingSpace from "../../components/WorkSpaceForm/CreateCoworkingSpace"
+import { jwtDecode } from "jwt-decode";
+import { useSelector } from "react-redux";
 import { useState, useRef } from "react";
 import { CheckLg , ExclamationCircleFill } from "react-bootstrap-icons";
 import WorkSpaceImages from "../../components/WorkSpaceForm/WorkSpaceImages";
@@ -10,7 +12,7 @@ function CreateFullWorkSpace() {
         address: "",
         description: "",
         email: "",
-        phones: [""],
+        phone: "",
         facebookLink: "",
         openingTime: "",
         closingTime: "",
@@ -18,6 +20,8 @@ function CreateFullWorkSpace() {
         mainimg: [],
         photos: []
     }
+    const token = useSelector(store => store.auth).token;
+    const ownerData = jwtDecode(token);
     const [data, setData] = useState(IntitialValue)
     const [dataSuccess, setDataSuccess] = useState(false)
     const stepNames = ["Main Data", "Photos"]
@@ -46,11 +50,13 @@ function CreateFullWorkSpace() {
         formData.append('imageName', data.offerImageName);
         formData.append('name', data.name);
         formData.append('address', data.address);
-        formData.append('phones', data.phones);
+        formData.append('phone', data.phone);
         formData.append('description', data.description);
+        formData.append('fbPage', data.facebookLink);
+        formData.append('email', data.email);
         formData.append('openingTime', data.openingTime);
         formData.append('closingTime', data.closingTime);
-        //we want to add the owner id with the form
+        formData.append('ownerOwnerID' , ownerData.ownerID)
         formData.append('mainPhoto', data.mainimg);
         fetch('http://localhost:4000/cw_spaces', {
             method: 'POST',
@@ -58,8 +64,10 @@ function CreateFullWorkSpace() {
         })
             .then(response => response.json())
             .then(data => {
-                // if (data.status === "error") { setErrorMessage(data.message) }
-                // else if (data.status === "success") { console.log(data) }
+                if (data.status === "error") {  console.log(data.message)}
+                else if (data.status === "success") { 
+                    success();
+                    setDataSuccess(true) }
                 console.log(data)
             })
     }
@@ -92,8 +100,6 @@ function CreateFullWorkSpace() {
         else if (isLastStep && childRef.current.checkImages()) {
             addMainData();
             addPhotos();
-            success();
-            setDataSuccess(true)
         }
     }
     function HandleBack() {

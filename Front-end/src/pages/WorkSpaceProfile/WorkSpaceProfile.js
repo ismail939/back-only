@@ -115,7 +115,7 @@ function WorkSpaceProfile() {
                     centeredSlides={true}
                     grabCursor={true}
                     loop={cwSpacePhotos.length > 2 ? true : false}
-                    slidesPerView={cwSpacePhotos?.length > 2 ? 2 : 1}
+                    slidesPerView={cwSpacePhotos?.length >= 1 ? 2 : 1}
                     modules={[EffectCoverflow, Navigation]}
                     coverflowEffect={
                         {
