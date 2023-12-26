@@ -30,13 +30,13 @@ function App() {
           <Route path=":cwID" element={<WorkSpaceProfile />} />
         </Route>
         <Route path='offers' element={<OfferList />}></Route>
-        <Route path='RoomList' element={<RoomList />}></Route>
         <Route element={<RequireAuth />} >
           <Route path='createworkspace' element={<CreateFullWorkSpace />}></Route>
           <Route path='dashboardProfile' element={<DashboardProfile />}></Route>
           <Route path='createOffer' element={<CreateOffer />}></Route>
           <Route path='discoverEdit' element={<DiscoverAdmin />}></Route>
           <Route path='offerEdit' element={<OfferAdmin />}></Route>
+          <Route path='workspaces/:cwID/rooms' element={<RoomList />}></Route>
         </Route>
         <Route path='dashboard' element={<Dashboard />}></Route>
         <Route path="*" element={<PageNotFound />}></Route>
