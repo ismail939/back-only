@@ -35,41 +35,44 @@ function OwnerAccountSettings(props) {
     const addImg = () => {
         const formData = new FormData();
         formData.append('profilePic', img);
+        const id = usertype === "owner" ? profileData.ownerID : profileData.clientID
         try {
-            updatePhoto({ id: profileData.clientID, credentials: formData , usertype: usertype })
+            updatePhoto({ id: id, credentials: formData , usertype: usertype })
         } catch (error) {
             console.log(error)
         }
     }
     const addData = () => {
+        const id = usertype === "owner" ? profileData.ownerID : profileData.clientID
         try {
             const data = JSON.stringify({
                 "fname": firstName ? firstName : profileData.fname,
                 "lname": lastName ? lastName : profileData.lname,
                 "email": email ? email : profileData.email
             })
-            updateData({ id: profileData.ownerID, credentials: data , usertype: usertype }).then(res=>res.JSON)
-            .then(data=>dispatch(setCredentials({...auth,token:data.token})))
+            updateData({ id: id, credentials: data , usertype: usertype })
         } catch (error) {
             console.log(error)
         }
     }
     const addPhone = () => {
+        const id = usertype === "owner" ? profileData.ownerID : profileData.clientID
         try {
             const data = JSON.stringify({
                 "phone": phoneNumber ? phoneNumber : profileData.phone
             })
-            updateData({ id: profileData.clientID, credentials: data , usertype: usertype })
+            updateData({ id: id, credentials: data , usertype: usertype })
         } catch (error) {
             console.log(error)
         }
     }
     const addPassword = () => {
+        const id = usertype === "owner" ? profileData.ownerID : profileData.clientID
         try {
             const data = JSON.stringify({
                 "password": newPassword ? newPassword : profileData.password,
             })
-            updateData({ id: profileData.clientID, credentials: data , usertype: usertype })
+            updateData({ id: id, credentials: data , usertype: usertype })
         } catch (error) {
             console.log(error)
         }
@@ -211,7 +214,6 @@ function OwnerAccountSettings(props) {
             addPassword();
         }
     }
-    {console.log(profileData.profilePic)}
     return (
         <>
         
