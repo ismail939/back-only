@@ -252,7 +252,7 @@ const CreateCoworkingSpace = forwardRef(({ name, address, description, email, ph
           files={mainimg}
           accept=".png,.jpg,.jpeg"
           onChange={(e) => {
-            updateFields({ mainimg: e.target.files[0], mainImgName: e.target.files[0].name })
+            updateFields({ mainimg: e.target.files[0], mainImgName: e.target.files[0]?.name })
           }}
         ></input>
         <ShowError condition={dataerrors.ImageName } value={checkerror} />
