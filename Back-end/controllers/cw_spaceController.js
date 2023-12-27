@@ -1,4 +1,4 @@
-const { Cw_space, Cw_spacePhone, Cw_spacePhoto, Room } = require('../models/modelIndex')
+const { Cw_space, Cw_spacePhone, Cw_spacePhoto, Room, Owner} = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
@@ -14,9 +14,10 @@ module.exports = {
                 return next(error);
             }
             req.body.mainPhoto = req.body.imageName;
-            delete req.body.imageName;
+            delete req.body.imageName; 
             let newCw_space = (await Cw_space.create(req.body)).get({ plain: true })
             if (newCw_space) {
+                await Owner.update({cwSpaceCwID: newCw_space.cwID}, {where: {ownerID:req.body.ownerOwnerID}})
                 return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Co-working Space is Created Successfully" });
             }
             const error = appError.create("Unexpected Error, Try Again Later", 500, httpStatusCode.FAIL)
@@ -29,7 +30,7 @@ module.exports = {
         async (req, res, next) => {
             let cw_spaces = await Cw_space.findAll({ raw: true })
             if (cw_spaces.length != 0) {
-                let rooms = await Room.findAll({
+                let rooms = await Room.findAll({ 
                     raw: true,
                     where: {
                         type: "shared room"
