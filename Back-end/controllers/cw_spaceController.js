@@ -4,6 +4,7 @@ const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 const fs = require('fs')
 const { validateUpdatedCw_space } = require("../middlewares/validationSchema");
+const generateJWT = require("../utils/generateJWT");
 
 
 module.exports = {
@@ -13,12 +14,14 @@ module.exports = {
                 const error = appError.create("There is NO Images Provided", 400, httpStatusCode.ERROR);
                 return next(error);
             }
-            req.body.mainPhoto = req.body.imageName;
+            req.body.mainPhoto = req.body.imageName; 
             delete req.body.imageName; 
             let newCw_space = (await Cw_space.create(req.body)).get({ plain: true })
             if (newCw_space) {
                 await Owner.update({cwSpaceCwID: newCw_space.cwID}, {where: {ownerID:req.body.ownerOwnerID}})
-                return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Co-working Space is Created Successfully" });
+                const updatedOwner = await Owner.findOne({raw: true}, {where: {ownerID: req.body.ownerOwnerID}} )
+                let token = await generateJWT(updatedOwner)
+                return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Co-working Space is Created Successfully" , data:{token}});
             }
             const error = appError.create("Unexpected Error, Try Again Later", 500, httpStatusCode.FAIL)
             const filePath = `./public/images/cw_spaces/${req.body.mainPhoto}`;
