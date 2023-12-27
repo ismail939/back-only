@@ -69,7 +69,7 @@ function WorkSpaces() {
     }
     const getSearchData = (event) => {
         const search = event.target.value;
-        setSearchData(cwspaces.filter((workspace) => {
+        setSearchData(cwspaces?.filter((workspace) => {
             return search === '' ?
                 null : workspace.name.toLowerCase().includes(search.toLowerCase());
         }))
@@ -88,7 +88,7 @@ function WorkSpaces() {
     function changePage(event, value) {
         setPageNumber(value - 1)
     }
-    const displayPages = displayedCwspaces.slice(pagesVisited, pagesVisited + cwSpacesPerPage).map((cwspace) => {
+    const displayPages = displayedCwspaces?.slice(pagesVisited, pagesVisited + cwSpacesPerPage).map((cwspace) => {
         return <WorkSpaceCard cwspace={cwspace} key={cwspace.cwID} />
     })
     return (
@@ -108,9 +108,9 @@ function WorkSpaces() {
                             onClick={() => { setSearchList(true) }}
                         ></input>
                         <button className="duration-200 ease-in-out btn-color h-full p-4 flex items-center rounded-r-md  text-white"
-                            onClick={() => { if (searchData.length > 0) setDisplayedCwspaces(searchData) }}><Search className="text-lg" /></button>
+                            onClick={() => { if (searchData?.length > 0) setDisplayedCwspaces(searchData) }}><Search className="text-lg" /></button>
                     </div>
-                    {(searchData.length > 0 && searchlist) ? <div className="flex flex-col max-h-60 w-full mt-1 shadow-md rounded-md bg-[#fafafa] overflow-x-hidden absolute z-[90]" >
+                    {(searchData?.length > 0 && searchlist) ? <div className="flex flex-col max-h-60 w-full mt-1 shadow-md rounded-md bg-[#fafafa] overflow-x-hidden absolute z-[90]" >
                         {searchData.map((workspace) => {
                             return <Link className="w-full p-3 capitalize hover:bg-gray-200 font-semibold" to={`/workspaces/${workspace.cwID}`}>{workspace.name}</Link>
                         })}
