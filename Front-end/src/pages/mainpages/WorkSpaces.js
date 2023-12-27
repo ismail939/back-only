@@ -39,7 +39,7 @@ function WorkSpaces() {
     const [pageNumber, setPageNumber] = useState(0)
     const cwSpacesPerPage = 10;
     const pagesVisited = pageNumber * cwSpacesPerPage;
-    const pageCount = Math.ceil(displayedCwspaces.length / cwSpacesPerPage);
+    const pageCount = Math.ceil(displayedCwspaces?.length / cwSpacesPerPage);
     let menuRef = useRef();
     //const [sortedData,setSortedData] =useState();
     useEffect(() => {
