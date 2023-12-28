@@ -15,13 +15,28 @@ module.exports = {
                 return next(error);
             }
             req.body.mainPhoto = req.body.imageName; 
-            delete req.body.imageName; 
+            delete req.body.imageName;
+            const owner = await Owner.findOne({
+                    raw: true, where: {
+                        ownerID: req.body.ownerOwnerID
+                    }
+            })
+            if (owner.cwSpaceCwID != null) {
+                const error = appError.create("This Owner Has Already Co-working Space", 400, httpStatusCode.ERROR)
+                const filePath = `./public/images/cw_spaces/${req.body.mainPhoto}`;
+                fs.unlink(filePath, () => {});
+                return next(error)
+            }
             let newCw_space = (await Cw_space.create(req.body)).get({ plain: true })
             if (newCw_space) {
-                await Owner.update({cwSpaceCwID: newCw_space.cwID}, {where: {ownerID:req.body.ownerOwnerID}})
-                const updatedOwner = await Owner.findOne({raw: true}, {where: {ownerID: req.body.ownerOwnerID}} )
-                let token = await generateJWT(updatedOwner)
-                return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Co-working Space is Created Successfully" , data:{token}});
+                await Owner.update({cwSpaceCwID: newCw_space.cwID}, {where: {ownerID:newCw_space.ownerOwnerID}})
+                const updatedOwner = await Owner.findOne({
+                    raw: true, where: {
+                        ownerID: newCw_space.ownerOwnerID
+                    }
+                })
+                const token = await generateJWT(updatedOwner)
+                return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Co-working Space is Created Successfully" , data:{ token }});
             }
             const error = appError.create("Unexpected Error, Try Again Later", 500, httpStatusCode.FAIL)
             const filePath = `./public/images/cw_spaces/${req.body.mainPhoto}`;
