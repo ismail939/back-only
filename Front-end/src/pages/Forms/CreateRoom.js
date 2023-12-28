@@ -3,6 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import { useSelector } from "react-redux";
 import RoomForm from "../../components/WorkSpaceForm/RoomForm";
 import { ExclamationCircleFill } from "react-bootstrap-icons";
+import Swal from "sweetalert2";
 function CreateRoom() {
     const IntitialRoomData = {
         type: "Select Room Type",
@@ -31,6 +32,14 @@ function CreateRoom() {
             </>
         )
     }
+    const success = () => {
+        Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Your Room is Created Successfully",
+            showConfirmButton: false,
+        });
+    }
     const addRoom = () => {
         console.log(roomData)
         console.log(ownerData.cwSpaceCwID)
@@ -51,8 +60,9 @@ function CreateRoom() {
             .then(response => {
                 if (response.status === "error") { console.log(response) }
                 else if (response.status === "success") {
+                    success()
+                    console.log(response)
                 }
-                console.log(response)
             })
     }
     function HandleClick(e){
