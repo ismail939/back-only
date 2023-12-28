@@ -17,6 +17,7 @@ import RequireAuth from './components/RequireAuth';
 import DashboardProfile from './pages/DashboardProfile';
 import WorkSpaceProfile from './pages/WorkSpaceProfile/WorkSpaceProfile';
 import RoomList from './pages/WorkSpaceProfile/RoomList';
+import CreateRoom from './pages/Forms/CreateRoom';
 function App() {
   return (
     <>
@@ -39,6 +40,7 @@ function App() {
         <Route element={<RequireAuth  allowedRoles={["owner"]}/>} >
           <Route path='createworkspace' element={<CreateFullWorkSpace />}></Route>
           <Route path='createOffer' element={<CreateOffer />}></Route>
+          <Route path='createRoom' element={<CreateRoom />}></Route>
         </Route>
         <Route path='dashboard' element={<Dashboard />}></Route>
         <Route path="*" element={<PageNotFound />}></Route>

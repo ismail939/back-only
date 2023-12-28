@@ -8,10 +8,10 @@ function RequireAuth({allowedRoles}){
     const client = useSelector(state => state.auth)
     const location = useLocation();
     return(
-        allowedRoles.includes(client.usertype) ?
-        client?.user ? <Outlet /> : 
-        <Navigate to="/login" state={{from:location}} replace/>
-        : <PageNotFound />
+        
+        client?.user ?  allowedRoles.includes(client.usertype) ? <Outlet /> : <PageNotFound />
+        : <Navigate to="/login" state={{from:location}} replace/>
+        
     )
 }
 

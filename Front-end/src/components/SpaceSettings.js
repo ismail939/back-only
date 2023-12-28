@@ -37,7 +37,7 @@ function SpaceSettings({cwspace , getCworkingSpaceData}) {
     useEffect(() => {
         getCworkingSpacePhotos();
     }, [])
-    function isImage(offerImage) {
+    function isImage(imgName) {
         if (imgName.slice(-4) === ".jpg" || imgName.slice(-5) === ".jpeg" || imgName.slice(-4) === ".png") return true;
         else {
             return false;
@@ -56,7 +56,9 @@ function SpaceSettings({cwspace , getCworkingSpaceData}) {
                     if (data.status === "error") {
                         console.log(data.message)
                     } else if (data.status === "success") {
-                        getCworkingSpacePhotos();
+                        getCworkingSpaceData();
+                        setImg([])
+                        setImgName("")
                     }
                 })
                 .catch(error => {
@@ -78,6 +80,8 @@ function SpaceSettings({cwspace , getCworkingSpaceData}) {
                         console.log(data.message)
                     } else if (data.status === "success") {
                         getCworkingSpacePhotos();
+                        setSecImg([]);
+                        setSecImgName("")
                     }
                 })
                 .catch(error => {
@@ -274,15 +278,15 @@ function SpaceSettings({cwspace , getCworkingSpaceData}) {
                 <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Main Photo</h2>
                 <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4" >
                     <div className="w-full md:px-16 px-4">
-                        <img className=" object-cover sm:w-3/4 w-full h-[250px] my-4" src={imageUrl} alt="no-picture-added"></img>
-                        <input className={`bg-gray-50 border px-4  ${dataerrors.img ? "border-red-500" : "border-gray-300"}
-                        text-gray-900 sm:text-sm rounded-lg focus:border-primary-600 block max-w-2xl  p-2.5`}
+                        <img className=" object-cover sm:w-5/6 sm:mx-auto w-full h-[250px] my-4" src={imageUrl} alt="no-picture-added"></img>
+                        <input className={`hidden`} id="uploadCWMainImg"
                             onChange={(e) => { setImg(e.target.files[0]); setImgName(e.target.files[0]?.name) }}
                             accept=".png,.jpg,.jpeg" type="file" ></input>
                         {dataerrors.img ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
-                        <div className="flex flex-row-reverse w-full">
+                        <div className="flex flex-row-reverse w-full items-center gap-5">
                             <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${!imgName?.trim() ? "bg-gray-500" : "btn-color border-indigo-200"}
                         rounded-lg border`} disabled={!imgName?.trim()} onClick={(e) => handleImage(e)}>Save</button>
+                        <label htmlFor="uploadCWMainImg" className="py-2 px-4 font-medium rounded-lg bg-red-500 hover:bg-red-600 duration-200 cursor-pointer">Change Image</label>
                         </div>
                     </div>
                 </div>
@@ -368,14 +372,14 @@ function SpaceSettings({cwspace , getCworkingSpaceData}) {
                             })}
                         </div>
                         <div>
-                            <input className={`bg-gray-50 mt-4 border px-4  ${dataerrors.img ? "border-red-500" : "border-gray-300"}
-                                text-gray-900 sm:text-sm rounded-lg focus:border-primary-600 block max-w-2xl  p-2.5`}
+                            <input className={`hidden`} id="uploadSecImg"
                                 onChange={(e) => { setSecImg(e.target.files[0]); setSecImgName(e.target.files[0]?.name) }}
                                 accept=".png,.jpg,.jpeg" type="file" ></input>
                             {dataerrors.secImg ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
-                            <div className="flex flex-row-reverse w-full">
+                            <div className="flex flex-row-reverse w-full items-center gap-5">
                                 <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${!secImgName?.trim() ? "bg-gray-500" : "btn-color border-indigo-200"}
                                     rounded-lg border`} disabled={!secImgName?.trim()} onClick={(e) => handleSecImage(e)}>Save</button>
+                                    <label htmlFor="uploadSecImg" className="py-2 px-4 font-medium rounded-lg bg-red-500 hover:bg-red-600 duration-200 cursor-pointer">ADD NEW PHOTO</label>
                             </div>
                         </div>
                     </div>

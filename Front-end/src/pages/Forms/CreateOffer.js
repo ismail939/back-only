@@ -146,28 +146,24 @@ function CreateOffer() {
                                     type="file"
                                     name="offerImage"
                                     id="offerImage"
-
                                     className={`bg-gray-50 border ${dataerrors.offerImageName ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
                                     placeholder=""
                                     required
                                     accept=".png,.jpg,.jpeg"
                                     onChange={(e) => {
-                                        
-
                                         setImg(e.target.files[0]);
                                         setOfferImageName(e.target.files[0].name);
                                         setPath(e.target.value)
                                     }}
                                 ></input>
                                 {dataerrors.offerImageName ? <span className="text-[12px] text-red-500">plaese enter an image accepted formats are png , jpg , jpeg</span> : null}
-
                             </div>
                             <div>
                                 <label
                                     htmlFor="name"
                                     className="block mb-2 text-sm font-medium text-gray-900 "
                                 >
-                                    title<span className="text-red-500">*</span>
+                                    Title<span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     type="text"
@@ -182,9 +178,7 @@ function CreateOffer() {
                                         setTitle(e.target.value);
                                     }}
                                 ></input>
-
                                 {dataerrors.title ? <span className="text-[12px] text-red-500">plaese enter a title</span> : null}
-
                             </div>
                             <div>
                                 <label
@@ -199,7 +193,6 @@ function CreateOffer() {
                                     id="Description"
 
                                     className={`bg-gray-50 border ${dataerrors.description ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
-
                                     placeholder="A breif description about your place"
                                     required
                                     onChange={(e) => {
@@ -215,7 +208,7 @@ function CreateOffer() {
                                         htmlFor="phonenumber1"
                                         className="block mb-2 text-sm font-medium text-gray-900 "
                                     >
-                                        start date<span className="text-red-500">*</span>
+                                        Start Date<span className="text-red-500">*</span>
                                     </label>
                                     <input
                                         type="date"
@@ -238,7 +231,7 @@ function CreateOffer() {
                                         htmlFor="phonenumber1"
                                         className="block mb-2 text-sm font-medium text-gray-900 "
                                     >
-                                        end date<span className="text-red-500">*</span>
+                                        End Date<span className="text-red-500">*</span>
                                     </label>
                                     <input
                                         type="date"
@@ -263,7 +256,7 @@ function CreateOffer() {
                             <button
                                 type="submit"
                                 onClick={(e) => { HandleError(e) }}
-                                className="mt-3 w-full text-white bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 font-medium rounded-lg text-md px-5 py-2.5 text-center duration-300 ease-in-out"
+                                className="mt-3 w-full text-white btn-color font-medium rounded-lg text-md px-5 py-2.5 text-center duration-300 ease-in-out"
                             >
                                 Create Offer
                             </button>

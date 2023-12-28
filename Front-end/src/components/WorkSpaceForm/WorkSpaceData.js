@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { forwardRef , useImperativeHandle } from "react";
-const CreateCoworkingSpace = forwardRef(({ name, address, description, email, phone, openingTime, closingTime,facebookLink,
+const WorkSpaceData = forwardRef(({ name, address, description, email, phone, openingTime, closingTime,facebookLink,
   mainImgName, mainimg, updateFields ,childRef, ShowError}) => {
   const [checkerror, setCheckError] = useState("");
   const [dataerrors, setDataErrors] = useState({
@@ -15,8 +15,8 @@ const CreateCoworkingSpace = forwardRef(({ name, address, description, email, ph
     fblink: false
   });
   const formRef = useRef(null);
-  function isImage(offerImageName) {
-    if (offerImageName.slice(-4) === ".jpg" || offerImageName.slice(-5) === ".jpeg" || offerImageName.slice(-4) === ".png") return true;
+  function isImage(ImageName) {
+    if (ImageName.slice(-4) === ".jpg" || ImageName.slice(-5) === ".jpeg" || ImageName.slice(-4) === ".png") return true;
     else {
       return false;
     }
@@ -295,4 +295,4 @@ const CreateCoworkingSpace = forwardRef(({ name, address, description, email, ph
     </>
   );
 })
-export default CreateCoworkingSpace;
+export default WorkSpaceData;
