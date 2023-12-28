@@ -36,13 +36,13 @@ function CreateRoom() {
         console.log(ownerData.cwSpaceCwID)
         let formData = new FormData();
         formData.append('type', roomData.type);
-        formData.append('img', roomData.roomImg);
         formData.append('hourPrice', roomData.hourPrice);
         formData.append('dayPrice', roomData.dayPrice);
         formData.append('maxRoomSize', roomData.maxRoomSize);
         formData.append('minRoomSize', roomData.minRoomSize);
         formData.append('number', roomData.number);
         formData.append('cwSpaceCwID', ownerData.cwSpaceCwID);
+        formData.append('img', roomData.roomImg);
         fetch(`http://localhost:4000/rooms`, {
             method: 'POST',
             body: formData,

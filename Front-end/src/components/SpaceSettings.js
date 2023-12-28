@@ -37,7 +37,7 @@ function SpaceSettings({cwspace , getCworkingSpaceData}) {
     useEffect(() => {
         getCworkingSpacePhotos();
     }, [])
-    function isImage(offerImage) {
+    function isImage(imgName) {
         if (imgName.slice(-4) === ".jpg" || imgName.slice(-5) === ".jpeg" || imgName.slice(-4) === ".png") return true;
         else {
             return false;
@@ -56,7 +56,9 @@ function SpaceSettings({cwspace , getCworkingSpaceData}) {
                     if (data.status === "error") {
                         console.log(data.message)
                     } else if (data.status === "success") {
-                        getCworkingSpacePhotos();
+                        getCworkingSpaceData();
+                        setImg([])
+                        setImgName("")
                     }
                 })
                 .catch(error => {
@@ -78,6 +80,8 @@ function SpaceSettings({cwspace , getCworkingSpaceData}) {
                         console.log(data.message)
                     } else if (data.status === "success") {
                         getCworkingSpacePhotos();
+                        setSecImg([]);
+                        setSecImgName("")
                     }
                 })
                 .catch(error => {
