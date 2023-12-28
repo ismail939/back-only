@@ -286,7 +286,7 @@ function SpaceSettings({cwspace , getCworkingSpaceData}) {
                         <div className="flex flex-row-reverse w-full items-center gap-5">
                             <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${!imgName?.trim() ? "bg-gray-500" : "btn-color border-indigo-200"}
                         rounded-lg border`} disabled={!imgName?.trim()} onClick={(e) => handleImage(e)}>Save</button>
-                        <label for="uploadCWMainImg" className="py-2 px-4 font-medium rounded-lg bg-red-500 hover:bg-red-600 duration-200 cursor-pointer">Change Image</label>
+                        <label htmlFor="uploadCWMainImg" className="py-2 px-4 font-medium rounded-lg bg-red-500 hover:bg-red-600 duration-200 cursor-pointer">Change Image</label>
                         </div>
                     </div>
                 </div>
@@ -379,7 +379,7 @@ function SpaceSettings({cwspace , getCworkingSpaceData}) {
                             <div className="flex flex-row-reverse w-full items-center gap-5">
                                 <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${!secImgName?.trim() ? "bg-gray-500" : "btn-color border-indigo-200"}
                                     rounded-lg border`} disabled={!secImgName?.trim()} onClick={(e) => handleSecImage(e)}>Save</button>
-                                    <label for="uploadSecImg" className="py-2 px-4 font-medium rounded-lg bg-red-500 hover:bg-red-600 duration-200 cursor-pointer">ADD NEW PHOTO</label>
+                                    <label htmlFor="uploadSecImg" className="py-2 px-4 font-medium rounded-lg bg-red-500 hover:bg-red-600 duration-200 cursor-pointer">ADD NEW PHOTO</label>
                             </div>
                         </div>
                     </div>

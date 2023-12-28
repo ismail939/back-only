@@ -226,7 +226,7 @@ function ProfileSettings(props) {
                         <div className="flex flex-row-reverse w-full items-center gap-5">
                             <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${!imgName?.trim() ? "bg-gray-500" :  "btn-color border-indigo-200"}
                         rounded-lg border`}  disabled={!imgName?.trim()} onClick={(e) => handleImage(e)}>Save</button>
-                        <label for="uploadProfileImg" className="py-2 px-4 font-medium rounded-lg bg-red-500 hover:bg-red-600 duration-200 cursor-pointer">Change Image</label>
+                        <label htmlFor="uploadProfileImg" className="py-2 px-4 font-medium rounded-lg bg-red-500 hover:bg-red-600 duration-200 cursor-pointer">Change Image</label>
                         </div>
                     </div>
                 </div>
