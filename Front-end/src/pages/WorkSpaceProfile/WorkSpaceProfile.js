@@ -120,7 +120,11 @@ function WorkSpaceProfile() {
                 "cwSpaceCwID": params.cwID
             }),
         }).then(res => res.json()).then((data) => {
-            console.log(data)
+            if (data.status === "error") {
+                console.log(data.message);
+            } else if (data.status === "success") {
+                getReviews();
+            }
         })
     }
     useEffect(() => {
