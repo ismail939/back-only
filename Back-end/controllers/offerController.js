@@ -70,6 +70,20 @@ module.exports = {
             return next(error);
         }
     ),
+    getCwSpaceOffers: asyncWrapper(
+        async (req, res, next) => {
+            const offers = await Offer.findAll({
+                where: {
+                    cwSpaceCwID: req.params.cwID
+                }
+            })
+            if (offers.length != 0) {
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: offers });
+            }
+            const error = appError.create("There are No Available Offers for This Co-working Space", 404, httpStatusCode.ERROR);
+            return next(error);
+        }
+    ),
     update: asyncWrapper(
         async (req, res, next) => {
             const updatedOffer = await Offer.findOne({
