@@ -3,7 +3,7 @@ import image from './images/offer1.jpg';
 
 function OfferCard(props) {
     const offer = props.offer;
-    const imageUrl = "http://localhost:4000/images/" + offer.img;
+    const imageUrl = "http://localhost:4000/images/offers/" + offer.img;
 
     return (
         <div className="bg-white rounded-xl shadow-md overflow-hidden">

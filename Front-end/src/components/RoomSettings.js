@@ -1,8 +1,8 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-function RoomSettings({cwid}){
-    const [rooms, setRooms]=useState([]);
-    const[noRooms,setNoRooms]=useState(false);
+function RoomSettings({ cwid }) {
+    const [rooms, setRooms] = useState([]);
+    const [noRooms, setNoRooms] = useState(false);
     useEffect(() => {
         getRooms();
     }, [])
@@ -12,55 +12,52 @@ function RoomSettings({cwid}){
             .then(responsedata => {
                 setRooms(responsedata.data);
                 console.log(responsedata.data)
-                if(responsedata.message === "There are No Available Rooms") setNoRooms(true);
+                if (responsedata.message === "There are No Available Rooms") setNoRooms(true);
             }
             )
     }
-    const shared=rooms?.filter(room=>room.type==="shared");
-    const privatee=rooms?.filter(room=>room.type==="private");
-    const meeting=rooms?.filter(room=>room.type==="meeting");
-    
-    const RoomCard= ({room}) =>{
-        const imageUrl=`http://localhost:4000/images/rooms/`
-        return(
-            <>
-                <div className="my-4  rounded-3xl max-w-3xl mx-auto mt-4" >
-                    <div className="w-full md:px-16 px-4">
-                        <img  className=" object-cover w-40 h-40 p-1 rounded-full ring-2 ring-indigo-300 m-8 " src={imageUrl+room.img} alt="no-picture-added"></img>
-                    </div>
-        </div>
-            </>
-        )
-        
+    const shared = rooms?.filter(room => room.type === "Shared");
+    const privatee = rooms?.filter(room => room.type === "Private");
+    const meeting = rooms?.filter(room => room.type === "Meeting");
+
+    const RoomCard = ({ room }) => {
+        const imageUrl = `http://localhost:4000/images/rooms/`
+        return <img className=" object-cover w-full h-[250px]" src={imageUrl + room.img} alt="no-picture-added"></img>
     }
-    return(
+    return (
         <>
-            {noRooms&&<div className="w-full flex flex-col items-center mt-[250px]">
-                        <p className="text-xl">You don't have any Room yet</p>
-                        <p className="my-6">Create your first Room Here:</p>
-                        <Link to="../createRoom" className="px-2 py-4 uppercase bg-[#0F4C75] text-white hover:bg-[#197ec2] duration-200"> create Room</Link>
+            {noRooms && <div className="w-full flex flex-col items-center mt-[250px]">
+                <p className="text-xl">You don't have any Rooms yet</p>
+                <p className="my-6">Create your first Room Here:</p>
+                <Link to="../createRoom" className="px-2 py-4 uppercase bg-[#0F4C75] text-white hover:bg-[#197ec2] duration-200"> Create Room</Link>
             </div>}
-            {!noRooms&&<div>
-                <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">shared Rooms</h2>
-                <div>
-                {shared.length?shared?.map((room) => {
-                                return <RoomCard room={room} key={room.roomID} />
-                            }):null}
-                </div>
-                <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">private Rooms</h2>
-                <div>
-                {privatee ?privatee?.map((room) => {
-                                return <RoomCard room={room} key={room.roomID} />
-                            }):null}
-                </div>
-                {console.log(shared)}
-                {console.log(privatee)}
-                {console.log(meeting)}
-                <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">meeting Rooms</h2>
-                <div>
-                {meeting.length? meeting?.map((room) => {
-                                return <RoomCard room={room} key={room.roomID} />
-                            }):null}
+            {!noRooms && <div className="mt-6 w-3/4 mx-auto">
+                {shared?.length > 0 ? <div className="">
+                    <h2 className="font-bold text-2xl mb-4">Shared Rooms</h2>
+                    <div className="grid lg:grid-cols-2 grid-cols-1 gap-6">
+                        {shared?.map((room) => {
+                            return <RoomCard room={room} key={room.roomID} />
+                        })}
+                    </div>
+                </div> : null}
+                {privatee?.length > 0 ? <div className="">
+                    <h2 className="font-bold text-2xl my-4">Private Rooms</h2>
+                    <div className="grid lg:grid-cols-2 grid-cols-1 gap-6">
+                        {privatee?.map((room) => {
+                            return <RoomCard room={room} key={room.roomID} />
+                        })}
+                    </div>
+                </div> : null}
+                {meeting?.length > 0 ? <div className="">
+                    <h2 className="font-bold text-2xl my-4">Meeting Rooms</h2>
+                    <div className="grid lg:grid-cols-2 grid-cols-1 gap-6">
+                        {meeting?.map((room) => {
+                            return <RoomCard room={room} key={room.roomID} />
+                        })}
+                    </div>
+                </div> : null}
+                <div className="mt-8 float-right">
+                    <Link to="../createRoom" className="px-6 py-4 uppercase bg-[#0F4C75] text-white hover:bg-[#197ec2] duration-200">ADD NEW ROOM</Link>
                 </div>
             </div>
             }

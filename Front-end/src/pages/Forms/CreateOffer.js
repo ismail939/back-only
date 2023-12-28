@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
-import { ExclamationCircleFill, HandIndex } from "react-bootstrap-icons";
+import { jwtDecode } from "jwt-decode";
+import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 function getDate() {
     const today = new Date();
@@ -8,16 +9,15 @@ function getDate() {
     const day = (today.getDate()).toString();
     return (`${year}-${month}-${parseInt(day) > 9 ? day : "0" + day}`);
 }
-
 function CreateOffer() {
+    const auth = useSelector(store => store.auth);
+    const ownerData = jwtDecode(auth.token);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [checkerror, setCheckError] = useState("");
     const [start, setStart] = useState("");
     const [end, setEnd] = useState("");
     const [img, setImg] = useState([]);
-    const [path,setPath]=useState("");
-    const [binaryData, setBinaryData] = useState(null);
     const [errormessage, setErrorMessage] = useState("");
     const [offerImageName, setOfferImageName] = useState("");
     const [dataerrors, setDataErrors] = useState({
@@ -32,79 +32,45 @@ function CreateOffer() {
         Swal.fire({
             position: "center",
             icon: "success",
-            title: "Your Offer is added successfully",
+            title: "Your Offer is Created Successfully",
             showConfirmButton: false,
         });
     }
     function isImage(offerImage) {
-        if (offerImageName.slice(-4) === ".jpg" || offerImageName.slice(-5) === ".jpeg" || offerImageName.slice(-4) === ".png") return true;
+        if (offerImage.slice(-4) === ".jpg" || offerImage.slice(-5) === ".jpeg" || offerImage.slice(-4) === ".png") return true;
         else {
             return false;
         }
     }
     const addData = () => {
         if (isImage(offerImageName)) {
-           
-            // console.log(img)
-            
-            
-            // let formData = { 'img': binaryData, 'imageName': offerImageName, 'title': title, 'description': description, 'start': start, 'end': end }
             let formData = new FormData();
-            
             formData.append('imageName', offerImageName);
             formData.append('title', title);
             formData.append('description', description);
             formData.append('start', start);
             formData.append('end', end);
-            formData.append('cwSpaceCwID', 1);
+            formData.append('cwSpaceCwID', ownerData.cwSpaceCwID);
             formData.append('img', img);
-            // formData = JSON.stringify(formData)
-            // console.log(formData)
             fetch('http://localhost:4000/offers', {
                 method: 'POST',
                 body: formData,
-                // headers: {
-                //     'Content-Type': 'multipart/form-data',
-                // }
             })
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === "error") {
-
                         setErrorMessage(data.message);
                         console.log(errormessage);
                     } else if (data.status === "success") {
                         console.log(data);
+                        success();
                     }
                 })
                 .catch(error => {
                     console.error('Error during fetch operation:', error);
-
                 });
         }
     }
-
-    // const titleError= (title) => {
-    //     if (title.length === 0) {
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // }
-    // const descriptionError= (description) => {
-    //     if (description.length === 0) {
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // }
-    // const dateError= (start,end) => {
-    //     if (start.length === 0||end.length===0) {
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // }
     const HandleError = (e) => {
         e.preventDefault();
         if (!isImage(offerImageName)) {
@@ -153,7 +119,6 @@ function CreateOffer() {
                                     onChange={(e) => {
                                         setImg(e.target.files[0]);
                                         setOfferImageName(e.target.files[0].name);
-                                        setPath(e.target.value)
                                     }}
                                 ></input>
                                 {dataerrors.offerImageName ? <span className="text-[12px] text-red-500">plaese enter an image accepted formats are png , jpg , jpeg</span> : null}
@@ -169,9 +134,7 @@ function CreateOffer() {
                                     type="text"
                                     name="title"
                                     id="title"
-
                                     className={`bg-gray-50 border ${dataerrors.title ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
-
                                     placeholder="Enter your name"
                                     required
                                     onChange={(e) => {
@@ -191,7 +154,6 @@ function CreateOffer() {
                                     type="text"
                                     name="Description"
                                     id="Description"
-
                                     className={`bg-gray-50 border ${dataerrors.description ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
                                     placeholder="A breif description about your place"
                                     required
@@ -200,7 +162,6 @@ function CreateOffer() {
                                     }}
                                 ></textarea>
                                 {dataerrors.description ? <span className="text-[12px] text-red-500">plaese enter a description</span> : null}
-
                             </div>
                             <div className="flex justify-between gap-6">
                                 <div className="w-full">
@@ -214,7 +175,6 @@ function CreateOffer() {
                                         type="date"
                                         name="startDate"
                                         id="startDate"
-
                                         value={start}
                                         min={getDate()}
                                         max={end?end:"2030-03-05"}
@@ -222,7 +182,6 @@ function CreateOffer() {
                                         required
                                         onChange={(e) => {
                                             setStart(e.target.value);
-
                                         }}
                                     ></input>
                                 </div>
@@ -237,7 +196,6 @@ function CreateOffer() {
                                         type="date"
                                         name="endDate"
                                         id="endDate"
-
                                         value={end}
                                         min={start ? start : getDate()}
                                         max="2030-03-05"
@@ -245,12 +203,10 @@ function CreateOffer() {
                                         required
                                         onChange={(e) => {
                                             setEnd(e.target.value);
-
                                         }}
                                     ></input>
                                 </div>
                             </div>
-
                             {(dataerrors.end || dataerrors.start) ? <span className="text-[12px] text-red-500">{checkerror}please enter start and end date</span> : null}
                             <br></br>
                             <button
