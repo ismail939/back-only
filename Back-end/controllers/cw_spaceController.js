@@ -177,6 +177,9 @@ module.exports = {
                         cwSpaceCwID: req.params.ID
                     }
                 })
+                await Owner.update({ cwSpaceCwID: null }, {
+                    where: { ownerID: deletedCw_space.ownerOwnerID }
+                })
                 await Cw_space.destroy({
                     where: {
                         cwID: req.params.ID
