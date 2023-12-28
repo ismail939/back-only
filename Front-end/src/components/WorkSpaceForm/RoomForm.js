@@ -28,13 +28,12 @@ function RoomForm({ roomData, updateRoomData, childRef, ShowError }) {
         var regex = /^\d+$/;
         if (!Number.match(regex)) {
             return true;
-        } else if (parseInt(Number) <= 0) {
+        }else if (Number <= 0) {
             return true;
         } else {
             return false;
         }
     }
-    //!roomData.roomImg || !isImage(roomData.roomImg?.name)
     const HandleRoomError = () => {
         if (roomData.type === "Select Room Type") {
             setDataErrors({ ...IntitialDataErrors, type: true })
@@ -52,13 +51,13 @@ function RoomForm({ roomData, updateRoomData, childRef, ShowError }) {
             setDataErrors({ ...IntitialDataErrors, dayPrice: true })
             setCheckError("Please enter a Suitable Day Price")
             window.scrollTo(0, 300)
-        } else if (NumberError(roomData.maxRoomSize)) {
-            setDataErrors({ ...IntitialDataErrors, maxRoomSize: true })
-            setCheckError("Please enter a Suitable Max. room size")
-            window.scrollTo(0, 400)
         } else if (NumberError(roomData.minRoomSize)) {
             setDataErrors({ ...IntitialDataErrors, minRoomSize: true })
             setCheckError("Please enter a Suitable Min. room size")
+            window.scrollTo(0, 400)
+        } else if (NumberError(roomData.maxRoomSize)) {
+            setDataErrors({ ...IntitialDataErrors, maxRoomSize: true })
+            setCheckError("Please enter a Suitable Max. room size")
             window.scrollTo(0, 400)
         } else {
             return true
@@ -150,21 +149,6 @@ function RoomForm({ roomData, updateRoomData, childRef, ShowError }) {
                 <div className="flex items-center justify-between gap-8 mb-3">
                     <div>
                         <label
-                            htmlFor="maxRoomSize"
-                            className="block mb-2 text-sm font-medium text-gray-900 "
-                        >
-                            Maximum Room Size
-                        </label>
-                        <input type="number" name="maxRoomSize" id="maxRoomSize" min={1}
-                            className={`bg-gray-50 border ${dataerrors.maxRoomSize ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
-                            placeholder="Enter maximum Room size"
-                            onChange={(e) => {
-                                updateRoomData({ maxRoomSize: e.target.value })
-                            }}
-                        ></input>
-                    </div>
-                    <div>
-                        <label
                             htmlFor="minRoomSize"
                             className="block mb-2 text-sm font-medium text-gray-900 "
                         >
@@ -175,6 +159,21 @@ function RoomForm({ roomData, updateRoomData, childRef, ShowError }) {
                             placeholder="Enter mimimum Room size"
                             onChange={(e) => {
                                 updateRoomData({ minRoomSize: e.target.value })
+                            }}
+                        ></input>
+                    </div>
+                    <div>
+                        <label
+                            htmlFor="maxRoomSize"
+                            className="block mb-2 text-sm font-medium text-gray-900 "
+                        >
+                            Maximum Room Size
+                        </label>
+                        <input type="number" name="maxRoomSize" id="maxRoomSize" min={1}
+                            className={`bg-gray-50 border ${dataerrors.maxRoomSize ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
+                            placeholder="Enter maximum Room size"
+                            onChange={(e) => {
+                                updateRoomData({ maxRoomSize: e.target.value })
                             }}
                         ></input>
                     </div>

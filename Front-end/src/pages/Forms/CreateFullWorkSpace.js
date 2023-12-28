@@ -30,7 +30,7 @@ function CreateFullWorkSpace() {
         maxRoomSize: "0",
         minRoomSize: "0",
         roomImg: null,
-        number: 0
+        number: "1"
     }
     const dispatch = useDispatch();
     const auth = useSelector(store => store.auth);
@@ -116,11 +116,12 @@ function CreateFullWorkSpace() {
     const addRoom = () => {
         let formData = new FormData();
         formData.append('type', roomData.type);
-        formData.append('roomImg', roomData.roomImg);
-        formData.append('openingTime', roomData.openingTime);
-        formData.append('closingTime', roomData.closingTime);
+        formData.append('img', roomData.roomImg);
+        formData.append('hourPrice', roomData.hourPrice);
+        formData.append('dayPrice', roomData.dayPrice);
         formData.append('maxRoomSize', roomData.maxRoomSize);
         formData.append('minRoomSize', roomData.minRoomSize);
+        formData.append('number', roomData.number);
         formData.append('cwSpaceCwID', ownerData.cwSpaceCwID);
         fetch(`http://localhost:4000/rooms`, {
             method: 'POST',
