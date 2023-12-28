@@ -4,6 +4,8 @@ import { jwtDecode } from "jwt-decode";
 import ProfileSettings from "../components/ProfileSettings";
 import { Link } from "react-router-dom";
 import SpaceSettings from "../components/SpaceSettings";
+import OfferSeetings from "../components/OfferSettings";
+import RoomSettings from "../components/RoomSettings";
 function DashboardProfile() {
     const [active, setActive] = useState("account settings");
     const [cwspace, setCWSpace] = useState();
@@ -34,9 +36,17 @@ function DashboardProfile() {
                         <button onClick={() => setActive("account settings")}
                             className={`${buttonStyle} ${active === "account settings" ? activeStyle : "hover:text-indigo-900"}`} >Account Settings</button>
                     </div>
-                    {usertype==="owner"&&<div className="my-8">
+                    {usertype==="owner"&& <div className="my-8">
                         <button className={`${buttonStyle} ${active === "space settings" ? activeStyle : "hover:text-indigo-900"}`}
                             onClick={() => setActive("space settings")}>Space Settings</button>
+                    </div>}
+                    {usertype==="owner"&& profileData.cwSpaceCwID !==null&&<div className="my-8">
+                        <button className={`${buttonStyle} ${active === "room settings" ? activeStyle : "hover:text-indigo-900"}`}
+                            onClick={() => setActive("room settings")}>room settings</button>
+                    </div>}
+                    {usertype==="owner"&&  profileData.cwSpaceCwID !==null &&<div className="my-8">
+                        <button className={`${buttonStyle} ${active === "offer settings" ? activeStyle : "hover:text-indigo-900"}`}
+                            onClick={() => setActive("offer settings")}>offer settings</button>
                     </div>}
                 </div>
                 {active === "account settings" && <ProfileSettings profileData={profileData} />
@@ -50,6 +60,12 @@ function DashboardProfile() {
                 }
                 {active === "space settings" &&  profileData.cwSpaceCwID !==null &&
                     <SpaceSettings cwspace={cwspace} getCworkingSpaceData={getCworkingSpaceData}/>
+                }
+                {active === "room settings"  &&
+                    <RoomSettings cwid={profileData.cwSpaceCwID} />
+                }
+                {active === "offer settings"  &&
+                    <OfferSeetings cwid={profileData.cwSpaceCwID} />
                 }
             </div>
         </>

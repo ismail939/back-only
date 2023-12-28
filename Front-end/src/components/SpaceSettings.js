@@ -4,13 +4,13 @@ function SpaceSettings({cwspace , getCworkingSpaceData}) {
     const [cwSpacePhotos, setCwSpacePhotos] = useState([]);
     const [img, setImg] = useState([]);
     const [imgName, setImgName] = useState("");
-    const [description, setDescription] = useState(cwspace.description);
-    const [email, setEmail] = useState(cwspace.email);
-    const [openingTime, setOpeningTime] = useState(cwspace.openingTime.substring(0, 5));
-    const [closingTime, setClosingTime] = useState(cwspace.closingTime.substring(0, 5));
-    const [fbPage, setFbPage] = useState(cwspace.fbPage);
-    const [address, setAddress] = useState(cwspace.address);
-    const [phone, setPhone] = useState(cwspace.phone);
+    const [description, setDescription] = useState(cwspace?.description);
+    const [email, setEmail] = useState(cwspace?.email);
+    const [openingTime, setOpeningTime] = useState(cwspace?.openingTime.substring(0, 5));
+    const [closingTime, setClosingTime] = useState(cwspace?.closingTime.substring(0, 5));
+    const [fbPage, setFbPage] = useState(cwspace?.fbPage);
+    const [address, setAddress] = useState(cwspace?.address);
+    const [phone, setPhone] = useState(cwspace?.phone);
     const [secImg, setSecImg] = useState([]);
     const [secImgName, setSecImgName] = useState("");
     const [checkerror, setCheckError] = useState("");
@@ -25,7 +25,7 @@ function SpaceSettings({cwspace , getCworkingSpaceData}) {
         img: false,
         secImg: false
     });
-    const imageUrl = `http://localhost:4000/images/cw_spaces/${cwspace.mainPhoto}`;
+    const imageUrl = `http://localhost:4000/images/cw_spaces/${cwspace?.mainPhoto}`;
     const getCworkingSpacePhotos = () => {
         fetch(`http://localhost:4000/cw_spacePhotos/${cwspace.cwID}`)
             .then(res => res.json())
@@ -270,7 +270,7 @@ function SpaceSettings({cwspace , getCworkingSpaceData}) {
     return (
         <>
             <div className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4 ">
-                <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">{cwspace.name}</h2>
+                <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">{cwspace?.name}</h2>
                 <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Main Photo</h2>
                 <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4" >
                     <div className="w-full md:px-16 px-4">
