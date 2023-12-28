@@ -34,8 +34,7 @@ function CreateFullWorkSpace() {
     }
     const dispatch = useDispatch();
     const auth = useSelector(store => store.auth);
-    const tokenData = jwtDecode(auth.token);
-    const [ownerData, setOwnerData] = useState(tokenData);
+    let ownerData = jwtDecode(auth.token);
     const [data, setData] = useState(IntitialValue)
     const [roomData, setRoomData] = useState(IntitialRoomData)
     const [dataSuccess, setDataSuccess] = useState(false)
@@ -90,7 +89,7 @@ function CreateFullWorkSpace() {
                 else if (response.status === "success") {
                     dispatch(setCredentials({...auth , token: response.data.token}))
                     let resTokenData = jwtDecode(auth.token);
-                    setOwnerData(resTokenData)
+                    ownerData = resTokenData;
                     next();
                 }
                 console.log(response)
@@ -101,6 +100,7 @@ function CreateFullWorkSpace() {
         data.photos.forEach(image => {
             formData.append('img', image);
         });
+        console.log("test" , ownerData.cwSpaceCwID)
         fetch(`http://localhost:4000/cw_spacePhotos/${ownerData.cwSpaceCwID}`, {
             method: 'POST',
             body: formData,
