@@ -42,5 +42,8 @@ router.route("/:offerID")
     .patch(upload.single('img'), offerController.update)
     .delete(offerController.delete);
 
+router.route("/cw_space/:cwID")
+    .get(offerController.getCwSpaceOffers);
+
 module.exports = router
 
