@@ -42,8 +42,8 @@ function DashboardProfile() {
                 {active === "account settings" && <ProfileSettings profileData={profileData} />
                 }
                 {active === "space settings" && profileData.cwSpaceCwID===null &&
-                    <div className="w-full flex flex-col items-center mt-[250px]">
-                        <p className="text-xl">You don't have any create a coworking space yet</p>
+                    <div className="w-full flex flex-col items-center md:mt-[250px] mt-[100px] text-center">
+                        <p className="text-xl font-medium">You don't have any created Coworking space yet</p>
                         <p className="my-6">Create your first Coworking Space Here:</p>
                         <Link to="../createworkspace" className="px-2 py-4 uppercase bg-[#0F4C75] text-white hover:bg-[#197ec2] duration-200"> create working space</Link>
                     </div>

@@ -88,8 +88,7 @@ function CreateFullWorkSpace() {
                 if (response.status === "error") { console.log(response.message) }
                 else if (response.status === "success") {
                     dispatch(setCredentials({...auth , token: response.data.token}))
-                    let resTokenData = jwtDecode(auth.token);
-                    ownerData = resTokenData;
+                    ownerData = jwtDecode(response.data.token);
                     next();
                 }
                 console.log(response)
@@ -107,7 +106,6 @@ function CreateFullWorkSpace() {
         })
             .then(res => res.json())
             .then(response => {
-                console.log(ownerData.cwSpaceCwID)
                 if (response.status === "error") { console.log(response) }
                 else if (response.status === "success") {
                     next()
