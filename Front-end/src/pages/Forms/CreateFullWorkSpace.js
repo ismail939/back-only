@@ -32,7 +32,6 @@ function CreateFullWorkSpace() {
         roomImg: null,
         number: 0
     }
-    let cwId;
     const dispatch = useDispatch();
     const auth = useSelector(store => store.auth);
     const tokenData = jwtDecode(auth.token);
