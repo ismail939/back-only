@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
-import ProfileSettings from "../components/ProfileSettings";
+import ProfileSettings from "../components/ProfileData/ProfileSettings";
 import { Link } from "react-router-dom";
-import SpaceSettings from "../components/SpaceSettings";
-import OfferSeetings from "../components/OfferSettings";
-import RoomSettings from "../components/RoomSettings";
+import SpaceSettings from "../components/ProfileData/SpaceSettings";
+import OfferSeetings from "../components/ProfileData/OfferSettings";
+import RoomSettings from "../components/ProfileData/RoomSettings";
 function DashboardProfile() {
     const [active, setActive] = useState("Personal Information");
     const [cwspace, setCWSpace] = useState();

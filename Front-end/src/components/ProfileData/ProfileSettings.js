@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useUpdateClientMutation, useUpdatePhotoMutation } from "./reduxtoolkit/Slices/apiSlice";
+import { useUpdateClientMutation, useUpdatePhotoMutation } from "../reduxtoolkit/Slices/apiSlice";
 function ProfileSettings(props) {
     const profileData = props.profileData;
     const usertype = useSelector(store => store.auth).usertype;
