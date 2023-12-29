@@ -2,13 +2,9 @@ import { ChevronDown, ChevronUp } from "react-bootstrap-icons";
 import { useState } from "react";
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
-function Filters({handleFilter}) {
+function Filters({handleFilter , priceRange, AdjustPriceRange , ApplyFilter}) {
     const [catdropdown, setCatDropDown] = useState(false)
     const [pricedropdown, setPRiceDropDown] = useState(false)
-    const [value, setValue] = useState([100, 500]);
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
     return (
         <div className="bg-white shadow rounded-md p-5 w-3/4 sm:w-1/2">
             <h2 className="text-xl font-bold mb-5">Filters</h2>
@@ -40,8 +36,8 @@ function Filters({handleFilter}) {
                             <Slider
                                 size="small"
                                 getAriaLabel={() => 'Temperature range'}
-                                value={value}
-                                onChange={handleChange}
+                                value={priceRange}
+                                onChange={e => AdjustPriceRange(e.target.value)}
                                 valueLabelDisplay="auto"
                                 min={100}
                                 max={1000}
@@ -51,7 +47,7 @@ function Filters({handleFilter}) {
                     </div>
                 </div>
                 <div className="mt-10 flex items-center justify-between">
-                    <button className="btn-color px-4 py-2 rounded-lg">
+                    <button className="btn-color px-4 py-2 rounded-lg" onClick={() => ApplyFilter()}>
                         Apply
                     </button>
                     <button className="btn-color px-4 py-2 rounded-lg" onClick={()=> handleFilter()}>

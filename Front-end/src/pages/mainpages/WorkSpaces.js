@@ -12,7 +12,6 @@ export function ShowError() {
     return (
         <div className="flex flex-col items-center text-center">
             <img src={servererror} alt="" className="md:h-[450px] md:w-[500px] h-[300px] w-[300px]"></img>
-            {/* <h2 className="mt-4 text-2xl font-medium">Failed to fetch data</h2> */}
             <p className="text-2xl text-[#1B262C] sec-font">Oops, there is a problem at the moment. try again later</p>
         </div>
     )
@@ -36,6 +35,7 @@ function WorkSpaces() {
     const [searchlist, setSearchList] = useState(false);
     const [fetcherror, setFetchError] = useState(false);
     const [showFilter, setShowFilter] = useState(false);
+    const [priceRange, setPriceRange] = useState([100, 500]);
     const [pageNumber, setPageNumber] = useState(0)
     const cwSpacesPerPage = 10;
     const pagesVisited = pageNumber * cwSpacesPerPage;
@@ -54,7 +54,6 @@ function WorkSpaces() {
         }
         document.addEventListener("mousedown", handler)
     }, [])
-
     const getWorkSpaces = () => {
         fetch("http://localhost:4000/cw_spaces")
             .then(res => res.json())
@@ -82,8 +81,17 @@ function WorkSpaces() {
         setDisplayedCwspaces(soretedData);
     }
     function handleFilter() {
-        console.log("handled")
         setShowFilter(!showFilter)
+    }
+    function ApplyFilter() {
+        const filteredCWs = cwspaces?.filter((workspace) => {
+            return workspace.hourPrice !== null && workspace.hourPrice >= priceRange[0] && workspace.hourPrice <= priceRange[1]
+        })
+        setDisplayedCwspaces(filteredCWs)
+        setShowFilter(false)
+    }
+    function AdjustPriceRange(newValue) {
+        setPriceRange(newValue)
     }
     function changePage(event, value) {
         setPageNumber(value - 1)
@@ -94,7 +102,7 @@ function WorkSpaces() {
     return (
         <div className="flex flex-col relative min-h-screen justify-between">
             {showFilter && <div className="fixed top-0 left-0 w-full h-[100vh] flex items-center justify-center bg-black/[.2] z-20">
-                <Filters handleFilter={handleFilter} />
+                <Filters priceRange={priceRange} handleFilter={handleFilter} AdjustPriceRange={AdjustPriceRange} ApplyFilter={ApplyFilter}/>
             </div>}
             <div className="w-4/5 mx-auto md:mt-[30px] p-5">
                 <div className="relative w-full" ref={menuRef}>
@@ -108,7 +116,7 @@ function WorkSpaces() {
                             onClick={() => { setSearchList(true) }}
                         ></input>
                         <button className="duration-200 ease-in-out btn-color h-full p-4 flex items-center rounded-r-md  text-white"
-                            onClick={() => { if (searchData?.length > 0) setDisplayedCwspaces(searchData) }}><Search className="text-lg" /></button>
+                            onClick={() => { if (searchData?.length > 0) {setDisplayedCwspaces(searchData ); setSearchList(false)} }}><Search className="text-lg" /></button>
                     </div>
                     {(searchData?.length > 0 && searchlist) ? <div className="flex flex-col max-h-60 w-full mt-1 shadow-md rounded-md bg-[#fafafa] overflow-x-hidden absolute z-[90]" >
                         {searchData.map((workspace) => {
@@ -140,7 +148,7 @@ function WorkSpaces() {
                 </div> : <ShowError />
                 }
             </div >
-            {!fetcherror && cwspaces ? <div className="mt-[50px] flex justify-center">
+            {!fetcherror && displayedCwspaces?.length > 0 ? <div className="mt-[50px] flex justify-center">
                 <Pagination
                     count={pageCount}
                     onChange={changePage}
