@@ -1,5 +1,10 @@
 import { Link } from "react-router-dom";
 
+function FooterLink({ title, link }) {
+    return (
+        <li className="hover:underline hover:text-[#BBE1FA] duration-100"><Link to={link}>{title}</Link></li>
+    )
+}
 function Footer() {
     return (
         <div className="w-full mt-[100px] py-5 min-h-[150px] flex items-center" style={{ backgroundColor: "#1B262C" }}>
@@ -11,30 +16,32 @@ function Footer() {
                             <p>Get in touch for enquiries, feedback, complaints and compliments.</p>
                             <p>{"Phone: 13 QGOV (13 64 68)"}</p>
                             <p>Email: Space-s@contact.com</p>
-                            <Link to="dashboard"><button className="py-2 px-3 text-center border border-[#BBE1FA] mt-3 w-full">Contact Us</button></Link>
+                            <Link to="dashboard"><button 
+                            className="py-2 px-3 main-font text-center border border-[#BBE1FA] mt-3 w-full hover:bg-[#BBE1FA] hover:text-[#1B262C] duration-200" 
+                            >Contact Us</button></Link>
                         </div>
                     </div>
                     <div className="flex flex-col gap-2">
                         <h2 className="main-font">Navigation Links</h2>
                         <ul className="flex flex-col text-sm">
-                            <li><Link>Home</Link></li>
-                            <li><Link>Co-Working Spaces</Link></li>
-                            <li><Link>Offers</Link></li>
-                            <li><Link>Events & Workshops</Link></li>
-                            <li><Link>About Us</Link></li>
+                            <FooterLink title="Home" link="/" />
+                            <FooterLink title="Co-Working Spaces" link="workspaces" />
+                            <FooterLink title="Offers" link="offers" />
+                            <FooterLink title="Events & Workshops" link={null} />
+                            <FooterLink title="About Us" link={null} />
                         </ul>
                     </div>
                     <div className="flex flex-col gap-2">
                         <h2 className="main-font">Quick Links</h2>
                         <ul className="flex flex-col text-sm">
-                            <li><Link>FAQ</Link></li>
-                            <li><Link>Terms of Service</Link></li>
-                            <li><Link>Privacy Policy</Link></li>
+                            <FooterLink title="FAQ" link={null} />
+                            <FooterLink title="Terms of Service" link={null} />
+                            <FooterLink title="Privacy Policy" link={null} />
                         </ul>
                     </div>
                 </div>
                 <hr className="mt-8"></hr>
-                <p className="text-center text-white main-font mt-[25px]">Copyright © SPACE S. All rights reserved.</p>
+                <p className="text-center text-white main-font mt-[25px]" style={{fontFamily:"Brush Script MT"}}>Copyright © SPACE S. All rights reserved.</p>
             </div>
         </div>
     )
