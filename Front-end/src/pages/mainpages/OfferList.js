@@ -39,13 +39,13 @@ function OfferList() {
                     <input
                         type="search"
                         className="h-full w-full p-2 border-2 border-solid border-black border-r-0 rounded-l-md focus:border-[#0F4C75] focus:outline-none"
-                        placeholder="Search"
+                        placeholder="Search for Offers of certain workspace"
                         aria-label="Search"
                         onChange={e => getSearchData(e)}
-                        onClick={() => { setSearchList(true) }}
+                        onClick={() => { setSearchList(true) ; console.log(searchData) }}
                     ></input>
                     <button className="duration-200 ease-in-out btn-color h-full p-4 flex items-center rounded-r-md  text-white"
-                        onClick={() => { if (searchData.length > 0) setOffers(searchData) }}><Search className="text-lg" /></button>
+                        onClick={() => { if (searchData.length > 0) {setOffers(searchData) ; setSearchList(false)} }}><Search className="text-lg" /></button>
                 </div>
                 {(searchData.length > 0 && searchlist) ? <div className="flex flex-col max-h-60 w-full mt-1 shadow-md rounded-md bg-[#fafafa] overflow-x-hidden absolute z-[90]" >
                     {searchData.map((workspace) => {

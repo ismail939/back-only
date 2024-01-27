@@ -9,7 +9,6 @@ import RoomSettings from "../components/ProfileData/RoomSettings";
 function DashboardProfile() {
     const [active, setActive] = useState("Personal Information");
     const [cwspace, setCWSpace] = useState();
-    const [dummyState,setDummyState]=useState();
     const user = useSelector(store => store.auth);
     const token = user.token;
     const usertype = user.usertype;

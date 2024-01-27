@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Trash3Fill } from "react-bootstrap-icons";
 function SpaceSettings({cwspace , getCworkingSpaceData}) {
     const [cwSpacePhotos, setCwSpacePhotos] = useState([]);
-    const [img, setImg] = useState([]);
+    const [img, setImg] = useState(null);
     const [imgName, setImgName] = useState("");
     const [description, setDescription] = useState(cwspace?.description);
     const [email, setEmail] = useState(cwspace?.email);
@@ -57,7 +57,6 @@ function SpaceSettings({cwspace , getCworkingSpaceData}) {
                         console.log(data.message)
                     } else if (data.status === "success") {
                         getCworkingSpaceData();
-                        setImg([])
                         setImgName("")
                     }
                 })
@@ -278,7 +277,7 @@ function SpaceSettings({cwspace , getCworkingSpaceData}) {
                 <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Main Photo</h2>
                 <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4" >
                     <div className="w-full md:px-16 px-4">
-                        <img className=" object-cover sm:w-5/6 sm:mx-auto w-full h-[250px] my-4" src={imageUrl} alt="no-picture-added"></img>
+                        <img className=" object-cover sm:w-5/6 sm:mx-auto w-full h-[250px] my-4" src={img ? URL.createObjectURL(img) : imageUrl} alt="no-picture-added"></img>
                         <input className={`hidden`} id="uploadCWMainImg"
                             onChange={(e) => { setImg(e.target.files[0]); setImgName(e.target.files[0]?.name) }}
                             accept=".png,.jpg,.jpeg" type="file" ></input>

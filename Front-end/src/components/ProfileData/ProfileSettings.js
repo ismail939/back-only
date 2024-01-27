@@ -13,7 +13,7 @@ function ProfileSettings(props) {
     const [newPassword, setNewPassword] = useState("");
     const [confrimPassword, setConfirmPassword] = useState("");
     const [phoneNumber, setPhoneNumber] = useState(profileData.phone);
-    const [img, setImg] = useState([]);
+    const [img, setImg] = useState(null);
     const [imgName, setImgName] = useState("");
     const [email, setEmail] = useState(profileData.email);
     const [checkerror, setCheckError] = useState("");
@@ -35,6 +35,7 @@ function ProfileSettings(props) {
         const id = usertype === "owner" ? profileData.ownerID : profileData.clientID
         try {
             updatePhoto({ id: id, credentials: formData , usertype: usertype })
+            setImgName("")
         } catch (error) {
             console.log(error)
         }
@@ -191,6 +192,7 @@ function ProfileSettings(props) {
             return false;
         }
     }
+    const reader = new FileReader();
     const handlePassword = (e) => {
         e.preventDefault();
         if (newPasswordError()) {
@@ -218,7 +220,7 @@ function ProfileSettings(props) {
                 <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Profile Photo</h2>
                 <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4" >
                     <div className="w-full md:px-16 px-4">
-                        <img  className=" object-cover w-60 h-60 p-1 rounded-full ring-2 ring-indigo-300 m-8 " src={imageUrl} alt="no-picture-added"></img>
+                        <img  className=" object-cover w-60 h-60 p-1 rounded-full ring-2 ring-indigo-300 m-8 " src={img ? URL.createObjectURL(img) : imageUrl} alt="no-picture-added"></img>
                         <input className={`hidden`} id="uploadProfileImg"
                             onChange={(e) => { setImg(e.target.files[0]); setImgName(e.target.files[0]?.name) }}
                             accept=".png,.jpg,.jpeg" type="file" ></input>

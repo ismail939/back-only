@@ -11,7 +11,6 @@ function RoomSettings({ cwid }) {
             .then(res => res.json())
             .then(responsedata => {
                 setRooms(responsedata.data);
-                console.log(responsedata.data)
                 if (responsedata.message === "There are No Available Rooms") setNoRooms(true);
             }
             )
