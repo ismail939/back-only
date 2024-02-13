@@ -57,7 +57,7 @@ function Review(props) {
 function WorkSpaceProfile() {
     const params = useParams();
     const token = useSelector(store => store.auth).token;
-    const userData = jwtDecode(token)
+    const userData = token ? jwtDecode(token) : null;
     const [cwSpace, setCWSpace] = useState(null);
     const [cwSpacePhotos, setCWSpacePhotos] = useState([]);
     const [reviews, setReviews] = useState(null);
@@ -116,7 +116,7 @@ function WorkSpaceProfile() {
                 "rate": reviewRate,
                 "dateTime": currentDate,
                 "body": reviewBody,
-                "clientClientID": userData.clientID,
+                "clientClientID": userData?.clientID,
                 "cwSpaceCwID": params.cwID
             }),
         }).then(res => res.json()).then((data) => {
@@ -202,7 +202,7 @@ function WorkSpaceProfile() {
                     {reviews ? reviews.map((review) => {
                         return <Review review={review} key={review.clientClientID + "/" + review.cwSpaceCwID} />
                     }) : <p className="text-center my-[100px] sec-font md:text-xl text-lg">Currently there are now reviews</p>}
-                    {userData.role === "client" ? <div className="lg:w-3/4 w-full mt-4 md:px-10">
+                    {userData?.role === "client" ? <div className="lg:w-3/4 w-full mt-4 md:px-10">
                         <h2 className="mb-4 text-2xl font-bold">Create Review</h2>
                         <textarea className="w-full border border-gray-600 p-2 min-h-[100px]" onChange={e => setReviewBody(e.target.value)}></textarea>
                         <div className="flex items-center gap-5 my-2">

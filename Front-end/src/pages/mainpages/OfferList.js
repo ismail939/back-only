@@ -16,6 +16,7 @@ function OfferList() {
             .then(res => res.json())
             .then(responsedata => {
                 setOffers(responsedata.data);
+                console.log(responsedata.data)
                 setFetchError(false)
                 if(responsedata.status === "error") setStatusResponse("Sorry, there are no offers currently");
                 else if(responsedata.status === "fail") setStatusResponse("Oops something went wrong !");

@@ -10,7 +10,7 @@ function Filters({handleFilter , priceRange, AdjustPriceRange , ApplyFilter}) {
             <h2 className="text-xl font-bold mb-5">Filters</h2>
             <div className="my-3">
                 <div className="flex items-center justify-between font-medium hover:cursor-pointer" onClick={() => setCatDropDown(!catdropdown)}>
-                    <h2 className="text-md">Category</h2>
+                    <h2 className="text-md">Available Rooms</h2>
                     {catdropdown ? <ChevronUp className="text-sm" /> : <ChevronDown className="text-sm" />}
                 </div>
                 <div className={`mt-3 text-gray-700 ${catdropdown ? null : "hidden"}`}>
@@ -27,7 +27,7 @@ function Filters({handleFilter , priceRange, AdjustPriceRange , ApplyFilter}) {
             </div>
             <div className="my-3">
                 <div className="flex items-center justify-between font-medium hover:cursor-pointer" onClick={() => setPRiceDropDown(!pricedropdown)}>
-                    <h2 className="text-md">Price</h2>
+                    <h2 className="text-md">Shared Room Price</h2>
                     {pricedropdown ? <ChevronUp className="text-sm" /> : <ChevronDown className="text-sm" />}
                 </div>
                 <div className={`mt-3 text-gray-700 ${pricedropdown ? null : "hidden"}`}>
