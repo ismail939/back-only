@@ -8,6 +8,7 @@ function OfferList() {
     const [searchlist, setSearchList] = useState(false);
     const [searchData, setSearchData] = useState([]);
     const [offers, setOffers] = useState([]);
+    const [displayedOffers, setDisplayedOffers] = useState([]);
     const [fetcherror, setFetchError] = useState(false);
     const [statusresponse, setStatusResponse] = useState("");
     let menuRef = useRef();
@@ -16,6 +17,7 @@ function OfferList() {
             .then(res => res.json())
             .then(responsedata => {
                 setOffers(responsedata.data);
+                setDisplayedOffers(responsedata.data)
                 console.log(responsedata.data)
                 setFetchError(false)
                 if(responsedata.status === "error") setStatusResponse("Sorry, there are no offers currently");
@@ -46,17 +48,17 @@ function OfferList() {
                         onClick={() => { setSearchList(true) ; console.log(searchData) }}
                     ></input>
                     <button className="duration-200 ease-in-out btn-color h-full p-4 flex items-center rounded-r-md  text-white"
-                        onClick={() => { if (searchData.length > 0) {setOffers(searchData) ; setSearchList(false)} }}><Search className="text-lg" /></button>
+                        onClick={() => { if (searchData.length > 0) {setDisplayedOffers(searchData) ; setSearchList(false)} }}><Search className="text-lg" /></button>
                 </div>
                 {(searchData.length > 0 && searchlist) ? <div className="flex flex-col max-h-60 w-full mt-1 shadow-md rounded-md bg-[#fafafa] overflow-x-hidden absolute z-[90]" >
-                    {searchData.map((workspace) => {
-                        return <Link className="w-full p-3 capitalize hover:bg-gray-200 font-semibold" to={`/workspaces/${workspace.cwSpaceCwID}`}>{workspace.cwSpaceName}</Link>
+                    {searchData.map((offer) => {
+                        return <Link className="w-full p-3 capitalize hover:bg-gray-200 font-semibold" to={`/workspaces/${offer.cwSpaceCwID}`}>{offer.cwSpaceName}</Link>
                     })}
                 </div> : null}
             </div>
             {!fetcherror ? <div>
-                    {offers ? <div className="flex flex-col gap-8 mt-8">
-                        {offers.map((offer) => {
+                    {displayedOffers ? <div className="flex flex-col gap-8 mt-8">
+                        {displayedOffers.map((offer) => {
                             return <OfferCard offer={offer} key={offer.offerID} />
                         })}</div> : <NoDataError response={statusresponse}/>}
                     {/* <div className="mt-[50px] flex justify-center">

@@ -1,5 +1,6 @@
 import Image1 from "../../components/images/HomeImage.jpg"
 import Image2 from "../../components/images/offer1.jpg"
+import sticker from "../../components/images/newsticker.png"
 import Slider from "../../components/Slider";
 import { BoxArrowInRight } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
@@ -14,8 +15,9 @@ function DiscoverCard(props) {
             <div className="w-full relative group h-64">
                 <img className="w-full h-full" src={imageUrl} alt={discover.name}></img>
                 <Link to={`/workspaces/${discover.cwID}`}><div className=" w-full absolute inset-0 duration-500 hover:bg-black hover:opacity-50"></div></Link>
-                <h2 className="absolute top-3 right-1 font-extrabold text-lg text-white text-yellow-400 opacity-0 duration-500
-                            group-hover:-translate-x-5 group-hover:opacity-100">New</h2>
+                {/* <h2 className="absolute top-3 right-1 font-extrabold text-lg text-white text-yellow-400 opacity-0 duration-500
+                            group-hover:-translate-x-5 group-hover:opacity-100">New</h2> */}
+                <img className="w-[70px] h-[70px] absolute top-[-3px] right-[-3px] object-contain" src={sticker} alt={"new"}></img>
             </div>
             <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2 sec-font">{discover.name}</div>
