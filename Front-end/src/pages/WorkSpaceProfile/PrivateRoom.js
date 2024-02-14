@@ -78,13 +78,13 @@ function PrivateRoom() {
                         </div>
                         <Calendar onChange={onDateChange} value={date} className={showdate ? "absolute" : "hidden"} />
                     </div>
-                    <div className="mt-4 flex gap-8">
-                        <div className="w-1/2 px-2 py-3 border rounded-md border-[#0F4C75] grid gap-4 grid-cols-5">
+                    <div className="mt-4 flex gap-8 lg:flex-row flex-col">
+                        <div className="lg:w-1/2 px-2 py-3 border rounded-md border-[#0F4C75] grid gap-4 grid-cols-5">
                             {timeRange.map((value, index) => {
                                 if(index < timeRange.length - 1) return <TimeStamp range={[value, value +1]} />
                             })}
                         </div>
-                        <div className="px-10 text-2xl main-font">
+                        <div className="lg:px-10 text-2xl main-font">
                             <div className="flex gap-4 items-center">Select Number of Persons:<div className="flex items-center gap-3">
                                 <PlusLg className="cursor-pointer hover:text-[#3282B8] duration-200" onClick={() => {if(numPerson < parseInt(room.maxRoomSize)) setNumPersons(numPerson + 1)}}/>
                                 <p className="border border-[#1B262C] py-2 w-12 text-center">{numPerson}</p>
