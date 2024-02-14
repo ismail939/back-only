@@ -18,6 +18,7 @@ import DashboardProfile from './pages/DashboardProfile';
 import WorkSpaceProfile from './pages/WorkSpaceProfile/WorkSpaceProfile';
 import RoomList from './pages/WorkSpaceProfile/RoomList';
 import CreateRoom from './pages/Forms/CreateRoom';
+import PrivateRoom from './pages/WorkSpaceProfile/PrivateRoom';
 function App() {
   return (
     <>
@@ -35,9 +36,12 @@ function App() {
           <Route path='dashboardProfile' element={<DashboardProfile />}></Route>
           <Route path='discoverEdit' element={<DiscoverAdmin />}></Route>
           <Route path='offerEdit' element={<OfferAdmin />}></Route>
-          <Route path='workspaces/:cwID/rooms' element={<RoomList />}></Route>
+          <Route path='workspaces/:cwID/rooms' element={<><Outlet /></>}>
+            <Route path="" element={<RoomList />} />
+            <Route path=":roomid" element={<PrivateRoom />} />
+          </Route>
         </Route>
-        <Route element={<RequireAuth  allowedRoles={["owner"]}/>} >
+        <Route element={<RequireAuth allowedRoles={["owner"]} />} >
           <Route path='createworkspace' element={<CreateFullWorkSpace />}></Route>
           <Route path='createOffer' element={<CreateOffer />}></Route>
           <Route path='createRoom' element={<CreateRoom />}></Route>

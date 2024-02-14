@@ -1,4 +1,5 @@
 import { useState,useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import PageNotFound from "../PageNotFound";
 
@@ -57,7 +58,7 @@ function RoomList(){
                     <div className="grid my-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
                         {
                         shared?.map((room) => {
-                                return <PhotoRow room={room} key={rooms.roomid} />
+                                return <Link to={`${room.roomID}`}><PhotoRow room={room} key={room.roomID} /></Link>
                         })}
                     </div>
                     
@@ -66,7 +67,7 @@ function RoomList(){
                     <h2 className="text-2xl main-font ">Private Rooms</h2>
                     <div className="grid my-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
                     {privatee?.map((room) => {
-                                return <PhotoRow room={room} key={rooms.roomid} />
+                                return <Link to={`${room.roomID}`}><PhotoRow room={room} key={room.roomID} /></Link>
                             })}
                     </div>
                 </div> : null}
@@ -74,7 +75,7 @@ function RoomList(){
                     <h2 className="text-2xl main-font ">Meeting Rooms</h2>
                     <div className="grid my-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
                     {meeting?.map((room) => {
-                                return <PhotoRow room={room} key={rooms.roomid} />
+                                return <Link to={`${room.roomID}`}><PhotoRow room={room} key={room.roomID} /></Link>
                             })}
                     </div>
                 </div> : null}
