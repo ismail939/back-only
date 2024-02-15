@@ -32,6 +32,8 @@ function PrivateRoom() {
             }
             ).catch(error => { console.log(error); });
     }
+    var d =new Date();
+    
     const getWorkSpace = () => {
         fetch(`http://localhost:4000/cw_spaces/${params.cwID}`)
             .then(res => res.json())
@@ -76,7 +78,7 @@ function PrivateRoom() {
                             <Calendar3 className="text-[40px] my-2 cursor-pointer text-[#3282B8] hover:text-[#0F4C75] duration-200" onClick={() => setShowDate(!showdate)} />
                             <p className="text-xl font-bold">{date.toDateString()}</p>
                         </div>
-                        <Calendar onChange={onDateChange} value={date} className={showdate ? "absolute" : "hidden"} />
+                        <Calendar onChange={onDateChange} minDate={new Date()} value={date} className={showdate ? "absolute" : "hidden"} />
                     </div>
                     <div className="mt-4 flex gap-8 lg:flex-row flex-col">
                         <div className="lg:w-1/2 px-2 py-3 border rounded-md border-[#0F4C75] grid gap-4 grid-cols-5">
@@ -91,7 +93,7 @@ function PrivateRoom() {
                                 <DashLg className="cursor-pointer hover:text-[#3282B8] duration-200" onClick={() => {if(numPerson !== parseInt(room.minRoomSize)) setNumPersons(numPerson - 1)}}/>
                             </div>
                             </div>
-                            <p className="mt-4">Total Cost: </p>
+                            <p className="mt-4">{`Total Cost: ${numPerson*room.hourPrice}`}</p>
                             <button className="w-full mt-6 py-2 text-center btn-color text-white">Book</button>
                         </div>
                     </div>
