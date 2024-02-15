@@ -32,7 +32,7 @@ function PrivateRoom() {
             }
             ).catch(error => { console.log(error); });
     }
-    var d =new Date();
+    
     
     const getWorkSpace = () => {
         fetch(`http://localhost:4000/cw_spaces/${params.cwID}`)
@@ -94,7 +94,7 @@ function PrivateRoom() {
                             </div>
                             </div>
                             <p className="mt-4">{`Total Cost: ${numPerson*room.hourPrice}`}</p>
-                            <button className="w-full mt-6 py-2 text-center btn-color text-white">Book</button>
+                            {room.type===`Shared`?<button className="w-full mt-6 py-2 text-center btn-color text-white">Request</button>:<button className="w-full mt-6 py-2 text-center btn-color text-white">Book</button>}
                         </div>
                     </div>
                 </div>
