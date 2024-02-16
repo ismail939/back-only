@@ -52,6 +52,13 @@ module.exports = {
         }
         return false
     },
+    isDateTime: (dateTime)=>{
+        const dateTimePattern = /^\d{4}-\d{2}-\d{2} ([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/
+        if (dateTimePattern.test(dateTime)) {
+            return true
+        }
+        return false
+    },
     isNotNumber: (data) => {
         return isNaN(data)
     }

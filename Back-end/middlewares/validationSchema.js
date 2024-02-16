@@ -364,6 +364,65 @@ const validateUpdatedCw_space = (req) => {
     return errors
 }
 
+const validateBook= (req) => {
+    let data = req.body
+    let errors = []
+    console.log('i am in validate function')
+    if(validator.isEmpty(data.bookingTime)){
+        errors.push("Booking Time is empty")
+    }else if(!validator.isDateTime(data.bookingTime)){
+        errors.push("bookingTime not in dateTime format")
+    }
+
+    if(validator.isEmpty(data.start)){
+        errors.push("Start is empty")
+    }else if(!validator.isDateTime(data.start)){
+        errors.push("start not in dateTime format")
+    }
+
+    if(validator.isEmpty(data.end)){
+        errors.push("End is empty")
+    }else if(!validator.isDateTime(data.end)){
+        errors.push("end not in dateTime format")
+    }
+
+    if(validator.isEmpty(data.roomType)){  
+        errors.push("RoomType is empty")
+    }
+
+    if(validator.isEmpty(data.payment)){
+        errors.push("Payment is empty")
+    }// we check if it is cash or visa or whatever.
+
+    let typesAllowed=['event', 'room']
+    if(validator.isEmpty(data.type)){
+        errors.push("Type is empty")
+    }else if(!typesAllowed.includes(data.type)){
+        errors.push("Not a valid type")
+    }
+
+    if(validator.isEmpty(data.totalCost)){
+        errors.push("Total Cost is empty")
+    }else if(validator.isNotNumber(data.totalCost)){
+        errors.push("totalCost not in number format")
+    }
+
+    if(validator.isEmpty(data.clientClientID)){
+        errors.push("clientClientID is empty")
+    }else if(validator.isNotNumber(data.clientClientID)){
+        errors.push("clientClientID not in number format")
+    }
+
+    if(validator.isEmpty(data.roomRoomID)){
+        errors.push("roomRoomID is empty")
+    }else if(validator.isNotNumber(data.roomRoomID)){
+        errors.push("roomRoomID not in number format")
+    }
+
+    console.log(errors)
+    return errors
+}
+
 module.exports = {
     validateUser,
     validateUpdatedUser,
@@ -372,5 +431,6 @@ module.exports = {
     validateRoom,
     validateUpdatedRoom,
     validateOffer,
-    validateUpdatedOffer
+    validateUpdatedOffer,
+    validateBook
 }
