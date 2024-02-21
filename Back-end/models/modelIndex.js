@@ -9,7 +9,8 @@ const Cw_spacePhotoModel = require("./Cw_spacePhoto")
 const EventModel = require("./Event")
 const EventPhotoModel = require("./EventPhoto");
 const OfferModel = require("./Offer");
-const OwnerModel = require("./Owner") 
+const OwnerModel = require("./Owner")
+const RequestModel = require("./Request"); 
 const ReviewModel = require("./Review")
 const RoomModel = require("./Room")
 const SubscribeModel = require("./Subscribe")
@@ -26,6 +27,7 @@ const Event = EventModel(db, Sequelize)
 const EventPhoto = EventPhotoModel(db, Sequelize)
 const Offer = OfferModel(db, Sequelize);
 const Owner = OwnerModel(db, Sequelize)
+const Request = RequestModel(db, Sequelize)
 const Review = ReviewModel(db, Sequelize)
 const Room = RoomModel(db, Sequelize)
 const Subscribe = SubscribeModel(db, Sequelize)
@@ -36,9 +38,9 @@ const Subscribe = SubscribeModel(db, Sequelize)
 Owner.belongsTo(Cw_space)
 Cw_space.belongsTo(Owner)
 
-// client & room (1 -> many) through book
+// client & room (many -> many) through book
 Client.belongsToMany(Room, { through: Book, as : "client1" })
-Room.belongsToMany(Client, { through: Book, as: "room" });
+Room.belongsToMany(Client, { through: Book, as: "room1" });
 
 // client & cw-space (many -> many) through review
 Client.belongsToMany(Cw_space, { through: Review, as: "client2" });
@@ -46,7 +48,11 @@ Cw_space.belongsToMany(Client, { through: Review, as: "cwSpace1" });
 
 // client & cw-space (many -> many) through subscribe
 Client.belongsToMany(Cw_space, { through: Subscribe, as: "client3" });
-Cw_space.belongsToMany(Client, { through: Subscribe, as : "cwSpace2" });
+Cw_space.belongsToMany(Client, { through: Subscribe, as: "cwSpace2" });
+
+// client & room (many -> many) through book
+Client.belongsToMany(Room, { through: Request, as : "client4" })
+Room.belongsToMany(Client, { through: Request, as: "room2" });
 
 // cw-space & room (1 -> many)
 Cw_space.hasMany(Room)
