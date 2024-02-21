@@ -32,6 +32,10 @@ module.exports = (db, type)=>{
         description: {
             type: type.TEXT,
             allowNull: false
+        },
+        home: {
+            type: type.STRING,
+            allowNull: true
         }
     },{
         timestamps: false 

@@ -1,76 +1,117 @@
-const { Event } = require('../models/modelIndex')
+const { Event, Cw_space } = require("../models/modelIndex");
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 
 
-module.exports ={
-    get: asyncWrapper(
+module.exports = {
+    create: asyncWrapper(
         async (req, res, next) => {
-            const events = await Event.findAll()
-            if (events.length === 0) {
-                const error = appError.create("Events not found", 404, httpStatusCode.ERROR);
-                return next(error);
+            const newEvent = await Event.create(req.body)
+            if (newEvent) {
+                return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Event is Created Successfully" })
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: events }); 
+            const error = appError.create("Unexpected Error, Try Again Later", 400, httpStatusCode.ERROR)
+            return next(error)
+        }
+    ),
+    getAll: asyncWrapper(
+        async (req, res, next) => {
+            const events = await Event.findAll({ raw: true })
+            if (events.length != 0) {
+                for (let i = 0; i < events.length; i++) {
+                let cw_space = await Cw_space.findOne({ raw: true }, {
+                    where: {
+                        cwID: events[i].cwSpaceCwID
+                    }
+                })
+                events[i].cwSpaceName = cw_space.name
+                }
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: events })
+            }
+            const error = appError.create("There are No Available Events", 404, httpStatusCode.ERROR);
+            return next(error);
+        }
+    ),
+    getHome: asyncWrapper(
+        async (req, res, next) => {
+            const eventHome = await Event.findAll({
+                raw: true,
+                where: {
+                    home: "home"
+                }
+            })
+            if (eventHome.length != 0) {
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: eventHome })
+            }
+            const error = appError.create("There are No Available Events", 404, httpStatusCode.ERROR);
+            return next(error);
         }
     ),
     getOne: asyncWrapper(
         async (req, res, next) => {
-            const event = await Event.findAll({
+            const event = await Event.findOne({
                 where: {
-                    ID: req.params.ID
+                    eventID: req.params.eventID
                 }
             })
-            if (event.length === 0) {
-                const error = appError.create("event not found", 404, httpStatusCode.ERROR);
-                return next(error);
+            if (event) {
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: event })
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: event }) 
+            const error = appError.create("Event Not Found", 404, httpStatusCode.ERROR);
+            return next(error);
         }
     ),
-    create: asyncWrapper(
+    getCwSpaceEvents: asyncWrapper(
         async (req, res, next) => {
-            const newEvent = await Event.create(req.body)
-            return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newEvent });
+            const events = await Event.findAll({
+                where: {
+                    cwSpaceCwID: req.params.cwID
+                }
+            })
+            if (events.length != 0) {
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: events });
+            }
+            const error = appError.create("There are No Available Events for This Co-working Space", 404, httpStatusCode.ERROR);
+            return next(error);
         }
     ),
     update: asyncWrapper(
         async (req, res, next) => {
-            const updatedEvent = await Event.findAll({
+            const updatedEvent = await Event.findOne({
                 where: {
-                    ID: req.params.ID
+                    eventID: req.params.eventID
                 }
             });
-            if (updatedEvent.length === 0) {
-                const error = appError.create("Event not found", 404, httpStatusCode.ERROR);
-                return next(error);
+            if (updatedEvent) {
+                await Event.update(req.body, {
+                where: {
+                    eventID: req.params.eventID
+                }
+                });
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Event Updated Successfully" });
             }
-            await Event.update(req.body, {
-                where: {
-                    ID: req.params.ID
-                }
-            });
-            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "updated successfully" });
+            const error = appError.create("Event Not Found", 404, httpStatusCode.ERROR);
+            return next(error);
         }
-    ),  
+    ),
     delete: asyncWrapper(
         async (req, res, next) => {
-            const deletedEvent = await Event.findAll({
+            const deletedEvent = await Event.findOne({
                 where: {
-                    ID: req.params.ID
+                    eventID: req.params.eventID
                 }
             });
-            if (deletedEvent.length === 0) {
-                const error = appError.create("Event not found", 404, httpStatusCode.ERROR);
-                return next(error);
-            }
-            await Event.destroy({
+            if (deletedEvent) {
+                await Event.destroy({
                 where: {
-                    ID: req.params.ID
-                }
-            })
-            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "deleted successfully" });
+                    eventID: req.params.eventID
+                    }
+                })
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Event Deleted Successfully" });
+            }
+            const error = appError.create("Event Not Found", 404, httpStatusCode.ERROR);
+            return next(error);
         }
     )
 } 
