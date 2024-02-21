@@ -13,7 +13,7 @@ function TimeStamp({ booked, range, bookingRange, updateBookingRange }) {
         `}
             onClick={() => {
                 setActive(!active);
-                if (!active)
+                if (!active && !booked)
                     updateBookingRange([...bookingRange , range])
                 else
                 updateBookingRange(bookingRange.filter(item => item[0] !== range[0]))

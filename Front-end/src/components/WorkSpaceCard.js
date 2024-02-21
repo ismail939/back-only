@@ -1,12 +1,21 @@
 import { Link } from 'react-router-dom';
+import { Star, StarFill } from 'react-bootstrap-icons';
+import { useState } from 'react';
 import image from './images/offer1.jpg';
 
 function WorkSpaceCard(props) {
     const cwspace = props.cwspace;
     const imageUrl="http://localhost:4000/images/cw_spaces/"+cwspace.mainPhoto;
-
+    const showFavIcon = props.showFavIcon;
+    const [selected, setSelected] = useState(false)
+    function addToFavourites(){
+        // add api
+    }
+    function RemoveFromFavourites(){
+        //remove api
+    }
     return (
-        <div className="bg-white rounded-xl shadow-md overflow-hidden">
+        <div className="bg-white rounded-xl shadow-md overflow-hidden relative">
             <div className="md:flex">
                 <div className="md:shrink-0">
                     <Link to={`/workspaces/${cwspace.cwID}`}><img className="h-48 w-full object-cover md:h-full md:w-64 hover:scale-110 duration-500" src={imageUrl} alt={cwspace.name}></img></Link>
@@ -17,6 +26,9 @@ function WorkSpaceCard(props) {
                     <p className="mt-2 text-slate-500 sec-font">{cwspace.description}</p>
                 </div>
             </div>
+            {showFavIcon && <div className="absolute top-3 right-3 text-yellow-500 text-xl cursor-pointer hover:text-yellow-600 duration-300" onClick={() => {if(!selected) addToFavourites(); else RemoveFromFavourites(); setSelected(!selected);}}>
+                {selected ? <StarFill /> : <Star/>}
+            </div>}
         </div>
     )
 }

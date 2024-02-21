@@ -97,7 +97,7 @@ function WorkSpaces() {
         setPageNumber(value - 1)
     }
     const displayPages = displayedCwspaces?.slice(pagesVisited, pagesVisited + cwSpacesPerPage).map((cwspace) => {
-        return <WorkSpaceCard cwspace={cwspace} key={cwspace.cwID} />
+        return <WorkSpaceCard cwspace={cwspace} showFavIcon={true} key={cwspace.cwID} />
     })
     return (
         <div className="flex flex-col relative min-h-screen justify-between">

@@ -19,6 +19,7 @@ import WorkSpaceProfile from './pages/WorkSpaceProfile/WorkSpaceProfile';
 import RoomList from './pages/WorkSpaceProfile/RoomList';
 import CreateRoom from './pages/Forms/CreateRoom';
 import BookingRoom from './pages/WorkSpaceProfile/BookingRoom';
+import Favourites from './pages/Favourites';
 function App() {
   return (
     <>
@@ -32,6 +33,9 @@ function App() {
           <Route path=":cwID" element={<WorkSpaceProfile />} />
         </Route>
         <Route path='offers' element={<OfferList />}></Route>
+        <Route element={<RequireAuth allowedRoles={["client"]} />} >
+          <Route path='favourites' element={<Favourites />}></Route>
+        </Route>
         <Route element={<RequireAuth allowedRoles={["owner", "client"]} />} >
           <Route path='dashboardProfile' element={<DashboardProfile />}></Route>
           <Route path='discoverEdit' element={<DiscoverAdmin />}></Route>
