@@ -21,6 +21,10 @@ module.exports = {
                         ownerID: req.body.ownerOwnerID
                     }
             })
+            if(!owner){
+                const error = appError.create("This Owner doesn't exist", 400, httpStatusCode.ERROR)
+                return next(error)
+            }
             if (owner.cwSpaceCwID != null) {
                 const error = appError.create("This Owner Has Already Co-working Space", 400, httpStatusCode.ERROR)
                 const filePath = `./public/images/cw_spaces/${req.body.mainPhoto}`;
