@@ -1,19 +1,11 @@
 module.exports = (db, type)=>{
     return db.define('book',{
-        bookingTime: {
-            type: type.DATE,
-            allowNull: false
-        },
         start: {
             type: type.DATE,
             allowNull: false
         },
         end: {
             type: type.DATE,
-            allowNull: false
-        },
-        roomType: {
-            type: type.STRING,
             allowNull: false
         },
         payment: {  
@@ -28,7 +20,7 @@ module.exports = (db, type)=>{
             type: type.FLOAT,
             allowNull: false
         }
-    },{
-        timestamps: false 
+    },{ 
+        timestamps: true 
     })
 }

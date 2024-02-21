@@ -385,11 +385,7 @@ const validateBook= (req) => {
     }else if(!validator.isDateTime(data.end)){
         errors.push("end not in dateTime format")
     }
-
-    if(validator.isEmpty(data.roomType)){  
-        errors.push("RoomType is empty")
-    }
-
+    
     if(validator.isEmpty(data.payment)){
         errors.push("Payment is empty")
     }// we check if it is cash or visa or whatever.

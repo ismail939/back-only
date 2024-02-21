@@ -1,12 +1,13 @@
 
-const { Book } = require('../models/modelIndex')
+const { Book, Room } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 const { validateBook } = require('../middlewares/validationSchema');
+const sequelize = require('sequelize')
 
 
-module.exports ={
+module.exports = {
     get: asyncWrapper(
         async (req, res, next) => {
             const books = await Book.findAll()
@@ -14,7 +15,53 @@ module.exports ={
                 const error = appError.create("Books not found", 404, httpStatusCode.ERROR);
                 return next(error);
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: books }); 
+            return res.json({ status: httpStatusCode.SUCCESS, data: books });
+        }
+    ),
+    getCwSpaceBookings: asyncWrapper(
+        async (req, res, next) => {
+            
+            // get a list of roomRoomIDs and find any bookings with included ids.
+            const rooms = await Room.findAll({
+                where: {
+                    cwSpaceCwID: req.params.cwSpaceCwID
+                }
+            })
+            let roomsIDs = [] 
+            for (let index = 0; index < rooms.length; index++) {
+                roomsIDs.push(rooms[index].roomID)
+            }
+            
+            const books = await Book.findAll({
+                where: {
+                    roomRoomID:{[sequelize.Op.in]: roomsIDs}
+                }
+            })
+            
+            if (books.length === 0) {
+                const error = appError.create("Books not found", 404, httpStatusCode.ERROR);
+                return next(error);
+            }
+            return res.json({ status: httpStatusCode.SUCCESS, data: books });
+        }
+    ),
+    getAllBookingsOneRoom:asyncWrapper(
+        async (req, res, next)=>{
+            const books = await Book.findAll({
+                where: {
+                    roomRoomID: req.params.roomID
+                }
+            })
+            let times = [] // list of objects each object is a list
+            for (let index = 0; index < books.length; index++) {
+                times.push([books[index].start.getHours(), books[index].end.getHours()])
+            }
+            console.log(times)
+            if (books.length === 0) {
+                const error = appError.create("book not found", 404, httpStatusCode.ERROR);
+                return next(error);
+            }
+            return res.json({ status: httpStatusCode.SUCCESS, data: times })
         }
     ),
     getOne: asyncWrapper(
@@ -29,18 +76,18 @@ module.exports ={
                 const error = appError.create("book not found", 404, httpStatusCode.ERROR);
                 return next(error);
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: book }) 
+            return res.json({ status: httpStatusCode.SUCCESS, data: book })
         }
     ),
     create: asyncWrapper(
         async (req, res, next) => {
             console.log(req.body)
-            req.body.payment='cash'
+            req.body.payment = 'cash'
             let errors = validateBook(req);
             if (errors.length != 0) {
                 const error = appError.create(errors, 400, httpStatusCode.ERROR)
                 return next(error)
-            }  
+            }
             const newBook = await Book.create(req.body)
             return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newBook });
         }
@@ -65,7 +112,7 @@ module.exports ={
             });
             return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "updated successfully" });
         }
-    ),  
+    ),
     delete: asyncWrapper(
         async (req, res, next) => {
             const deletedBook = await Book.findAll({
