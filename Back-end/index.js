@@ -13,6 +13,7 @@ const eventRouter = require("./routes/event");
 const subscribeRouter = require("./routes/subscribe");
 const ownerRouter = require("./routes/owner");
 const roomRouter = require("./routes/room");
+const requestRouter = require("./routes/request");
 const reviewRouter = require("./routes/review");
 const eventPhotoRouter = require("./routes/eventPhoto");
 const offerRouter = require('./routes/offer')
@@ -32,6 +33,7 @@ app.use("/subscribe", subscribeRouter);
 app.use("/clients", clientRouter);
 app.use("/owners", ownerRouter);
 app.use("/rooms", roomRouter);
+app.use("/requests", requestRouter);
 app.use("/reviews", reviewRouter);
 app.use("/eventPhotos", eventPhotoRouter);
 app.use('/offers', offerRouter)

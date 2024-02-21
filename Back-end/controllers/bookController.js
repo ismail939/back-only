@@ -82,7 +82,6 @@ module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
             console.log(req.body)
-            req.body.payment = 'cash'
             let errors = validateBook(req);
             if (errors.length != 0) {
                 const error = appError.create(errors, 400, httpStatusCode.ERROR)

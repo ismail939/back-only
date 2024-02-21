@@ -50,7 +50,7 @@ Cw_space.belongsToMany(Client, { through: Review, as: "cwSpace1" });
 Client.belongsToMany(Cw_space, { through: Subscribe, as: "client3" });
 Cw_space.belongsToMany(Client, { through: Subscribe, as: "cwSpace2" });
 
-// client & room (many -> many) through book
+// client & room (many -> many) through request
 Client.belongsToMany(Room, { through: Request, as : "client4" })
 Room.belongsToMany(Client, { through: Request, as: "room2" });
 
@@ -99,4 +99,5 @@ module.exports = {
     Review,
     Room,
     Subscribe,
+    Request
 }
