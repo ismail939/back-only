@@ -18,7 +18,7 @@ import DashboardProfile from './pages/DashboardProfile';
 import WorkSpaceProfile from './pages/WorkSpaceProfile/WorkSpaceProfile';
 import RoomList from './pages/WorkSpaceProfile/RoomList';
 import CreateRoom from './pages/Forms/CreateRoom';
-import PrivateRoom from './pages/WorkSpaceProfile/PrivateRoom';
+import BookingRoom from './pages/WorkSpaceProfile/BookingRoom';
 function App() {
   return (
     <>
@@ -38,7 +38,7 @@ function App() {
           <Route path='offerEdit' element={<OfferAdmin />}></Route>
           <Route path='workspaces/:cwID/rooms' element={<><Outlet /></>}>
             <Route path="" element={<RoomList />} />
-            <Route path=":roomid" element={<PrivateRoom />} />
+            <Route path=":roomid" element={<BookingRoom />} />
           </Route>
         </Route>
         <Route element={<RequireAuth allowedRoles={["owner"]} />} >
