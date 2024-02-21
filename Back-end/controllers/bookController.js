@@ -1,5 +1,5 @@
 
-const { Book, Room } = require('../models/modelIndex')
+const { Book, Room , Client} = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
@@ -19,7 +19,7 @@ module.exports = {
         }
     ),
     getCwSpaceBookings: asyncWrapper(
-        async (req, res, next) => {
+        async (req, res, next) => { 
             
             // get a list of roomRoomIDs and find any bookings with included ids.
             const rooms = await Room.findAll({
@@ -32,12 +32,19 @@ module.exports = {
                 roomsIDs.push(rooms[index].roomID)
             }
             
-            const books = await Book.findAll({
-                where: {
+            let books = await Book.findAll({
+                raw: true, where: {
                     roomRoomID:{[sequelize.Op.in]: roomsIDs}
                 }
             })
-            
+            for (let index = 0; index < books.length; index++)  {
+                let clientClientID = books[index].clientClientID
+                let client = await Client.findOne({raw: true, where: {
+                    clientID: clientClientID
+                }})
+                books[index].username = client.username
+            }
+
             if (books.length === 0) {
                 const error = appError.create("Books not found", 404, httpStatusCode.ERROR);
                 return next(error);
@@ -56,7 +63,6 @@ module.exports = {
             for (let index = 0; index < books.length; index++) {
                 times.push([books[index].start.getHours(), books[index].end.getHours()])
             }
-            console.log(times)
             if (books.length === 0) {
                 const error = appError.create("book not found", 404, httpStatusCode.ERROR);
                 return next(error);
