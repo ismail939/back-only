@@ -39,11 +39,9 @@ module.exports = {
             })
             for (let index = 0; index < books.length; index++)  {
                 let clientClientID = books[index].clientClientID
-                console.log(clientClientID)
                 let client = await Client.findOne({raw: true, where: {
                     clientID: clientClientID
                 }})
-                console.log(client) 
                 books[index].username = client.username
             }
 
@@ -65,7 +63,6 @@ module.exports = {
             for (let index = 0; index < books.length; index++) {
                 times.push([books[index].start.getHours(), books[index].end.getHours()])
             }
-            console.log(times)
             if (books.length === 0) {
                 const error = appError.create("book not found", 404, httpStatusCode.ERROR);
                 return next(error);
