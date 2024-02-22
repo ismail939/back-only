@@ -28,6 +28,7 @@ module.exports = {
     getCw_spaceRequests: asyncWrapper(
         async (req, res, next) => {
             const rooms = await Room.findAll({
+                raw: true,
                 where: {
                     cwSpaceCwID: req.params.cwSpaceID
                 }
@@ -45,7 +46,7 @@ module.exports = {
             if (requests.length != 0) {
                 for (let i = 0; i < requests.length; i++) {
                     for (let j = 0; j < rooms.length; j++) {
-                        if (requests[i].roomRoomID = rooms[j].roomID) {
+                        if (requests[i].roomRoomID == rooms[j].roomID) {
                             requests[i].roomType = rooms[j].type
                             requests[i].roomNumber = rooms[j].number
                             requests[i].roomImg = rooms[j].img;
