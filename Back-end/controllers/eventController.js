@@ -20,7 +20,8 @@ module.exports = {
             const events = await Event.findAll({ raw: true })
             if (events.length != 0) {
                 for (let i = 0; i < events.length; i++) {
-                let cw_space = await Cw_space.findOne({ raw: true }, {
+                let cw_space = await Cw_space.findOne( {
+                    raw: true,
                     where: {
                         cwID: events[i].cwSpaceCwID
                     }
