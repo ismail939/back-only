@@ -23,6 +23,7 @@ module.exports = (db, type)=>{
         },
         capacity: {
             type: type.INTEGER,
+            defaultValue: 0,
             allowNull: false,
         },
         maxCapacity: {
