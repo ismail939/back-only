@@ -65,9 +65,6 @@ function OfferList() {
                         <Pagination />
                     </div> */}
                 </div> : <ShowError />}
-            {/* <div className="flex flex-col gap-8 mt-8">
-                <Card cwspace={{cwID:"1" , name:"Share room Offer" , description:"Experience the camaraderie of shared travel moments at an unbeatable offer! Book our shared rooms now and enjoy a limited-time 50% off, making your stay both affordable and memorable. "}}/>
-            </div> */}
         </div>
     )
 }
