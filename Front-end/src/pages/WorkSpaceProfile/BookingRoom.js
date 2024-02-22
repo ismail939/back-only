@@ -13,7 +13,7 @@ function TimeStamp({ booked, range, bookingRange, updateBookingRange }) {
         `}
             onClick={() => {
                 setActive(!active);
-                if (!active)
+                if (!active && !booked)
                     updateBookingRange([...bookingRange, range])
                 else
                     updateBookingRange(bookingRange.filter(item => item[0] !== range[0]))
@@ -31,7 +31,7 @@ function BookingRoom() {
     const [showCal, setShowCal] = useState(false)
     const [timeRange, setTimeRange] = useState([]);
     const [numPerson, setNumPersons] = useState(3)
-    const [bookedTimes, setBookesTimes] = useState([[12,13]])
+    const [bookedTimes, setBookesTimes] = useState([])
     const [bookingRange, setBookingRange] = useState([])
     const roomImageUrl = "http://localhost:4000/images/rooms/";
     const getRoom = () => {
@@ -92,6 +92,16 @@ function BookingRoom() {
             }
             );
     }
+    function createRequest() {
+        fetch(`http://localhost:4000/books/roomof/${params.roomid}`)
+            .then(res => res.json())
+            .then(responsedata => {
+                if (responsedata.status === "error") {
+                } else if (responsedata.status === "success") {
+                }
+            }
+            );
+    }
     useEffect(() => {
         getWorkSpace();
         getBookedTimes(new Date())
@@ -100,14 +110,14 @@ function BookingRoom() {
         setDate(selectedDate)
         getBookedTimes(selectedDate)
     }
-    function isBooked(hour){
-        if(bookedTimes.length === 0) return false
-        else{
-            for(let i = 0 ; i < bookedTimes.length ; i++){
-                if(hour === bookedTimes[i][0]){
+    function isBooked(hour) {
+        if (bookedTimes.length === 0) return false
+        else {
+            for (let i = 0; i < bookedTimes.length; i++) {
+                if (hour === bookedTimes[i][0]) {
                     return true
                 }
-                
+
             }
         }
         return false;
@@ -128,22 +138,25 @@ function BookingRoom() {
                     </div>
                 </div>
                 <div className="mt-[50px]">
-                    <div className="relative">
+                    {room.type === `Private` && <div className="relative">
                         <div className="flex gap-5 items-center">
                             <Calendar3 className="text-[40px] my-2 cursor-pointer text-[#3282B8] hover:text-[#0F4C75] duration-200" onClick={() => setShowCal(!showCal)} />
                             <p className="text-xl font-bold">{date.toDateString()}</p>
                         </div>
                         <Calendar onChange={onDateChange} minDate={new Date()} value={date} className={showCal ? "absolute" : "hidden"} />
-                    </div>
+                    </div>}
                     <div className="mt-4 flex gap-8 lg:flex-row flex-col">
-                        <div className="lg:w-1/2 px-2 py-3 border rounded-md border-[#0F4C75] grid gap-4 grid-cols-5">
+                        {room.type === `Private` ? <div className="lg:w-1/2 px-2 py-3 border rounded-md border-[#0F4C75] grid gap-4 grid-cols-5">
                             {timeRange.map((value, index) => {
                                 if (index < timeRange.length - 1)
                                     if (!isBooked(value))
                                         return <TimeStamp range={[value, value + 1]} booked={false} bookingRange={bookingRange} updateBookingRange={updateBookingRange} />
                                     else return <TimeStamp range={[value, value + 1]} booked={true} bookingRange={bookingRange} updateBookingRange={updateBookingRange} />
                             })}
-                        </div>
+                        </div> :
+                            <div className="lg:w-1/2 px-2 py-3 text-xl main-font">
+                                Please select the number of persons before requesting a place in the room 
+                            </div>}
                         <div className="lg:px-10 text-2xl main-font">
                             <div className="flex gap-4 items-center">Select Number of Persons:<div className="flex items-center gap-3">
                                 <PlusLg className="cursor-pointer hover:text-[#3282B8] duration-200" onClick={() => { if (numPerson < parseInt(room.maxRoomSize)) setNumPersons(numPerson + 1) }} />
@@ -151,7 +164,7 @@ function BookingRoom() {
                                 <DashLg className="cursor-pointer hover:text-[#3282B8] duration-200" onClick={() => { if (numPerson !== parseInt(room.minRoomSize)) setNumPersons(numPerson - 1) }} />
                             </div>
                             </div>
-                            <p className="mt-4">{bookingRange.length > 0 ? `Total Cost: ${numPerson * room.hourPrice * bookingRange.length}  L.E` : "Total Cost: No time selected"}</p>
+                            <p className="mt-4">Total Cost: {room.type === `Private` ? bookingRange.length > 0 ? `${numPerson * room.hourPrice * bookingRange.length }  L.E` : "No time selected" : `${numPerson * room.hourPrice}  L.E`}</p>
                             <button className="w-full mt-6 py-2 text-center btn-color text-white" onClick={() => console.log(bookingRange)}>{room.type === `Shared` ? "Request" : "Book"}</button>
                         </div>
                     </div>
