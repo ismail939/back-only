@@ -31,7 +31,7 @@ function BookingRoom() {
     const [showCal, setShowCal] = useState(false)
     const [timeRange, setTimeRange] = useState([]);
     const [numPerson, setNumPersons] = useState(3)
-    const [bookedTimes, setBookesTimes] = useState([[12,13]])
+    const [bookedTimes, setBookesTimes] = useState([])
     const [bookingRange, setBookingRange] = useState([])
     const roomImageUrl = "http://localhost:4000/images/rooms/";
     const getRoom = () => {

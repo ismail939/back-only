@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Star, StarFill } from 'react-bootstrap-icons';
+import { Star, StarFill, TrashFill } from 'react-bootstrap-icons';
 import { useState } from 'react';
 import image from './images/offer1.jpg';
 
@@ -28,6 +28,9 @@ function WorkSpaceCard(props) {
             </div>
             {showFavIcon && <div className="absolute top-3 right-3 text-yellow-500 text-xl cursor-pointer hover:text-yellow-600 duration-300" onClick={() => {if(!selected) addToFavourites(); else RemoveFromFavourites(); setSelected(!selected);}}>
                 {selected ? <StarFill /> : <Star/>}
+            </div>}
+            {!showFavIcon && <div className="absolute top-3 right-3 text-red-500 text-xl cursor-pointer hover:text-red-600 duration-300" onClick={() => {if(!selected) addToFavourites(); else RemoveFromFavourites(); setSelected(!selected);}}>
+                <TrashFill />
             </div>}
         </div>
     )
