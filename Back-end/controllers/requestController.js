@@ -2,6 +2,7 @@ const { Request, Client, Room } = require("../models/modelIndex");
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
+const sequelize = require("sequelize");
 
 module.exports = {
     create: asyncWrapper(
@@ -28,7 +29,7 @@ module.exports = {
         async (req, res, next) => {
             const rooms = await Room.findAll({
                 where: {
-                    cwSpaceCwID: req.params.cwSpaceCwID
+                    cwSpaceCwID: req.params.cwSpaceID
                 }
             })
             let roomsIDs = []

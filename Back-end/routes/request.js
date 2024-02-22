@@ -7,10 +7,10 @@ router.route("/")
     .get(requestController.getAll)
     .post(requestController.create);
 
-//router.route("/:cwSpaceID")
-//    .get(requestController.getCw_spaceRequests)
+router.route("/:cwSpaceID")
+    .get(requestController.getCw_spaceRequests)
 
-router.route("/:clientID/:cwSpaceID")
+router.route("/:clientID/:roomID")
     .patch(requestController.update)
     .delete(requestController.delete);
 
