@@ -10,6 +10,7 @@ module.exports = (db, type)=>{
         },
         payment: {  
             type: type.STRING,
+            defaultValue: 'cash',
             allowNull: false
         },
         type: {
