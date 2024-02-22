@@ -419,6 +419,49 @@ const validateBook= (req) => {
     return errors
 }
 
+const validateEvent = (req) => {
+    let data = req.body
+    let errors = []
+    if (validator.isEmpty(data.name)) {
+        errors.push("Event Name is Required");
+    }
+
+    if (validator.isEmpty(data.start)) {
+        errors.push("Event Start Date is Required");
+    } else {
+        if (!validator.isDate(data.start)) {
+            errors.push('Event Start Date Not in Date Format')
+        }
+    }
+
+    if (validator.isEmpty(data.end)) {
+        errors.push("Event End Date is Required");
+    } else {
+        if (!validator.isDate(data.end)) {
+            errors.push('Event End Date Not in Date Format')
+        }
+    }
+
+    if (validator.isEmpty(data.price)) {
+        errors.push("Event price is Required");
+    }
+    else if (validator.isNotNumber(data.price)) {
+        errors.push("Event price Not in Price Format")
+    }
+
+    if (validator.isEmpty(data.maxCapacity)) {
+        errors.push("Maximum Capacity is Required");
+    }
+    else if (validator.isNotNumber(data.maxCapacity)) {
+        errors.push("Maximum Capacity Not in Number Format");
+    }
+    if (validator.isEmpty(data.description)) {
+        errors.push("Description is Required");
+    }
+
+    return errors
+}
+
 module.exports = {
     validateUser,
     validateUpdatedUser,
@@ -428,5 +471,6 @@ module.exports = {
     validateUpdatedRoom,
     validateOffer,
     validateUpdatedOffer,
-    validateBook
+    validateBook,
+    validateEvent
 }
