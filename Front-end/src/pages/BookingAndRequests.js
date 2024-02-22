@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 function BookingAndRequests() {
     const [rooms, setRooms] = useState([]);
-    const [bookings, setBookings] = useState([]);
-    const getBookings = () => {
-        fetch(`http://localhost:4000/cw_spaces/`)
+    const [requests, setRequests] = useState([]);
+    const getRequests = () => {
+        fetch(`http://localhost:4000/requests/1`)
             .then(res => res.json())
             .then(responsedata => {
-                setBookings(responsedata.data)
+                setRequests(responsedata.data)
             })
     }
     useEffect(() => {
-        getBookings();
+        getRequests();
     }, [])
     function SharedRoomCard(props) {
         const room = props.room;
@@ -25,8 +25,8 @@ function BookingAndRequests() {
                     </div>
                     <div className="px-8 py-2">
                         <h1 className="capitalize block font-semibold text-lg leading-tight font-medium text-black hover:text-[#3282B8] duration-300 sec-font">{`${room?.name}`}</h1>
-                        <div className="uppercase mt-1  tracking-wide text-sm text-[#0F4C75] font-semibold sec-font">{`total :${room?.total}         avaliable:${room?.avaliable} `}</div>
-                        <div>{`user ${user?.username} want requested ${user?.amount}`}</div>
+                        <div className="uppercase mt-1  tracking-wide text-sm text-[#0F4C75] font-semibold sec-font">{` `}</div>
+                        <div>{`user ${user?.username}  requested ${user?.amount} people`}</div>
                         <button className="btn-color">Accept</button>
                         <button className="bg-red-500 hover:bg-red-300">Delete</button>
                     </div>
@@ -54,15 +54,16 @@ function BookingAndRequests() {
             </div>
         )
     }
+    const pending = requests?.filter(request => request.status === "pending");
     return (
         <>
             <div>
                 <div className="w-3/4">
                     {bookings.map((roomi) => {
-                        if (roomi.type==='Shared') {
-                            <SharedRoomCard props={roomi}  />
+                        if (roomi.type === 'Shared') {
+                            <SharedRoomCard props={roomi} />
                         }
-                        else  {
+                        else {
                             <PrivateRoomCard props={roomi} />
                         }
                     })}
