@@ -39,8 +39,8 @@ Owner.belongsTo(Cw_space)
 Cw_space.belongsTo(Owner)
 
 // client & room (many -> many) through book
-Client.belongsToMany(Room, { through: Book, as : "client1" })
-Room.belongsToMany(Client, { through: Book, as: "room1" });
+Client.belongsToMany(Room, { through: {model: Book, unique: false}, as : "client1" })
+Room.belongsToMany(Client, { through: {model: Book, unique: false}, as: "room1" });
 
 // client & cw-space (many -> many) through review
 Client.belongsToMany(Cw_space, { through: Review, as: "client2" });
@@ -50,7 +50,7 @@ Cw_space.belongsToMany(Client, { through: Review, as: "cwSpace1" });
 Client.belongsToMany(Cw_space, { through: Subscribe, as: "client3" });
 Cw_space.belongsToMany(Client, { through: Subscribe, as: "cwSpace2" });
 
-// client & room (many -> many) through request
+// client & room (many -> many) through request 
 Client.belongsToMany(Room, { through: Request, as : "client4" })
 Room.belongsToMany(Client, { through: Request, as: "room2" });
 
