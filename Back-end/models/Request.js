@@ -4,6 +4,10 @@ module.exports = (db, type)=>{
             type: type.STRING,
             defaultValue: "pending",
             allowNull: false
+        },
+        numberOfPersons: {
+            type: type.INTEGER,
+            allowNull: false
         }
     },{
         timestamps: true 
