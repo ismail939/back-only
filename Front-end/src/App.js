@@ -20,7 +20,7 @@ import RoomList from './pages/WorkSpaceProfile/RoomList';
 import CreateRoom from './pages/Forms/CreateRoom';
 import Requests from './pages/Requests';
 import BookingRoom from './pages/WorkSpaceProfile/BookingRoom';
-
+import Boooks from './pages/Boooks';
 function App() {
   return (
     <>
@@ -29,7 +29,8 @@ function App() {
         <Route path='/' element={<Home />}></Route>
         <Route path='login' element={<Login />}></Route>
         <Route path='sign-up' element={<SignUp />}></Route>
-        <Route path='BookingAndRequests' element={<Requests />}></Route>
+        <Route path='Requests' element={<Requests />}></Route>
+        <Route path='Books' element={<Boooks />}></Route>
         <Route path='workspaces' element={<><Outlet /></>}>
           <Route path="" element={<WorkSpaces />} />
           <Route path=":cwID" element={<WorkSpaceProfile />} />

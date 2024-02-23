@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 function Requests() {
     const [requests, setRequests] = useState([]);
     const getRequests = () => {
-        fetch(`http://localhost:4000/requests/32`)
+        fetch(`http://localhost:4000/requests/1`)
             .then(res => res.json())
             .then(responsedata => {
                 setRequests(responsedata.data)
@@ -64,7 +64,8 @@ function Requests() {
                     </div>
                     <div className="px-8 py-2">
                         <h1 className="capitalize font-semibold text-xl leading-tight text-black main-font">{`${room?.roomType} Room ${room?.roomNumber}`}</h1>
-                        <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`${room?.createdAt.slice(0, 10)} ${room?.createdAt.slice(11, 19)} `}</div>
+                        <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`${room?.createdAt.slice(0, 10)} ${room?.createdAt.slice(11, 19)} Created `}</div>
+                        <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`${room?.updatedAt.slice(0, 10)} ${room?.updatedAt.slice(11, 19)} Updated`}</div>
                         <div className="flex items-center gap-2 my-2">
                             <img className="w-10 h-10 object-cover rounded-full" src={clientImage} alt={"no image found"}></img>
                             <div>{`${room?.clientName}  requested ${room?.numberOfPersons} people`}</div>
@@ -90,7 +91,8 @@ function Requests() {
                     </div>
                     <div className="px-8 py-2">
                         <h1 className="capitalize text-lg leading-tight text-xl main-font">{`${room?.roomType} Room ${room?.roomNumber}`}</h1>
-                        <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`${room?.createdAt.slice(0, 10)} ${room?.createdAt.slice(11, 19)} `}</div>
+                        <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`${room?.createdAt.slice(0, 10)} ${room?.createdAt.slice(11, 19)} Created `}</div>
+                        <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`${room?.updatedAt.slice(0, 10)} ${room?.updatedAt.slice(11, 19)} Updated`}</div>
                         <div className="flex items-center gap-2 my-2">
                             <img className="w-10 h-10 object-cover rounded-full" src={clientImage} alt={"no image found"}></img>
                             <div>{`${room?.clientName}  requested ${room?.numberOfPersons} people`}</div>
