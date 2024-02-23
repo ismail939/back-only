@@ -36,14 +36,14 @@ const Subscribe = SubscribeModel(db, Sequelize)
 // relationship
 // owner & cw-space (1 -> 1)
 Owner.belongsTo(Cw_space)
-Cw_space.belongsTo(Owner)
+Cw_space.belongsTo(Owner) 
 
 // client & room (many -> many) through book
 Client.belongsToMany(Room, { through: {model: Book, unique: false}, as : "client1" })
 Room.belongsToMany(Client, { through: {model: Book, unique: false}, as: "room1" });
 
 // client & cw-space (many -> many) through review
-Client.belongsToMany(Cw_space, { through: Review, as: "client2" });
+Client.belongsToMany(Cw_space, { through: Review, as: "client2" }); 
 Cw_space.belongsToMany(Client, { through: Review, as: "cwSpace1" });
 
 // client & cw-space (many -> many) through subscribe
@@ -78,6 +78,7 @@ Offer.belongsTo(Cw_space)
 // event & event photos (1-> many)
 Event.hasMany(EventPhoto)
 EventPhoto.belongsTo(Event)
+
 
 
 
