@@ -1,5 +1,10 @@
 module.exports = (db, type)=>{
     return db.define('book',{
+        bookID:{
+            type: type.INTEGER,
+            autoIncrement: true, 
+            primaryKey: true
+        },
         start: {
             type: type.DATE,
             allowNull: false
@@ -7,7 +12,7 @@ module.exports = (db, type)=>{
         end: {
             type: type.DATE,
             allowNull: false
-        },
+        }, 
         payment: {  
             type: type.STRING,
             defaultValue: 'cash',

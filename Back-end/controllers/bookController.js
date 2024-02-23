@@ -87,12 +87,34 @@ module.exports = {
     ),
     create: asyncWrapper(
         async (req, res, next) => {
-            console.log(req.body)
+            // date, range of hours
+            console.log(req.body) 
             let errors = validateBook(req);
             if (errors.length != 0) {
                 const error = appError.create(errors, 400, httpStatusCode.ERROR)
                 return next(error)
             }
+            req.body.start = req.body.date+' '+req.body.times[0]+":00:00"
+            req.body.end = req.body.date+' '+req.body.times[1]+":00:00"
+            // check if this date exists already
+            const booked = await Book.findOne({raw: true, where: {
+                start: {
+                    [sequelize.Op.lt]: req.body.end
+                },
+                end: {
+                    [sequelize.Op.gt]: req.body.start
+                }
+            }})
+            console.log(booked)
+
+            if(booked!=null){
+                console.log(booked)
+                const error = appError.create("This slot is not valid", 400, httpStatusCode.ERROR);
+                return next(error);
+            }
+            delete req.body.date
+            delete req.body.times
+            console.log(req.body)
             const newBook = await Book.create(req.body)
             return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newBook });
         }
