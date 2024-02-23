@@ -368,23 +368,18 @@ const validateBook= (req) => {
     let data = req.body
     let errors = []
     console.log('i am in validate function')
-    if(validator.isEmpty(data.bookingTime)){
-        errors.push("Booking Time is empty")
-    }else if(!validator.isDateTime(data.bookingTime)){
-        errors.push("bookingTime not in dateTime format")
+    if(validator.isEmpty(data.date)){
+        errors.push("date is empty")
+    }else if(!validator.isDate(data.date)){
+        errors.push("date not in date format")
     }
 
-    if(validator.isEmpty(data.start)){
-        errors.push("Start is empty")
-    }else if(!validator.isDateTime(data.start)){
-        errors.push("start not in dateTime format")
+    if(validator.isEmpty(data.times)){
+        errors.push("times is empty")
+    }else if(!validator.isTimes(data.times)){
+        errors.push("times not in times format")
     }
 
-    if(validator.isEmpty(data.end)){
-        errors.push("End is empty")
-    }else if(!validator.isDateTime(data.end)){
-        errors.push("end not in dateTime format")
-    }
     
     if(validator.isEmpty(data.payment)){
         errors.push("Payment is empty")
@@ -419,6 +414,49 @@ const validateBook= (req) => {
     return errors
 }
 
+const validateEvent = (req) => {
+    let data = req.body
+    let errors = []
+    if (validator.isEmpty(data.name)) {
+        errors.push("Event Name is Required");
+    }
+
+    if (validator.isEmpty(data.start)) {
+        errors.push("Event Start Date is Required");
+    } else {
+        if (!validator.isDate(data.start)) {
+            errors.push('Event Start Date Not in Date Format')
+        }
+    }
+
+    if (validator.isEmpty(data.end)) {
+        errors.push("Event End Date is Required");
+    } else {
+        if (!validator.isDate(data.end)) {
+            errors.push('Event End Date Not in Date Format')
+        }
+    }
+
+    if (validator.isEmpty(data.price)) {
+        errors.push("Event price is Required");
+    }
+    else if (validator.isNotNumber(data.price)) {
+        errors.push("Event price Not in Price Format")
+    }
+
+    if (validator.isEmpty(data.maxCapacity)) {
+        errors.push("Maximum Capacity is Required");
+    }
+    else if (validator.isNotNumber(data.maxCapacity)) {
+        errors.push("Maximum Capacity Not in Number Format");
+    }
+    if (validator.isEmpty(data.description)) {
+        errors.push("Description is Required");
+    }
+
+    return errors
+}
+
 module.exports = {
     validateUser,
     validateUpdatedUser,
@@ -428,5 +466,6 @@ module.exports = {
     validateUpdatedRoom,
     validateOffer,
     validateUpdatedOffer,
-    validateBook
+    validateBook,
+    validateEvent
 }
