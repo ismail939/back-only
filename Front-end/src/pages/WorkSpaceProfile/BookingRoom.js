@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Calendar3, PlusLg, DashLg, PeopleFill, ClockFill } from "react-bootstrap-icons";
+import { Calendar3, PlusLg, DashLg, PeopleFill, ClockFill, InfoCircleFill } from "react-bootstrap-icons";
 import Calendar from 'react-calendar';
 import PageNotFound from "../PageNotFound";
 import { useSelector } from "react-redux";
@@ -24,7 +24,7 @@ function TimeStamp({ booked, range, bookingRange, updateBookingRange }) {
         </div>
     )
 }
-function SuccessMessage({ room,numPerson, cost, bookingRange, closeSuccessMessage }) {
+function SuccessMessage({ room, numPerson, cost, bookingRange, closeSuccessMessage }) {
     const roomImageUrl = "http://localhost:4000/images/rooms/";
     return (
         <div className="fixed top-0 left-0 w-full h-[100vh] flex items-center justify-center bg-black/[.2] z-100">
@@ -32,30 +32,50 @@ function SuccessMessage({ room,numPerson, cost, bookingRange, closeSuccessMessag
                 <img className="w-full h-[200px] object-cover" src={roomImageUrl + room.img}></img>
                 <div className="mt-5">
                     {room.type === "Shared" ? <><h2 className="main-font text-xl">Request Created Successfully</h2>
-                    <p className="text-md my-2">Your Request has been submitted and sent to the owner, the response will appear in your profile page.</p>
-                    <div className="flex items-center gap-4 text-lg main-font">
-                        <PeopleFill />
-                        <p>{numPerson} Persons</p>
-                    </div>
-                    <div className="flex items-center gap-4 text-lg main-font">
-                        <ClockFill />
-                        <p>Cost of one hour: {cost} L.E</p>
-                    </div>
+                        <p className="text-md my-2">Your Request has been submitted and sent to the owner, the response will appear in your profile page.</p>
+                        <div className="flex items-center gap-4 text-lg main-font">
+                            <PeopleFill />
+                            <p>{numPerson} Persons</p>
+                        </div>
+                        <div className="flex items-center gap-4 text-lg main-font">
+                            <ClockFill />
+                            <p>Cost of one hour: {cost} L.E</p>
+                        </div>
                     </> : <>
-                    <h2 className="main-font text-xl mb-2">Room Booked Successfully</h2>
-                    <p className="text-md my-2">Thanks for your booking, you can find all your bookings in your profile page.</p>
-                    <div className="flex items-center gap-4 text-lg main-font my-1">
-                        <PeopleFill />
-                        <p>{numPerson} Persons</p>
-                    </div>
-                    <div className="flex items-center gap-4 text-lg main-font my-1">
-                        <ClockFill />
-                        <p>From {12} to {16}</p>
-                    </div>
-                    <h2 className="main-font text-xl">Total Cost is {cost} L.E</h2>
+                        <h2 className="main-font text-xl mb-2">Room Booked Successfully</h2>
+                        <p className="text-md my-2">Thanks for your booking, you can find all your bookings in your profile page.</p>
+                        <div className="flex items-center gap-4 text-lg main-font my-1 text-[#0F4C75]">
+                            <PeopleFill />
+                            <p>{numPerson} Persons</p>
+                        </div>
+                        <div className="flex items-center gap-4 text-lg main-font my-1 text-[#0F4C75]">
+                            <ClockFill />
+                            <p>From {12} to {16}</p>
+                        </div>
+                        <h2 className="main-font text-2xl mt-4">Total Cost is {cost} L.E</h2>
                     </>}
-                    <button className="btn-color px-2 py-1 mt-2 float-right" onClick={() => closeSuccessMessage()}>
+                    <hr className="border-black"></hr>
+                    <button className="btn-color px-6 py-1 mt-2 float-right rounded-sm" onClick={() => closeSuccessMessage()}>
                         Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    )
+}
+function FailedMessage({ failMessage, closeFailMessage }) {
+    return (
+        <div className="fixed top-0 left-0 w-full h-[100vh] flex items-center justify-center bg-black/[.2] z-100">
+            <div className="bg-white shadow rounded-md p-3 sm:w-[400px] w-3/4 text-center">
+                <div className="flex flex-col items-center px-4">
+                    <h2 className="text-2xl main-font">Booking Failed</h2>
+                    <p className="text-lg text-gray-500 my-1">Please try again</p>
+                    <div className="text-[50px] text-red-500 my-4">
+                        <InfoCircleFill />
+                    </div>
+                    <p className="my-2">{failMessage}</p>
+                    <button className="btn-color p-2 mt-2 w-full" onClick={() => closeFailMessage()}>
+                        Go Back
                     </button>
                 </div>
             </div>
@@ -74,6 +94,8 @@ function BookingRoom() {
     const [bookedTimes, setBookesTimes] = useState([])
     const [bookingRange, setBookingRange] = useState([])
     const [showsuccess, setShowSuccess] = useState(false)
+    const [showFail, setShowFail] = useState(false)
+    const [failMessage, setFailMessage] = useState("")
     const roomImageUrl = "http://localhost:4000/images/rooms/";
     const user = useSelector(store => store.auth);
     const token = user.token;
@@ -127,27 +149,56 @@ function BookingRoom() {
             }
             );
     }
-    function createBook() {
-        let formData = new FormData();
-        formData.append('bookingTime', new Date());
-        formData.append('start', bookingRange[0][0]);
-        formData.append('end', bookingRange[bookingRange.length-1][1]);
-        formData.append('roomType', "Private");
-        formData.append('payment',);
-        formData.append('type',);
-        formData.append('totalCost', numPerson * room.hourPrice * bookingRange.length);
-        fetch('http://localhost:4000/book', {
-            method: 'POST',
-            body: formData,
-        })
-            .then(response => response.json())
-            .then(responsedata => {
-                if (responsedata.status === "error") {
-
-                } else if (responsedata.status === "success") {
-
+    function isContinous() {
+        if (bookingRange.length === 0) return false
+        else {
+            let sortedBookingRange = bookingRange;
+            sortedBookingRange.sort((a, b) => a[0] - b[0])
+            for (let i = 0; i < sortedBookingRange.length - 1; i++) {
+                if (sortedBookingRange[i][1] !== bookingRange[i + 1][0]) {
+                    return false
                 }
-            })
+            }
+        }
+        return true;
+    }
+    function createBook() {
+        if (bookingRange.length === 0) {
+            setFailMessage("Please choose your desired time before booking")
+            setShowFail(true)
+        } else if (!isContinous()) {
+            console.log(bookingRange)
+            console.log(isContinous())
+            setFailMessage("You cannot book seperate time ranges, booking time must be continous")
+            setShowFail(true)
+        } else {
+            let sortedBookingRange = bookingRange;
+            sortedBookingRange.sort((a, b) => a[0] - b[0])
+            fetch(`http://localhost:4000/books`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "date": new Date().toISOString().split('T')[0],
+                    "times": [
+                        sortedBookingRange[0][0], sortedBookingRange[bookingRange.length - 1][1]
+                    ],
+                    "payment": "cash",
+                    "type": "room",
+                    "clientClientID": profileData.clientID,
+                    "roomRoomID": params.roomid,
+                    "totalCost": numPerson * room.hourPrice * bookingRange.length
+                }),
+            }).then(res => res.json())
+                .then(responsedata => {
+                    if (responsedata.status === "error") {
+                    } else if (responsedata.status === "success") {
+                        setShowSuccess(true)
+                    }
+                }
+                );
+        }
     }
     function createRequest() {
         fetch(`http://localhost:4000/requests`, {
@@ -171,6 +222,9 @@ function BookingRoom() {
     function closeSuccessMessage() {
         setShowSuccess(false)
     }
+    function closeFailMessage() {
+        setShowFail(false)
+    }
     useEffect(() => {
         getWorkSpace();
         getBookedTimes(new Date())
@@ -189,17 +243,6 @@ function BookingRoom() {
             }
         }
         return false;
-    }
-    function isContinous() {
-        if (bookingRange.length === 0) return false
-        else {
-            for (let i = 0; i < bookingRange.length - 1; i++) {
-                if (bookingRange[i][1] !== bookingRange[i + 1][0]) {
-                    return false
-                }
-            }
-        }
-        return true;
     }
     if (found) {
         return (
@@ -246,14 +289,15 @@ function BookingRoom() {
                             <p className="mt-4">Total Cost: {room.type === `Private` ? bookingRange.length > 0 ? `${numPerson * room.hourPrice * bookingRange.length}  L.E` : "No time selected" : `${numPerson * room.hourPrice}  L.E/hr`}</p>
                             <button className="w-full mt-6 py-2 text-center btn-color text-white" onClick={() => {
                                 if (room.type === `Private`) {
-                                    isContinous() ? console.log("Time range continous") : console.log("Error")
+                                    createBook();
                                 } else if (room.type === `Shared`) {
                                     createRequest();
                                 }
                             }}>{room.type === `Shared` ? "Request" : "Book"}</button>
                         </div>
-                        {showsuccess && room.type === `Shared` &&<SuccessMessage room={room} numPerson={numPerson} cost={numPerson * room.hourPrice} closeSuccessMessage={closeSuccessMessage} />}
-                        {showsuccess && room.type === `Private` &&<SuccessMessage room={room} numPerson={numPerson} cost={numPerson * room.hourPrice * bookingRange.length} bookingRange={bookingRange} closeSuccessMessage={closeSuccessMessage} />}
+                        {showsuccess && room.type === `Shared` && <SuccessMessage room={room} numPerson={numPerson} cost={numPerson * room.hourPrice} closeSuccessMessage={closeSuccessMessage} />}
+                        {showsuccess && room.type === `Private` && <SuccessMessage room={room} numPerson={numPerson} cost={numPerson * room.hourPrice * bookingRange.length} bookingRange={bookingRange} closeSuccessMessage={closeSuccessMessage} />}
+                        {showFail && room.type === `Private` && <FailedMessage failMessage={failMessage} closeFailMessage={closeFailMessage} />}
                     </div>
                 </div>
             </div>
