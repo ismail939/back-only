@@ -11,6 +11,7 @@ const storage = multer.diskStorage({
     filename: function (req, file, cb) {
         let errors
         if (req.method == "POST") {
+            console.log(req.body)
             errors = validateRoom(req)
         }
         else if (req.method == "PATCH") {

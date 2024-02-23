@@ -50,7 +50,8 @@ module.exports = {
                 })
                 books[index].username = client.username
                 books[index].clientImage = client.profilePic
-                books[index].roomImage = roomsImages[books[index].roomID]
+                console.log(books[index].roomID, roomsImages, "9999999999")
+                books[index].roomImage = roomsImages[books[index].roomRoomID]
             }
 
             if (books.length === 0) {
@@ -112,7 +113,8 @@ module.exports = {
                     },
                     end: {
                         [sequelize.Op.gt]: req.body.start
-                    }
+                    },
+                    roomRoomID: req.body.roomRoomID
                 }
             })
             console.log(booked)
