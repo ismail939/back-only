@@ -18,7 +18,7 @@ import DashboardProfile from './pages/DashboardProfile';
 import WorkSpaceProfile from './pages/WorkSpaceProfile/WorkSpaceProfile';
 import RoomList from './pages/WorkSpaceProfile/RoomList';
 import CreateRoom from './pages/Forms/CreateRoom';
-import BookingAndRequests from './pages/BookingAndRequests';
+import Requests from './pages/Requests';
 import BookingRoom from './pages/WorkSpaceProfile/BookingRoom';
 
 function App() {
@@ -29,7 +29,7 @@ function App() {
         <Route path='/' element={<Home />}></Route>
         <Route path='login' element={<Login />}></Route>
         <Route path='sign-up' element={<SignUp />}></Route>
-        <Route path='BookingAndRequests' element={<BookingAndRequests />}></Route>
+        <Route path='BookingAndRequests' element={<Requests />}></Route>
         <Route path='workspaces' element={<><Outlet /></>}>
           <Route path="" element={<WorkSpaces />} />
           <Route path=":cwID" element={<WorkSpaceProfile />} />
