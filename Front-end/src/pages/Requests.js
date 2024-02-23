@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 function Requests() {
     const [requests, setRequests] = useState([]);
     const getRequests = () => {
-        fetch(`http://localhost:4000/requests/8`)
+        fetch(`http://localhost:4000/requests/32`)
             .then(res => res.json())
             .then(responsedata => {
                 setRequests(responsedata.data)
@@ -55,18 +55,24 @@ function Requests() {
     function PendingRoomCard(props) {
         const room = props.room;
         const imageUrl = "http://localhost:4000/images/rooms/" + room?.roomImg;
+        const clientImage = `http://localhost:4000/images/clients/` + room.clientProfilePic;
         return (
-            <div className="bg-white rounded-xl shadow-md overflow-hidden">
-                <div className="md:flex">
-                    <div className="md:shrink-0">
-                        <img className="h-48 w-full object-cover md:h-full md:w-64 hover:scale-110 duration-500" src={imageUrl} alt={"no image found"}></img>
+            <div className="bg-white rounded-xl shadow-md overflow-hidden w-full">
+                <div className="">
+                    <div className="">
+                        <img className="h-48 w-full object-cover w-full" src={imageUrl} alt={"no image found"}></img>
                     </div>
                     <div className="px-8 py-2">
-                        <h1 className="capitalize block font-semibold text-lg leading-tight font-medium text-black hover:text-[#3282B8] duration-300 sec-font">{`${room?.roomType} Room ${room?.roomNumber}`}</h1>
-                        <div className="uppercase mt-1  tracking-wide text-sm text-[#0F4C75] font-semibold sec-font">{`${room?.createdAt.slice(0, 10)} ${room?.createdAt.slice(11, 19)} `}</div>
-                        <div>{`user ${room?.clientName}  requested ${room?.numberOfPersons} people`}</div>
-                        <button className="btn-color" onClick={() => handleAccept(room.clientClientID, room.roomRoomID)}>Accept</button>
-                        <button className="bg-red-500 hover:bg-red-300" onClick={() => handleDelete(room.clientClientID, room.roomRoomID)}>Delete</button>
+                        <h1 className="capitalize font-semibold text-xl leading-tight text-black main-font">{`${room?.roomType} Room ${room?.roomNumber}`}</h1>
+                        <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`${room?.createdAt.slice(0, 10)} ${room?.createdAt.slice(11, 19)} `}</div>
+                        <div className="flex items-center gap-2 my-2">
+                            <img className="w-10 h-10 object-cover rounded-full" src={clientImage} alt={"no image found"}></img>
+                            <div>{`${room?.clientName}  requested ${room?.numberOfPersons} people`}</div>
+                        </div>
+                        <div className="flex flex-col items-center gap-1 mt-2">
+                            <button className="btn-color px-2 py-1 rounded-xl w-full h-10 text-lg main-font" onClick={() => handleAccept(room.clientClientID, room.roomRoomID)}>Accept</button>
+                            <button className="bg-red-500 px-2 py-1 hover:bg-red-600 rounded-xl w-full main-font" onClick={() => handleDelete(room.clientClientID, room.roomRoomID)}>Delete</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -75,17 +81,21 @@ function Requests() {
     function HistoryCard(props) {
         const room = props.room;
         const imageUrl = "http://localhost:4000/images/rooms/" + room?.roomImg;
+        const clientImage = `http://localhost:4000/images/clients/` + room.clientProfilePic;
         return (
-            <div className="bg-white rounded-xl shadow-md overflow-hidden">
-                <div className="md:flex">
-                    <div className="md:shrink-0">
-                        <img className="h-48 w-full object-cover md:h-full md:w-64 hover:scale-110 duration-500" src={imageUrl} alt={"no image found"}></img>
+            <div className="bg-white rounded-xl shadow-md overflow-hidden w-full">
+                <div className="">
+                    <div className="">
+                        <img className="h-48 w-full object-cover w-full" src={imageUrl} alt={"no image found"}></img>
                     </div>
                     <div className="px-8 py-2">
-                        <h1 className="capitalize block font-semibold text-lg leading-tight font-medium text-black hover:text-[#3282B8] duration-300 sec-font">{`${room?.roomType} Room ${room?.roomNumber}`}</h1>
-                        <div className="uppercase mt-1  tracking-wide text-sm text-[#0F4C75] font-semibold sec-font">{`${room?.createdAt.slice(0, 10)} ${room?.createdAt.slice(11, 19)} `}</div>
-                        <div>{`user ${room?.clientName}  requested ${room?.numberOfPersons} people`}</div>
-                        <div>{`${room.status}`}</div>
+                        <h1 className="capitalize text-lg leading-tight text-xl main-font">{`${room?.roomType} Room ${room?.roomNumber}`}</h1>
+                        <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`${room?.createdAt.slice(0, 10)} ${room?.createdAt.slice(11, 19)} `}</div>
+                        <div className="flex items-center gap-2 my-2">
+                            <img className="w-10 h-10 object-cover rounded-full" src={clientImage} alt={"no image found"}></img>
+                            <div>{`${room?.clientName}  requested ${room?.numberOfPersons} people`}</div>
+                        </div>
+                        <div className="main-font text-xl capitalize text-[#0F4C75]">{`Request ${room.status}`}</div>
                     </div>
                 </div>
             </div>
@@ -95,11 +105,11 @@ function Requests() {
     const History = requests?.filter(request => (request.status === "accepted" || request.status === "rejected"));
     return (
         <>
-            <div>
+            <div className="w-[95%] mx-auto">
                 <div className="">
                     {pending?.length > 0 ? <div className="mt-10">
-                        <h2 className="text-2xl main-font ">Pending</h2>
-                        <div className="">
+                        <h2 className="text-2xl main-font mb-4">Pending</h2>
+                        <div className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-6">
                             {pending?.map((room) => {
                                 return <PendingRoomCard room={room} key={room.clientClientID} />
                             })}
@@ -108,8 +118,8 @@ function Requests() {
                 </div>
                 <div>
                     {History?.length > 0 ? <div className="mt-10">
-                        <h2 className="text-2xl main-font ">History</h2>
-                        <div className="">
+                        <h2 className="text-2xl main-font mb-4">History</h2>
+                        <div className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-6">
                             {History?.map((room) => {
                                 return <HistoryCard room={room} key={room.clientClientID} />
                             })}
