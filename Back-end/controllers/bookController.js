@@ -96,8 +96,7 @@ module.exports = {
     ),
     create: asyncWrapper(
         async (req, res, next) => {
-            // date, range of hours
-            console.log(req.body)
+            // date, range of hour
             let errors = validateBook(req);
             if (errors.length != 0) {
                 const error = appError.create(errors, 400, httpStatusCode.ERROR)
@@ -117,7 +116,6 @@ module.exports = {
                     roomRoomID: req.body.roomRoomID
                 }
             })
-            console.log(booked)
 
             if (booked != null) {
                 console.log(booked)
