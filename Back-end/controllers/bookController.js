@@ -70,7 +70,9 @@ module.exports = {
             })
             let times = [] // list of objects each object is a list
             for (let index = 0; index < books.length; index++) {
-                times.push([books[index].start.getHours(), books[index].end.getHours()])
+                for(let j = books[index].start.getHours();j<books[index].end.getHours();j++){
+                    times.push([j, j+1])
+                }
             }
             if (books.length === 0) {
                 const error = appError.create("book not found", 404, httpStatusCode.ERROR);
