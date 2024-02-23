@@ -368,23 +368,18 @@ const validateBook= (req) => {
     let data = req.body
     let errors = []
     console.log('i am in validate function')
-    if(validator.isEmpty(data.bookingTime)){
-        errors.push("Booking Time is empty")
-    }else if(!validator.isDateTime(data.bookingTime)){
-        errors.push("bookingTime not in dateTime format")
+    if(validator.isEmpty(data.date)){
+        errors.push("date is empty")
+    }else if(!validator.isDate(data.date)){
+        errors.push("date not in date format")
     }
 
-    if(validator.isEmpty(data.start)){
-        errors.push("Start is empty")
-    }else if(!validator.isDateTime(data.start)){
-        errors.push("start not in dateTime format")
+    if(validator.isEmpty(data.times)){
+        errors.push("times is empty")
+    }else if(!validator.isTimes(data.times)){
+        errors.push("times not in times format")
     }
 
-    if(validator.isEmpty(data.end)){
-        errors.push("End is empty")
-    }else if(!validator.isDateTime(data.end)){
-        errors.push("end not in dateTime format")
-    }
     
     if(validator.isEmpty(data.payment)){
         errors.push("Payment is empty")
