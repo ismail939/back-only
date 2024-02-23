@@ -190,6 +190,17 @@ function BookingRoom() {
         }
         return false;
     }
+    function isContinous() {
+        if (bookingRange.length === 0) return false
+        else {
+            for (let i = 0; i < bookingRange.length - 1; i++) {
+                if (bookingRange[i][1] !== bookingRange[i + 1][0]) {
+                    return false
+                }
+            }
+        }
+        return true;
+    }
     if (found) {
         return (
             <div className="min-h-screen w-4/5 mx-auto mt-[70px]">
@@ -235,7 +246,7 @@ function BookingRoom() {
                             <p className="mt-4">Total Cost: {room.type === `Private` ? bookingRange.length > 0 ? `${numPerson * room.hourPrice * bookingRange.length}  L.E` : "No time selected" : `${numPerson * room.hourPrice}  L.E/hr`}</p>
                             <button className="w-full mt-6 py-2 text-center btn-color text-white" onClick={() => {
                                 if (room.type === `Private`) {
-                                    createBook()
+                                    isContinous() ? console.log("Time range continous") : console.log("Error")
                                 } else if (room.type === `Shared`) {
                                     createRequest();
                                 }
