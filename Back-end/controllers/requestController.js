@@ -28,6 +28,7 @@ module.exports = {
     getCw_spaceRequests: asyncWrapper(
         async (req, res, next) => {
             const rooms = await Room.findAll({
+                raw: true,
                 where: {
                     cwSpaceCwID: req.params.cwSpaceID
                 }
@@ -36,12 +37,30 @@ module.exports = {
             for (let index = 0; index < rooms.length; index++) {
                 roomsIDs.push(rooms[index].roomID)
             }
-            const requests = await Request.findAll({
+            let requests = await Request.findAll({
+                raw: true,
                 where: {
                     roomRoomID:{[sequelize.Op.in]: roomsIDs}
                 }
             })
             if (requests.length != 0) {
+                for (let i = 0; i < requests.length; i++) {
+                    for (let j = 0; j < rooms.length; j++) {
+                        if (requests[i].roomRoomID == rooms[j].roomID) {
+                            requests[i].roomType = rooms[j].type
+                            requests[i].roomNumber = rooms[j].number
+                            requests[i].roomImg = rooms[j].img;
+                        }
+                    }
+                    let client = await Client.findOne({
+                    raw: true,
+                    where: {
+                        clientID: requests[i].clientClientID
+                    }
+                    })
+                    requests[i].clientName = client.fname + ' ' + client.lname
+                    requests[i].clientProfilePic = client.profilePic
+                }
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: requests });
             }
             const error = appError.create("There are No Available Requests", 404, httpStatusCode.ERROR);
