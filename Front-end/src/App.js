@@ -29,8 +29,6 @@ function App() {
         <Route path='/' element={<Home />}></Route>
         <Route path='login' element={<Login />}></Route>
         <Route path='sign-up' element={<SignUp />}></Route>
-        <Route path='Requests' element={<Requests />}></Route>
-        <Route path='Books' element={<Boooks />}></Route>
         <Route path='workspaces' element={<><Outlet /></>}>
           <Route path="" element={<WorkSpaces />} />
           <Route path=":cwID" element={<WorkSpaceProfile />} />
@@ -49,6 +47,8 @@ function App() {
           <Route path='createworkspace' element={<CreateFullWorkSpace />}></Route>
           <Route path='createOffer' element={<CreateOffer />}></Route>
           <Route path='createRoom' element={<CreateRoom />}></Route>
+          <Route path='Requests' element={<Requests />}></Route>
+          <Route path='Books' element={<Boooks />}></Route>
         </Route>
         <Route path='dashboard' element={<Dashboard />}></Route>
         <Route path="*" element={<PageNotFound />}></Route>

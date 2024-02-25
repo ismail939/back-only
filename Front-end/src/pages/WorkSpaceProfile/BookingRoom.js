@@ -149,6 +149,7 @@ function BookingRoom() {
                 if (responsedata.status === "error") {
                 } else if (responsedata.status === "success") {
                     setBookesTimes(responsedata.data)
+                    console.log(responsedata.data)
                 }
             }
             );
@@ -213,10 +214,12 @@ function BookingRoom() {
             },
             body: JSON.stringify({
                 "clientClientID": profileData.clientID,
-                "roomRoomID": params.roomid
+                "roomRoomID": params.roomid,
+                "numberOfPersons": numPerson
             })
         }).then(res => res.json())
             .then(responsedata => {
+                console.log(numPerson)
                 if (responsedata.status === "error") {
                     setFailMessage("Sorry we cannot proceed with your request")
                     setShowFail(true)
