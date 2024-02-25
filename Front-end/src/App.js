@@ -20,7 +20,7 @@ import RoomList from './pages/WorkSpaceProfile/RoomList';
 import CreateRoom from './pages/Forms/CreateRoom';
 import Requests from './pages/Requests';
 import BookingRoom from './pages/WorkSpaceProfile/BookingRoom';
-import Boooks from './pages/Boooks';
+import Books from './pages/Books';
 function App() {
   return (
     <>
@@ -47,8 +47,8 @@ function App() {
           <Route path='createworkspace' element={<CreateFullWorkSpace />}></Route>
           <Route path='createOffer' element={<CreateOffer />}></Route>
           <Route path='createRoom' element={<CreateRoom />}></Route>
-          <Route path='Requests' element={<Requests />}></Route>
-          <Route path='Books' element={<Boooks />}></Route>
+          <Route path='requests' element={<Requests />}></Route>
+          <Route path='books' element={<Books />}></Route>
         </Route>
         <Route path='dashboard' element={<Dashboard />}></Route>
         <Route path="*" element={<PageNotFound />}></Route>

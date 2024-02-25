@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-function Boooks() {
+import { TopBar } from "./Requests";
+function Books() {
     const [books, setBooks] = useState([]);
     const getBooks = () => {
         fetch(`http://localhost:4000/books/1`)
@@ -40,7 +41,8 @@ function Boooks() {
 
     return (
         <>
-            <div className="w-[95%] mx-auto">
+            <div className="w-[95%] mx-auto min-h-screen">
+                <TopBar intitalState={"Books"}/>
                 <div className="">
                     {books?.length > 0 ? <div className="mt-10">
                         <h2 className="text-2xl main-font mb-4">Booked</h2>
@@ -55,4 +57,4 @@ function Boooks() {
         </>
     )
 }
-export default Boooks;
+export default Books;

@@ -1,4 +1,18 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+export function TopBar({intitalState}) {
+    const [activeSection, setActiveSection] = useState(intitalState)
+    const activeStyle = "bg-[#BBE1FA] p-4"
+    return (
+        <div className="w-full mb-4 mt-[50px] main-font text-lg">
+            <div className=" flex items-center gap-4">
+                <Link className={`${activeSection === `Reqeusts` ? activeStyle : null} py-2 px-4`} to="/requests" onClick={() => setActiveSection("Reqeusts")}>Requests</Link>
+                <Link className={`${activeSection === `Books` ? activeStyle : null} py-2 px-4`} to="/books" onClick={() => setActiveSection("Books")}>Books</Link>
+            </div>
+            <hr className="border-black mt-2"></hr>
+        </div>
+    )
+}
 function Requests() {
     const [requests, setRequests] = useState([]);
     const getRequests = () => {
@@ -107,7 +121,8 @@ function Requests() {
     const History = requests?.filter(request => (request.status === "accepted" || request.status === "rejected"));
     return (
         <>
-            <div className="w-[95%] mx-auto">
+            <div className="w-[95%] mx-auto min-h-screen">
+                <TopBar intitalState={"Reqeusts"}/>
                 <div className="">
                     {pending?.length > 0 ? <div className="mt-10">
                         <h2 className="text-2xl main-font mb-4">Pending</h2>

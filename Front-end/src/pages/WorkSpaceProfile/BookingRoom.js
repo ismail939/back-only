@@ -149,7 +149,6 @@ function BookingRoom() {
                 if (responsedata.status === "error") {
                 } else if (responsedata.status === "success") {
                     setBookesTimes(responsedata.data)
-                    console.log(responsedata.data)
                 }
             }
             );
@@ -219,8 +218,7 @@ function BookingRoom() {
             })
         }).then(res => res.json())
             .then(responsedata => {
-                console.log(numPerson)
-                if (responsedata.status === "error") {
+                if (responsedata.status === "error" || responsedata.status === "fail") {
                     setFailMessage("Sorry we cannot proceed with your request")
                     setShowFail(true)
                 } else if (responsedata.status === "success") {
