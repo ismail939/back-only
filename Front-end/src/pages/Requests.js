@@ -1,8 +1,14 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { jwtDecode } from "jwt-decode";
 function Requests() {
     const [requests, setRequests] = useState([]);
+    const user = useSelector(store => store.auth);
+    const token = user.token;
+    const usertype = user.usertype;
+    const profileData = jwtDecode(token);
     const getRequests = () => {
-        fetch(`http://localhost:4000/requests/1`)
+        fetch(`http://localhost:4000/requests/${profileData.cwSpaceCwID}`)
             .then(res => res.json())
             .then(responsedata => {
                 setRequests(responsedata.data)
