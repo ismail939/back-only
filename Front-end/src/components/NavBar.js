@@ -52,7 +52,7 @@ function NavBar() {
                         <>
                             <Link to="dashboardProfile" onClick={() => ShowSubMenu()}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">My Profile</li></Link>
                             <hr className="border-[#BBE1FA]"></hr>
-                            <Link to="" onClick={() => {ShowSubMenu() ; dispatch(logOut())}}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">Sign-Out</li></Link>
+                            <Link to="" onClick={() => {ShowSubMenu() ; dispatch(logOut()); window.location.reload();}}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">Sign-Out</li></Link>
                         </>
                     )
                     }
