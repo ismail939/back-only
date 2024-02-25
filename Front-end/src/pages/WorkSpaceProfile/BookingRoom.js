@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Calendar3, PlusLg, DashLg, PeopleFill, ClockFill, InfoCircleFill } from "react-bootstrap-icons";
+import { Calendar3, PlusLg, DashLg, PeopleFill, ClockFill, InfoCircleFill, Calendar2EventFill } from "react-bootstrap-icons";
 import Calendar from 'react-calendar';
 import PageNotFound from "../PageNotFound";
 import { useSelector } from "react-redux";
@@ -24,11 +24,11 @@ function TimeStamp({ booked, range, bookingRange, updateBookingRange }) {
         </div>
     )
 }
-function SuccessMessage({ room, numPerson, cost, bookingRange, closeSuccessMessage }) {
+function SuccessMessage({ showsuccess, room, numPerson, cost, bookingRange, closeSuccessMessage,date }) {
     const roomImageUrl = "http://localhost:4000/images/rooms/";
     return (
-        <div className="fixed top-0 left-0 w-full h-[100vh] flex items-center justify-center bg-black/[.2] z-100">
-            <div className="bg-white shadow rounded-md p-3 md:w-[500px] w-3/4">
+        <div className="fixed top-0 left-0 w-full h-[100vh] flex items-center justify-center bg-black/[.2] z-100 duration-300">
+            <div className="bg-white shadow rounded-md p-3 md:w-[500px] w-3/4 duration-800">
                 <img className="w-full h-[200px] object-cover" src={roomImageUrl + room.img}></img>
                 <div className="mt-5">
                     {room.type === "Shared" ? <><h2 className="main-font text-xl">Request Created Successfully</h2>
@@ -49,8 +49,12 @@ function SuccessMessage({ room, numPerson, cost, bookingRange, closeSuccessMessa
                             <p>{numPerson} Persons</p>
                         </div>
                         <div className="flex items-center gap-4 text-lg main-font my-1 text-[#0F4C75]">
+                            <Calendar2EventFill />
+                            <p>{date.toDateString()}</p>
+                        </div>
+                        <div className="flex items-center gap-4 text-lg main-font my-1 text-[#0F4C75]">
                             <ClockFill />
-                            <p>From {12} to {16}</p>
+                            <p>From {bookingRange[0][0]} to {bookingRange[bookingRange.length - 1][1]}</p>
                         </div>
                         <h2 className="main-font text-2xl mt-4">Total Cost is {cost} L.E</h2>
                     </>}
@@ -63,12 +67,12 @@ function SuccessMessage({ room, numPerson, cost, bookingRange, closeSuccessMessa
         </div>
     )
 }
-function FailedMessage({ failMessage, closeFailMessage }) {
+function FailedMessage({ room, failMessage, closeFailMessage }) {
     return (
         <div className="fixed top-0 left-0 w-full h-[100vh] flex items-center justify-center bg-black/[.2] z-100">
             <div className="bg-white shadow rounded-md p-3 sm:w-[400px] w-3/4 text-center">
                 <div className="flex flex-col items-center px-4">
-                    <h2 className="text-2xl main-font">Booking Failed</h2>
+                    <h2 className="text-2xl main-font">{room.type === `Shared` ? "Request" : "Booking"} Failed</h2>
                     <p className="text-lg text-gray-500 my-1">Please try again</p>
                     <div className="text-[50px] text-red-500 my-4">
                         <InfoCircleFill />
@@ -167,20 +171,19 @@ function BookingRoom() {
             setFailMessage("Please choose your desired time before booking")
             setShowFail(true)
         } else if (!isContinous()) {
-            console.log(bookingRange)
-            console.log(isContinous())
             setFailMessage("You cannot book seperate time ranges, booking time must be continous")
             setShowFail(true)
         } else {
             let sortedBookingRange = bookingRange;
             sortedBookingRange.sort((a, b) => a[0] - b[0])
+            setBookingRange(sortedBookingRange)
             fetch(`http://localhost:4000/books`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    "date": new Date().toISOString().split('T')[0],
+                    "date": date.toISOString().split('T')[0],
                     "times": [
                         sortedBookingRange[0][0], sortedBookingRange[bookingRange.length - 1][1]
                     ],
@@ -193,6 +196,8 @@ function BookingRoom() {
             }).then(res => res.json())
                 .then(responsedata => {
                     if (responsedata.status === "error") {
+                        setFailMessage("Sorry we cannot proceed with your Book")
+                        setShowFail(true)
                     } else if (responsedata.status === "success") {
                         setShowSuccess(true)
                     }
@@ -213,6 +218,8 @@ function BookingRoom() {
         }).then(res => res.json())
             .then(responsedata => {
                 if (responsedata.status === "error") {
+                    setFailMessage("Sorry we cannot proceed with your request")
+                    setShowFail(true)
                 } else if (responsedata.status === "success") {
                     setShowSuccess(true)
                 }
@@ -295,9 +302,9 @@ function BookingRoom() {
                                 }
                             }}>{room.type === `Shared` ? "Request" : "Book"}</button>
                         </div>
-                        {showsuccess && room.type === `Shared` && <SuccessMessage room={room} numPerson={numPerson} cost={numPerson * room.hourPrice} closeSuccessMessage={closeSuccessMessage} />}
-                        {showsuccess && room.type === `Private` && <SuccessMessage room={room} numPerson={numPerson} cost={numPerson * room.hourPrice * bookingRange.length} bookingRange={bookingRange} closeSuccessMessage={closeSuccessMessage} />}
-                        {showFail && room.type === `Private` && <FailedMessage failMessage={failMessage} closeFailMessage={closeFailMessage} />}
+                        {showsuccess && room.type === `Shared` && <SuccessMessage showsuccess={showsuccess} room={room} numPerson={numPerson} cost={numPerson * room.hourPrice} closeSuccessMessage={closeSuccessMessage} />}
+                        {showsuccess && room.type === `Private` && <SuccessMessage date={date} room={room} numPerson={numPerson} cost={numPerson * room.hourPrice * bookingRange.length} bookingRange={bookingRange} closeSuccessMessage={closeSuccessMessage} />}
+                        {showFail && <FailedMessage room={room} failMessage={failMessage} closeFailMessage={closeFailMessage} />}
                     </div>
                 </div>
             </div>
