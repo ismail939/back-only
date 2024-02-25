@@ -1,9 +1,15 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { jwtDecode } from "jwt-decode";
 import { TopBar } from "./Requests";
 function Books() {
     const [books, setBooks] = useState([]);
+    const user = useSelector(store => store.auth);
+    const token = user.token;
+    const usertype = user.usertype;
+    const profileData = jwtDecode(token);
     const getBooks = () => {
-        fetch(`http://localhost:4000/books/1`)
+        fetch(`http://localhost:4000/books/${profileData.cwSpaceCwID}`)
             .then(res => res.json())
             .then(responsedata => {
                 setBooks(responsedata.data)

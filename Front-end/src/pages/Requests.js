@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { jwtDecode } from "jwt-decode";
 export function TopBar({intitalState}) {
     const [activeSection, setActiveSection] = useState(intitalState)
     const activeStyle = "bg-[#BBE1FA] p-4"
@@ -13,10 +15,15 @@ export function TopBar({intitalState}) {
         </div>
     )
 }
+
 function Requests() {
     const [requests, setRequests] = useState([]);
+    const user = useSelector(store => store.auth);
+    const token = user.token;
+    const usertype = user.usertype;
+    const profileData = jwtDecode(token);
     const getRequests = () => {
-        fetch(`http://localhost:4000/requests/1`)
+        fetch(`http://localhost:4000/requests/${profileData.cwSpaceCwID}`)
             .then(res => res.json())
             .then(responsedata => {
                 setRequests(responsedata.data)
