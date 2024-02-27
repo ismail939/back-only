@@ -57,7 +57,11 @@ function NavBar() {
                             <Link to="favourites" onClick={() => ShowSubMenu()}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">My Favourites</li></Link>
                             <hr className="border-[#BBE1FA]"></hr>
                             </>}
-                            <Link to="" onClick={() => {ShowSubMenu() ; dispatch(logOut())}}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">Sign-Out</li></Link>
+                            {usertype === "owner" && <>
+                            <Link to="requests" onClick={() => ShowSubMenu()}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">Booking & Requests</li></Link>
+                            <hr className="border-[#BBE1FA]"></hr>
+                            </>}
+                            <Link to="" onClick={() => {ShowSubMenu() ; dispatch(logOut()); window.location.reload()}}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">Sign-Out</li></Link>
                         </>
                     )
                     }
