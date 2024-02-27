@@ -9,6 +9,7 @@ function NavBar() {
     const [listActive, setlistActive] = useState(false);
     const [subMenu, setSubMenu] = useState(false);
     const client = useSelector(store => store.auth).token
+    const usertype = useSelector(store => store.auth).usertype;
     const dispatch = useDispatch();
     const subMenuRef = useRef();
     const profileBtn = useRef();
@@ -52,7 +53,15 @@ function NavBar() {
                         <>
                             <Link to="dashboardProfile" onClick={() => ShowSubMenu()}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">My Profile</li></Link>
                             <hr className="border-[#BBE1FA]"></hr>
-                            <Link to="" onClick={() => {ShowSubMenu() ; dispatch(logOut())}}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">Sign-Out</li></Link>
+                            {usertype === "client" && <>
+                            <Link to="favourites" onClick={() => ShowSubMenu()}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">My Favourites</li></Link>
+                            <hr className="border-[#BBE1FA]"></hr>
+                            </>}
+                            {usertype === "owner" && <>
+                            <Link to="requests" onClick={() => ShowSubMenu()}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">Booking & Requests</li></Link>
+                            <hr className="border-[#BBE1FA]"></hr>
+                            </>}
+                            <Link to="" onClick={() => {ShowSubMenu() ; dispatch(logOut()); window.location.reload()}}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">Sign-Out</li></Link>
                         </>
                     )
                     }

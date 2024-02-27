@@ -2,11 +2,16 @@ const { Event, Cw_space } = require("../models/modelIndex");
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-
+const { validateEvent } = require("../middlewares/validationSchema");
 
 module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
+            let errors = validateEvent(req)
+            if (errors.length != 0) {
+                const error = appError.create(errors, 400, httpStatusCode.ERROR)
+                return next(error)
+            }
             const newEvent = await Event.create(req.body)
             if (newEvent) {
                 return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Event is Created Successfully" })
@@ -20,7 +25,8 @@ module.exports = {
             const events = await Event.findAll({ raw: true })
             if (events.length != 0) {
                 for (let i = 0; i < events.length; i++) {
-                let cw_space = await Cw_space.findOne({ raw: true }, {
+                let cw_space = await Cw_space.findOne( {
+                    raw: true,
                     where: {
                         cwID: events[i].cwSpaceCwID
                     }
