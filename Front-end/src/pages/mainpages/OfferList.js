@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Search,XCircleFill } from "react-bootstrap-icons";
+import { Search, XCircleFill } from "react-bootstrap-icons";
 import notFoundImage from "../../components/images/WorkSpaceNotFound.png"
 import { NoDataError, ShowError } from "./WorkSpaces";
 import OfferCard from "../../components/OfferCard";
@@ -20,13 +20,21 @@ function OfferList() {
                 setDisplayedOffers(responsedata.data)
                 console.log(responsedata.data)
                 setFetchError(false)
-                if(responsedata.status === "error") setStatusResponse("Sorry, there are no offers currently");
-                else if(responsedata.status === "fail") setStatusResponse("Oops something went wrong !");
+                if (responsedata.status === "error") setStatusResponse("Sorry, there are no offers currently");
+                else if (responsedata.status === "fail") setStatusResponse("Oops something went wrong !");
             }
             ).catch(error => { setFetchError(true); console.log(error) });
     }
     useEffect(() => {
         getOffers();
+    }, [])
+    useEffect(() => {
+        let handler = (e) => {
+            if (menuRef.current && !menuRef.current.contains(e.target)) {
+                setSearchList(false)
+            }
+        }
+        document.addEventListener("mousedown", handler)
     }, [])
     const getSearchData = (event) => {
         const search = event.target.value;
@@ -45,10 +53,10 @@ function OfferList() {
                         placeholder="Search for Offers of certain workspace"
                         aria-label="Search"
                         onChange={e => getSearchData(e)}
-                        onClick={() => { setSearchList(true) ; console.log(searchData) }}
+                        onClick={() => { setSearchList(true); console.log(searchData) }}
                     ></input>
                     <button className="duration-200 ease-in-out btn-color h-full p-4 flex items-center rounded-r-md  text-white"
-                        onClick={() => { if (searchData.length > 0) {setDisplayedOffers(searchData) ; setSearchList(false)} }}><Search className="text-lg" /></button>
+                        onClick={() => { if (searchData.length > 0) { setDisplayedOffers(searchData); setSearchList(false) } }}><Search className="text-lg" /></button>
                 </div>
                 {(searchData.length > 0 && searchlist) ? <div className="flex flex-col max-h-60 w-full mt-1 shadow-md rounded-md bg-[#fafafa] overflow-x-hidden absolute z-[90]" >
                     {searchData.map((offer) => {
@@ -57,14 +65,14 @@ function OfferList() {
                 </div> : null}
             </div>
             {!fetcherror ? <div>
-                    {displayedOffers ? <div className="flex flex-col gap-8 mt-8">
-                        {displayedOffers.map((offer) => {
-                            return <OfferCard offer={offer} key={offer.offerID} />
-                        })}</div> : <NoDataError response={statusresponse}/>}
-                    {/* <div className="mt-[50px] flex justify-center">
+                {displayedOffers ? <div className="flex flex-col gap-8 mt-8">
+                    {displayedOffers.map((offer) => {
+                        return <OfferCard offer={offer} key={offer.offerID} />
+                    })}</div> : <NoDataError response={statusresponse} />}
+                {/* <div className="mt-[50px] flex justify-center">
                         <Pagination />
                     </div> */}
-                </div> : <ShowError />}
+            </div> : <ShowError />}
         </div>
     )
 }
