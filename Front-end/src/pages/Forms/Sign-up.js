@@ -1,8 +1,27 @@
-import { useEffect, useState } from "react";
+import {useState } from "react";
 import { Link } from "react-router-dom";
 import { ExclamationCircleFill, Eye, EyeSlash } from "react-bootstrap-icons";
 import { useNavigate } from 'react-router-dom';
-
+import client from "../../components/images/client.png";
+import businnesman from "../../components/images/businessman.png";
+import { ShowErrorMessage } from "./PortalLogin";
+function TypeSelection({ usertype,setUsertype }) {
+    const activeStyle = "border-2 border-[#197ec2] rounded-md"
+    return (
+        <div className="flex items-center gap-8 my-8 w-full">
+            <div className={`w-full bg-white p-4 flex flex-col gap-8 items-center justify-between cursor-pointer duration-100 hover:shadow-md ${usertype ==="Client" && activeStyle}`}
+            onClick={() => setUsertype("Client")}>
+                <h2 className="main-font text-lg">Client</h2>
+                <img className="w-full h-32 object-contain" src={client}></img>
+            </div>
+            <div className={`w-full bg-white p-4 flex flex-col gap-8 items-center justify-center cursor-pointer duration-100 hover:shadow-md ${usertype ==="Owner" && activeStyle}`}
+            onClick={() => setUsertype("Owner")}>
+                <h2 className="main-font text-lg">Owner</h2>
+                <img className="w-full h-32 object-contain" src={businnesman}></img>
+            </div>
+        </div>
+    )
+}
 
 function SignUp() {
     const navigate = useNavigate();
@@ -58,9 +77,6 @@ function SignUp() {
             }
         })
     }
-    const handleUserType = (event) => {
-        setUsertype(event.target.value);
-    };
     const nameError = (name) => {
         var letters = /^[A-Za-z]+$/;
         if (!name.match(letters)) {
@@ -199,6 +215,7 @@ function SignUp() {
                         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
                             Sign Up
                         </h1>
+                        <TypeSelection usertype={usertype} setUsertype={setUsertype}/>
                         <form className="space-y-4 md:space-y-6" action="#">
                             <div className="flex justify-between max-md:flex-col max-md:space-y-4">
                                 <div>
@@ -212,24 +229,24 @@ function SignUp() {
                                         placeholder="Enter your last name" required onChange={(e) => { setLastName(e.target.value) }}></input>
                                 </div>
                             </div>
-                            {dataerrors.firstName || dataerrors.lastName ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
+                            <ShowErrorMessage condition={dataerrors.firstName || dataerrors.lastName} value={checkerror} />
                             <div>
                                 <label htmlFor="username" className="block mb-2 text-sm font-medium text-gray-900 ">Username</label>
                                 <input type="text" name="username" id="username" className={`bg-gray-50 border ${dataerrors.username ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg  block w-full p-2.5`} placeholder="Enter your username" required
                                     onChange={(e) => { setUserName(e.target.value) }}></input>
-                                {dataerrors.username ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
+                                <ShowErrorMessage condition={dataerrors.username} value={checkerror} />
                             </div>
                             <div>
                                 <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 ">Email</label>
                                 <input type="email" name="email" id="email" className={`bg-gray-50 border ${dataerrors.email ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg  block w-full p-2.5`} placeholder="name@example.com" required
                                     onChange={(e) => { setEmail(e.target.value) }}></input>
-                                {dataerrors.email ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
+                                <ShowErrorMessage condition={dataerrors.email} value={checkerror} />
                             </div>
                             <div>
                                 <label htmlFor="phonenumber" className="block mb-2 text-sm font-medium text-gray-900 ">Phone Number</label>
                                 <input type="text" name="phonenumber" id="phonenumber" className={`bg-gray-50 border ${dataerrors.phonenumber ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg  block w-full p-2.5`}
                                     placeholder="write a valid phonenumber" required onChange={(e) => { setPhoneNumber(e.target.value) }}></input>
-                                {dataerrors.phonenumber ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
+                                <ShowErrorMessage condition={dataerrors.phonenumber} value={checkerror} />
                             </div>
                             <div>
                                 <label htmlFor="Password" className="block mb-2 text-sm font-medium text-gray-900">Password</label>
@@ -240,43 +257,18 @@ function SignUp() {
                                         {showpassword ? <Eye /> : <EyeSlash />}
                                     </span>
                                 </div>
-                                {dataerrors.password ? <span className="text-[12px] text-red-500">{checkerror}</span> : <p className="m-0 mt-1 text-xs text-gray-500">Note: Password must be at least 8 charachters long with one lowercase, one uppercase and a number</p>}
+                                {dataerrors.password ? <ShowErrorMessage condition={true} value={checkerror} /> : <p className="m-0 mt-1 text-xs text-gray-500">Note: Password must be at least 8 charachters long with one lowercase, one uppercase and a number</p>}
                             </div>
                             <div className="">
                                 <label htmlFor="confirmpassword" className="block mb-2 text-sm font-medium text-gray-900">Confirm Password</label>
                                 <input type="password" name="confirmpassword" id="confirmpassword" placeholder="••••••••" className={`bg-gray-50 border ${dataerrors.confirmpassword || !compPassword() ? "border-red-500 focus:outline-rose-600" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg  block w-full p-2.5 `} required
                                     onChange={(e) => { setConfirmPassword(e.target.value) }}></input>
-                                {!compPassword() || dataerrors.confirmpassword ? <p className="text-rose-600 text-xs mt-1 flex items-center gap-1 inline-block">Password doesn't match</p> : null}
+                                {!compPassword() || dataerrors.confirmpassword ?  <ShowErrorMessage condition={true} value={"Password doesn't match"} /> : null}
                             </div>
-                            <div>
-                                <label htmlFor="usertype" className="block mb-2 text-sm font-medium text-gray-900">User Type</label>
-                                <div name="usertype" className="text-gray-900 rounded-lg w-full py-2.5 flex gap-10 text-sm font-medium">
-                                    <div className="flex items-center gap-2">
-                                        <input
-                                            type="radio"
-                                            value="Client"
-                                            className="w-4 h-4 cursor-pointer"
-                                            checked={usertype === 'Client'}
-                                            onChange={handleUserType}
-                                        />
-                                        <span>Client</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <input
-                                            type="radio"
-                                            value="Owner"
-                                            className="w-4 h-4 cursor-pointer"
-                                            checked={usertype === 'Owner'}
-                                            onChange={handleUserType}
-                                        />
-                                        <span>Owner</span>
-                                    </div>
-                                </div>
-                            </div>
-                            {dataerrors.usertype ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
+                            <ShowErrorMessage condition={dataerrors.usertype} value={checkerror} />
                             <br></br>
                             {reserror !== "" ? <span className="text-[14px] text-red-500 flex gap-2 items-center"><ExclamationCircleFill />{reserror}</span> : null}
-                            <button type="submit" className="mt-3 w-full  btn-color  hover:bg-blue-600 focus:bg-blue-700 font-medium rounded-lg text-md px-5 py-2.5 text-center duration-300 ease-in-out"
+                            <button type="submit" className="mt-3 w-full  btn-color font-medium rounded-lg text-md px-5 py-2.5 text-center duration-300 ease-in-out"
                                 onClick={(e) => { HandleError(e); }}>Sign Up</button>
                             <p className="text-sm font-light text-gray-500">
                                 Already have an account? <Link to="../login" className="font-medium text-primary-600 hover:underline">Login</Link>
