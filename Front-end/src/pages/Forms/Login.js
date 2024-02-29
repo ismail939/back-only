@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { ExclamationCircleFill } from "react-bootstrap-icons";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../components/reduxtoolkit/Slices/authSlice";
 import { ShowErrorMessage } from "./PortalLogin";

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {useState } from "react";
 import { Link } from "react-router-dom";
 import { ExclamationCircleFill, Eye, EyeSlash } from "react-bootstrap-icons";
 import { useNavigate } from 'react-router-dom';
@@ -8,13 +8,13 @@ import { ShowErrorMessage } from "./PortalLogin";
 function TypeSelection({ usertype,setUsertype }) {
     const activeStyle = "border-2 border-[#197ec2] rounded-md"
     return (
-        <div className="flex items-center gap-8 my-8">
-            <div className={`bg-white p-4 flex flex-col gap-8 items-center justify-center cursor-pointer duration-100 hover:shadow-md ${usertype ==="Client" && activeStyle}`}
+        <div className="flex items-center gap-8 my-8 w-full">
+            <div className={`w-full bg-white p-4 flex flex-col gap-8 items-center justify-between cursor-pointer duration-100 hover:shadow-md ${usertype ==="Client" && activeStyle}`}
             onClick={() => setUsertype("Client")}>
                 <h2 className="main-font text-lg">Client</h2>
-                <img className="w-ful h-32 object-contain" src={client}></img>
+                <img className="w-full h-32 object-contain" src={client}></img>
             </div>
-            <div className={`bg-white p-4 flex flex-col gap-8 items-center justify-center cursor-pointer duration-100 hover:shadow-md ${usertype ==="Owner" && activeStyle}`}
+            <div className={`w-full bg-white p-4 flex flex-col gap-8 items-center justify-center cursor-pointer duration-100 hover:shadow-md ${usertype ==="Owner" && activeStyle}`}
             onClick={() => setUsertype("Owner")}>
                 <h2 className="main-font text-lg">Owner</h2>
                 <img className="w-full h-32 object-contain" src={businnesman}></img>
