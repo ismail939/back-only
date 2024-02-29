@@ -8,6 +8,7 @@ const Cw_spacePhoneModel = require("./Cw_spacePhone")
 const Cw_spacePhotoModel = require("./Cw_spacePhoto")
 const EventModel = require("./Event")
 const EventPhotoModel = require("./EventPhoto");
+const ModeratorModel = require("./Moderator");
 const OfferModel = require("./Offer");
 const OwnerModel = require("./Owner")
 const RequestModel = require("./Request"); 
@@ -25,6 +26,7 @@ const Cw_spacePhone = Cw_spacePhoneModel(db, Sequelize)
 const Cw_spacePhoto = Cw_spacePhotoModel(db, Sequelize);
 const Event = EventModel(db, Sequelize)
 const EventPhoto = EventPhotoModel(db, Sequelize)
+const Moderator = ModeratorModel(db, Sequelize);
 const Offer = OfferModel(db, Sequelize);
 const Owner = OwnerModel(db, Sequelize)
 const Request = RequestModel(db, Sequelize)
@@ -66,6 +68,10 @@ Cw_spacePhone.belongsTo(Cw_space)
 Cw_space.hasMany(Cw_spacePhoto)
 Cw_spacePhoto.belongsTo(Cw_space)
 
+// cw-space & cw-space photos (1-> many)
+Cw_space.hasMany(Moderator)
+Moderator.belongsTo(Cw_space)
+
 
 // cw-space & event (1 -> many)
 Cw_space.hasMany(Event)
@@ -95,6 +101,7 @@ module.exports = {
     Cw_spacePhoto,
     Event,
     EventPhoto,
+    Moderator,
     Offer,
     Owner,
     Review,
