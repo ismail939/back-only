@@ -7,11 +7,12 @@ const { validateEvent } = require("../middlewares/validationSchema");
 module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
-            let errors = validateEvent(req)
-            if (errors.length != 0) {
-                const error = appError.create(errors, 400, httpStatusCode.ERROR)
-                return next(error)
+            if (req.body.imageName == undefined || req.body.img == '') {
+                const error = appError.create("There is NO Images Provided", 400, httpStatusCode.ERROR);
+                return next(error);
             }
+            req.body.mainPhoto = req.body.imageName;
+            delete req.body.imageName;
             const newEvent = await Event.create(req.body)
             if (newEvent) {
                 return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Event is Created Successfully" })
