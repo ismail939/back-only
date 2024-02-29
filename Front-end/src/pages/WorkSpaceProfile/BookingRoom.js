@@ -228,7 +228,8 @@ function BookingRoom() {
             )
     }
     function closeSuccessMessage() {
-        setShowSuccess(false)
+        setShowSuccess(false);
+        window.location.reload();
     }
     function closeFailMessage() {
         setShowFail(false)
