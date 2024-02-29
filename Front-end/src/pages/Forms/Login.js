@@ -77,7 +77,7 @@ function Login() {
                                 onChange={(e) => setPassword(e.target.value)}></input>
                             <ShowErrorMessage condition={dataerrors.password} value={"please enter your password"} />
                         </div>
-                        {errormessage !== "" ? <p className="text-rose-600 text-xs mt-1 flex items-center gap-1 inline-block"><ExclamationCircleFill />{errormessage}</p> : null}
+                        {errormessage !== "" ? <ShowErrorMessage condition={true} value={errormessage} /> : null}
                         <div className="flex items-center justify-between">
                             <div className="flex items-start">
                                 <div className="flex items-center h-5">
