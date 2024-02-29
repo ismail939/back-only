@@ -22,6 +22,7 @@ import Requests from './pages/Requests';
 import BookingRoom from './pages/WorkSpaceProfile/BookingRoom';
 import Books from './pages/Books';
 import Favourites from './pages/Favourites';
+import PortalLogin from './pages/Forms/PortalLogin';
 function App() {
   return (
     <>
@@ -29,6 +30,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />}></Route>
         <Route path='login' element={<Login />}></Route>
+        <Route path='portal-login' element={<PortalLogin />}></Route>
         <Route path='sign-up' element={<SignUp />}></Route>
         <Route path='workspaces' element={<><Outlet /></>}>
           <Route path="" element={<WorkSpaces />} />
