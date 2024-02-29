@@ -27,7 +27,7 @@ function Footer() {
                             <FooterLink title="Home" link="/" />
                             <FooterLink title="Co-Working Spaces" link="workspaces" />
                             <FooterLink title="Offers" link="offers" />
-                            <FooterLink title="Events & Workshops" link={null} />
+                            <FooterLink title="Events & Workshops" link="events&workshops" />
                             <FooterLink title="About Us" link={null} />
                         </ul>
                     </div>

@@ -20,6 +20,7 @@ import RoomList from './pages/WorkSpaceProfile/RoomList';
 import CreateRoom from './pages/Forms/CreateRoom';
 import Requests from './pages/Requests';
 import BookingRoom from './pages/WorkSpaceProfile/BookingRoom';
+import EventsWorshops from './pages/mainpages/EventsWorkshops';
 import Books from './pages/Books';
 import Favourites from './pages/Favourites';
 import PortalLogin from './pages/Forms/PortalLogin';
@@ -37,6 +38,7 @@ function App() {
           <Route path=":cwID" element={<WorkSpaceProfile />} />
         </Route>
         <Route path='offers' element={<OfferList />}></Route>
+        <Route path='events&workshops' element={<EventsWorshops />}></Route>
         <Route element={<RequireAuth allowedRoles={["client"]} />} >
           <Route path='favourites' element={<Favourites />}></Route>
         </Route>
