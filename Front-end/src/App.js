@@ -21,6 +21,7 @@ import CreateRoom from './pages/Forms/CreateRoom';
 import Requests from './pages/Requests';
 import BookingRoom from './pages/WorkSpaceProfile/BookingRoom';
 import Books from './pages/Books';
+import CreateEvent from './pages/Forms/CreateEvent';
 function App() {
   return (
     <>
@@ -29,6 +30,7 @@ function App() {
         <Route path='/' element={<Home />}></Route>
         <Route path='login' element={<Login />}></Route>
         <Route path='sign-up' element={<SignUp />}></Route>
+        <Route path='CreateEvent' element={<CreateEvent/>}></Route>
         <Route path='workspaces' element={<><Outlet /></>}>
           <Route path="" element={<WorkSpaces />} />
           <Route path=":cwID" element={<WorkSpaceProfile />} />
