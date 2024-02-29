@@ -9,11 +9,12 @@ function ShowErrorMessage(props) {
         </>
     )
 }
-function Moderators() {
+function Moderators({ cwid }) {
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [checkerror, setCheckError] = useState("");
+    const [resMessage, setResMessage] = useState("");
     const [dataerrors, setDataErrors] = useState({
         username: false,
         password: false,
@@ -58,7 +59,7 @@ function Moderators() {
         }
     }
     function createModerator(){
-        fetch(`http://localhost:4000/moderators`, {
+        fetch(`http://localhost:4000/moderators/register`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -66,13 +67,15 @@ function Moderators() {
             body: JSON.stringify({
                 "username": username,
                 "password": password,
+                "cwSpaceCwID" : cwid
             }),
         }).then(res => res.json()).then((data) => {
             if (data.status === "success") {
+                window.location.reload();
             } else if (data.status === "error") {
-                checkerror(data.message)
+                setResMessage(data.message)
             } else if (data.status === "fail") {
-                checkerror("oops, something wrong went on !")
+                setResMessage("oops, something wrong went on !")
             }
         })
     }
@@ -97,13 +100,15 @@ function Moderators() {
                 username: false, password: false, confirmPassword: false
             })
             setCheckError("")
+            setResMessage("")
+            createModerator();
         }
     }
     return (
         <div className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4 " >
             <h2 className="mx-auto mt-8 px-2 font-bold text-2xl">Moderators</h2>
             <div className="mx-auto mt-8 px-2">
-                <h2 className="my-4 font-bold text-lg">Create Moderator</h2>
+                <h2 className="my-4 font-bold text-lg">Add Moderator</h2>
                 <form className="space-y-4 md:space-y-6 lg:w-3/5 w-full" action="#">
                     <div>
                         <label htmlFor="username" className="block mb-2 text-sm font-medium text-gray-900 ">Username</label>
@@ -126,6 +131,7 @@ function Moderators() {
                             onChange={(e) => setConfirmPassword(e.target.value)}></input>
                         {!compPassword() || dataerrors.confirmpassword ? <ShowErrorMessage condition={true} value={"Password doesn't match"} /> : null}
                     </div>
+                    <ShowErrorMessage condition={resMessage !== ""} value={resMessage} />
                     <button className="py-2 px-4 float-right btn-color main-font" onClick={HandleError}>Create Moderator</button>
                 </form>
             </div>

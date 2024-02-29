@@ -17,7 +17,7 @@ function DashboardProfile() {
     const buttonStyle = "w-48 font-semibold px-2 py-3 hover:border-blue-500 border rounded-2xl text-md"
     const activeStyle = "bg-[#0F4C75] text-white hover:bg-[#197ec2] duration-200"
     useEffect(() => {
-        if(usertype==="owner" && profileData.cwSpaceCwID){
+        if((usertype==="owner" || usertype==="moderator") && profileData.cwSpaceCwID){
             getCworkingSpaceData();}
     }, [])
     const getCworkingSpaceData = () => {
@@ -36,15 +36,15 @@ function DashboardProfile() {
                         <button onClick={() => setActive("Personal Information")}
                             className={`${buttonStyle} ${active === "Personal Information" ? activeStyle : "hover:text-indigo-900"}`} >Personal Information</button>
                     </div>
-                    {usertype==="owner"&& <div className="my-7">
+                    {(usertype==="owner" || usertype === "moderator") && <div className="my-7">
                         <button className={`${buttonStyle} ${active === "WorkSpace Information" ? activeStyle : "hover:text-indigo-900"}`}
                             onClick={() => setActive("WorkSpace Information")}>WorkSpace Information</button>
                     </div>}
-                    {usertype==="owner"&& profileData.cwSpaceCwID !==null&&<div className="my-7">
+                    {(usertype==="owner" || usertype === "moderator") && profileData.cwSpaceCwID !==null&&<div className="my-7">
                         <button className={`${buttonStyle} ${active === "WorkSpace Rooms" ? activeStyle : "hover:text-indigo-900"}`}
                             onClick={() => setActive("WorkSpace Rooms")}>WorkSpace Rooms</button>
                     </div>}
-                    {usertype==="owner"&&  profileData.cwSpaceCwID !==null &&<div className="my-7">
+                    {(usertype==="owner" || usertype === "moderator") &&  profileData.cwSpaceCwID !==null &&<div className="my-7">
                         <button className={`${buttonStyle} ${active === "WorkSpace Offer" ? activeStyle : "hover:text-indigo-900"}`}
                             onClick={() => setActive("WorkSpace Offer")}>WorkSpace Offers</button>
                     </div>}
@@ -72,7 +72,7 @@ function DashboardProfile() {
                     <OfferSeetings cwid={profileData.cwSpaceCwID} />
                 }
                 {active === "Moderators"  &&
-                    <Moderators />
+                    <Moderators cwid={profileData.cwSpaceCwID}/>
                 }
                 
             </div>

@@ -32,7 +32,7 @@ function ProfileSettings(props) {
     const addImg = () => {
         const formData = new FormData();
         formData.append('profilePic', img);
-        const id = usertype === "owner" ? profileData.ownerID : profileData.clientID
+        const id = usertype === "owner" ? profileData.ownerID : (usertype === "moderator" ? profileData.moderatorID : profileData.clientID)
         try {
             updatePhoto({ id: id, credentials: formData , usertype: usertype })
             setImgName("")
@@ -65,7 +65,7 @@ function ProfileSettings(props) {
         }
     }
     const addPassword = () => {
-        const id = usertype === "owner" ? profileData.ownerID : profileData.clientID
+        const id = usertype === "owner" ? profileData.ownerID : (usertype === "moderator" ? profileData.moderatorID : profileData.clientID)
         try {
             const data = JSON.stringify({
                 "password": newPassword ? newPassword : profileData.password,
@@ -232,8 +232,8 @@ function ProfileSettings(props) {
                         </div>
                     </div>
                 </div>
-                <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Basic Information</h2>
-                <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4">
+                {usertype !== "moderator" && <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Basic Information</h2>}
+                {usertype !== "moderator" && <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4">
                     <div className="w-full md:px-12 px-4">
                         <div className="my-4 w-full flex justify-between items-center" >
                             <label className="block mb-2 cursor-icon w-1/4 gap-2">First Name</label>
@@ -268,8 +268,8 @@ function ProfileSettings(props) {
                                 rounded-lg border`} >Save</button>
                         </div>
                     </div>
-                </div>
-                <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">PhoneNumber</h2>
+                </div>}
+                {usertype !== "moderator" && <><h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">PhoneNumber</h2>
                 <div className="my-4 border  border-black-90 rounded-3xl max-w-3xl mx-auto mt-4">
                     <div className="flex justify-between items-center py-4 md:px-12 px-4 gap-8">
                         <input className={`bg-gray-50 border ${dataerrors.phonenumber ? "border-red-500" : "border-gray-300"} 
@@ -283,7 +283,7 @@ function ProfileSettings(props) {
                     <div className="px-16 mb-3">
                         {dataerrors.phonenumber ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
                     </div>
-                </div>
+                </div></>}
                 <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Passsword</h2>
                 <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4">
                     <div className="w-full md:px-12 px-4">
