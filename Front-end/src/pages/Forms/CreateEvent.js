@@ -7,7 +7,7 @@ function getDate() {
     const month = (today.getMonth() + 1).toString();
     const year = (today.getFullYear()).toString();
     const day = (today.getDate()).toString();
-    return (`"${year}-${month}-${parseInt(day) > 9 ? day : "0" + day}"`);
+    return (`${year}-${parseInt(month) > 9 ? month : "0" + month}-${parseInt(day) > 9 ? day : "0" + day}`);
 }
 function CreateEvent() {
     const auth = useSelector(store => store.auth);
@@ -59,14 +59,15 @@ function CreateEvent() {
     const addData = () => {
         if (isImage(offerImageName)) {
             let formData = new FormData();
-            formData.append('imageName', offerImageName);
-            formData.append('title', title);
+            formData.append('name', title);
             formData.append('description', description);
             formData.append('start', start);
             formData.append('end', end);
+            formData.append('price', price);
+            formData.append('maxCapacity', maxCapacity);
             formData.append('cwSpaceCwID', ownerData.cwSpaceCwID);
-            formData.append('img', img);
-            fetch('http://localhost:4000/offers', {
+            formData.append('mainPhoto', img);
+            fetch('http://localhost:4000/events', {
                 method: 'POST',
                 body: formData,
             })
@@ -109,7 +110,8 @@ function CreateEvent() {
             setDataErrors({ title: false, description: false, start: false, end: true, offerImageName: false, price: false, maxCapacity: false })
         }
         else {
-            setDataErrors({ title: false, description: false, start: false, end: false, offerImageName: false, price: false, maxCapacity: false }); addData();
+            setDataErrors({ title: false, description: false, start: false, end: false, offerImageName: false, price: false, maxCapacity: false });
+            addData();
         }
     }
     return (
@@ -120,6 +122,7 @@ function CreateEvent() {
                         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
                             Create Event
                         </h1>
+                        <div>{console.log(getDate())}</div>
                         <form className="space-y-4 md:space-y-6" action="#" ref={formRef}>
                             <div>
                                 <label

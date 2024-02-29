@@ -7,7 +7,7 @@ function getDate() {
     const month = (today.getMonth() + 1).toString();
     const year = (today.getFullYear()).toString();
     const day = (today.getDate()).toString();
-    return (`${year}-${month}-${parseInt(day) > 9 ? day : "0" + day}`);
+    return (`${year}-${parseInt(month) > 9 ? month : "0" + month}-${parseInt(day) > 9 ? day : "0" + day}`);
 }
 function CreateOffer() {
     const auth = useSelector(store => store.auth);
@@ -177,7 +177,7 @@ function CreateOffer() {
                                         id="startDate"
                                         value={start}
                                         min={getDate()}
-                                        max={end?end:"2030-03-05"}
+                                        max={end ? end : "2030-03-05"}
                                         className={`bg-gray-50 border ${dataerrors.start ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
                                         required
                                         onChange={(e) => {
