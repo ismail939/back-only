@@ -63,15 +63,26 @@ module.exports = {
     ),
     getAllBookingsOneRoom: asyncWrapper(
         async (req, res, next) => {
-            const books = await Book.findAll({
+            let books = await Book.findAll({
                 where: {
                     roomRoomID: req.params.roomID
-                }
+                }, raw: true
             })
+            // filter the books as they are equal to the sent date
+            for (let index = 0; index < books.length; index++) {
+                console.log(books[index].start.toISOString().split('T')[0])
+                console.log(req.body.date)
+                if(books[index].start.toISOString().split('T')[0]!=req.body.date){
+                    console.log(books[index]+"uuuu")
+                    books.splice(index, 1)
+                    index--
+                }
+            }
+            console.log(books)
             let times = [] // list of objects each object is a list
             for (let index = 0; index < books.length; index++) {
-                for(let j = books[index].start.getHours();j<books[index].end.getHours();j++){
-                    times.push([j, j+1])
+                for (let j = books[index].start.getHours(); j < books[index].end.getHours(); j++) {
+                    times.push([j, j + 1])
                 }
             }
             if (books.length === 0) {
