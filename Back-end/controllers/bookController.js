@@ -85,10 +85,7 @@ module.exports = {
                     times.push([j, j + 1])
                 }
             }
-            if (books.length === 0) {
-                const error = appError.create("book not found", 404, httpStatusCode.ERROR);
-                return next(error);
-            }
+            
             return res.json({ status: httpStatusCode.SUCCESS, data: times })
         }
     ),
