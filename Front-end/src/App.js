@@ -18,7 +18,12 @@ import DashboardProfile from './pages/DashboardProfile';
 import WorkSpaceProfile from './pages/WorkSpaceProfile/WorkSpaceProfile';
 import RoomList from './pages/WorkSpaceProfile/RoomList';
 import CreateRoom from './pages/Forms/CreateRoom';
+import Requests from './pages/Requests';
 import BookingRoom from './pages/WorkSpaceProfile/BookingRoom';
+import EventsWorshops from './pages/mainpages/EventsWorkshops';
+import Books from './pages/Books';
+import Favourites from './pages/Favourites';
+import PortalLogin from './pages/Forms/PortalLogin';
 function App() {
   return (
     <>
@@ -26,12 +31,17 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />}></Route>
         <Route path='login' element={<Login />}></Route>
+        <Route path='portal-login' element={<PortalLogin />}></Route>
         <Route path='sign-up' element={<SignUp />}></Route>
         <Route path='workspaces' element={<><Outlet /></>}>
           <Route path="" element={<WorkSpaces />} />
           <Route path=":cwID" element={<WorkSpaceProfile />} />
         </Route>
         <Route path='offers' element={<OfferList />}></Route>
+        <Route path='events&workshops' element={<EventsWorshops />}></Route>
+        <Route element={<RequireAuth allowedRoles={["client"]} />} >
+          <Route path='favourites' element={<Favourites />}></Route>
+        </Route>
         <Route element={<RequireAuth allowedRoles={["owner", "client"]} />} >
           <Route path='dashboardProfile' element={<DashboardProfile />}></Route>
           <Route path='discoverEdit' element={<DiscoverAdmin />}></Route>
@@ -45,6 +55,8 @@ function App() {
           <Route path='createworkspace' element={<CreateFullWorkSpace />}></Route>
           <Route path='createOffer' element={<CreateOffer />}></Route>
           <Route path='createRoom' element={<CreateRoom />}></Route>
+          <Route path='requests' element={<Requests />}></Route>
+          <Route path='books' element={<Books />}></Route>
         </Route>
         <Route path='dashboard' element={<Dashboard />}></Route>
         <Route path="*" element={<PageNotFound />}></Route>
