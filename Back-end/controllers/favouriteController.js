@@ -22,7 +22,12 @@ module.exports = {
     ),
     create: asyncWrapper(
         async (req, res, next) => {
-            // validate req.body here ----
+            const errors = validateFavourite(req)
+            if (errors.length != 0) {
+                const error = appError.create(errors, 400, httpStatusCode.ERROR)
+                return next(error)
+            }
+            console.log(req.body)
             const favourite = await Favourite.create(req.body)
             return res.status(201).json({ status: httpStatusCode.SUCCESS, data: favourite })
         }
@@ -31,14 +36,14 @@ module.exports = {
         async (req, res, next) => {
             const favourite = await Favourite.findOne({
                 where: {
-                    clientClientID: req.body.clientID,
+                    clientClientID: req.body.clientClientID,
                     cwSpaceCwID: req.body.cwSpaceCwID
                 }
             })
             if (favourite) {
                 await Favourite.destroy({
                     where: {
-                        clientClientID: req.body.clientID,
+                        clientClientID: req.body.clientClientID,
                         cwSpaceCwID: req.body.cwSpaceCwID
                     }
                 })

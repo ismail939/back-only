@@ -112,5 +112,6 @@ module.exports = {
     Review,
     Room,
     Subscribe,
-    Request
+    Request,
+    Favourite
 }

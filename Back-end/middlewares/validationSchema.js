@@ -1,3 +1,4 @@
+const validators = require('../utils/validators');
 const validator = require('../utils/validators')
 
 const validateUser = (req) => {
@@ -457,6 +458,26 @@ const validateEvent = (req) => {
     return errors
 }
 
+const validateFavourite = (req) =>{
+    let data = req.body
+    let errors = []
+
+    if(validator.isEmpty(data.clientClientID))
+    {
+        errors.push("clientClientID is required")
+    }else if(validator.isNotNumber(data.clientClientID)){
+        errors.push("clientClientID not in number format")
+    }
+
+    if(validator.isEmpty(data.cwSpaceCwID))
+    {
+        errors.push("cwSpaceCwID is required")
+    }else if(validator.isNotNumber(data.cwSpaceCwID)){
+        errors.push("cwSpaceCwID not in number format")
+    }
+    return errors
+}
+
 module.exports = {
     validateUser,
     validateUpdatedUser,
@@ -467,5 +488,6 @@ module.exports = {
     validateOffer,
     validateUpdatedOffer,
     validateBook,
-    validateEvent
+    validateEvent,
+    validateFavourite
 }
