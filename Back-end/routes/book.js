@@ -4,7 +4,7 @@ const bookController = require('../controllers/bookController')
 const router = express.Router();
 
 router.route("/roomof/:roomID")
-    .get(bookController.getAllBookingsOneRoom)
+    .post(bookController.getAllBookingsOneRoom)
 
 router.route("/")
     .get(bookController.get)
