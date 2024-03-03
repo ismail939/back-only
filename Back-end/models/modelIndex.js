@@ -15,6 +15,7 @@ const RequestModel = require("./Request");
 const ReviewModel = require("./Review")
 const RoomModel = require("./Room")
 const SubscribeModel = require("./Subscribe")
+const FavouriteModel = require('./Favourite')
 
 
 
@@ -33,7 +34,7 @@ const Request = RequestModel(db, Sequelize)
 const Review = ReviewModel(db, Sequelize)
 const Room = RoomModel(db, Sequelize)
 const Subscribe = SubscribeModel(db, Sequelize)
-
+const Favourite = FavouriteModel(db, Sequelize)
 
 // relationship
 // owner & cw-space (1 -> 1)
@@ -47,6 +48,10 @@ Room.belongsToMany(Client, { through: {model: Book, unique: false}, as: "room1" 
 // client & cw-space (many -> many) through review
 Client.belongsToMany(Cw_space, { through: Review, as: "client2" }); 
 Cw_space.belongsToMany(Client, { through: Review, as: "cwSpace1" });
+
+// client & cw-space (many -> many) through Favourite
+Client.belongsToMany(Cw_space, { through: Favourite, as: "client8" }); 
+Cw_space.belongsToMany(Client, { through: Favourite, as: "cwSpace8" });
 
 // client & cw-space (many -> many) through subscribe
 Client.belongsToMany(Cw_space, { through: Subscribe, as: "client3" });
