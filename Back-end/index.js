@@ -18,6 +18,7 @@ const reviewRouter = require("./routes/review");
 const eventPhotoRouter = require("./routes/eventPhoto");
 const offerRouter = require('./routes/offer')
 const moderatorRouter = require("./routes/moderator");
+const favouriteRouter = require("./routes/favourite")
 
 const path = require('path')
 app.use(express.static(path.join(__dirname, 'public')));
@@ -37,8 +38,9 @@ app.use("/rooms", roomRouter);
 app.use("/requests", requestRouter);
 app.use("/reviews", reviewRouter);
 app.use("/eventPhotos", eventPhotoRouter);
-app.use('/offers', offerRouter)
+app.use('/offers', offerRouter);
 app.use("/moderators", moderatorRouter);
+app.use("/favourites", favouriteRouter);
 
 
 const db = require('./config/database');
