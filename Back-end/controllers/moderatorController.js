@@ -27,7 +27,6 @@ module.exports = {
                 const error = appError.create("Moderator Already Exists", 400, httpStatusCode.ERROR)
                 return next(error)
             }
-            
             const password = req.body.password;
             const hashedPassword = await bcrypt.hash(password, Number(process.env.SALT_ROUND))
             const newModerator = await Moderator.create({
