@@ -39,7 +39,13 @@ module.exports = (db, type)=>{
         },
         rate: {
             type: type.FLOAT,
+            defaultValue: 0,
             allowNull: true
+        },
+        noOfReviews: {
+            type: type.INTEGER,
+            defaultValue: 0,
+            allowNull: false
         },
         mainPhoto: {
             type: type.TEXT,

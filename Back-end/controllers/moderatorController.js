@@ -34,6 +34,7 @@ module.exports = {
                 username: req.body.username,
                 password: hashedPassword,
                 profilePic: req.body.profilePic,
+                cwSpaceCwID: req.body.cwSpaceCwID
             })
             if (newModerator) {
                 return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Moderator is Created Successfully" })
