@@ -36,7 +36,6 @@ function Home() {
         fetch("http://localhost:4000/cw_spaces/home")
             .then(res => res.json())
             .then(responsedata => {
-                console.log(responsedata)
                 setDiscover(responsedata.data);
             }
             ).catch(error => { setFetchError(true); });
