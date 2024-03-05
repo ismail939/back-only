@@ -12,7 +12,6 @@ function Slider(){
         fetch("http://localhost:4000/offers/home")
             .then(res => res.json())
             .then(responsedata => {
-                console.log(responsedata)
                 setHomeOffers(responsedata.data);
             }
             ).catch(error => { setFetchError(true); });

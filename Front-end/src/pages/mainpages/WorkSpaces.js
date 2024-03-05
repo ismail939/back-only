@@ -7,6 +7,8 @@ import notdata from "../../components/images/Nodata.svg"
 import servererror from "../../components/images/serverdown.svg"
 import WorkSpaceCard from "../../components/WorkSpaceCard";
 import { Pagination, PaginationItem } from "@mui/material";
+import { useSelector } from "react-redux";
+import { jwtDecode } from "jwt-decode";
 
 export function ShowError() {
     return (
@@ -37,6 +39,8 @@ function WorkSpaces() {
     const [showFilter, setShowFilter] = useState(false);
     const [priceRange, setPriceRange] = useState([100, 500]);
     const [pageNumber, setPageNumber] = useState(0)
+    const token = useSelector(store => store.auth).token;
+    const profileData = token ? jwtDecode(token) : null;
     const cwSpacesPerPage = 10;
     const pagesVisited = pageNumber * cwSpacesPerPage;
     const pageCount = Math.ceil(displayedCwspaces?.length / cwSpacesPerPage);
@@ -58,7 +62,6 @@ function WorkSpaces() {
         fetch("http://localhost:4000/cw_spaces")
             .then(res => res.json())
             .then(responsedata => {
-                console.log(responsedata)
                 setCWSpaces(responsedata.data);
                 setDisplayedCwspaces(responsedata.data)
                 setFetchError(false)
@@ -97,7 +100,7 @@ function WorkSpaces() {
         setPageNumber(value - 1)
     }
     const displayPages = displayedCwspaces?.slice(pagesVisited, pagesVisited + cwSpacesPerPage).map((cwspace) => {
-        return <WorkSpaceCard cwspace={cwspace} showFavIcon={true} key={cwspace.cwID} />
+        return <WorkSpaceCard cwspace={cwspace} showFavIcon={true} profileData={profileData} key={cwspace.cwID} />
     })
     return (
         <div className="flex flex-col relative min-h-screen justify-between">
