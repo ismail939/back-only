@@ -6,15 +6,18 @@ import PageNotFound from "../PageNotFound";
 import { useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
 import 'react-calendar/dist/Calendar.css';
-function TimeStamp({ booked, range, bookingRange, updateBookingRange }) {
+function TimeStamp({ date, booked, range, bookingRange, updateBookingRange }) {
     const [active, setActive] = useState(false)
+    useEffect(()=>{
+        setActive(false)
+    },[date])
     return (
         <div className={`rounded-3xl text-white w-full h-14 px-2 flex items-center justify-center font-semibold
         ${!booked ? `cursor-pointer duration-200 hover:bg-[#0F4C75] ${active ? "bg-[#197ec2] border-2 border-[#BBE1FA]" : "bg-[#1B262C]"}`
                 : "bg-gray-500"}
         `}
             onClick={() => {
-                setActive(!active);
+                if(!booked) setActive(!active);
                 if (!active && !booked)
                     updateBookingRange([...bookingRange, range])
                 else
@@ -240,6 +243,7 @@ function BookingRoom() {
     }, [])
     function onDateChange(selectedDate) {
         setDate(selectedDate)
+        setBookingRange([])
         getBookedTimes(selectedDate)
     }
     function isBooked(hour) {
@@ -281,8 +285,8 @@ function BookingRoom() {
                             {timeRange.map((value, index) => {
                                 if (index < timeRange.length - 1)
                                     if (!isBooked(value))
-                                        return <TimeStamp range={[value, value + 1]} booked={false} bookingRange={bookingRange} updateBookingRange={updateBookingRange} />
-                                    else return <TimeStamp range={[value, value + 1]} booked={true} bookingRange={bookingRange} updateBookingRange={updateBookingRange} />
+                                        return <TimeStamp date={date} range={[value, value + 1]} booked={false} bookingRange={bookingRange} updateBookingRange={updateBookingRange} />
+                                    else return <TimeStamp date={date} range={[value, value + 1]} booked={true} bookingRange={bookingRange} updateBookingRange={updateBookingRange} />
                             })}
                         </div> :
                             <div className="lg:w-1/2 px-2 py-3 text-xl main-font">

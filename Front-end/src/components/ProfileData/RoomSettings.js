@@ -55,7 +55,7 @@ function RoomSettings({ cwid }) {
                         })}
                     </div>
                 </div> : null}
-                <div className="mt-8 float-right">
+                <div className="mt-8">
                     <Link to="../createRoom" className="px-6 py-4 uppercase bg-[#0F4C75] text-white hover:bg-[#197ec2] duration-200">ADD NEW ROOM</Link>
                 </div>
             </div>
