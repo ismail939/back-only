@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import SpaceSettings from "../components/ProfileData/SpaceSettings";
 import OfferSeetings from "../components/ProfileData/OfferSettings";
 import RoomSettings from "../components/ProfileData/RoomSettings";
+import Moderators from "../components/ProfileData/Moderators";
 function DashboardProfile() {
     const [active, setActive] = useState("Personal Information");
     const [cwspace, setCWSpace] = useState();
@@ -16,7 +17,7 @@ function DashboardProfile() {
     const buttonStyle = "w-48 font-semibold px-2 py-3 hover:border-blue-500 border rounded-2xl text-md"
     const activeStyle = "bg-[#0F4C75] text-white hover:bg-[#197ec2] duration-200"
     useEffect(() => {
-        if(usertype==="owner" && profileData.cwSpaceCwID){
+        if((usertype==="owner" || usertype==="moderator") && profileData.cwSpaceCwID){
             getCworkingSpaceData();}
     }, [])
     const getCworkingSpaceData = () => {
@@ -31,21 +32,25 @@ function DashboardProfile() {
         < >
             <div className="flex flex-col gap-5 px-3 md:px-16 lg:px-28 md:flex-row mx-8 md:mx-auto min-h-screen">
                 <div className="  mx-8 ">
-                    <div className="my-8">
+                    <div className="my-7">
                         <button onClick={() => setActive("Personal Information")}
                             className={`${buttonStyle} ${active === "Personal Information" ? activeStyle : "hover:text-indigo-900"}`} >Personal Information</button>
                     </div>
-                    {usertype==="owner"&& <div className="my-8">
+                    {(usertype==="owner" || usertype === "moderator") && <div className="my-7">
                         <button className={`${buttonStyle} ${active === "WorkSpace Information" ? activeStyle : "hover:text-indigo-900"}`}
                             onClick={() => setActive("WorkSpace Information")}>WorkSpace Information</button>
                     </div>}
-                    {usertype==="owner"&& profileData.cwSpaceCwID !==null&&<div className="my-8">
+                    {(usertype==="owner" || usertype === "moderator") && profileData.cwSpaceCwID !==null&&<div className="my-7">
                         <button className={`${buttonStyle} ${active === "WorkSpace Rooms" ? activeStyle : "hover:text-indigo-900"}`}
                             onClick={() => setActive("WorkSpace Rooms")}>WorkSpace Rooms</button>
                     </div>}
-                    {usertype==="owner"&&  profileData.cwSpaceCwID !==null &&<div className="my-8">
+                    {(usertype==="owner" || usertype === "moderator") &&  profileData.cwSpaceCwID !==null &&<div className="my-7">
                         <button className={`${buttonStyle} ${active === "WorkSpace Offer" ? activeStyle : "hover:text-indigo-900"}`}
                             onClick={() => setActive("WorkSpace Offer")}>WorkSpace Offers</button>
+                    </div>}
+                    {usertype==="owner"&&  profileData.cwSpaceCwID !==null &&<div className="my-7">
+                        <button className={`${buttonStyle} ${active === "Moderators" ? activeStyle : "hover:text-indigo-900"}`}
+                            onClick={() => setActive("Moderators")}>Moderators</button>
                     </div>}
                 </div>
                 {active === "Personal Information" && <ProfileSettings profileData={profileData} />
@@ -66,6 +71,10 @@ function DashboardProfile() {
                 {active === "WorkSpace Offer"  &&
                     <OfferSeetings cwid={profileData.cwSpaceCwID} />
                 }
+                {active === "Moderators"  &&
+                    <Moderators cwid={profileData.cwSpaceCwID}/>
+                }
+                
             </div>
         </>
     )

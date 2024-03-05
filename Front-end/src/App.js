@@ -42,7 +42,7 @@ function App() {
         <Route element={<RequireAuth allowedRoles={["client"]} />} >
           <Route path='favourites' element={<Favourites />}></Route>
         </Route>
-        <Route element={<RequireAuth allowedRoles={["owner", "client"]} />} >
+        <Route element={<RequireAuth allowedRoles={["owner", "client", "moderator"]} />} >
           <Route path='dashboardProfile' element={<DashboardProfile />}></Route>
           <Route path='discoverEdit' element={<DiscoverAdmin />}></Route>
           <Route path='offerEdit' element={<OfferAdmin />}></Route>
