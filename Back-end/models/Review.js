@@ -4,15 +4,11 @@ module.exports = (db, type) => {
             type: type.INTEGER,
             allowNull: false
         },
-        dateTime: {
-            type: type.DATE,
-            allowNull: false
-        },
         body: {
             type: type.TEXT,
             allowNull: false
         },
     },{
-        timestamps: false 
+        timestamps: true 
     })
 }
