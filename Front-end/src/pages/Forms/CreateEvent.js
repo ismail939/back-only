@@ -186,46 +186,51 @@ function CreateEvent() {
                                 ></textarea>
                                 {dataerrors.description ? <span className="text-[12px] text-red-500">plaese enter a description</span> : null}
                             </div>
-                            <div>
-                                <label
-                                    htmlFor="name"
-                                    className="block mb-2 text-sm font-medium text-gray-900 "
-                                >
-                                    Max Capacity<span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    name="title"
-                                    id="title"
-                                    className={`bg-gray-50 border ${dataerrors.title ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
-                                    placeholder="Enter your name"
-                                    required
-                                    onChange={(e) => {
-                                        setMaxCapacity(e.target.value);
-                                    }}
-                                ></input>
-                                {dataerrors.maxCapacity ? <span className="text-[12px] text-red-500">plaese enter a valid number </span> : null}
+                            <div className="flex items-center justify-between gap-8 mb-3">
+                                <div>
+                                    <label
+                                        htmlFor="name"
+                                        className="block mb-2 text-sm font-medium text-gray-900 "
+                                    >
+                                        Max Capacity<span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="title"
+                                        min={1}
+                                        id="title"
+                                        className={`bg-gray-50 border ${dataerrors.title ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
+                                        placeholder="Enter your name"
+                                        required
+                                        onChange={(e) => {
+                                            setMaxCapacity(e.target.value);
+                                        }}
+                                    ></input>
+                                    {dataerrors.maxCapacity ? <span className="text-[12px] text-red-500">plaese enter a valid number </span> : null}
+                                </div>
+                                <div>
+                                    <label
+                                        htmlFor="name"
+                                        className="block mb-2 text-sm font-medium text-gray-900 "
+                                    >
+                                        Price<span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="title"
+                                        min={1}
+                                        id="title"
+                                        className={`bg-gray-50 border ${dataerrors.title ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
+                                        placeholder="Enter your name"
+                                        required
+                                        onChange={(e) => {
+                                            setPrice(e.target.value);
+                                        }}
+                                    ></input>
+                                    {dataerrors.price ? <span className="text-[12px] text-red-500">plaese enter a vaild number</span> : null}
+                                </div>
                             </div>
-                            <div>
-                                <label
-                                    htmlFor="name"
-                                    className="block mb-2 text-sm font-medium text-gray-900 "
-                                >
-                                    Price<span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    name="title"
-                                    id="title"
-                                    className={`bg-gray-50 border ${dataerrors.title ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
-                                    placeholder="Enter your name"
-                                    required
-                                    onChange={(e) => {
-                                        setPrice(e.target.value);
-                                    }}
-                                ></input>
-                                {dataerrors.price ? <span className="text-[12px] text-red-500">plaese enter a vaild number</span> : null}
-                            </div>
+
                             <div className="flex justify-between gap-6">
                                 <div className="w-full">
                                     <label

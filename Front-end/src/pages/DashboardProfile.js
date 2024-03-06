@@ -7,6 +7,7 @@ import SpaceSettings from "../components/ProfileData/SpaceSettings";
 import OfferSeetings from "../components/ProfileData/OfferSettings";
 import RoomSettings from "../components/ProfileData/RoomSettings";
 import Moderators from "../components/ProfileData/Moderators";
+import EventSettings from "../components/ProfileData/EventSettings";
 function DashboardProfile() {
     const [active, setActive] = useState("Personal Information");
     const [cwspace, setCWSpace] = useState();
@@ -48,6 +49,10 @@ function DashboardProfile() {
                         <button className={`${buttonStyle} ${active === "WorkSpace Offer" ? activeStyle : "hover:text-indigo-900"}`}
                             onClick={() => setActive("WorkSpace Offer")}>WorkSpace Offers</button>
                     </div>}
+                    {(usertype==="owner" || usertype === "moderator") &&  profileData.cwSpaceCwID !==null &&<div className="my-7">
+                        <button className={`${buttonStyle} ${active === "WorkSpace Event" ? activeStyle : "hover:text-indigo-900"}`}
+                            onClick={() => setActive("WorkSpace Event")}>WorkSpace Event</button>
+                    </div>}
                     {usertype==="owner"&&  profileData.cwSpaceCwID !==null &&<div className="my-7">
                         <button className={`${buttonStyle} ${active === "Moderators" ? activeStyle : "hover:text-indigo-900"}`}
                             onClick={() => setActive("Moderators")}>Moderators</button>
@@ -70,6 +75,9 @@ function DashboardProfile() {
                 }
                 {active === "WorkSpace Offer"  &&
                     <OfferSeetings cwid={profileData.cwSpaceCwID} />
+                }
+                {active === "WorkSpace Event"  &&
+                    <EventSettings cwid={profileData.cwSpaceCwID} />
                 }
                 {active === "Moderators"  &&
                     <Moderators cwid={profileData.cwSpaceCwID}/>
