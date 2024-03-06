@@ -32,6 +32,7 @@ function WorkSpaces() {
     const [dropdown, setDropDown] = useState(false);
     const [cwspaces, setCWSpaces] = useState([]);
     const [displayedCwspaces, setDisplayedCwspaces] = useState([]);
+    const [favourites, setFavourites] = useState([]);
     const [statusresponse, setStatusResponse] = useState("");
     const [searchData, setSearchData] = useState([]);
     const [searchlist, setSearchList] = useState(false);
@@ -45,11 +46,19 @@ function WorkSpaces() {
     const pagesVisited = pageNumber * cwSpacesPerPage;
     const pageCount = Math.ceil(displayedCwspaces?.length / cwSpacesPerPage);
     let menuRef = useRef();
-    //const [sortedData,setSortedData] =useState();
     useEffect(() => {
+        if(profileData?.clientID) getFavourites();
         getWorkSpaces();
         setDropDown(false);
     }, [])
+    const getFavourites = () => {
+        fetch(`http://localhost:4000/favourites/${profileData.clientID}`)
+            .then(res => res.json())
+            .then(responsedata => {
+                setFavourites(responsedata.data);
+            }
+            ).catch(error => { });
+    }
     useEffect(() => {
         let handler = (e) => {
             if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -100,7 +109,7 @@ function WorkSpaces() {
         setPageNumber(value - 1)
     }
     const displayPages = displayedCwspaces?.slice(pagesVisited, pagesVisited + cwSpacesPerPage).map((cwspace) => {
-        return <WorkSpaceCard cwspace={cwspace} showFavIcon={true} profileData={profileData} key={cwspace.cwID} />
+        return <WorkSpaceCard cwspace={cwspace} showFavIcon={true} favourites={favourites} profileData={profileData}  key={cwspace.cwID} />
     })
     return (
         <div className="flex flex-col relative min-h-screen justify-between">
