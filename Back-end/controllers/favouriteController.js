@@ -16,8 +16,18 @@ module.exports = {
             if (favourites.length === 0) {
                 const error = appError.create("No favourites found for this client", 404, httpStatusCode.ERROR);
                 return next(error);
+            } 
+            let favIDs = [] 
+            for (let index = 0; index < favourites.length; index++) {
+                favIDs.push(favourites[index].cwSpaceCwID)
             }
-            return res.json({ status: httpStatusCode.SUCCESS, data: favourites });
+            const cw_spaces = await Cw_space.findAll({
+                where: {
+                    cwID: { [sequelize.Op.in]: favIDs }
+                }
+                , raw: true
+            })
+            return res.json({ status: httpStatusCode.SUCCESS, data: cw_spaces });
         }
     ),
     create: asyncWrapper(
@@ -27,7 +37,6 @@ module.exports = {
                 const error = appError.create(errors, 400, httpStatusCode.ERROR)
                 return next(error)
             }
-            console.log(req.body)
             const favourite = await Favourite.create(req.body)
             return res.status(201).json({ status: httpStatusCode.SUCCESS, data: favourite })
         }
