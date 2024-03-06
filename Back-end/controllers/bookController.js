@@ -50,7 +50,6 @@ module.exports = {
                 })
                 books[index].username = client.username
                 books[index].clientImage = client.profilePic
-                console.log(books[index].roomID, roomsImages, "9999999999")
                 books[index].roomImage = roomsImages[books[index].roomRoomID]
             }
 
@@ -70,10 +69,7 @@ module.exports = {
             })
             // filter the books as they are equal to the sent date
             for (let index = 0; index < books.length; index++) {
-                console.log(books[index].start.toISOString().split('T')[0])
-                console.log(req.body.date)
                 if(books[index].start.toISOString().split('T')[0]!=req.body.date){
-                    console.log(books[index]+"uuuu")
                     books.splice(index, 1)
                     index--
                 }
@@ -134,7 +130,6 @@ module.exports = {
             }
             delete req.body.date
             delete req.body.times
-            console.log(req.body)
             const newBook = await Book.create(req.body)
             return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newBook });
         }
