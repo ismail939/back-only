@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import client from "../../components/images/client.png";
 import businnesman from "../../components/images/businessman.png";
 import { ShowErrorMessage } from "./PortalLogin";
+import { setData } from "../../components/reduxtoolkit/Slices/signUpSlice";
+import { useDispatch } from "react-redux";
 function TypeSelection({ usertype,setUsertype }) {
     const activeStyle = "border-2 border-[#197ec2] rounded-md"
     return (
@@ -25,6 +27,7 @@ function TypeSelection({ usertype,setUsertype }) {
 
 function SignUp() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [showpassword, setShowPassword] = useState(false);
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -205,6 +208,16 @@ function SignUp() {
             })
             setCheckError("")
             AddData();
+            // dispatch(setData({
+            //     firstName: firstName,
+            //     lastName: lastName,
+            //     email: email,
+            //     phonenumber: phonenumber,
+            //     password: password,
+            //     username: username,
+            //     usertype:usertype
+            // }))
+            // navigate("../email authentication")
         }
     }
     return (
