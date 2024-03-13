@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { ShowErrorMessage } from "./PortalLogin";
-function Ask({data, setCheck}) {
+function Ask({ data, setCheck }) {
     return (
         <div className="p-6">
             <h1 className="my-4 main-font text-gray-900 text-2xl">
@@ -15,29 +15,33 @@ function Ask({data, setCheck}) {
             </p>
             <div className="flex items-center justify-between gap-8">
                 <button type="submit" className="w-full bg-[#3282B8] rounded-sm text-md px-5 py-2.5 text-center duration-300 hover:bg-[#2272A8]"
-                    onClick={(e) => { setCheck(true)}}>Yes</button>
+                    onClick={(e) => { setCheck(true) }}>Yes</button>
                 <button type="submit" className="w-full bg-red-600 rounded-sm text-md px-5 py-2.5 text-center duration-300 hover:bg-red-700"
                     onClick={(e) => { }}>No</button>
             </div>
         </div>
     )
 }
-function Verify({data}) {
-    const [code , setCode] = useState("")
-    const [enable , setEnable] = useState(false)
-    function HandleChange(e){
+function Verify({ data }) {
+    const [code, setCode] = useState("")
+    const [enable, setEnable] = useState(false)
+    const [incorrect, setIncorrect] = useState(false)
+    function HandleChange(e) {
         const input = e.target.value;
-        if(/^(?:\d+)?$/.test(input) && input.length <= 6)  {setCode(e.target.value);}
-        if(input.length < 6){
+        if (/^(?:\d+)?$/.test(input) && input.length <= 6) { setCode(e.target.value); }
+        if (input.length < 6) {
             setEnable(false)
-        }else{
+        } else {
             setEnable(true)
         }
     }
-    function Continue(){
-        console.log(code)
+    function Continue() {
+        if(code !== ""){
+        }else{
+            setIncorrect(true)
+        }
     }
-    function ResendCode(){
+    function ResendCode() {
     }
     return (
         <div className="p-6">
@@ -51,13 +55,16 @@ function Verify({data}) {
                 <div className="my-2">
                     <label htmlFor="verify" className="mb-10 text-md font-medium">Verification Code</label>
                     <input type="number" name="verify" id="verify" min={0} placeholder="" value={code}
-                    className={`verify-input my-3 bg-gray-50 border text-center text-gray-900 text-2xl main-font rounded-sm block w-full p-2.5`}
-                    onChange={HandleChange}></input>
+                        className={`verify-input my-3 bg-gray-50 border text-center text-gray-900 text-2xl main-font rounded-sm block w-full p-2.5`}
+                        onChange={HandleChange}></input>
+                </div>
+                <div className="my-3">
+                    <ShowErrorMessage condition={incorrect} value={"Incorrect Verification Code"} />
                 </div>
                 <button type="submit" className={`w-full ${enable ? "btn-color" : "bg-gray-400 text-white"} rounded-sm text-md font-medium px-5 py-2.5 text-center duration-300`}
                     disabled={!enable}
-                    onClick={(e) => { Continue()}}>Continue</button>
-                    <button type="submit" className="w-full mt-3 border border-red-600 text-red-600 rounded-sm text-md font-medium px-5 py-2.5 text-center hover:bg-red-600 hover:text-white duration-100"
+                    onClick={(e) => { Continue() }}>Continue</button>
+                <button type="submit" className="w-full mt-3 border border-red-600 text-red-600 rounded-sm text-md font-medium px-5 py-2.5 text-center hover:bg-red-600 hover:text-white duration-100"
                     onClick={(e) => { }}>Resend Code</button>
             </div>
         </div>
@@ -69,7 +76,7 @@ function EmailAuthentication() {
     return (
         <div className="flex flex-col items-center mt-32 min-h-screen">
             <div className="w-full bg-white rounded-lg shadow mt-[100px] max-w-md xl:p-0">
-                {check ? <Verify data={data}/> : <Ask data={data} setCheck={setCheck}/>}
+                {check ? <Verify data={data} /> : <Ask data={data} setCheck={setCheck} />}
             </div>
         </div>
     )

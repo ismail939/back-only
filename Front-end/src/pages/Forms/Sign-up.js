@@ -207,17 +207,17 @@ function SignUp() {
                 password: false, username: false, confirmpassword: false , usertype:false
             })
             setCheckError("")
-            AddData();
-            // dispatch(setData({
-            //     firstName: firstName,
-            //     lastName: lastName,
-            //     email: email,
-            //     phonenumber: phonenumber,
-            //     password: password,
-            //     username: username,
-            //     usertype:usertype
-            // }))
-            // navigate("../email authentication")
+            // AddData();
+            dispatch(setData({
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                phonenumber: phonenumber,
+                password: password,
+                username: username,
+                usertype:usertype
+            }))
+            navigate("../email authentication")
         }
     }
     return (
