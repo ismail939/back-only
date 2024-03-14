@@ -116,7 +116,7 @@ module.exports = {
     },
     sendResetLink: (email, token) => {
         return new Promise((resolve, reject) => {
-        const resetLink = `http://localhost:3000/?token=${token}`;
+        const resetLink = `http://localhost:3000/ResetPassword?token=${token}`;
         const htmlContent = `
             <html>
                 <head>
