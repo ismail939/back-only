@@ -48,7 +48,6 @@ module.exports = {
 
             const password = req.body.password;
             const hashedPassword = await bcrypt.hash(password, Number(process.env.SALT_ROUND))
-            const verificationCode = generateVerificationCode();
             const newOwner = await Owner.create({
                 fname: req.body.fname,
                 lname: req.body.lname,
@@ -57,7 +56,7 @@ module.exports = {
                 password: hashedPassword,
                 profilePic: req.body.profilePic,
                 phone: req.body.phone,
-                verificationCode: verificationCode
+                verificationCode: false
             })
             if (newOwner) {
                 try {
@@ -70,6 +69,38 @@ module.exports = {
             } else {
                 const error = appError.create("Unexpected Error, Try Again Later", 500, httpStatusCode.FAIL);
                 return next(error);
+            }
+        }
+    ),
+    sendVerification: asyncWrapper(
+        async (req, res, next) => {
+            const owner = await Owner.findOne({
+                raw: true, where: {
+                    email: req.body.email
+                }
+            })
+            if (owner) {
+                if (owner.verified === 0) {
+                    const verificationCode = generateVerificationCode();
+                    await Owner.update({ verificationCode: verificationCode }, {
+                        where: {
+                            ownerID: owner.ownerID
+                        }
+                    })
+                    try {
+                        await sendVerificationCode(owner.email, verificationCode);
+                        return res.status(201).json({ status: httpStatusCode.SUCCESS, message: `Email Sent to ${owner.email} successfully` });
+                    } catch (err) {
+                        const error = appError.create("Error sending verification code", 500, httpStatusCode.FAIL);
+                        return next(error);
+                    }
+                } else {
+                    const error = appError.create("This Email Associated with another account", 400, httpStatusCode.ERROR)
+                    return next(error)
+                }
+            } else {
+                const error = appError.create(`Invalid Email ${req.body.email}`, 404, httpStatusCode.ERROR)
+                return next(error)
             }
         }
     ),
