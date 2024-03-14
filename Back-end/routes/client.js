@@ -34,6 +34,9 @@ router.route("/verify")
 router.route("/login")
     .post(clientController.login);
 
+router.route("/forgotPassword")
+    .post(clientController.forgotPassword);
+
 router.route("/updatePhoto/:ID")
     .patch(verifyToken, allowedTo('client'), upload.single('profilePic'), clientController.updatePhoto);
 

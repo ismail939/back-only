@@ -1,7 +1,6 @@
 const nodemailer = require("nodemailer");
 const path = require("path");
 const logoPath = path.join(__dirname, "..", "public", "images", "logo.png");
-require("dotenv").config();
 
 const transporter = nodemailer.createTransport({
     service: "Gmail",
@@ -91,21 +90,21 @@ module.exports = {
                 </html>
                 `;
         const mailOptions = {
-        from: {
-            name: "Spaces Platform",
-            address: process.env.GMAIL_USER,
-        },
-        to: email,
-        subject: "Verification Code",
-        html: htmlContent,
-        attachments: [
-            {
-            filename: "logo.png",
-            path: logoPath,
-            cid: "logo",
+            from: {
+                name: "Spaces Platform",
+                address: process.env.GMAIL_USER,
             },
-        ],
-        };
+            to: email,
+            subject: "Verification Code",
+            html: htmlContent,
+            attachments: [
+                {
+                filename: "logo.png",
+                path: logoPath,
+                cid: "logo",
+                },
+            ],
+            };
         transporter.sendMail(mailOptions, (error) => {
         if (error) {
             reject(error);
@@ -116,7 +115,8 @@ module.exports = {
     });
     },
     sendResetLink: (email, token) => {
-    return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
+        const resetLink = `http://localhost:3000/?token=${token}`;
         const htmlContent = `
             <html>
                 <head>
@@ -141,9 +141,6 @@ module.exports = {
                             margin-bottom: 20px;
                         }
                         .reset-button {
-                            text-align: center;
-                            color: #1B262C;
-                            font-size: 48px;
                             margin-top: 20px;
                             margin-bottom: 30px;
                         }
@@ -165,7 +162,23 @@ module.exports = {
                             font-size: 24px;
                             color: #0F4C75
                         }
-                        
+                        .button {
+                            display: block;
+                            padding: 10px 20px;
+                            background-color: #1B262C;
+                            color: #BBE1FA;
+                            text-align: center;
+                            text-decoration: none;
+                            font-size: 24px;
+                            border-radius: 5px;
+                            cursor: pointer;
+                        }
+                        .button:hover {
+                            background-color: #0F4C75;
+                        }
+                        a{
+                            color: #BBE1FA
+                        }
                     </style>
                 </head>
                 <body>
@@ -177,10 +190,9 @@ module.exports = {
                             <img src="cid:logo" alt="Spaces Logo" style="width: 300px; height: auto; ">
                         </div>
                         <div class="code-box">
-                            <p>If you've lost your password or wish to reset it,</p>
-                            <p>use the link below to get started.</p>
+                            <p>If you've lost your password or wish to reset it, use the link below to get started.</p>
                             <div class="reset-button">
-                            <a href=${code} class="button">Reset password</a>
+                            <a href= ${resetLink} class="button">Reset password</a>
                             </div>
                         </div>
                         <div class="signature">
@@ -195,27 +207,27 @@ module.exports = {
             </html>
             `;
         const mailOptions = {
-        from: {
-            name: "Spaces Platform",
-            address: process.env.GMAIL_USER,
-        },
-        to: email,
-        subject: "Forgot password",
-        html: htmlContent,
-        attachments: [
-            {
-            filename: "logo.png",
-            path: logoPath,
-            cid: "logo",
-            }
-        ]
-        };
+            from: {
+                name: "Spaces Platform",
+                address: process.env.GMAIL_USER,
+            },
+            to: email,
+            subject: "Forgot Password",
+            html: htmlContent,
+            attachments: [
+                {
+                filename: "logo.png",
+                path: logoPath,
+                cid: "logo",
+                },
+            ],
+            };
         transporter.sendMail(mailOptions, (error) => {
-            if (error) {
+        if (error) {
             reject(error);
-            } else {
+        } else {
             resolve();
-            }
+        }
         });
     });
     }

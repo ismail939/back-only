@@ -7,7 +7,7 @@ const { validateUser , validateUpdatedUser} = require("../middlewares/validation
 const bcrypt = require("bcrypt")
 const generateJWT = require("../utils/generateJWT");
 const generateVerificationCode = require("../utils/generateVerificationCode");
-const { sendVerificationCode } = require("../utils/sendEmail");
+const { sendVerificationCode, sendResetLink } = require("../utils/sendEmail");
 const fs = require('fs')
 
 module.exports = {
@@ -107,13 +107,13 @@ module.exports = {
                 const enteredPassword = req.body.password;
                 bcrypt.compare(enteredPassword, owner.password, async (err, result) => {
                     if (result) {
-                        if (owner.verified === false) {
+                        if (owner.verified === 0) {
                             const error = appError.create("Not Verified", 400, httpStatusCode.ERROR)
                             return next(error)
                         }
                         delete owner.verificationCode;
                         delete owner.password
-                        const token = await generateJWT(owner)
+                        const token = await generateJWT(owner, process.env.ACCESS_TOKEN_PERIOD)
                         return res.status(200).json({ status: httpStatusCode.SUCCESS, data: { token } })
                     }
                 });
@@ -164,11 +164,37 @@ module.exports = {
                     }
                 });
                 delete updatedOwner.password;
-                const token = await generateJWT(updatedOwner);
+                const token = await generateJWT(updatedOwner, process.env.ACCESS_TOKEN_PERIOD);
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Owner Updated Successfully", data: { token } });
             }
             const error = appError.create("Owner Not Found", 404, httpStatusCode.ERROR);
             return next(error);
+        }
+    ),
+    forgotPassword: asyncWrapper(
+        async (req, res, next) => {
+            const owner = await Owner.findOne({
+                raw: true, where: {
+                    email: req.body.email
+                }
+            })
+            if (owner) {
+                const tokenData = {
+                    ownerID: owner.ownerID,
+                    email: owner.email,
+                    role: owner.role
+                }
+                try {
+                    const token = await generateJWT(tokenData, process.env.RESET_TOKEN_PERIOD);
+                    await sendResetLink(owner.email, token);
+                    return res.status(201).json({ status: httpStatusCode.SUCCESS, message: `An Email has been Sent to ${owner.email}` });
+                } catch (err) {
+                    const error = appError.create("Error sending Resetting Email", 500, httpStatusCode.FAIL);
+                    return next(error);
+                }
+            }
+            const error = appError.create(`There Are No Available Owners with Email ${owner.email}`, 404, httpStatusCode.ERROR)
+            return next(error)
         }
     ),
     updatePassword: asyncWrapper(
@@ -229,7 +255,7 @@ module.exports = {
                     }
                 });
                 delete updatedOwner.password;
-                const token = await generateJWT(updatedOwner);
+                const token = await generateJWT(updatedOwner, process.env.ACCESS_TOKEN_PERIOD);
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Owner Updated Successfully", data: { token } })
             }
             const error = appError.create("Owner Not Found", 404, httpStatusCode.ERROR);

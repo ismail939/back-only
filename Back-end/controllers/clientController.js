@@ -7,7 +7,7 @@ const { validateUser, validateUpdatedUser } = require("../middlewares/validation
 const bcrypt = require('bcrypt')
 const generateJWT = require('../utils/generateJWT')
 const generateVerificationCode = require("../utils/generateVerificationCode");
-const { sendVerificationCode } = require("../utils/sendEmail");
+const { sendVerificationCode, sendResetLink } = require("../utils/sendEmail");
 const fs = require('fs')
 
 module.exports = {
@@ -107,13 +107,13 @@ module.exports = {
                 const enteredPassword = req.body.password;
                 bcrypt.compare(enteredPassword, client.password, async (err, result) => {
                     if (result) {
-                        if (client.verified === false) {
+                        if (client.verified === 0) {
                             const error = appError.create("Not Verified", 400, httpStatusCode.ERROR)
                             return next(error)
                         }
                         delete client.verificationCode;
                         delete client.password
-                        const token = await generateJWT(client)
+                        const token = await generateJWT(client, process.env.ACCESS_TOKEN_PERIOD)
                         return res.status(200).json({ status: httpStatusCode.SUCCESS, data: { token } })
                     }
                     const error = appError.create("Username or Password is Incorrect", 404, httpStatusCode.ERROR)
@@ -166,11 +166,37 @@ module.exports = {
                     }
                 });
                 delete updatedClient.password;
-                const token = await generateJWT(updatedClient);
+                const token = await generateJWT(updatedClient, process.env.ACCESS_TOKEN_PERIOD);
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully", data: { token } });
             }
             const error = appError.create("Client Not Found", 404, httpStatusCode.ERROR);
             return next(error);
+        }
+    ),
+    forgotPassword: asyncWrapper(
+        async (req, res, next) => {
+            const client = await Client.findOne({
+                raw: true, where: {
+                    email: req.body.email
+                }
+            })
+            if (client) {
+                const tokenData = {
+                    clientID: client.clientID,
+                    email: client.email,
+                    role: client.role
+                }
+                try {
+                    const token = await generateJWT(tokenData, process.env.RESET_TOKEN_PERIOD)
+                    await sendResetLink(client.email, token);
+                    return res.status(201).json({ status: httpStatusCode.SUCCESS, message: `An Email has been Sent to ${client.email}` });
+                } catch (err) {
+                    const error = appError.create("Error sending Resetting Email", 500, httpStatusCode.FAIL);
+                    return next(error);
+                }
+            }
+            const error = appError.create(`There Are No Available Clients with Email ${req.body.email}`, 404, httpStatusCode.ERROR)
+            return next(error)
         }
     ),
     updatePassword: asyncWrapper(
@@ -230,7 +256,7 @@ module.exports = {
                     }
                 });
                 delete updatedClient.password;
-                const token = await generateJWT(updatedClient);
+                const token = await generateJWT(updatedClient, process.env.ACCESS_TOKEN_PERIOD);
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully", data: { token } });
             }
             const error = appError.create("Client Not Found", 404, httpStatusCode.ERROR);
