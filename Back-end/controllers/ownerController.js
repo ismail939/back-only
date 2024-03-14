@@ -205,25 +205,31 @@ module.exports = {
                 }
             })
             if (updatedOwner) {
-                const oldPassword = req.body.oldPassword; 
-                bcrypt.compare(oldPassword, updatedOwner.password, async (err, result) => {
-                    if (result) {
-                        const hashedPassword = await bcrypt.hash(req.body.newPassword, Number(process.env.SALT_ROUND))
-                        await Owner.update(
-                            { password: hashedPassword }, {
-                            where: {
-                                ownerID: req.params.ID
-                            }
+                if (req.body.reset === true) {
+                    const hashedPassword = await bcrypt.hash(req.body.newPassword, Number(process.env.SALT_ROUND))
+                    await Owner.update({ password: hashedPassword }, {
+                        where: {
+                            ownerID: req.params.ID
                         }
-                        )
-                        return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Password is Updated Successfully!"})
-                    }
-                    else {
-                        const error = appError.create("Old Password is Incorrect ", 404, httpStatusCode.ERROR);
-                        return next(error);
-                    }
-                });
-
+                    })
+                    return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Password is Updated Successfully!" })
+                } else if (req.body.reset === false) {
+                    const oldPassword = req.body.oldPassword;
+                    bcrypt.compare(oldPassword, updatedOwner.password, async (err, result) => {
+                        if (result) {
+                            const hashedPassword = await bcrypt.hash(req.body.newPassword, Number(process.env.SALT_ROUND))
+                            await Owner.update({ password: hashedPassword }, {
+                                where: {
+                                    ownerID: req.params.ID
+                                }
+                            })
+                            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Password is Updated Successfully!" });
+                        } else {
+                            const error = appError.create("Old Password is Incorrect ", 404, httpStatusCode.ERROR);
+                            return next(error);
+                        }
+                    });
+                }
             } else {
                 const error = appError.create("Username or Password is Incorrect", 404, httpStatusCode.ERROR)
                 return next(error)
