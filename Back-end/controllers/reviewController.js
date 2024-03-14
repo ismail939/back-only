@@ -27,12 +27,22 @@ module.exports = {
                 }
             })
             if (client && cw_space) {
-                const newReview = await Review.create(req.body);
+                const newReview = await Review.create(req.body)
+                const newRate = (cw_space.rate * cw_space.noOfReviews + req.body.rate) / (cw_space.noOfReviews + 1)
+                await Cw_space.update(
+                    {
+                        rate: newRate,
+                        noOfReviews: cw_space.noOfReviews+1
+                    }, {
+                    where: {
+                        cwID: cw_space.cwID
+                    }
+                })
                 if (newReview) {
                     return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Review is Created Successfully" });
                 }
             }
-            const error = appError.create("Client or Co-working Space does not exist", 400, httpStatusCode.ERROR);
+            const error = appError.create("Client or Co-working Space does not exist", 404, httpStatusCode.ERROR);
             return next(error);
         }
     ),
@@ -93,6 +103,23 @@ module.exports = {
                 }
             });
             if (updatedReview) {
+                if (req.body.rate) {
+                    console.log("lol")
+                    const cw_space = await Cw_space.findOne({
+                        where: {
+                            cwID: req.params.cwSpaceID
+                        }
+                    })
+                    const newRate = (cw_space.rate * cw_space.noOfReviews - updatedReview.rate + req.body.rate) / (cw_space.noOfReviews)
+                    await Cw_space.update(
+                        {
+                            rate: newRate
+                        }, {
+                        where: {
+                            cwID: cw_space.cwID
+                        }
+                    })
+                }
                 await Review.update(req.body, {
                 where: {
                     clientClientID: req.params.clientID,
@@ -114,6 +141,21 @@ module.exports = {
                 }
             });
             if (deletedReview) {
+                const cw_space = await Cw_space.findOne({
+                        where: {
+                            cwID: req.params.cwSpaceID
+                        }
+                    })
+                    const newRate = (cw_space.rate * cw_space.noOfReviews - deletedReview.rate) / (cw_space.noOfReviews - 1)
+                    await Cw_space.update(
+                        {
+                            rate: newRate,
+                            noOfReviews: cw_space.noOfReviews-1
+                        }, {
+                        where: {
+                            cwID: cw_space.cwID
+                        }
+                    })
                 await Review.destroy({
                 where: {
                     clientClientID: req.params.clientID,
