@@ -6,6 +6,8 @@ const appError = require("../utils/appError");
 const { validateUser, validateUpdatedUser } = require("../middlewares/validationSchema");
 const bcrypt = require('bcrypt')
 const generateJWT = require('../utils/generateJWT')
+const generateVerificationCode = require("../utils/generateVerificationCode");
+const { sendVerificationCode, sendResetLink } = require("../utils/sendEmail");
 const fs = require('fs')
 
 module.exports = {
@@ -21,6 +23,9 @@ module.exports = {
                     [Sequelize.Op.or]: [
                         { username: req.body.username },
                         { email: req.body.email }
+                    ],
+                    [Sequelize.Op.and]: [
+                        { verified: true }
                     ]
                 }
             })
@@ -29,8 +34,21 @@ module.exports = {
                 return next(error)
             }
 
+            await Client.destroy({
+                where: {
+                    [Sequelize.Op.or]: [
+                        { username: req.body.username },
+                        { email: req.body.email }
+                    ],
+                    [Sequelize.Op.and]: [
+                        { verified: false }
+                    ]
+                }
+            })
+
             const password = req.body.password;
             const hashedPassword = await bcrypt.hash(password, Number(process.env.SALT_ROUND))
+            const verificationCode = generateVerificationCode();
             const newClient = (await Client.create({
                 fname: req.body.fname,
                 lname: req.body.lname,
@@ -38,12 +56,43 @@ module.exports = {
                 email: req.body.email,
                 password: hashedPassword,
                 profilePic: req.body.profilePic,
-                phone: req.body.phone
+                phone: req.body.phone,
+                verificationCode: verificationCode
             }))
             if (newClient) {
-                return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Client is Created Successfully" })
+                try {
+                    await sendVerificationCode(req.body.email, verificationCode);
+                    return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Client is Registered Successfully" });
+                } catch (err) {
+                    const error = appError.create("Error sending verification code", 500, httpStatusCode.FAIL);
+                    return next(error);
+                }
+            } else {
+                const error = appError.create("Unexpected Error, Try Again Later", 500, httpStatusCode.FAIL);
+                return next(error);
             }
-            const error = appError.create("Unexpected Error, Try Again Later", 500, httpStatusCode.FAIL)
+        }
+    ),
+    verifyEmail: asyncWrapper(
+        async (req, res, next) => {
+            const client = await Client.findOne({
+                raw: true, where: {
+                    email: req.body.email
+                }
+            })
+            if (client) {
+                if (client.verificationCode === req.body.verificationCode) {
+                    await Client.update({verified: true}, {
+                    where: {
+                        clientID: client.clientID
+                    }
+                    })
+                    return res.status(201).json({ status: httpStatusCode.SUCCESS, message: `Email ${req.body.email} Verified Successfully!` })
+                }
+                const error = appError.create("Invalid verification code", 400, httpStatusCode.ERROR)
+                return next(error)
+            }
+            const error = appError.create(`There Are No Available Clients with Email ${req.body.email}`, 404, httpStatusCode.ERROR)
             return next(error)
         }
     ),
@@ -58,8 +107,13 @@ module.exports = {
                 const enteredPassword = req.body.password;
                 bcrypt.compare(enteredPassword, client.password, async (err, result) => {
                     if (result) {
+                        if (client.verified === 0) {
+                            const error = appError.create("Not Verified", 400, httpStatusCode.ERROR)
+                            return next(error)
+                        }
+                        delete client.verificationCode;
                         delete client.password
-                        const token = await generateJWT(client)
+                        const token = await generateJWT(client, process.env.ACCESS_TOKEN_PERIOD)
                         return res.status(200).json({ status: httpStatusCode.SUCCESS, data: { token } })
                     }
                     const error = appError.create("Username or Password is Incorrect", 404, httpStatusCode.ERROR)
@@ -112,11 +166,37 @@ module.exports = {
                     }
                 });
                 delete updatedClient.password;
-                const token = await generateJWT(updatedClient);
+                const token = await generateJWT(updatedClient, process.env.ACCESS_TOKEN_PERIOD);
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully", data: { token } });
             }
             const error = appError.create("Client Not Found", 404, httpStatusCode.ERROR);
             return next(error);
+        }
+    ),
+    forgotPassword: asyncWrapper(
+        async (req, res, next) => {
+            const client = await Client.findOne({
+                raw: true, where: {
+                    email: req.body.email
+                }
+            })
+            if (client) {
+                const tokenData = {
+                    clientID: client.clientID,
+                    email: client.email,
+                    role: client.role
+                }
+                try {
+                    const token = await generateJWT(tokenData, process.env.RESET_TOKEN_PERIOD)
+                    await sendResetLink(client.email, token);
+                    return res.status(201).json({ status: httpStatusCode.SUCCESS, message: `An Email has been Sent to ${client.email}` });
+                } catch (err) {
+                    const error = appError.create("Error sending Resetting Email", 500, httpStatusCode.FAIL);
+                    return next(error);
+                }
+            }
+            const error = appError.create(`There Are No Available Clients with Email ${req.body.email}`, 404, httpStatusCode.ERROR)
+            return next(error)
         }
     ),
     updatePassword: asyncWrapper(
@@ -176,7 +256,7 @@ module.exports = {
                     }
                 });
                 delete updatedClient.password;
-                const token = await generateJWT(updatedClient);
+                const token = await generateJWT(updatedClient, process.env.ACCESS_TOKEN_PERIOD);
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully", data: { token } });
             }
             const error = appError.create("Client Not Found", 404, httpStatusCode.ERROR);

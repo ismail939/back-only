@@ -3,6 +3,7 @@ const httpStatusCode = require("./utils/httpStatusText");
 const cors = require("cors");
 const app = express()
 app.use(express.json())
+require("dotenv").config();
 
 const bookRouter = require("./routes/book");
 const clientRouter = require('./routes/client')

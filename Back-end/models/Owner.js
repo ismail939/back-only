@@ -37,6 +37,15 @@ module.exports = (db, type)=>{
             type: type.STRING,
             defaultValue: 'owner',
             readOnly: true
+        },
+        verified: {
+            type: type.BOOLEAN,
+            allowNUll: false,
+            defaultValue: false
+        },
+        verificationCode: {
+            type: type.STRING,
+            allowNUll: false
         }
     },{
         timestamps: false 
