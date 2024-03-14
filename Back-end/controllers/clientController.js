@@ -48,7 +48,6 @@ module.exports = {
 
             const password = req.body.password;
             const hashedPassword = await bcrypt.hash(password, Number(process.env.SALT_ROUND))
-            const verificationCode = generateVerificationCode();
             const newClient = (await Client.create({
                 fname: req.body.fname,
                 lname: req.body.lname,
@@ -57,7 +56,7 @@ module.exports = {
                 password: hashedPassword,
                 profilePic: req.body.profilePic,
                 phone: req.body.phone,
-                verificationCode: verificationCode
+                verificationCode: false
             }))
             if (newClient) {
                 try {
@@ -73,6 +72,38 @@ module.exports = {
             }
         }
     ),
+    sendVerification: asyncWrapper(
+        async (req, res, next) => {
+            const client = await Client.findOne({
+                raw: true, where: {
+                    email: req.body.email
+                }
+            })
+            if (client) {
+                if (client.verified === 0) {
+                    const verificationCode = generateVerificationCode();
+                    await Client.update({ verificationCode: verificationCode }, {
+                        where: {
+                            clientID: client.clientID
+                        }
+                    })
+                    try {
+                        await sendVerificationCode(client.email, verificationCode);
+                        return res.status(201).json({ status: httpStatusCode.SUCCESS, message: `Email Sent to ${client.email} successfully` });
+                    } catch (err) {
+                        const error = appError.create("Error sending verification code", 500, httpStatusCode.FAIL);
+                        return next(error);
+                    }
+                } else {
+                    const error = appError.create("This Email Associated with another account", 400, httpStatusCode.ERROR)
+                    return next(error)
+                }
+            } else {
+                const error = appError.create(`Invalid Email ${req.body.email}`, 404, httpStatusCode.ERROR)
+                return next(error)
+            }
+        }
+    ),
     verifyEmail: asyncWrapper(
         async (req, res, next) => {
             const client = await Client.findOne({
@@ -82,11 +113,15 @@ module.exports = {
             })
             if (client) {
                 if (client.verificationCode === req.body.verificationCode) {
-                    await Client.update({verified: true}, {
-                    where: {
-                        clientID: client.clientID
-                    }
-                    })
+                    await Client.update(
+                        {
+                            verified: true,
+                            verificationCode: null
+                        },{
+                            where: {
+                                clientID: client.clientID
+                            }   
+                        })
                     return res.status(201).json({ status: httpStatusCode.SUCCESS, message: `Email ${req.body.email} Verified Successfully!` })
                 }
                 const error = appError.create("Invalid verification code", 400, httpStatusCode.ERROR)
