@@ -45,7 +45,7 @@ module.exports = (db, type)=>{
         },
         verificationCode: {
             type: type.STRING,
-            allowNUll: false
+            allowNUll: true
         }
     },{
         timestamps: false 
