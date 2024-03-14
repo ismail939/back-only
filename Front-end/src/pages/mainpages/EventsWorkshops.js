@@ -17,6 +17,7 @@ function EventsWorshops() {
             .then(responsedata => {
                 setEvents(responsedata.data);
                 setDisplayedEvents(responsedata.data)
+
                 setFetchError(false)
                 if (responsedata.status === "error") setStatusResponse("Sorry, there are no Events currently");
                 else if (responsedata.status === "fail") setStatusResponse("Oops something went wrong !");
@@ -63,17 +64,14 @@ function EventsWorshops() {
                 </div> : null}
             </div>
             {!fetcherror ? <div>
-                {/* {displayedEvents ? <div className="flex flex-row gap-8 mt-8">
+                {displayedEvents ? <div className="flex flex-row gap-8 mt-8">
                     {displayedEvents.map((event) => {
-                        return <EventsCard key={event} />
+                        return <EventsCard event={event} key={event.eventID} />
                     })}
                 </div>
-                    : <NoDataError response={statusresponse} />} */}
+                    : <NoDataError response={statusresponse} />}
                 <div className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-6 mt-8">
-                    <EventsCard />
-                    <EventsCard />
-                    <EventsCard />
-                    <EventsCard />
+
                 </div>
             </div> : <ShowError />}
         </div>

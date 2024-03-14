@@ -22,8 +22,10 @@ import Requests from './pages/Requests';
 import BookingRoom from './pages/WorkSpaceProfile/BookingRoom';
 import EventsWorshops from './pages/mainpages/EventsWorkshops';
 import Books from './pages/Books';
+import CreateEvent from './pages/Forms/CreateEvent';
 import Favourites from './pages/Favourites';
 import PortalLogin from './pages/Forms/PortalLogin';
+
 function App() {
   return (
     <>
@@ -42,7 +44,7 @@ function App() {
         <Route element={<RequireAuth allowedRoles={["client"]} />} >
           <Route path='favourites' element={<Favourites />}></Route>
         </Route>
-        <Route element={<RequireAuth allowedRoles={["owner", "client"]} />} >
+        <Route element={<RequireAuth allowedRoles={["owner", "client", "moderator"]} />} >
           <Route path='dashboardProfile' element={<DashboardProfile />}></Route>
           <Route path='discoverEdit' element={<DiscoverAdmin />}></Route>
           <Route path='offerEdit' element={<OfferAdmin />}></Route>
@@ -57,6 +59,7 @@ function App() {
           <Route path='createRoom' element={<CreateRoom />}></Route>
           <Route path='requests' element={<Requests />}></Route>
           <Route path='books' element={<Books />}></Route>
+          <Route path='createEvent' element={<CreateEvent/>}></Route>
         </Route>
         <Route path='dashboard' element={<Dashboard />}></Route>
         <Route path="*" element={<PageNotFound />}></Route>
