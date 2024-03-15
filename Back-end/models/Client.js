@@ -37,6 +37,15 @@ module.exports = (db, type) => {
             type: type.STRING,
             defaultValue: 'client',
             readOnly: true
+        },
+        verified: {
+            type: type.BOOLEAN,
+            allowNUll: false,
+            defaultValue: false
+        },
+        verificationCode: {
+            type: type.STRING,
+            allowNUll: true
         }
     }, {
         timestamps: false

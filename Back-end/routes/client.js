@@ -28,8 +28,17 @@ const upload = multer({ storage: storage })
 router.route("/register")
     .post(clientController.register);
 
+router.route("/sendVerification")
+    .post(clientController.sendVerification);
+
+router.route("/verify")
+    .post(clientController.verifyEmail);
+
 router.route("/login")
     .post(clientController.login);
+
+router.route("/forgotPassword")
+    .post(clientController.forgotPassword);
 
 router.route("/updatePhoto/:ID")
     .patch(verifyToken, allowedTo('client'), upload.single('profilePic'), clientController.updatePhoto);

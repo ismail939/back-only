@@ -39,7 +39,7 @@ module.exports = {
                         ownerID: newCw_space.ownerOwnerID
                     }
                 })
-                const token = await generateJWT(updatedOwner)
+                const token = await generateJWT(updatedOwner, process.env.ACCESS_TOKEN_PERIOD)
                 return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Co-working Space is Created Successfully" , data:{ token }});
             }
             const error = appError.create("Unexpected Error, Try Again Later", 500, httpStatusCode.FAIL)
