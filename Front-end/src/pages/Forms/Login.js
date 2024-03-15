@@ -91,7 +91,7 @@ function Login() {
                         <button type="submit" className="w-full btn-color font-medium rounded-lg text-md px-5 py-2.5 text-center duration-300 ease-in-out"
                             onClick={(e) => { HandleError(e) }}>Sign in</button>
                         <p className="text-sm font-light text-gray-500">
-                            Forgot your Password? <Link to="../ResetPassword" className="font-medium text-primary-600 hover:underline">Reset Password</Link>
+                            Forgot your Password? <Link to="../ForgotPassword" className="font-medium text-primary-600 hover:underline">Reset Password</Link>
                         </p>
                         <p className="text-sm font-light text-gray-500">
                             Don’t have an account yet? <Link to="../sign-up" className="font-medium text-primary-600 hover:underline">Sign up</Link>

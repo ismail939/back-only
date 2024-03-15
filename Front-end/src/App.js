@@ -25,6 +25,7 @@ import Books from './pages/Books';
 import CreateEvent from './pages/Forms/CreateEvent';
 import Favourites from './pages/Favourites';
 import PortalLogin from './pages/Forms/PortalLogin';
+import ForgotPassword from './pages/Forms/ForgetPassword';
 import ResetPassword from './pages/Forms/ResetPassword';
 
 function App() {
@@ -36,7 +37,8 @@ function App() {
         <Route path='login' element={<Login />}></Route>
         <Route path='portal-login' element={<PortalLogin />}></Route>
         <Route path='sign-up' element={<SignUp />}></Route>
-        <Route path='ResetPassword' element={<ResetPassword />}></Route>
+        <Route path='forgotPassword' element={<ForgotPassword />}></Route>
+        <Route path='resetpassword' element={<ResetPassword />}></Route>
         <Route path='workspaces' element={<><Outlet /></>}>
           <Route path="" element={<WorkSpaces />} />
           <Route path=":cwID" element={<WorkSpaceProfile />} />
