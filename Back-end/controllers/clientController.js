@@ -59,13 +59,7 @@ module.exports = {
                 verificationCode: false
             }))
             if (newClient) {
-                try {
-                    await sendVerificationCode(req.body.email, verificationCode);
-                    return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Client is Registered Successfully" });
-                } catch (err) {
-                    const error = appError.create("Error sending verification code", 500, httpStatusCode.FAIL);
-                    return next(error);
-                }
+                return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Client is Registered Successfully" });
             } else {
                 const error = appError.create("Unexpected Error, Try Again Later", 500, httpStatusCode.FAIL);
                 return next(error);
