@@ -72,10 +72,15 @@ function SignUp() {
             }),
         }).then(res => res.json()).then((data) => {
             if (data.status === "success") {
-                navigate("../login")
+                dispatch(setData({
+                    email: email,
+                    usertype:usertype
+                }))
+                navigate("../email authentication")
             } else if (data.status === "error") {
                 setResError(data.message)
             } else if (data.status === "fail") {
+                console.log(data)
                 setResError("oops, something wrong went on !")
             }
         })
@@ -207,17 +212,7 @@ function SignUp() {
                 password: false, username: false, confirmpassword: false , usertype:false
             })
             setCheckError("")
-            // AddData();
-            dispatch(setData({
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                phonenumber: phonenumber,
-                password: password,
-                username: username,
-                usertype:usertype
-            }))
-            navigate("../email authentication")
+            AddData();
         }
     }
     return (

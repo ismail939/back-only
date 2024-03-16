@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { ShowErrorMessage } from "./PortalLogin";
-function Ask({ data, setCheck }) {
+import { useNavigate } from "react-router-dom";
+function Ask({ data, setCheck, SendCode }) {
+    const navigate = useNavigate();
     return (
         <div className="p-6">
             <h1 className="my-4 main-font text-gray-900 text-2xl">
@@ -15,14 +17,14 @@ function Ask({ data, setCheck }) {
             </p>
             <div className="flex items-center justify-between gap-8">
                 <button type="submit" className="w-full bg-[#3282B8] rounded-sm text-md px-5 py-2.5 text-center duration-300 hover:bg-[#2272A8]"
-                    onClick={(e) => { setCheck(true) }}>Yes</button>
+                    onClick={(e) => { SendCode() ; setCheck(true) }}>Yes</button>
                 <button type="submit" className="w-full bg-red-600 rounded-sm text-md px-5 py-2.5 text-center duration-300 hover:bg-red-700"
-                    onClick={(e) => { }}>No</button>
+                    onClick={(e) => { navigate("../sign-up")}}>No</button>
             </div>
         </div>
     )
 }
-function Verify({ data }) {
+function Verify({ data, SendCode }) {
     const [code, setCode] = useState("")
     const [enable, setEnable] = useState(false)
     const [incorrect, setIncorrect] = useState(false)
@@ -36,12 +38,16 @@ function Verify({ data }) {
         }
     }
     function Continue() {
-        if(code !== ""){
-        }else{
-            setIncorrect(true)
-        }
-    }
-    function ResendCode() {
+        fetch(`http://localhost:4000/${data.usertype}s/verify`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "email": data.email,
+                "verificationCode": code
+            }),
+        })
     }
     return (
         <div className="p-6">
@@ -65,7 +71,7 @@ function Verify({ data }) {
                     disabled={!enable}
                     onClick={(e) => { Continue() }}>Continue</button>
                 <button type="submit" className="w-full mt-3 border border-red-600 text-red-600 rounded-sm text-md font-medium px-5 py-2.5 text-center hover:bg-red-600 hover:text-white duration-100"
-                    onClick={(e) => { }}>Resend Code</button>
+                    onClick={(e) => {SendCode(); }}>Resend Code</button>
             </div>
         </div>
     )
@@ -73,10 +79,21 @@ function Verify({ data }) {
 function EmailAuthentication() {
     const [check, setCheck] = useState(false);
     const data = useSelector(store => store.signUp);
+    function SendCode(){
+        fetch(`http://localhost:4000/${data.usertype}s/sendVerification`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "email": data.email,
+            }),
+        })
+    }
     return (
         <div className="flex flex-col items-center mt-32 min-h-screen">
             <div className="w-full bg-white rounded-lg shadow mt-[100px] max-w-md xl:p-0">
-                {check ? <Verify data={data} /> : <Ask data={data} setCheck={setCheck} />}
+                {check ? <Verify data={data} SendCode={SendCode}/> : <Ask data={data} setCheck={setCheck} SendCode={SendCode}/>}
             </div>
         </div>
     )
