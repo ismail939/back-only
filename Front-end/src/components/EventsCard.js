@@ -17,17 +17,17 @@ function EventsCard(props) {
                         </div>
                         <div className="flex items-center gap-2 text-md main-font my-1 text-[#0F4C75]">
                             <CalendarEvent />
-                            <p>{`from  ${event.start.slice(0, 10)}`}</p>
+                            <p>{`From:  ${event.start.slice(0, 10)}`}</p>
                         </div>
                         <div className="flex items-center gap-2 text-md main-font my-1 text-[#0F4C75]">
                             <CalendarEvent />
-                            <p>{`to    ${event.end.slice(0, 10)}`}</p>
+                            <p>{`To:    ${event.end.slice(0, 10)}`}</p>
                         </div>
                         <div className="flex items-center gap-2 text-md main-font my-1 text-[#0F4C75]">
-                            {`price :${event.price}`}
+                            {`Price: ${event.price} L.E`}
                         </div>
                         <div className="flex items-center gap-2 text-md main-font my-1 text-[#0F4C75]">
-                            {`max capacity :${event.maxCapacity}`}
+                            {`Available Slots: ${event.maxCapacity - event.capacity}`}
                         </div>
                     </div>
                     <hr></hr>
@@ -35,7 +35,7 @@ function EventsCard(props) {
                         <h2 className="main-font text-lg text-neutral-600">Event Details</h2>
                         <p>{event.description}</p>
                     </div>
-                    <button className="main-font my-2 btn-color py-2 px-2 float-right w-1/2">Register</button>
+                    <button className="main-font my-2 btn-color py-2 px-2 w-full">Register</button>
                 </div>
             </div>
         </div>

@@ -74,7 +74,8 @@ function WorkSpaces() {
                 setCWSpaces(responsedata.data);
                 setDisplayedCwspaces(responsedata.data)
                 setFetchError(false)
-                setStatusResponse("Sorry, there are no Co-workspaces currently")
+                if (responsedata.status === "error") setStatusResponse("Sorry, there are no Co-working Spaces currently");
+                else if (responsedata.status === "fail") setStatusResponse("Oops something went wrong !");
             }
             ).catch(error => { setFetchError(true); });
     }

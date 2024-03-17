@@ -58,7 +58,8 @@ function CreateRoom() {
         })
             .then(res => res.json())
             .then(response => {
-                if (response.status === "error") { console.log(response) }
+                if (response.status === "error") { 
+                    console.log(response) }
                 else if (response.status === "success") {
                     success()
                     console.log(response)

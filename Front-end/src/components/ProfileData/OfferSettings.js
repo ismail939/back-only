@@ -22,11 +22,11 @@ function OfferSeetings({ cwid }) {
         return (
             <div className="bg-white rounded-xl shadow-md overflow-hidden">
                 <div className="">
-                    <div className="md:shrink-0 cursor-pointer">
-                        <img className="h-48 w-full object-cover hover:scale-110 duration-500" src={imageUrl} alt="Modern building architecture"></img>
+                    <div className="md:shrink-0">
+                        <img className="h-48 w-full object-cover" src={imageUrl} alt="Modern building architecture"></img>
                     </div>
                     <div className="px-8 py-2">
-                        <Link to={`/workspaces/${offer.offerID}`} className="capitalize block font-semibold text-lg leading-tight font-medium text-black hover:text-[#3282B8] duration-300 sec-font">{offer.title}</Link>
+                        <h2 className="capitalize block font-semibold text-lg leading-tight font-medium text-black sec-font">{offer.title}</h2>
                         <div className="uppercase mt-1  tracking-wide text-sm text-[#0F4C75] font-semibold sec-font">{offer.name}</div>
                         <p className="mt-2 text-slate-500 sec-font">{offer.description}
                         </p>
@@ -50,7 +50,7 @@ function OfferSeetings({ cwid }) {
                         return <OfferCard offer={offer} key={offer.offerID} />
                     })}
                 </div>
-                <div className="mt-8 float-right">
+                <div className="mt-8">
                     <Link to="../createOffer" className="px-6 py-4 uppercase bg-[#0F4C75] text-white hover:bg-[#197ec2] duration-200">ADD NEW OFFER</Link>
                 </div>
             </div>

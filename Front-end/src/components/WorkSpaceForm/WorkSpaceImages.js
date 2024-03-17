@@ -2,7 +2,7 @@ import { useState } from "react";
 import { forwardRef, useImperativeHandle } from "react";
 function WorkSpaceImages({ photos, updateFields, childRef , ShowError }) {
     const [error, setError] = useState(false);
-    const errormessage = "Please select a valid image, accepted formats are: png, jpg, jpeg";
+    const errormessage = "Please select at least 2 valid images, accepted formats are: png, jpg, jpeg";
     function isImage(offerImageName) {
         if (offerImageName.slice(-4) === ".jpg" || offerImageName.slice(-5) === ".jpeg" || offerImageName.slice(-4) === ".png") return true;
         else {
@@ -16,7 +16,7 @@ function WorkSpaceImages({ photos, updateFields, childRef , ShowError }) {
                 result = false;
             }
         })
-        if (!result || photos.length <= 0) { setError(true); return false; }
+        if (!result || photos.length <= 1) { setError(true); return false; }
         else {
             setError(false);
             return true;

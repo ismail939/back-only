@@ -50,7 +50,7 @@ import { GeoAlt, CalendarEvent, Clock } from "react-bootstrap-icons";
                                 <h2 className="main-font text-lg text-neutral-600">Event Details</h2>
                                 <p>{event.description}</p>
                             </div>
-                            <button className="main-font my-2 btn-color py-2 px-2 float-right w-1/2">Register</button>
+                            <button className="main-font my-2 btn-color py-2 px-2 float-right w-1/2">Edit</button>
                         </div>
                     </div>
                 </div>
@@ -69,7 +69,7 @@ import { GeoAlt, CalendarEvent, Clock } from "react-bootstrap-icons";
                             return <EventCard event={event} key={event.eventID} />
                         })}
                     </div>
-                    <div className="mt-8 float-right">
+                    <div className="mt-8">
                         <Link to="../createevent" className="px-6 py-4 uppercase bg-[#0F4C75] text-white hover:bg-[#197ec2] duration-200">ADD NEW event</Link>
                     </div>
                 </div>
