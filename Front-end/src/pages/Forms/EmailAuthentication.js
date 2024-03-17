@@ -17,9 +17,9 @@ function Ask({ data, setCheck, SendCode }) {
             </p>
             <div className="flex items-center justify-between gap-8">
                 <button type="submit" className="w-full bg-[#3282B8] rounded-sm text-md px-5 py-2.5 text-center duration-300 hover:bg-[#2272A8]"
-                    onClick={(e) => { SendCode() ; setCheck(true) }}>Yes</button>
+                    onClick={(e) => { SendCode(); setCheck(true) }}>Yes</button>
                 <button type="submit" className="w-full bg-red-600 rounded-sm text-md px-5 py-2.5 text-center duration-300 hover:bg-red-700"
-                    onClick={(e) => { navigate("../sign-up")}}>No</button>
+                    onClick={(e) => { navigate("../sign-up") }}>No</button>
             </div>
         </div>
     )
@@ -28,6 +28,7 @@ function Verify({ data, SendCode }) {
     const [code, setCode] = useState("")
     const [enable, setEnable] = useState(false)
     const [incorrect, setIncorrect] = useState(false)
+    const navigate = useNavigate();
     function HandleChange(e) {
         const input = e.target.value;
         if (/^(?:\d+)?$/.test(input) && input.length <= 6) { setCode(e.target.value); }
@@ -47,6 +48,13 @@ function Verify({ data, SendCode }) {
                 "email": data.email,
                 "verificationCode": code
             }),
+        }).then(res => res.json()).then((data) => {
+            console.log(data)
+            if (data.status === "success") {
+                navigate("../login")
+            }else if (data.status === "error") {
+                setIncorrect(true)
+            }
         })
     }
     return (
@@ -65,13 +73,13 @@ function Verify({ data, SendCode }) {
                         onChange={HandleChange}></input>
                 </div>
                 <div className="my-3">
-                    <ShowErrorMessage condition={incorrect} value={"Incorrect Verification Code"} />
+                    <ShowErrorMessage condition={incorrect} value={"Invalid Verification Code"} />
                 </div>
                 <button type="submit" className={`w-full ${enable ? "btn-color" : "bg-gray-400 text-white"} rounded-sm text-md font-medium px-5 py-2.5 text-center duration-300`}
                     disabled={!enable}
                     onClick={(e) => { Continue() }}>Continue</button>
                 <button type="submit" className="w-full mt-3 border border-red-600 text-red-600 rounded-sm text-md font-medium px-5 py-2.5 text-center hover:bg-red-600 hover:text-white duration-100"
-                    onClick={(e) => {SendCode(); }}>Resend Code</button>
+                    onClick={(e) => { SendCode(); }}>Resend Code</button>
             </div>
         </div>
     )
@@ -79,7 +87,7 @@ function Verify({ data, SendCode }) {
 function EmailAuthentication() {
     const [check, setCheck] = useState(false);
     const data = useSelector(store => store.signUp);
-    function SendCode(){
+    function SendCode() {
         fetch(`http://localhost:4000/${data.usertype}s/sendVerification`, {
             method: "POST",
             headers: {
@@ -93,7 +101,7 @@ function EmailAuthentication() {
     return (
         <div className="flex flex-col items-center mt-32 min-h-screen">
             <div className="w-full bg-white rounded-lg shadow mt-[100px] max-w-md xl:p-0">
-                {check ? <Verify data={data} SendCode={SendCode}/> : <Ask data={data} setCheck={setCheck} SendCode={SendCode}/>}
+                {check ? <Verify data={data} SendCode={SendCode} /> : <Ask data={data} setCheck={setCheck} SendCode={SendCode} />}
             </div>
         </div>
     )

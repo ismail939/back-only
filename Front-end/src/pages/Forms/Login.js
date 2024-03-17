@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../components/reduxtoolkit/Slices/authSlice";
 import { ShowErrorMessage } from "./PortalLogin";
+import { setData } from "../../components/reduxtoolkit/Slices/signUpSlice";
 import logo from "../../components/images/Spaces logo.png"
 function Login() {
     const dispatch = useDispatch();
@@ -40,6 +41,12 @@ function Login() {
                 setErrorMessage(resdata.message)
             } else if (resdata.status === "fail") {
                 setErrorMessage("oops, something wrong went on !")
+            }else if(resdata.status === "unverified"){
+                dispatch(setData({
+                    email: resdata.message,
+                    usertype: "client"
+                }))
+                navigate("../email authentication")
             }
         })
     }
