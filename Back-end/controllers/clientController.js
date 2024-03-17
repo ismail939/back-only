@@ -137,7 +137,7 @@ module.exports = {
                 bcrypt.compare(enteredPassword, client.password, async (err, result) => {
                     if (result) {
                         if (client.verified === 0) {
-                            const error = appError.create("Not Verified", 400, httpStatusCode.ERROR)
+                            const error = appError.create(`This Email ${client.email} Not Verified`, 400, httpStatusCode.UNVERIFIED)
                             return next(error)
                         }
                         delete client.verificationCode;
