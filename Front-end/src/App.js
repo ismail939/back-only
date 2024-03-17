@@ -25,6 +25,7 @@ import Books from './pages/Books';
 import CreateEvent from './pages/Forms/CreateEvent';
 import Favourites from './pages/Favourites';
 import PortalLogin from './pages/Forms/PortalLogin';
+import EmailAuthentication from './pages/Forms/EmailAuthentication';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
         <Route path='login' element={<Login />}></Route>
         <Route path='portal-login' element={<PortalLogin />}></Route>
         <Route path='sign-up' element={<SignUp />}></Route>
+        <Route path='email authentication' element={<EmailAuthentication />}></Route>
         <Route path='workspaces' element={<><Outlet /></>}>
           <Route path="" element={<WorkSpaces />} />
           <Route path=":cwID" element={<WorkSpaceProfile />} />

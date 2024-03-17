@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import client from "../../components/images/client.png";
 import businnesman from "../../components/images/businessman.png";
 import { ShowErrorMessage } from "./PortalLogin";
+import { setData } from "../../components/reduxtoolkit/Slices/signUpSlice";
+import { useDispatch } from "react-redux";
 function TypeSelection({ usertype,setUsertype }) {
     const activeStyle = "border-2 border-[#197ec2] rounded-md"
     return (
@@ -25,6 +27,7 @@ function TypeSelection({ usertype,setUsertype }) {
 
 function SignUp() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [showpassword, setShowPassword] = useState(false);
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -69,10 +72,15 @@ function SignUp() {
             }),
         }).then(res => res.json()).then((data) => {
             if (data.status === "success") {
-                navigate("../login")
+                dispatch(setData({
+                    email: email,
+                    usertype:usertype
+                }))
+                navigate("../email authentication")
             } else if (data.status === "error") {
                 setResError(data.message)
             } else if (data.status === "fail") {
+                console.log(data)
                 setResError("oops, something wrong went on !")
             }
         })
