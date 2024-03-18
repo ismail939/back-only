@@ -68,13 +68,13 @@ function Login({ type }) {
     const HandleError = (e) => {
         e.preventDefault();
         if (username.length === 0) {
-            setDataErrors({ username: true, password: false})
+            setDataErrors({ username: true, password: false })
         }
         else if (password.length === 0) {
-            setDataErrors({ username: false, password: true})
+            setDataErrors({ username: false, password: true })
         }
         else {
-            setDataErrors({ username: false, password: false}); AddData();
+            setDataErrors({ username: false, password: false }); AddData();
         }
     }
     return (
@@ -100,7 +100,10 @@ function Login({ type }) {
                         </div>
                         {errormessage !== "" ? <p className="text-rose-600 text-xs mt-1 flex items-center gap-1 inline-block"><ExclamationCircleFill />{errormessage}</p> : null}
                         <button type="submit" className="w-full btn-color font-medium rounded-lg text-md px-5 py-2.5 text-center duration-300 ease-in-out"
-                        onClick={(e)=> HandleError(e)}>Sign in</button>
+                            onClick={(e) => HandleError(e)}>Sign in</button>
+                        <p className="text-sm font-light text-gray-500">
+                            Forgot your Password? <Link to="../forgotpassword" className="font-medium text-primary-600 hover:underline">Reset Password</Link>
+                        </p>
                         {type === "Owner" && <p className="text-sm font-light text-gray-500">
                             Don’t have an account yet? <Link to="../sign-up" className="font-medium text-primary-600 hover:underline">Sign up</Link>
                         </p>}

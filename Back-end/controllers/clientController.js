@@ -220,6 +220,7 @@ module.exports = {
                     await sendResetLink(client.email, token);
                     return res.status(201).json({ status: httpStatusCode.SUCCESS, message: `An Email has been Sent to ${client.email}` });
                 } catch (err) {
+                    console.log(err)
                     const error = appError.create("Error sending Resetting Email", 500, httpStatusCode.FAIL);
                     return next(error);
                 }

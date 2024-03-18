@@ -278,9 +278,12 @@ function SignUp() {
                             {reserror !== "" ? <span className="text-[14px] text-red-500 flex gap-2 items-center"><ExclamationCircleFill />{reserror}</span> : null}
                             <button type="submit" className="mt-3 w-full  btn-color font-medium rounded-lg text-md px-5 py-2.5 text-center duration-300 ease-in-out"
                                 onClick={(e) => { HandleError(e); }}>Sign Up</button>
+                            
+                            
                             <p className="text-sm font-light text-gray-500">
                                 Already have an account? <Link to="../login" className="font-medium text-primary-600 hover:underline">Login</Link>
                             </p>
+
                         </form>
                     </div>
                 </div>
