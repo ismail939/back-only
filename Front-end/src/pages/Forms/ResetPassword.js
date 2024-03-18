@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { ExclamationCircleFill, Eye, EyeSlash } from "react-bootstrap-icons";
 import { ShowErrorMessage } from "./PortalLogin";
 import { useParams } from "react-router-dom";
-import { useUpdateClientMutation, useUpdatePhotoMutation } from "../reduxtoolkit/Slices/apiSlice";
-import Swal from "sweetalert2";
 function ResetPassword() {
     const [password, setPassword] = useState("")
     const [showpassword, setShowPassword] = useState(false);
@@ -46,18 +44,21 @@ function ResetPassword() {
             return false;
         }
     }
-    const addPassword = () => {
-        const id = usertype === "owner" ? profileData.ownerID :  profileData.clientID
-        try {
-            const data = JSON.stringify({
-                "password": password,
-                "reset":true,
-                
-            })
-            updateData({ id: id, credentials: data , usertype: usertype })
-        } catch (error) {
-            console.log(error)
-        }
+    // const addPassword = () => {
+    //     const id = usertype === "owner" ? profileData.ownerID :  profileData.clientID
+    //     try {
+    //         const data = JSON.stringify({
+    //             "password": password,
+    //             "reset":true,
+
+    //         })
+    //         updateData({ id: id, credentials: data , usertype: usertype })
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+    function sendPasswords() {
+
     }
     function handlePasswords(e) {
         e.preventDefault()
