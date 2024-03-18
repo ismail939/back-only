@@ -50,7 +50,7 @@ function CreateEvent() {
         var regex = /^\d+$/;
         if (!Number.match(regex)) {
             return true;
-        } else if (Number <= 0) {
+        } else if (Number < 0) {
             return true;
         } else {
             return false;

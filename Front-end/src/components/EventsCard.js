@@ -24,18 +24,18 @@ function EventsCard(props) {
                             <p>{`To:    ${event.end.slice(0, 10)}`}</p>
                         </div>
                         <div className="flex items-center gap-2 text-md main-font my-1 text-[#0F4C75]">
-                            {`Price: ${event.price} L.E`}
+                            {event.price === 0 ? `Price: Free` : `Price: ${event.price} L.E`}
                         </div>
                         <div className="flex items-center gap-2 text-md main-font my-1 text-[#0F4C75]">
                             {`Available Slots: ${event.maxCapacity - event.capacity}`}
                         </div>
                     </div>
                     <hr></hr>
+                    <button className="main-font my-2 btn-color py-2 px-2 w-full">Register</button>
                     <div className="my-2">
                         <h2 className="main-font text-lg text-neutral-600">Event Details</h2>
                         <p>{event.description}</p>
                     </div>
-                    <button className="main-font my-2 btn-color py-2 px-2 w-full">Register</button>
                 </div>
             </div>
         </div>

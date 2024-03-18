@@ -64,7 +64,7 @@ function EventsWorshops() {
                 </div> : null}
             </div>
             {!fetcherror ? <div>
-                {displayedEvents ? <div className="flex flex-row gap-8 mt-8">
+                {displayedEvents ? <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1  gap-8 mt-8">
                     {displayedEvents.map((event) => {
                         return <EventsCard event={event} key={event.eventID} />
                     })}
