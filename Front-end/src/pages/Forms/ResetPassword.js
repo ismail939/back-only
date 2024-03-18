@@ -51,7 +51,7 @@ function ResetPassword() {
     const sendPassword = () => {
         const id = profileData.role === "owner" ? profileData.ownerID : profileData.clientID
         fetch(`http://localhost:4000/${profileData.role}s/updatePassword/${id}`, {
-            method: "POST",
+            method: "PATCH",
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -62,7 +62,7 @@ function ResetPassword() {
             })
         }).then(res => res.json()).then((data) => {
             if (data.status === "success") {
-                profileData.role === "owner" ?  navigate("../portal-login") : navigate("../login") 
+                profileData.role === "owner" ? navigate("../portal-login") : navigate("../login")
             } else if (data.status === "error") {
                 console.log(data.message)
             } else if (data.status === "fail") {
