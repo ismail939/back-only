@@ -1,22 +1,26 @@
 import { useEffect, useState } from "react";
-import { ExclamationCircleFill, Eye, EyeSlash } from "react-bootstrap-icons";
+import { Eye, EyeSlash } from "react-bootstrap-icons";
 import { ShowErrorMessage } from "./PortalLogin";
-import { useParams } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 function ResetPassword() {
     const [password, setPassword] = useState("")
     const [showpassword, setShowPassword] = useState(false);
-    const [url, setUrl] = useState("");
+    const [token, setToken] = useState("");
+    const [profileData, setProfileData] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("")
     const [checkerror, setCheckError] = useState("")
+    const navigate = useNavigate();
     const [dataerrors, setDataErrors] = useState({
         password: false,
         confirmPassword: false,
     });
     useEffect(() => {
-        const cu = window.location.href;
-        setUrl(cu)
+        const url = window.location.href;
+        setToken(url.slice(42))
+        const usertype = jwtDecode(url.slice(42))
+        setProfileData(usertype)
     }, [])
-    console.log(url.slice(42))
     function compPassword() {
         if ((password !== confirmPassword) && (password !== "") && (confirmPassword !== "")) return false;
         else return true
@@ -44,21 +48,27 @@ function ResetPassword() {
             return false;
         }
     }
-    // const addPassword = () => {
-    //     const id = usertype === "owner" ? profileData.ownerID :  profileData.clientID
-    //     try {
-    //         const data = JSON.stringify({
-    //             "password": password,
-    //             "reset":true,
-
-    //         })
-    //         updateData({ id: id, credentials: data , usertype: usertype })
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
-    function sendPasswords() {
-
+    const sendPassword = () => {
+        const id = profileData.role === "owner" ? profileData.ownerID : profileData.clientID
+        fetch(`http://localhost:4000/${profileData.role}s/updatePassword/${id}`, {
+            method: "POST",
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "reset": true,
+                "newPassword": password,
+            })
+        }).then(res => res.json()).then((data) => {
+            if (data.status === "success") {
+                profileData.role === "owner" ?  navigate("../portal-login") : navigate("../login") 
+            } else if (data.status === "error") {
+                console.log(data.message)
+            } else if (data.status === "fail") {
+                console.log("There is problem in the server")
+            }
+        })
     }
     function handlePasswords(e) {
         e.preventDefault()
@@ -76,7 +86,7 @@ function ResetPassword() {
                 password: false, confirmpassword: false
             })
             setCheckError("")
-            sendPasswords();
+            sendPassword();
         }
     }
     return (
@@ -88,7 +98,7 @@ function ResetPassword() {
                             Change Your Password
                         </h1>
                         <div className="">
-                            <div>
+                            <div className="mb-3">
                                 <label htmlFor="Password" className="block mb-2 text-sm font-medium text-gray-900">New Password</label>
                                 <div className="relative">
                                     <input type={showpassword ? "text" : "password"} name="password" id="password" placeholder="••••••••" className={`bg-gray-50 border ${dataerrors.password ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg  block w-full p-2.5`} required
@@ -97,10 +107,10 @@ function ResetPassword() {
                                         {showpassword ? <Eye /> : <EyeSlash />}
                                     </span>
                                 </div>
-                                {dataerrors.password ? <ShowErrorMessage condition={true} value={checkerror} /> : <p className="m-0 mt-1 text-xs text-gray-500">Note: Password must be at least 8 charachters long with one lowercase, one uppercase and a number</p>}
+                                {dataerrors.password ? <ShowErrorMessage condition={true} value={checkerror} /> : <p className="m-0 mt-1 text-[11px] text-gray-500">Note: Password must be at least 8 charachters long with one lowercase, one uppercase and a number</p>}
                             </div>
-                            <div className="">
-                                <label htmlFor="confirmpassword" className="block mb-2 text-sm font-medium text-gray-900">Confirm Password</label>
+                            <div className="mb-4">
+                                <label htmlFor="confirmpassword" className="block mb-2 text-sm font-medium text-gray-900">Confirm New Password</label>
                                 <input type="password" name="confirmpassword" id="confirmpassword" placeholder="••••••••" className={`bg-gray-50 border ${dataerrors.confirmpassword || !compPassword() ? "border-red-500 focus:outline-rose-600" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg  block w-full p-2.5 `} required
                                     onChange={(e) => { setConfirmPassword(e.target.value) }}></input>
                                 {!compPassword() || dataerrors.confirmpassword ? <ShowErrorMessage condition={true} value={"Password doesn't match"} /> : null}

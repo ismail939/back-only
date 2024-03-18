@@ -4,7 +4,7 @@ import { useUpdateClientMutation, useUpdatePhotoMutation } from "../reduxtoolkit
 function ProfileSettings(props) {
     const profileData = props.profileData;
     const usertype = useSelector(store => store.auth).usertype;
-    const auth=useSelector(store=>store.auth);
+    const auth = useSelector(store => store.auth);
     const [updateData] = useUpdateClientMutation();
     const [updatePhoto] = useUpdatePhotoMutation();
     const [firstName, setFirstName] = useState(profileData.fname);
@@ -27,14 +27,14 @@ function ProfileSettings(props) {
         newpassword: false,
         confrimpassword: false
     });
-    
+
     const imageUrl = `http://localhost:4000/images/${usertype}s/` + profileData.profilePic;
     const addImg = () => {
         const formData = new FormData();
         formData.append('profilePic', img);
         const id = usertype === "owner" ? profileData.ownerID : (usertype === "moderator" ? profileData.moderatorID : profileData.clientID)
         try {
-            updatePhoto({ id: id, credentials: formData , usertype: usertype })
+            updatePhoto({ id: id, credentials: formData, usertype: usertype })
             setImgName("")
         } catch (error) {
             console.log(error)
@@ -48,7 +48,7 @@ function ProfileSettings(props) {
                 "lname": lastName ? lastName : profileData.lname,
                 "email": email ? email : profileData.email
             })
-            updateData({ id: id, credentials: data , usertype: usertype })
+            updateData({ id: id, credentials: data, usertype: usertype })
         } catch (error) {
             console.log(error)
         }
@@ -59,7 +59,7 @@ function ProfileSettings(props) {
             const data = JSON.stringify({
                 "phone": phoneNumber ? phoneNumber : profileData.phone
             })
-            updateData({ id: id, credentials: data , usertype: usertype })
+            updateData({ id: id, credentials: data, usertype: usertype })
         } catch (error) {
             console.log(error)
         }
@@ -68,9 +68,11 @@ function ProfileSettings(props) {
         const id = usertype === "owner" ? profileData.ownerID : (usertype === "moderator" ? profileData.moderatorID : profileData.clientID)
         try {
             const data = JSON.stringify({
-                "password": newPassword ? newPassword : profileData.password,
+                "reset": false,
+                "oldPassword": oldPassword,
+                "newPassword": newPassword,
             })
-            updateData({ id: id, credentials: data , usertype: usertype })
+            updateData({ id: id, credentials: data, usertype: usertype })
         } catch (error) {
             console.log(error)
         }
@@ -215,20 +217,20 @@ function ProfileSettings(props) {
     }
     return (
         <>
-        
+
             <div className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4 " >
                 <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Profile Photo</h2>
                 <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4" >
                     <div className="w-full md:px-16 px-4">
-                        <img  className=" object-cover w-60 h-60 p-1 rounded-full ring-2 ring-indigo-300 m-8 " src={img ? URL.createObjectURL(img) : imageUrl} alt="no-picture-added"></img>
+                        <img className=" object-cover w-60 h-60 p-1 rounded-full ring-2 ring-indigo-300 m-8 " src={img ? URL.createObjectURL(img) : imageUrl} alt="no-picture-added"></img>
                         <input className={`hidden`} id="uploadProfileImg"
                             onChange={(e) => { setImg(e.target.files[0]); setImgName(e.target.files[0]?.name) }}
                             accept=".png,.jpg,.jpeg" type="file" ></input>
                         {dataerrors.imgName ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
                         <div className="flex flex-row-reverse w-full items-center gap-5">
-                            <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${!imgName?.trim() ? "bg-gray-500" :  "btn-color border-indigo-200"}
-                        rounded-lg border`}  disabled={!imgName?.trim()} onClick={(e) => handleImage(e)}>Save</button>
-                        <label htmlFor="uploadProfileImg" className="py-2 px-4 font-medium rounded-lg bg-red-500 hover:bg-red-600 duration-200 cursor-pointer">Change Image</label>
+                            <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${!imgName?.trim() ? "bg-gray-500" : "btn-color border-indigo-200"}
+                        rounded-lg border`} disabled={!imgName?.trim()} onClick={(e) => handleImage(e)}>Save</button>
+                            <label htmlFor="uploadProfileImg" className="py-2 px-4 font-medium rounded-lg bg-red-500 hover:bg-red-600 duration-200 cursor-pointer">Change Image</label>
                         </div>
                     </div>
                 </div>
@@ -263,27 +265,27 @@ function ProfileSettings(props) {
                             </div>
                         </div>
                         <div className="flex flex-row-reverse w-full">
-                            <button disabled={firstName===profileData.fname&&lastName===profileData.lname&&email===profileData.email}
-                                onClick={e => HandleError(e)} className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${firstName===profileData.fname&&lastName===profileData.lname&&email===profileData.email ? "bg-gray-500" :  "btn-color border-indigo-200"}
+                            <button disabled={firstName === profileData.fname && lastName === profileData.lname && email === profileData.email}
+                                onClick={e => HandleError(e)} className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${firstName === profileData.fname && lastName === profileData.lname && email === profileData.email ? "bg-gray-500" : "btn-color border-indigo-200"}
                                 rounded-lg border`} >Save</button>
                         </div>
                     </div>
                 </div>}
                 {usertype !== "moderator" && <><h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">PhoneNumber</h2>
-                <div className="my-4 border  border-black-90 rounded-3xl max-w-3xl mx-auto mt-4">
-                    <div className="flex justify-between items-center py-4 md:px-12 px-4 gap-8">
-                        <input className={`bg-gray-50 border ${dataerrors.phonenumber ? "border-red-500" : "border-gray-300"} 
+                    <div className="my-4 border  border-black-90 rounded-3xl max-w-3xl mx-auto mt-4">
+                        <div className="flex justify-between items-center py-4 md:px-12 px-4 gap-8">
+                            <input className={`bg-gray-50 border ${dataerrors.phonenumber ? "border-red-500" : "border-gray-300"} 
                         text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
-                            onChange={(e) => setPhoneNumber(e.target.value)} type="text"
-                            value={phoneNumber} ></input>
-                        <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${phoneNumber===profileData.phone ? "bg-gray-500" :  "btn-color border-indigo-200"}
-                                rounded-lg border`} disabled={phoneNumber===profileData.phone}
-                            onClick={e => handlePhone(e)} >Save</button>
-                    </div>
-                    <div className="px-16 mb-3">
-                        {dataerrors.phonenumber ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
-                    </div>
-                </div></>}
+                                onChange={(e) => setPhoneNumber(e.target.value)} type="text"
+                                value={phoneNumber} ></input>
+                            <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${phoneNumber === profileData.phone ? "bg-gray-500" : "btn-color border-indigo-200"}
+                                rounded-lg border`} disabled={phoneNumber === profileData.phone}
+                                onClick={e => handlePhone(e)} >Save</button>
+                        </div>
+                        <div className="px-16 mb-3">
+                            {dataerrors.phonenumber ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
+                        </div>
+                    </div></>}
                 <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Passsword</h2>
                 <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4">
                     <div className="w-full md:px-12 px-4">
@@ -313,7 +315,7 @@ function ProfileSettings(props) {
                             </div>
                         </div>
                         <div className="flex flex-row-reverse w-full">
-                            <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${!oldPassword.trim() || !newPassword.trim() || !confrimPassword.trim() ? "bg-gray-500" :  "btn-color border-indigo-200"}
+                            <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${!oldPassword.trim() || !newPassword.trim() || !confrimPassword.trim() ? "bg-gray-500" : "btn-color border-indigo-200"}
                                 rounded-lg border`} disabled={!oldPassword.trim() || !newPassword.trim() || !confrimPassword.trim()} onClick={(e) => handlePassword(e)} >Save</button>
                         </div>
                     </div>

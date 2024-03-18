@@ -41,7 +41,7 @@ function Login() {
                 setErrorMessage(resdata.message)
             } else if (resdata.status === "fail") {
                 setErrorMessage("oops, something wrong went on !")
-            }else if(resdata.status === "unverified"){
+            } else if (resdata.status === "unverified") {
                 dispatch(setData({
                     email: resdata.message,
                     usertype: "client"
@@ -97,12 +97,13 @@ function Login() {
                         </div>
                         <button type="submit" className="w-full btn-color font-medium rounded-lg text-md px-5 py-2.5 text-center duration-300 ease-in-out"
                             onClick={(e) => { HandleError(e) }}>Sign in</button>
-                        <p className="text-sm font-light text-gray-500">
-                            Forgot your Password? <Link to="../ForgotPassword" className="font-medium text-primary-600 hover:underline">Reset Password</Link>
-                        </p>
-                        <p className="text-sm font-light text-gray-500">
-                            Don’t have an account yet? <Link to="../sign-up" className="font-medium text-primary-600 hover:underline">Sign up</Link>
-                        </p>
+                        <div>
+                            <p className="text-sm text-gray-800 font-medium mb-2 ">
+                                Don’t have an account yet? <Link to="../sign-up" className="text-gray-500 text-light text-[13px] hover:underline">Sign up</Link>
+                            </p>
+                            <p className="text-[12px] font-light text-gray-500">
+                                Forgot your Password? <Link to="../forgotpassword" className="font-medium text-primary-600 hover:underline">Reset Password</Link>
+                            </p></div>
                     </form>
                 </div>
             </div>
