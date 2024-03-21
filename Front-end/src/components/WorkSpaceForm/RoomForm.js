@@ -9,6 +9,7 @@ function RoomForm({ roomData, updateRoomData, childRef, ShowError }) {
         maxRoomSize: false,
         minRoomSize: false,
         roomImg: false,
+        roomNumber: false,
     }
     const [dataerrors, setDataErrors] = useState(IntitialDataErrors);
     const [checkerror, setCheckError] = useState("");
@@ -26,10 +27,13 @@ function RoomForm({ roomData, updateRoomData, childRef, ShowError }) {
     }
     function NumberError(Number) {
         var regex = /^\d+$/;
-        if (!Number.match(regex)) {
+        if (!Number) {
             return true;
-        }else if (Number <= 0) {
+        }
+        else if (!Number.match(regex)) {
             return true;
+        } else if (Number <= 0) {
+            return true
         } else {
             return false;
         }
@@ -43,6 +47,10 @@ function RoomForm({ roomData, updateRoomData, childRef, ShowError }) {
             setDataErrors({ ...IntitialDataErrors, roomImg: true })
             setCheckError("Please Select a valid Image, accepted formats are: png, jpg, jpeg")
             window.scrollTo(0, 200)
+        } else if (NumberError(roomData.number)) {
+            setDataErrors({ ...IntitialDataErrors, roomNumber: true })
+            setCheckError("Please enter a Suitable Room Number")
+            window.scrollTo(0, 250)
         } else if (NumberError(roomData.hourPrice)) {
             setDataErrors({ ...IntitialDataErrors, hourPrice: true })
             setCheckError("Please enter a Suitable Hour Price")
@@ -111,6 +119,23 @@ function RoomForm({ roomData, updateRoomData, childRef, ShowError }) {
                 <ShowError condition={dataerrors.roomImg} value={checkerror} />
             </div>
             <div>
+                <label
+                    htmlFor="minRoomSize"
+                    className="block mb-2 text-sm font-medium text-gray-900 "
+                >
+                    Room Number
+                </label>
+                <input type="number" name="roomNumber" id="roomNumber" min={1}
+                    className={`bg-gray-50 border ${dataerrors.roomNumber ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
+                    placeholder="Enter room number"
+                    value={roomData?.number}
+                    onChange={(e) => {
+                        updateRoomData({ number: e.target.value })
+                    }}
+                ></input>
+                <ShowError condition={dataerrors.roomNumber} value={checkerror} />
+            </div>
+            <div>
                 <div className="flex items-center justify-between gap-8 mb-3">
                     <div>
                         <label
@@ -122,6 +147,7 @@ function RoomForm({ roomData, updateRoomData, childRef, ShowError }) {
                         <input type="number" name="hourPrice" id="hourPrice" min={0}
                             className={`bg-gray-50 border ${dataerrors.hourPrice ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
                             placeholder="Enter price of Hour"
+                            value={roomData.hourPrice}
                             onChange={(e) => {
                                 updateRoomData({ hourPrice: e.target.value })
                             }}
@@ -136,6 +162,7 @@ function RoomForm({ roomData, updateRoomData, childRef, ShowError }) {
                         <input type="number" name="dayPrice" id="dayPrice" min={0}
                             className={`bg-gray-50 border ${dataerrors.dayPrice ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
                             placeholder="Enter price of Day"
+                            value={roomData.dayPrice}
                             onChange={(e) => {
                                 updateRoomData({ dayPrice: e.target.value })
                             }}
@@ -157,6 +184,7 @@ function RoomForm({ roomData, updateRoomData, childRef, ShowError }) {
                         <input type="number" name="minRoomSize" id="minRoomSize" min={1}
                             className={`bg-gray-50 border ${dataerrors.minRoomSize ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
                             placeholder="Enter mimimum Room size"
+                            value={roomData.minRoomSize}
                             onChange={(e) => {
                                 updateRoomData({ minRoomSize: e.target.value })
                             }}
@@ -172,6 +200,7 @@ function RoomForm({ roomData, updateRoomData, childRef, ShowError }) {
                         <input type="number" name="maxRoomSize" id="maxRoomSize" min={1}
                             className={`bg-gray-50 border ${dataerrors.maxRoomSize ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
                             placeholder="Enter maximum Room size"
+                            value={roomData.maxRoomSize}
                             onChange={(e) => {
                                 updateRoomData({ maxRoomSize: e.target.value })
                             }}

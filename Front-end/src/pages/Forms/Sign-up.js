@@ -83,7 +83,7 @@ function SignUp() {
                 console.log(data)
                 setResError("oops, something wrong went on !")
             }
-        })
+        }).catch(error =>setResError("Unfortunately there was a server error"))
     }
     const nameError = (name) => {
         var letters = /^[A-Za-z]+$/;

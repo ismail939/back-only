@@ -6,6 +6,7 @@ import moderator from "../../components/images/Modaerator.png"
 import businnesman from "../../components/images/businessman.png"
 import { ExclamationCircleFill } from "react-bootstrap-icons"
 import logo from "../../components/images/Spaces logo.png"
+import { setData } from "../../components/reduxtoolkit/Slices/signUpSlice";
 export function ShowErrorMessage(props) {
     const condition = props.condition;
     const value = props.value;
@@ -59,10 +60,18 @@ function Login({ type }) {
                 dispatch(setCredentials({ user: username, token: resdata.data.token, usertype: type.toLocaleLowerCase() }))
                 navigate("/", { replace: true })
             } else if (resdata.status === "error") {
-                setErrorMessage(resdata.message)
+                console(resdata.message)
             } else if (resdata.status === "fail") {
-                setErrorMessage("oops, something wrong went on !")
+                setErrorMessage(resdata.message)
+            } else if (resdata.status === "unverified") {
+                dispatch(setData({
+                    email: resdata.message,
+                    usertype: "owner"
+                }))
+                navigate("../email authentication")
             }
+        }).catch(error => {
+            setErrorMessage("unfortunately there was a server error")
         })
     }
     const HandleError = (e) => {
@@ -98,7 +107,7 @@ function Login({ type }) {
                                 onChange={(e) => setPassword(e.target.value)}></input>
                             <ShowErrorMessage condition={dataerrors.password} value={"please enter your password"} />
                         </div>
-                        {errormessage !== "" ? <p className="text-rose-600 text-xs mt-1 flex items-center gap-1 inline-block"><ExclamationCircleFill />{errormessage}</p> : null}
+                        {errormessage !== "" ? <ShowErrorMessage condition={true} value={errormessage} /> : null}
                         <button type="submit" className="w-full btn-color font-medium rounded-lg text-md px-5 py-2.5 text-center duration-300 ease-in-out"
                             onClick={(e) => HandleError(e)}>Sign in</button>
                         {type === "Owner" && <div>

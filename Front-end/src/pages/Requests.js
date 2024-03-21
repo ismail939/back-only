@@ -28,7 +28,7 @@ function Requests() {
             .then(responsedata => {
                 setRequests(responsedata.data)
                 console.log(responsedata.data)
-            })
+            }).catch()
     }
     useEffect(() => {
         getRequests();

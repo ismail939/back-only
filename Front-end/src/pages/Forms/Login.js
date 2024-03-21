@@ -48,6 +48,8 @@ function Login() {
                 }))
                 navigate("../email authentication")
             }
+        }).catch(error => {
+            setErrorMessage("unfortunately there was a server error")
         })
     }
     const HandleError = (e) => {

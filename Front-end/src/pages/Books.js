@@ -14,7 +14,7 @@ function Books() {
             .then(responsedata => {
                 setBooks(responsedata.data)
                 console.log(responsedata.data)
-            })
+            }).catch()
     }
     useEffect(() => {
         getBooks();

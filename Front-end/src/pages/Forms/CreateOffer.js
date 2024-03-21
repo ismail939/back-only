@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useSelector } from "react-redux";
+import { ShowErrorMessage } from "./PortalLogin";
 import Swal from "sweetalert2";
 function getDate() {
     const today = new Date();
@@ -19,6 +20,7 @@ function CreateOffer() {
     const [end, setEnd] = useState("");
     const [img, setImg] = useState([]);
     const [errormessage, setErrorMessage] = useState("");
+    const [error, setError] = useState(false)
     const [offerImageName, setOfferImageName] = useState("");
     const [dataerrors, setDataErrors] = useState({
         start: false,
@@ -59,15 +61,23 @@ function CreateOffer() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === "error") {
-                        setErrorMessage(data.message);
-                        console.log(errormessage);
+                        setErrorMessage(data.message)
+                    } else if (data.status === "fail") {
+                        setErrorMessage(data.message)
                     } else if (data.status === "success") {
-                        console.log(data);
+                        setErrorMessage("")
+                        setImg([]);
+                        document.getElementById("offerImage").value = "";
+                        setTitle("")
+                        setDescription("")
+                        setStart("")
+                        setEnd("")
                         success();
                     }
                 })
                 .catch(error => {
-                    console.error('Error during fetch operation:', error);
+                    setErrorMessage("unfortunately there was a server error")
+
                 });
         }
     }
@@ -115,6 +125,7 @@ function CreateOffer() {
                                     className={`bg-gray-50 border ${dataerrors.offerImageName ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
                                     placeholder=""
                                     required
+
                                     accept=".png,.jpg,.jpeg"
                                     onChange={(e) => {
                                         setImg(e.target.files[0]);
@@ -137,6 +148,7 @@ function CreateOffer() {
                                     className={`bg-gray-50 border ${dataerrors.title ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
                                     placeholder="Enter your name"
                                     required
+                                    value={title}
                                     onChange={(e) => {
                                         setTitle(e.target.value);
                                     }}
@@ -154,6 +166,7 @@ function CreateOffer() {
                                     type="text"
                                     name="Description"
                                     id="Description"
+                                    value={description}
                                     className={`bg-gray-50 border ${dataerrors.description ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
                                     placeholder="A breif description about your place"
                                     required
@@ -209,6 +222,7 @@ function CreateOffer() {
                             </div>
                             {(dataerrors.end || dataerrors.start) ? <span className="text-[12px] text-red-500">{checkerror}please enter start and end date</span> : null}
                             <br></br>
+                            {errormessage !== "" ? <ShowErrorMessage condition={true} value={errormessage} /> : null}
                             <button
                                 type="submit"
                                 onClick={(e) => { HandleError(e) }}

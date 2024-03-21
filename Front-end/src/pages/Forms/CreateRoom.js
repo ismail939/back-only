@@ -4,18 +4,20 @@ import { useSelector } from "react-redux";
 import RoomForm from "../../components/WorkSpaceForm/RoomForm";
 import { ExclamationCircleFill } from "react-bootstrap-icons";
 import Swal from "sweetalert2";
+import { ShowErrorMessage } from "./PortalLogin";
 function CreateRoom() {
     const IntitialRoomData = {
         type: "Select Room Type",
-        hourPrice: "0",
-        dayPrice: "0",
-        maxRoomSize: "0",
-        minRoomSize: "0",
+        hourPrice: "",
+        dayPrice: "",
+        maxRoomSize: "",
+        minRoomSize: "",
         roomImg: null,
-        number: "1"
+        number: ""
     }
     const [roomData, setRoomData] = useState(IntitialRoomData)
     const auth = useSelector(store => store.auth);
+    const [resError, setResError] = useState("")
     const ownerData = jwtDecode(auth.token);
     const childRef = useRef(null);
     function updateRoomData(fields) {
@@ -42,7 +44,6 @@ function CreateRoom() {
     }
     const addRoom = () => {
         console.log(roomData)
-        console.log(ownerData.cwSpaceCwID)
         let formData = new FormData();
         formData.append('type', roomData.type);
         formData.append('hourPrice', roomData.hourPrice);
@@ -58,17 +59,23 @@ function CreateRoom() {
         })
             .then(res => res.json())
             .then(response => {
-                if (response.status === "error") { 
-                    console.log(response) }
+                if (response.status === "error") {
+                    setResError(response.message)
+                }
+                else if (response.status === "fail") {
+                    setResError(response.message)
+                }
                 else if (response.status === "success") {
                     success()
+                    
+                    setRoomData(IntitialRoomData)
                     console.log(response)
                 }
-            })
+            }).catch(error => setResError("unfortunately there was a server error"))
     }
-    function HandleClick(e){
+    function HandleClick(e) {
         e.preventDefault();
-        if(childRef.current.HandleRoomError()){
+        if (childRef.current.HandleRoomError()) {
             addRoom()
         }
     }
@@ -82,6 +89,7 @@ function CreateRoom() {
                         </h1>
                         <form className="space-y-4 md:space-y-6" action="#" >
                             <RoomForm roomData={roomData} updateRoomData={updateRoomData} childRef={childRef} ShowError={ShowError} />
+                            <ShowErrorMessage condition={resError !== ""} value={resError} />
                             <button
                                 type="submit"
                                 onClick={e => HandleClick(e)}

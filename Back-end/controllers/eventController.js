@@ -26,13 +26,13 @@ module.exports = {
             const events = await Event.findAll({ raw: true })
             if (events.length != 0) {
                 for (let i = 0; i < events.length; i++) {
-                let cw_space = await Cw_space.findOne( {
-                    raw: true,
-                    where: {
-                        cwID: events[i].cwSpaceCwID
-                    }
-                })
-                events[i].cwSpaceName = cw_space.name
+                    let cw_space = await Cw_space.findOne({
+                        raw: true,
+                        where: {
+                            cwID: events[i].cwSpaceCwID
+                        }
+                    })
+                    events[i].cwSpaceName = cw_space.name
                 }
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: events })
             }
@@ -92,9 +92,9 @@ module.exports = {
             });
             if (updatedEvent) {
                 await Event.update(req.body, {
-                where: {
-                    eventID: req.params.eventID
-                }
+                    where: {
+                        eventID: req.params.eventID
+                    }
                 });
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Event Updated Successfully" });
             }
@@ -111,8 +111,8 @@ module.exports = {
             });
             if (deletedEvent) {
                 await Event.destroy({
-                where: {
-                    eventID: req.params.eventID
+                    where: {
+                        eventID: req.params.eventID
                     }
                 })
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Event Deleted Successfully" });
