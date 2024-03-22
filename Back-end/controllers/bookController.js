@@ -131,6 +131,7 @@ module.exports = {
             delete req.body.date
             delete req.body.times
             const newBook = await Book.create(req.body)
+            // send an email confirmation
             return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newBook });
         }
     ),
