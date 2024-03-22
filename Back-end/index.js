@@ -55,7 +55,7 @@ db.authenticate()
     console.log('connection failed', err) 
 })
 
-setInterval(checkReminders, 30000)
+setInterval(checkReminders, 40000)
 
 app.all("*", (req, res) => {
     return res.status(404).json({ status: httpStatusCode.ERROR, message: "this resource not found" })
