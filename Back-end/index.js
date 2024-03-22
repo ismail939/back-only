@@ -47,6 +47,7 @@ app.use("/favourites", favouriteRouter);
 
 const db = require('./config/database');
 const cw_spacePhotoController = require('./controllers/cw_spacePhotoController');
+const { sendReminderReview } = require('./utils/sendEmail');
 
 db.authenticate()
 .then(()=>{

@@ -1,5 +1,6 @@
 const Sequelize = require("sequelize")
 const { Book, Client } = require("../models/modelIndex")
+const {sendReminder, sendReminderReview} = require("./sendEmail")
 module.exports = {
     checkReminders: async () => {
         console.log("checking reminders")
@@ -16,16 +17,18 @@ module.exports = {
                         [Sequelize.Op.eq]: timeNow.getMinutes()
                     })
                 ]
-            }
+            }, raw: true
         })
+        console.log(comingBookings)
         // send email to each one of them
         for (let index = 0; index < comingBookings.length; index++) {
             let client = await Client.findOne({
                 where: {
-                    clientID: clientClientID
+                    clientID: comingBookings[index].clientClientID
                 }
             })
-            // send the email to him with client.email
+            console.log('sending the email to '+client.email)
+            sendReminder(client.email)
         }
         // 2- if there is a time in the booking table(end) that is equal to the current time then send an emailto the person to get his review
         const endedBookings = await Book.findAll({
@@ -43,10 +46,11 @@ module.exports = {
         for (let index = 0; index < endedBookings.length; index++) {
             let client = await Client.findOne({
                 where: {
-                    clientID: clientClientID
+                    clientID: endedBookings[index].clientClientID
                 }
             })
             // send the email to him with client.email
+            sendReminderReview(client.email)
         }
     }
 }
