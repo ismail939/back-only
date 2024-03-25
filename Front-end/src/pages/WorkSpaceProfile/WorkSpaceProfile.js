@@ -3,11 +3,6 @@ import { useEffect, useState } from "react";
 import PageNotFound from "../PageNotFound";
 import { Stars, StarFill, Star, StarHalf, PersonCircle, HouseDoorFill } from "react-bootstrap-icons"
 import { ClockFill, TelephoneFill } from "react-bootstrap-icons"
-import Image1 from "../../components/images/cover.jpg"
-import Image2 from "../../components/images/offer1.jpg"
-import Image3 from "../../components/images/offer2.jpg"
-import Image4 from "../../components/images/HomeImage.jpg"
-import Image5 from "../../components/images/cover.jpg";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, EffectCoverflow } from 'swiper/modules';
 import 'swiper/css';
@@ -63,10 +58,9 @@ function WorkSpaceProfile() {
     const [reviews, setReviews] = useState(null);
     const [found, setFound] = useState(false);
     const [loading, setLodaing] = useState(true);
-    const [reviewBody , setReviewBody] = useState("")
-    const [reviewRate , setReviewRate] = useState("")
+    const [reviewBody, setReviewBody] = useState("")
+    const [reviewRate, setReviewRate] = useState("")
     const imageUrl = "http://localhost:4000/images/cw_spaces/";
-    const images = [Image1, Image2, Image3, Image4, Image5]
     const getWorkSpace = () => {
         fetch(`http://localhost:4000/cw_spaces/${params.cwID}`)
             .then(res => res.json())
@@ -154,12 +148,12 @@ function WorkSpaceProfile() {
                     }
                 >
                     <SwiperSlide >
-                        <img src={imageUrl + cwSpace.mainPhoto} className="w-full h-full object-cover" />
+                        <img src={imageUrl + cwSpace.mainPhoto} alt={cwSpace.name} className="w-full h-full object-cover" />
                     </SwiperSlide>
                     {cwSpacePhotos?.map((image, index) => {
                         return (
                             <SwiperSlide >
-                                <img src={imageUrl + image.photo} className="w-full h-full object-cover" />
+                                <img src={imageUrl + image.photo} key={index} alt={cwSpace.name} className="w-full h-full object-cover" />
                             </SwiperSlide>
                         )
                     })}
@@ -195,6 +189,11 @@ function WorkSpaceProfile() {
                     </div>
                 </div>
                 <p className="mt-10 mb-[30px] sec-font bg-gray-100 rounded-xl p-10">{cwSpace.description}</p>
+                <div className="">
+                    <iframe title={cwSpace.name + " map"} src={`https://www.google.com/maps/embed/v1/place?q=${encodeURIComponent(cwSpace.name)}&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8`}
+                        className="w-full "
+                        height="450" allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+                </div>
                 <Link to="rooms"><button className="mx-auto my-[100px] main-font btn-color py-2 px-6 sm:text-2xl text-xl w-48 flex justify-center">BOOK</button></Link>
                 <div className="mt-[50px]">
                     <h2 className="text-center main-font md:text-4xl text-2xl flex items-center justify-center gap-2 mb-[50px]">
@@ -208,10 +207,10 @@ function WorkSpaceProfile() {
                         <div className="flex items-center gap-5 my-2">
                             <h2 className="text-md font-medium">Rating: </h2>
                             <input type="number" min={0} max={5} className="border border-black p-2 rounded-xl w-14 text-center"
-                            onChange={e => setReviewRate(e.target.value)}></input>
+                                onChange={e => setReviewRate(e.target.value)}></input>
                         </div>
                         <button className="bg-yellow-500 hover:bg-yellow-600 duration-100 font-medium mt-2 px-2 py-2 float-right"
-                        onClick={e => createReview(e)}>Add Review</button>
+                            onClick={e => createReview(e)}>Add Review</button>
                     </div> : null}
                 </div>
             </div>

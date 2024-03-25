@@ -247,6 +247,8 @@ function BookingRoom() {
         getBookedTimes(selectedDate)
     }
     function isBooked(hour) {
+        let currentDate = new Date()
+        let currentHour = currentDate.getHours();
         if (bookedTimes.length === 0) return false
         else {
             for (let i = 0; i < bookedTimes.length; i++) {
@@ -255,13 +257,16 @@ function BookingRoom() {
                 }
             }
         }
+        if(date.getDate() === currentDate.getDate() && date.getMonth() === currentDate.getMonth() && date.getFullYear() === currentDate.getFullYear() ){
+            return hour <= currentHour;
+        }
         return false;
     }
     if (found) {
         return (
             <div className="min-h-screen w-4/5 mx-auto mt-[70px]">
                 <div className="flex md:flex-row flex-col gap-8">
-                    <img className="md:w-1/2 h-[400px] object-cover" src={roomImageUrl + room.img}></img>
+                    <img className="md:w-1/2 h-[400px] object-cover" src={roomImageUrl + room.img} alt={room.type + "room" +room.number}></img>
                     <div className="md:px-10">
                         <h2 className="text-4xl main-font">Room {room.number}</h2>
                         <h2 className="text-gray-400 mt-2 text-2xl font-medium ">{room.type} Room</h2>
@@ -284,9 +289,7 @@ function BookingRoom() {
                         {room.type === `Private` ? <div className="lg:w-1/2 px-2 py-3 border rounded-md border-[#0F4C75] grid gap-4 sm:grid-cols-5 grid-cols-3">
                             {timeRange.map((value, index) => {
                                 if (index < timeRange.length - 1)
-                                    if (!isBooked(value))
-                                        return <TimeStamp date={date} range={[value, value + 1]} booked={false} bookingRange={bookingRange} updateBookingRange={updateBookingRange} />
-                                    else return <TimeStamp date={date} range={[value, value + 1]} booked={true} bookingRange={bookingRange} updateBookingRange={updateBookingRange} />
+                                    return <TimeStamp date={date} range={[value, value + 1]} booked={isBooked(value)} bookingRange={bookingRange} updateBookingRange={updateBookingRange} key={index}/>
                             })}
                         </div> :
                             <div className="lg:w-1/2 px-2 py-3 text-xl main-font">
