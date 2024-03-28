@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
+import { useOutletContext } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { jwtDecode } from "jwt-decode";
 import { Trash3Fill } from "react-bootstrap-icons";
-function SpaceSettings({cwspace , getCworkingSpaceData}) {
+function WorkSpaceSettings() {
+    const [cwspace,getCworkingSpaceData] = useOutletContext();
     const [cwSpacePhotos, setCwSpacePhotos] = useState([]);
+    const token = useSelector(store => store.auth).token;
+    const profileData = jwtDecode(token);
     const [img, setImg] = useState(null);
     const [imgName, setImgName] = useState("");
     const [description, setDescription] = useState(cwspace?.description);
@@ -226,21 +232,21 @@ function SpaceSettings({cwspace , getCworkingSpaceData}) {
                     'Content-Type': 'application/json',
                 },
             }).then(res => {
-                if(res?.status === 200)
-                getCworkingSpacePhotos();
+                if (res?.status === 200)
+                    getCworkingSpacePhotos();
             })
         } catch (error) {
             console.error('Error deleting image:', error);
         }
     }
-    function checkCompatability(){
-        return address === cwspace.address 
-        && email === cwspace.email 
-        && fbPage === cwspace.fbPage 
-        && description === cwspace.description 
-        && openingTime === cwspace.openingTime.substring(0,5) 
-        && closingTime === cwspace.closingTime.substring(0,5) 
-        && phone === cwspace.phone
+    function checkCompatability() {
+        return address === cwspace.address
+            && email === cwspace.email
+            && fbPage === cwspace.fbPage
+            && description === cwspace.description
+            && openingTime === cwspace.openingTime.substring(0, 5)
+            && closingTime === cwspace.closingTime.substring(0, 5)
+            && phone === cwspace.phone
     }
     const handleSecImage = (e) => {
         e.preventDefault();
@@ -270,9 +276,9 @@ function SpaceSettings({cwspace , getCworkingSpaceData}) {
             </>
         )
     }
-    return (
+    if(cwspace) return (
         <>
-            <div className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4 ">
+            <div className="w-full min-h-screen py-1 lg:w-3/4 ">
                 <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">{cwspace?.name}</h2>
                 <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Main Photo</h2>
                 <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4" >
@@ -285,7 +291,7 @@ function SpaceSettings({cwspace , getCworkingSpaceData}) {
                         <div className="flex flex-row-reverse w-full items-center gap-5">
                             <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${!imgName?.trim() ? "bg-gray-500" : "btn-color border-indigo-200"}
                         rounded-lg border`} disabled={!imgName?.trim()} onClick={(e) => handleImage(e)}>Save</button>
-                        <label htmlFor="uploadCWMainImg" className="py-2 px-4 font-medium rounded-lg bg-red-500 hover:bg-red-600 duration-200 cursor-pointer">Change Image</label>
+                            <label htmlFor="uploadCWMainImg" className="py-2 px-4 font-medium rounded-lg bg-red-500 hover:bg-red-600 duration-200 cursor-pointer">Change Image</label>
                         </div>
                     </div>
                 </div>
@@ -378,7 +384,7 @@ function SpaceSettings({cwspace , getCworkingSpaceData}) {
                             <div className="flex flex-row-reverse w-full items-center gap-5">
                                 <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${!secImgName?.trim() ? "bg-gray-500" : "btn-color border-indigo-200"}
                                     rounded-lg border`} disabled={!secImgName?.trim()} onClick={(e) => handleSecImage(e)}>Save</button>
-                                    <label htmlFor="uploadSecImg" className="py-2 px-4 font-medium rounded-lg bg-red-500 hover:bg-red-600 duration-200 cursor-pointer">ADD NEW PHOTO</label>
+                                <label htmlFor="uploadSecImg" className="py-2 px-4 font-medium rounded-lg bg-red-500 hover:bg-red-600 duration-200 cursor-pointer">ADD NEW PHOTO</label>
                             </div>
                         </div>
                     </div>
@@ -388,4 +394,4 @@ function SpaceSettings({cwspace , getCworkingSpaceData}) {
     )
 
 }
-export default SpaceSettings;
+export default WorkSpaceSettings;

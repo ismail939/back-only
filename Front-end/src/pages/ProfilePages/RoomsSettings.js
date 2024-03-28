@@ -1,8 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-function RoomSettings({ cwid }) {
+import { useSelector } from "react-redux";
+import { jwtDecode } from "jwt-decode";
+function RoomsSettings() {
     const [rooms, setRooms] = useState([]);
     const [noRooms, setNoRooms] = useState(false);
+    const token = useSelector(store => store.auth).token;
+    const profileData = jwtDecode(token);
+    const cwid = profileData.cwSpaceCwID
     useEffect(() => {
         getRooms();
     }, [])
@@ -63,4 +68,4 @@ function RoomSettings({ cwid }) {
         </>
     )
 }
-export default RoomSettings;
+export default RoomsSettings;

@@ -1,8 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-function OfferSeetings({ cwid }) {
+import { useSelector } from "react-redux";
+import { jwtDecode } from "jwt-decode";
+function OffersSettings() {
     const [offers, setOffers] = useState([]);
     const [noOffers, setNoOffers] = useState(false);
+    const token = useSelector(store => store.auth).token;
+    const profileData = jwtDecode(token);
+    const cwid = profileData.cwSpaceCwID
     useEffect(() => {
         getOffers();
     }, [])
@@ -58,4 +63,4 @@ function OfferSeetings({ cwid }) {
         </>
     )
 }
-export default OfferSeetings;
+export default OffersSettings;

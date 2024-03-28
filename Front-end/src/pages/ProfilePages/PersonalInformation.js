@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useUpdateClientMutation, useUpdatePhotoMutation } from "../reduxtoolkit/Slices/apiSlice";
-function ProfileSettings(props) {
-    const profileData = props.profileData;
-    const usertype = useSelector(store => store.auth).usertype;
-    const auth = useSelector(store => store.auth);
+import { jwtDecode } from "jwt-decode";
+import { useUpdateClientMutation, useUpdatePhotoMutation } from "../../components/reduxtoolkit/Slices/apiSlice";
+function PersonalInformation(props) {
+    const user = useSelector(store => store.auth);
+    const profileData = jwtDecode(user.token);
+    const usertype = user.usertype;
     const [updateData] = useUpdateClientMutation();
     const [updatePhoto] = useUpdatePhotoMutation();
     const [firstName, setFirstName] = useState(profileData.fname);
@@ -217,8 +218,7 @@ function ProfileSettings(props) {
     }
     return (
         <>
-
-            <div className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4 " >
+            <div className="w-full min-h-screen py-1 lg:w-3/4 " >
                 <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Profile Photo</h2>
                 <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4" >
                     <div className="w-full md:px-16 px-4">
@@ -324,4 +324,4 @@ function ProfileSettings(props) {
         </>
     )
 }
-export default ProfileSettings;
+export default PersonalInformation;

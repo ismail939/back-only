@@ -1,64 +1,59 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
-import ProfileSettings from "../components/ProfileData/ProfileSettings";
+import { Outlet } from "react-router-dom";
 import { Link } from "react-router-dom";
-import SpaceSettings from "../components/ProfileData/SpaceSettings";
-import OfferSeetings from "../components/ProfileData/OfferSettings";
-import RoomSettings from "../components/ProfileData/RoomSettings";
-import Moderators from "../components/ProfileData/Moderators";
-import EventSettings from "../components/ProfileData/EventSettings";
-function DashboardProfile() {
+function ProfileManager() {
+    const [cwspace, setCwSpace] = useState([]);
     const [active, setActive] = useState("Personal Information");
-    const [cwspace, setCWSpace] = useState();
     const user = useSelector(store => store.auth);
     const token = user.token;
     const usertype = user.usertype;
     const profileData = jwtDecode(token);
     const buttonStyle = "w-48 font-semibold px-2 py-3 hover:border-blue-500 border rounded-2xl text-md"
     const activeStyle = "bg-[#0F4C75] text-white hover:bg-[#197ec2] duration-200"
-    useEffect(() => {
-        if((usertype==="owner" || usertype==="moderator") && profileData.cwSpaceCwID){
-            getCworkingSpaceData();}
-    }, [])
     const getCworkingSpaceData = () => {
         fetch(`http://localhost:4000/cw_spaces/${profileData.cwSpaceCwID}`)
             .then(res => res.json())
             .then(responsedata => {
-                setCWSpace(responsedata.data);
+                setCwSpace(responsedata.data);
             }
             ).catch(error => { console.log(error); });
     }
+    useEffect(() => {
+        getCworkingSpaceData();
+    }, [])
     return (
         < >
-            <div className="flex flex-col gap-5 px-3 md:px-16 lg:px-28 md:flex-row mx-8 md:mx-auto min-h-screen">
-                <div className="  mx-8 ">
+            <div className="flex flex-col gap-5 px-3 lg:px-16 lg:px-28 lg:flex-row mx-8 lg:mx-auto min-h-screen">
+                <div className="mx-8">
                     <div className="my-7">
-                        <button onClick={() => setActive("Personal Information")}
-                            className={`${buttonStyle} ${active === "Personal Information" ? activeStyle : "hover:text-indigo-900"}`} >Personal Information</button>
+                    <Link to="personal-information"><button onClick={() => setActive("Personal Information")}
+                            className={`${buttonStyle} ${active === "Personal Information" ? activeStyle : "hover:text-indigo-900"}`} >Personal Information</button></Link>
                     </div>
                     {(usertype==="owner" || usertype === "moderator") && <div className="my-7">
-                        <button className={`${buttonStyle} ${active === "WorkSpace Information" ? activeStyle : "hover:text-indigo-900"}`}
-                            onClick={() => setActive("WorkSpace Information")}>WorkSpace Information</button>
+                        <Link to="workspace-data"><button className={`${buttonStyle} ${active === "WorkSpace Information" ? activeStyle : "hover:text-indigo-900"}`}
+                            onClick={() => setActive("WorkSpace Information")}>WorkSpace Information</button></Link>
                     </div>}
                     {(usertype==="owner" || usertype === "moderator") && profileData.cwSpaceCwID !==null&&<div className="my-7">
-                        <button className={`${buttonStyle} ${active === "WorkSpace Rooms" ? activeStyle : "hover:text-indigo-900"}`}
-                            onClick={() => setActive("WorkSpace Rooms")}>WorkSpace Rooms</button>
+                    <Link to="rooms-data"><button className={`${buttonStyle} ${active === "WorkSpace Rooms" ? activeStyle : "hover:text-indigo-900"}`}
+                            onClick={() => setActive("WorkSpace Rooms")}>WorkSpace Rooms</button></Link>
                     </div>}
                     {(usertype==="owner" || usertype === "moderator") &&  profileData.cwSpaceCwID !==null &&<div className="my-7">
-                        <button className={`${buttonStyle} ${active === "WorkSpace Offer" ? activeStyle : "hover:text-indigo-900"}`}
-                            onClick={() => setActive("WorkSpace Offer")}>WorkSpace Offers</button>
+                    <Link to="offers-data"><button className={`${buttonStyle} ${active === "WorkSpace Offer" ? activeStyle : "hover:text-indigo-900"}`}
+                            onClick={() => setActive("WorkSpace Offer")}>WorkSpace Offers</button></Link>
                     </div>}
                     {(usertype==="owner" || usertype === "moderator") &&  profileData.cwSpaceCwID !==null &&<div className="my-7">
-                        <button className={`${buttonStyle} ${active === "WorkSpace Event" ? activeStyle : "hover:text-indigo-900"}`}
-                            onClick={() => setActive("WorkSpace Event")}>WorkSpace Event</button>
+                    <Link to="events&workshops-data"><button className={`${buttonStyle} ${active === "WorkSpace Event" ? activeStyle : "hover:text-indigo-900"}`}
+                            onClick={() => setActive("WorkSpace Event")}>WorkSpace Event</button></Link>
                     </div>}
                     {usertype==="owner"&&  profileData.cwSpaceCwID !==null &&<div className="my-7">
-                        <button className={`${buttonStyle} ${active === "Moderators" ? activeStyle : "hover:text-indigo-900"}`}
-                            onClick={() => setActive("Moderators")}>Moderators</button>
+                    <Link to="moderators"><button className={`${buttonStyle} ${active === "Moderators" ? activeStyle : "hover:text-indigo-900"}`}
+                            onClick={() => setActive("Moderators")}>Moderators</button></Link>
                     </div>}
                 </div>
-                {active === "Personal Information" && <ProfileSettings profileData={profileData} />
+                <Outlet context={[cwspace,getCworkingSpaceData]}/>
+                {/* {active === "Personal Information" && <ProfileSettings profileData={profileData} />
                 }
                 {active === "WorkSpace Information" && profileData.cwSpaceCwID===null &&
                     <div className="w-full flex flex-col items-center md:mt-[250px] mt-[100px] text-center">
@@ -81,10 +76,10 @@ function DashboardProfile() {
                 }
                 {active === "Moderators"  &&
                     <Moderators cwid={profileData.cwSpaceCwID}/>
-                }
+                } */}
                 
             </div>
         </>
     )
 }
-export default DashboardProfile;
+export default ProfileManager;

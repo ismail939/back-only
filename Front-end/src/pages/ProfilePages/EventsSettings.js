@@ -1,9 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { jwtDecode } from "jwt-decode";
 import { GeoAlt, CalendarEvent, Clock } from "react-bootstrap-icons";
-function EventSettings({ cwid }) {
+function EventsSettings() {
     const [events, setEvents] = useState([]);
     const [noEvents, setNoEvents] = useState(false);
+    const token = useSelector(store => store.auth).token;
+    const profileData = jwtDecode(token);
+    const cwid = profileData.cwSpaceCwID
     useEffect(() => {
         getevents();
     }, [])
@@ -78,4 +83,4 @@ function EventSettings({ cwid }) {
         </>
     )
 }
-export default EventSettings;
+export default EventsSettings;
