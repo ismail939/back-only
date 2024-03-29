@@ -20,7 +20,9 @@ function OffersSettings() {
                 setLoading(false);
                 if (responsedata.message === "There are No Available Offers for This Co-working Space") setNoOffers(true);
             }
-            )
+            ).catch(error => {
+                console.error('Error during fetch operation:', error);
+            });
     }
     function OfferCard(props) {
         const offer = props.offer;

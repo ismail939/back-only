@@ -28,7 +28,7 @@ function AdjustOffer() {
     }, [])
     function checkCompatability() {
     }
-    if(!loading) return (
+    if(!loading && offer) return (
         <div className="w-full min-h-screen py-1 lg:w-3/4">
             <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">{`${originData.title}`}</h2>
             <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Image</h2>

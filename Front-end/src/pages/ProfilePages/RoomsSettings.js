@@ -20,7 +20,9 @@ function RoomsSettings() {
                 setLoading(false);
                 if (responsedata.message === "There are No Available Rooms") setNoRooms(true);
             }
-            )
+            ).catch(error => {
+                console.error('Error during fetch operation:', error);
+            });
     }
     const shared = rooms?.filter(room => room.type === "Shared");
     const privatee = rooms?.filter(room => room.type === "Private");

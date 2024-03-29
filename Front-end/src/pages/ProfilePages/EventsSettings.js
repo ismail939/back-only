@@ -22,7 +22,9 @@ function EventsSettings() {
                 console.log(responsedata.message)
                 if (responsedata.message === "There are No Available Events for This Co-working Space") setNoEvents(true);
             }
-            )
+            ).catch(error => {
+                console.error('Error during fetch operation:', error);
+            });
     }
     function EventCard(props) {
         const event = props.event;
