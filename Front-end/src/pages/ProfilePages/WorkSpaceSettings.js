@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useOutletContext } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
 import { Trash3Fill } from "react-bootstrap-icons";
 function WorkSpaceSettings() {
-    const [cwspace,getCworkingSpaceData] = useOutletContext();
+    const [cwspace, getCworkingSpaceData] = useOutletContext();
     const [cwSpacePhotos, setCwSpacePhotos] = useState([]);
     const token = useSelector(store => store.auth).token;
     const profileData = jwtDecode(token);
@@ -276,7 +277,7 @@ function WorkSpaceSettings() {
             </>
         )
     }
-    if(cwspace) return (
+    if (profileData.cwSpaceCwID) return (
         <>
             <div className="w-full min-h-screen py-1 lg:w-3/4 ">
                 <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">{cwspace?.name}</h2>
@@ -391,6 +392,12 @@ function WorkSpaceSettings() {
                 </div>
             </div>
         </>
+    ); else return (
+        <div className="w-full flex flex-col items-center md:mt-[250px] mt-[100px] text-center">
+            <p className="text-xl font-medium">You don't have any created Coworking space yet</p>
+            <p className="my-6">Create your first Coworking Space Here:</p>
+            <Link to="../createworkspace" className="px-2 py-4 uppercase bg-[#0F4C75] text-white hover:bg-[#197ec2] duration-200"> create working space</Link>
+        </div>
     )
 
 }

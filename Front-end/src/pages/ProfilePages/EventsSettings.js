@@ -8,6 +8,7 @@ function EventsSettings() {
     const [noEvents, setNoEvents] = useState(false);
     const token = useSelector(store => store.auth).token;
     const profileData = jwtDecode(token);
+    const [loading, setLoading] = useState(true)
     const cwid = profileData.cwSpaceCwID
     useEffect(() => {
         getevents();
@@ -17,6 +18,7 @@ function EventsSettings() {
             .then(res => res.json())
             .then(responsedata => {
                 setEvents(responsedata.data);
+                setLoading(false)
                 console.log(responsedata.message)
                 if (responsedata.message === "There are No Available Events for This Co-working Space") setNoEvents(true);
             }
@@ -28,41 +30,38 @@ function EventsSettings() {
         return (
             <div className="bg-white shadow-md overflow-hidden rounded-sm">
                 <div className="flex-col">
-                    <img className="h-48 w-full object-cover md:h-72 md:w-full" src={imageUrl} alt={"event image"}></img>
+                    <img className="h-48 w-full object-cover md:h-72 md:w-full" src={imageUrl} alt={event.name}></img>
                     <div className="mt-4 px-4">
                         <h2 className="main-font text-xl">{event.name}</h2>
                         <div className="my-3">
                             <div className="flex items-center gap-2 text-md main-font my-1 text-[#0F4C75]">
-                                <GeoAlt />
-                                <p>{event?.cwSpaceName}</p>
+                                <CalendarEvent />
+                                <p>{`From:  ${event.start.slice(0, 10)}`}</p>
                             </div>
                             <div className="flex items-center gap-2 text-md main-font my-1 text-[#0F4C75]">
                                 <CalendarEvent />
-                                <p>{`from  ${event.start.slice(0, 10)}`}</p>
+                                <p>{`To :   ${event.end.slice(0, 10)}`}</p>
                             </div>
                             <div className="flex items-center gap-2 text-md main-font my-1 text-[#0F4C75]">
-                                <CalendarEvent />
-                                <p>{`to    ${event.end.slice(0, 10)}`}</p>
+                                {`Price: ${event.price}`}
                             </div>
                             <div className="flex items-center gap-2 text-md main-font my-1 text-[#0F4C75]">
-                                {`price :${event.price}`}
-                            </div>
-                            <div className="flex items-center gap-2 text-md main-font my-1 text-[#0F4C75]">
-                                {`max capacity :${event.maxCapacity}`}
+                                {`Max Capacity: ${event.maxCapacity}`}
                             </div>
                         </div>
                         <hr></hr>
                         <div className="my-2">
-                            <h2 className="main-font text-lg text-neutral-600">Event Details</h2>
-                            <p>{event.description}</p>
                         </div>
-                        <button className="main-font my-2 btn-color py-2 px-2 float-right w-1/2">Edit</button>
+                        <div className="flex items-center justify-between gap-4">
+                            <Link to={`${event.eventID}`} className="main-font text-center my-2 btn-color py-2 px-2 w-full">Edit</Link>
+                            <button className="main-font my-2 bg-red-500 hover:bg-red-600 duration-200 py-2 px-2 w-full">Remove</button>
+                        </div>
                     </div>
                 </div>
             </div>
         )
     }
-    return (
+    if(!loading) return (
         <>
             {noEvents && <div className="w-full flex flex-col items-center mt-[250px]">
                 <p className="text-xl">You don't have any events yet</p>

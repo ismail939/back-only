@@ -35,6 +35,9 @@ import RoomsSettings from './pages/ProfilePages/RoomsSettings';
 import OffersSettings from './pages/ProfilePages/OffersSettings';
 import EventsSettings from './pages/ProfilePages/EventsSettings';
 import Moderators from './pages/ProfilePages/Moderators';
+import AdjustRoom from './pages/ProfilePages/AdjustRoom';
+import AdjustOffer from './pages/ProfilePages/AdjustOffer';
+import AdjustEvent from './pages/ProfilePages/AdjustEvent';
 function App() {
   return (
     <>
@@ -58,10 +61,19 @@ function App() {
           <Route path='favourites' element={<Favourites />}></Route>
         </Route>
         <Route element={<RequireAuth allowedRoles={["owner", "moderator"]} />} >
-        <Route element={<ProfileManager />} >
-            <Route path='rooms-data' element={<RoomsSettings />}></Route>
-            <Route path='offers-data' element={<OffersSettings />}></Route>
-            <Route path='events&workshops-data' element={<EventsSettings />}></Route>
+          <Route element={<ProfileManager />} >
+            <Route path='rooms-data' element={<><Outlet /></>}>
+              <Route path="" element={<RoomsSettings />} />
+              <Route path=":roomid" element={<AdjustRoom />} />
+            </Route>
+            <Route path='offers-data' element={<><Outlet /></>}>
+              <Route path="" element={<OffersSettings />} />
+              <Route path=":offerid" element={<AdjustOffer />} />
+            </Route>
+            <Route path='events&workshops-data' element={<Outlet />}>
+              <Route path="" element={<EventsSettings />}/>
+              <Route path=":eventid" element={<AdjustEvent />} />
+            </Route>
           </Route>
         </Route>
         <Route element={<RequireAuth allowedRoles={["owner", "client", "moderator"]} />} >
@@ -76,7 +88,7 @@ function App() {
           </Route>
         </Route>
         <Route element={<RequireAuth allowedRoles={["owner"]} />} >
-        <Route element={<ProfileManager />} >
+          <Route element={<ProfileManager />} >
             <Route path='workspace-data' element={<WorkSpaceSettings />}></Route>
           </Route>
           <Route element={<ProfileManager />} >

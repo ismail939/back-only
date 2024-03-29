@@ -7,6 +7,7 @@ function RoomsSettings() {
     const [noRooms, setNoRooms] = useState(false);
     const token = useSelector(store => store.auth).token;
     const profileData = jwtDecode(token);
+    const [loading, setLoading] = useState(true)
     const cwid = profileData.cwSpaceCwID
     useEffect(() => {
         getRooms();
@@ -16,6 +17,7 @@ function RoomsSettings() {
             .then(res => res.json())
             .then(responsedata => {
                 setRooms(responsedata.data);
+                setLoading(false);
                 if (responsedata.message === "There are No Available Rooms") setNoRooms(true);
             }
             )
@@ -26,9 +28,9 @@ function RoomsSettings() {
 
     const RoomCard = ({ room }) => {
         const imageUrl = `http://localhost:4000/images/rooms/`
-        return <img className=" object-cover w-full h-[250px]" src={imageUrl + room.img} alt="no-picture-added"></img>
+        return <Link to={`${room.roomID}`}><img className=" object-cover w-full h-[250px]" src={imageUrl + room.img} alt={`${room.type} room ${room.number}`}></img></Link>
     }
-    return (
+    if(!loading) return (
         <>
             {noRooms && <div className="w-full flex flex-col items-center mt-[250px]">
                 <p className="text-xl">You don't have any Rooms yet</p>
