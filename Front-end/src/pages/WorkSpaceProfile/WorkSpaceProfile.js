@@ -5,6 +5,8 @@ import { Stars, StarFill, Star, StarHalf, PersonCircle, HouseDoorFill } from "re
 import { ClockFill, TelephoneFill } from "react-bootstrap-icons"
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, EffectCoverflow } from 'swiper/modules';
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import { useSelector } from "react-redux";
@@ -126,7 +128,7 @@ function WorkSpaceProfile() {
         getWorkSpaceImages();
         getReviews();
     }, [])
-    if (found) {
+    if (found && !loading) {
         return (
             <div className="w-4/5 mx-auto mt-[50px] min-h-screen">
                 <h2 className="main-font md:text-3xl text-xl mt-5 mb-[50px]">{cwSpace.name}</h2>
@@ -212,6 +214,50 @@ function WorkSpaceProfile() {
                         <button className="bg-yellow-500 hover:bg-yellow-600 duration-100 font-medium mt-2 px-2 py-2 float-right"
                             onClick={e => createReview(e)}>Add Review</button>
                     </div> : null}
+                </div>
+            </div>
+        )
+    } else if (loading && !found) {
+        return (
+            <div className="w-4/5 mx-auto mt-[50px] min-h-screen">
+                <div className="md:w-1/4 w-2/5">
+                    <Skeleton className="w-full h-7 mb-8" />
+                </div>
+                <Swiper
+                    className="lg:h-[30rem] md:h-[20rem] h-[15rem]"
+                    effect={'coverflow'}
+                    centeredSlides={true}
+                    grabCursor={true}
+                    loop={true}
+                    slidesPerView={2}
+                    modules={[EffectCoverflow]}
+                    coverflowEffect={
+                        {
+                            rotate: 0,
+                            stretch: 0,
+                            depth: 100,
+                            modifier: 2.5
+                        }
+                    }
+                >
+                    <SwiperSlide >
+                        <Skeleton className="w-full h-full" />
+                    </SwiperSlide>
+                    <SwiperSlide >
+                        <Skeleton className="w-full h-full" />
+                    </SwiperSlide>
+                    <SwiperSlide >
+                        <Skeleton className="w-full h-full" />
+                    </SwiperSlide>
+                    <SwiperSlide >
+                        <Skeleton className="w-full h-full" />
+                    </SwiperSlide>
+                </Swiper>
+                <div className="mt-[100px] grid lg:grid-cols-4 grid-cols-2 gap-10">
+                    <Skeleton className="w-full h-10"/>
+                    <Skeleton className="w-full h-10"/>
+                    <Skeleton className="w-full h-10"/>
+                    <Skeleton className="w-full h-10"/>
                 </div>
             </div>
         )
