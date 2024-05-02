@@ -5,6 +5,7 @@ const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 const { validateBook } = require('../middlewares/validationSchema');
 const sequelize = require('sequelize')
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 
 module.exports = {
@@ -20,7 +21,6 @@ module.exports = {
     ),
     getCwSpaceBookings: asyncWrapper(
         async (req, res, next) => {
-
             // get the room image and the client image
             // roomsIDs to be 
             const rooms = await Room.findAll({
@@ -130,8 +130,25 @@ module.exports = {
             }
             delete req.body.date
             delete req.body.times
-            const newBook = await Book.create(req.body)
-            return res.status(201).json({ status: httpStatusCode.SUCCESS, data: newBook });
+            if (req.body.payment === 'cash') {
+                await Book.create(req.body);
+            } else if (req.body.payment === 'visa') {
+                stripe.charges.create({
+                    amount: req.body.totalCost * 100, // Amount in cents
+                    currency: 'usd',
+                    source: req.body.cardToken, // Use a test card token
+                    description: 'Test Payment',
+                    }, async function(err, charge) {
+                    if (err) {
+                        return next(err)
+                    } else {
+                        console.log(charge);
+                        req.body.status = 'paid'
+                        await Book.create(req.body);
+                        return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Created Successfully" });
+                    }
+                });
+            }
         }
     ),
     update: asyncWrapper(
