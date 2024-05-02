@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useSelector } from "react-redux";
 import { ShowErrorMessage } from "./PortalLogin";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 function getDate() {
     const today = new Date();
@@ -13,6 +14,7 @@ function getDate() {
 function CreateOffer() {
     const auth = useSelector(store => store.auth);
     const ownerData = jwtDecode(auth.token);
+    const navigate = useNavigate();
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [checkerror, setCheckError] = useState("");
@@ -72,12 +74,11 @@ function CreateOffer() {
                         setDescription("")
                         setStart("")
                         setEnd("")
-                        success();
+                        navigate("/offers-data")
                     }
                 })
                 .catch(error => {
                     setErrorMessage("unfortunately there was a server error")
-
                 });
         }
     }

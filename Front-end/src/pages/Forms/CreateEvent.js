@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 import { ShowErrorMessage } from "./PortalLogin";
 function getDate() {
     const today = new Date();
@@ -24,6 +25,7 @@ function CreateEvent() {
     const [img, setImg] = useState([]);
     const [errormessage, setErrorMessage] = useState("");
     const [offerImageName, setOfferImageName] = useState("");
+    const navigate = useNavigate();
     const [dataerrors, setDataErrors] = useState({
         start: false,
         end: false,
@@ -89,7 +91,7 @@ function CreateEvent() {
                         setEnd("")
                         setMaxCapacity("")
                         setPrice("")
-                        success();
+                        navigate("/events&workshops-data")
                     }
                 })
                 .catch(error => {

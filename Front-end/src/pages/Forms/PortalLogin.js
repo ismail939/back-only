@@ -60,7 +60,7 @@ function Login({ type }) {
                 dispatch(setCredentials({ user: username, token: resdata.data.token, usertype: type.toLocaleLowerCase() }))
                 navigate("/", { replace: true })
             } else if (resdata.status === "error") {
-                console(resdata.message)
+                setErrorMessage(resdata.message)
             } else if (resdata.status === "fail") {
                 setErrorMessage(resdata.message)
             } else if (resdata.status === "unverified") {
