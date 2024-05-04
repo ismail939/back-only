@@ -145,20 +145,20 @@ function WorkSpaceProfile() {
     }, [])
     if (found && !loading) {
         return (
-            <div className="w-4/5 mx-auto mt-[50px] min-h-screen">
-                <div className="flex justify-between items-center" >
-                    <h2 className="main-font md:text-3xl text-xl mt-5 mb-[50px]">{cwSpace.name}</h2>
+            <div className="md:w-4/5 w-[90%] mx-auto mt-[50px] min-h-screen">
+                <div className="flex justify-between items-center mt-5 mb-[50px]" >
+                    <h2 className="main-font md:text-3xl text-xl">{cwSpace.name}</h2>
                     <div className="flex gap-3 items-center">
-                        <h2 className="text-[35px] font-light">{cwSpace.rate}</h2>
+                        <h2 className="md:text-[35px] text-[20px] font-light">{cwSpace.rate}</h2>
                         <div>
-                            <div className="text-yellow-500 text-xl flex items-center">
+                            <div className="text-yellow-500 md:text-xl text-sm flex items-center">
                                 {[1, 2, 3, 4, 5].map(i => {
                                     if (i <= Math.round(cwSpace.rate * 2) / 2) return <StarFill />
                                     else if (i - 0.5 === Math.round(cwSpace.rate * 2) / 2) return <StarHalf />
                                     else return <Star />
                                 })}
                             </div>
-                            <h2 className="mt-1 text-sm">out of {cwSpace.noOfReviews} review{cwSpace.noOfReviews > 1 && "s"}</h2>
+                            <h2 className="mt-1 md:text-sm text-[12px]">out of {cwSpace.noOfReviews} review{cwSpace.noOfReviews > 1 && "s"}</h2>
                         </div>
                     </div>
                 </div>
@@ -238,7 +238,7 @@ function WorkSpaceProfile() {
                 </div>
                 <Link to="rooms"><button className="mx-auto my-[100px] main-font btn-color py-2 px-6 sm:text-2xl text-xl w-48 flex justify-center">BOOK</button></Link>
                 <div className="mt-[50px]">
-                    <h2 className="text-center main-font md:text-4xl text-2xl flex items-center justify-center gap-2 mb-[50px]">
+                    <h2 className="text-center main-font md:text-4xl text-3xl flex items-center justify-center gap-2 mb-[50px]">
                         <Stars />Reviews</h2>
                     {reviews ? reviews.map((review) => {
                         return <Review review={review} key={review.clientClientID + "/" + review.cwSpaceCwID} />
