@@ -1,10 +1,12 @@
-import { useEffect, useState, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Calendar3, PlusLg, DashLg, PeopleFill, ClockFill, InfoCircleFill, Calendar2EventFill } from "react-bootstrap-icons";
 import Calendar from 'react-calendar';
 import PageNotFound from "../PageNotFound";
 import { useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
+import { useDispatch } from "react-redux";
+import { setPayData } from "../../components/reduxtoolkit/Slices/paySlice";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import 'react-calendar/dist/Calendar.css';
@@ -105,6 +107,8 @@ function BookingRoom() {
     const [showsuccess, setShowSuccess] = useState(false)
     const [showFail, setShowFail] = useState(false)
     const [failMessage, setFailMessage] = useState("")
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const roomImageUrl = "http://localhost:4000/images/rooms/";
     const user = useSelector(store => store.auth);
     const token = user.token;
@@ -150,7 +154,7 @@ function BookingRoom() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "date": selectedDate.toISOString().split('T')[0],
+                "date": convertDate(selectedDate),
             }),
         }).then(res => res.json())
             .then(responsedata => {
@@ -174,7 +178,17 @@ function BookingRoom() {
         }
         return true;
     }
+    function convertDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const day = String(date.getDate()).padStart(2, '0');
+        // Format the date as "YYYY-MM-DD"
+        return `${year}-${month}-${day}`;
+    }
     function createBook() {
+        let sortedBookingRange = bookingRange;
+        sortedBookingRange.sort((a, b) => a[0] - b[0])
+        setBookingRange(sortedBookingRange)
         if (bookingRange.length === 0) {
             setFailMessage("Please choose your desired time before booking")
             setShowFail(true)
@@ -182,35 +196,15 @@ function BookingRoom() {
             setFailMessage("You cannot book seperate time ranges, booking time must be continous")
             setShowFail(true)
         } else {
-            let sortedBookingRange = bookingRange;
-            sortedBookingRange.sort((a, b) => a[0] - b[0])
-            setBookingRange(sortedBookingRange)
-            fetch(`http://localhost:4000/books`, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    "date": date.toISOString().split('T')[0],
-                    "times": [
-                        sortedBookingRange[0][0], sortedBookingRange[bookingRange.length - 1][1]
-                    ],
-                    "payment": "cash",
-                    "type": "room",
-                    "clientClientID": profileData.clientID,
-                    "roomRoomID": params.roomid,
-                    "totalCost": numPerson * room.hourPrice * bookingRange.length
-                }),
-            }).then(res => res.json())
-                .then(responsedata => {
-                    if (responsedata.status === "error") {
-                        setFailMessage("Sorry we cannot proceed with your Book")
-                        setShowFail(true)
-                    } else if (responsedata.status === "success") {
-                        setShowSuccess(true)
-                    }
-                }
-                ).catch();
+            dispatch(setPayData({bookingTime:[
+                sortedBookingRange[0][0], sortedBookingRange[bookingRange.length - 1][1]
+            ] ,
+                totalPrice:numPerson * room.hourPrice * bookingRange.length ,
+                date:convertDate(date) ,
+                type:"room",
+                roomid: params.roomid}
+            ))
+            navigate("/payment")
         }
     }
     function createRequest() {
@@ -332,7 +326,7 @@ function BookingRoom() {
                     </div>
                     <div className="md:px-10 w-[300px] mt-10">
                         <Skeleton />
-                        <Skeleton className="mt-4" count={4}/>
+                        <Skeleton className="mt-4" count={4} />
                     </div>
                 </div>
             </div>
