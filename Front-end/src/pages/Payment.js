@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { loadStripe } from '@stripe/stripe-js';
 import { jwtDecode } from 'jwt-decode';
 import { ExclamationCircleFill, CashStack, CreditCardFill } from "react-bootstrap-icons";
+import { removePayData } from "../components/reduxtoolkit/Slices/paySlice";
 import check from "../components/images/check.png";
 import MoonLoader from "react-spinners/MoonLoader";
 import { useDispatch } from "react-redux";
@@ -17,6 +18,7 @@ import {
 import PageNotFound from "./PageNotFound";
 function CheckoutForm() {
     const stripe = useStripe();
+    const dispatch = useDispatch();
     const elements = useElements();
     const navigate = useNavigate();
     const payElements = useSelector(store => store.pay);
@@ -75,7 +77,6 @@ function CheckoutForm() {
                     // Send the token to your server for further processing
                     setLodaing(false)
                     let token = result.token;
-                    console.log("done here")
                     makeBook(token.id)
                     // Your code to send the token to the server (e.g., using AJAX)
                 };
@@ -104,13 +105,12 @@ function CheckoutForm() {
         }).then(res => res.json())
             .then(responsedata => {
                 if (responsedata.status === "success") {
+                    dispatch(removePayData())
                     setPayComplete(true)
                     redirect()
                 } else if (responsedata.status === "error") {
-                    console.log("error here")
                     setErrorMessage(responsedata.message)
                 } else if (responsedata.status === "fail") {
-                    console.log("done here")
                     setErrorMessage(responsedata.message)
                 }
             }
@@ -184,7 +184,7 @@ export default function Payment() {
             /*...*/
         },
     };
-    if(payElements.totalPrice > 0)return (
+    if(payElements.type !== "")return (
         <Elements stripe={stripePromise} options={options}>
             <CheckoutForm />
         </Elements>

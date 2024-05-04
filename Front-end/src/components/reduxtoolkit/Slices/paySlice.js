@@ -21,5 +21,5 @@ export const paySlice = createSlice({
     }
 })
 
-export const { setPayData} = paySlice.actions;
+export const { setPayData, removePayData} = paySlice.actions;
 export default paySlice.reducer;

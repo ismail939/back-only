@@ -1,9 +1,24 @@
 import image from "../components/images/offer1.jpg"
 import { GeoAlt, CalendarEvent, Clock } from "react-bootstrap-icons";
+import { setPayData } from "./reduxtoolkit/Slices/paySlice";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 function EventsCard(props) {
     const event = props.event;
-    console.log(event)
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const imageUrl = "http://localhost:4000/images/events/" + event?.mainPhoto;
+    function RegisterEvent() {
+        dispatch(setPayData({
+            bookingTime: [],
+            totalPrice: event.price,
+            date: "",
+            type: "event",
+            roomid: ""
+        }
+        ))
+        navigate("/payment")
+    }
     return (
         <div className="bg-white shadow-md overflow-hidden rounded-sm">
             <div className="flex-col">
