@@ -3,16 +3,11 @@ const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 const fs = require('fs')
-
+const uploadToCloud = require('../utils/cloudinary')
 module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
-            if (req.body.imageName == undefined || req.body.img == '') {
-                const error = appError.create("There is NO Images Provided", 400, httpStatusCode.ERROR);
-                return next(error);
-            }
-            req.body.img = req.body.imageName
-            delete req.body.imageName
+            uploadToCloud(req, 'offers', next)
             const newOffer = await Offer.create(req.body)
             if (newOffer) {
                 return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Offer is Created Successfully" })

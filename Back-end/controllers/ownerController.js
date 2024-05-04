@@ -133,7 +133,7 @@ module.exports = {
                 bcrypt.compare(enteredPassword, owner.password, async (err, result) => {
                     if (result) {
                         if (owner.verified === 0) {
-                            const error = appError.create(client.email, 400, httpStatusCode.UNVERIFIED)
+                            const error = appError.create(owner.email, 400, httpStatusCode.UNVERIFIED)
                             return next(error)
                         }
                         delete owner.verificationCode;
