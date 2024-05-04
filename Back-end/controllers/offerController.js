@@ -3,11 +3,12 @@ const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 const fs = require('fs')
-const uploadToCloud = require('../utils/cloudinary')
+const {uploadToCloud} = require('../utils/cloudinary')
 module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
-            uploadToCloud(req, 'offers', next)
+            await uploadToCloud(req, 'offers')
+            console.log(req.body)
             const newOffer = await Offer.create(req.body)
             if (newOffer) {
                 return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Offer is Created Successfully" })
