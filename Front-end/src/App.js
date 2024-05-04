@@ -38,6 +38,7 @@ import Moderators from './pages/ProfilePages/Moderators';
 import AdjustRoom from './pages/ProfilePages/AdjustRoom';
 import AdjustOffer from './pages/ProfilePages/AdjustOffer';
 import AdjustEvent from './pages/ProfilePages/AdjustEvent';
+import Payment from './pages/Payment';
 function App() {
   return (
     <>
@@ -86,6 +87,7 @@ function App() {
             <Route path="" element={<RoomList />} />
             <Route path=":roomid" element={<BookingRoom />} />
           </Route>
+          <Route path='payment' element={<Payment />}></Route>
         </Route>
         <Route element={<RequireAuth allowedRoles={["owner"]} />} >
           <Route element={<ProfileManager />} >

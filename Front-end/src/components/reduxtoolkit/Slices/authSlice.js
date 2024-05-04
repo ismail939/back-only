@@ -14,6 +14,7 @@ export const authSlice = createSlice({
             state.token = null;
             state.usertype = null;
             localStorage.removeItem('user')
+            sessionStorage.removeItem('pay')
         }
     }
 })
