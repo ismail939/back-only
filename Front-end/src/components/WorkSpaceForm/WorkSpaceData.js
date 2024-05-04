@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
-import { forwardRef , useImperativeHandle } from "react";
-const WorkSpaceData = forwardRef(({ name, address, description, email, phone, openingTime, closingTime,facebookLink,
-  mainImgName, mainimg, updateFields ,childRef, ShowError}) => {
+import { forwardRef, useImperativeHandle } from "react";
+let availablefacilities = [];
+const WorkSpaceData = forwardRef(({ name, address, description, email, phone, openingTime, closingTime, facilities,
+  mainImgName, mainimg, updateFields, childRef, ShowError }) => {
   const [checkerror, setCheckError] = useState("");
   const [dataerrors, setDataErrors] = useState({
     startDate: false,
@@ -12,9 +13,30 @@ const WorkSpaceData = forwardRef(({ name, address, description, email, phone, op
     description: false,
     email: false,
     ImageName: false,
-    fblink: false
+    facilities: false
   });
+  const amenities = [
+    "Comfortable chair",
+    "Comfortable lights",
+    "High-speed internet",
+    "Collaboration Tools (whiteboards, projectors, ...)",
+    "Drinks & Snacks",
+    "Kitchen",
+    "Printers and Scanners",
+    "Waiting area",
+    "Event Spaces",
+    "Pet-Friendly Spaces",
+    "Outdoor Spaces"
+  ];
   const formRef = useRef(null);
+  function handleChange(e){
+    if(e.target.checked){
+      availablefacilities.push(e.target.name)
+    } else{
+      availablefacilities = availablefacilities.filter(item => item !== e.target.name);
+    }
+    updateFields({ facilities: availablefacilities.join("/") })
+}
   function isImage(ImageName) {
     if (ImageName.slice(-4) === ".jpg" || ImageName.slice(-5) === ".jpeg" || ImageName.slice(-4) === ".png") return true;
     else {
@@ -47,12 +69,12 @@ const WorkSpaceData = forwardRef(({ name, address, description, email, phone, op
   const urlError = (fbPage) => {
     var regex = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+\/?)|localhost(:\d+)?(\/[.\w-]*)*(\?[\w%&=-]*)?(#[\w-]*)?$/;
     if (!fbPage.match(regex)) {
-        return true;
+      return true;
     }
     else {
-        return false;
+      return false;
     }
-}
+  }
   const DateError = (date) => {
     var regex = "([01]?[0-9]|2[0-3]):[0-5][0-9]";
     if (!date.match(regex)) {
@@ -67,65 +89,66 @@ const WorkSpaceData = forwardRef(({ name, address, description, email, phone, op
     if (NameError(name)) {
       setDataErrors({
         "phonenumber1": false, "startDate": false, "endDate": false, "name": true, "address": false,
-        "description": false, "email": false, "ImageName": false, "fblink": false
+        "description": false, "email": false, "ImageName": false, "facilities": false
       })
       setCheckError("Please fill in the name"); window.scrollTo(0, 100);
     }
     else if (NameError(address)) {
       setDataErrors({
         "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": true,
-        "description": false, "email": false, "ImageName": false, "fblink": false
+        "description": false, "email": false, "ImageName": false, "facilities": false
       })
       setCheckError("Please fill in the location"); window.scrollTo(0, 200);
     }
     else if (NameError(description)) {
       setDataErrors({
         "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false,
-        "description": true, "email": false, "ImageName": false, "fblink": false
+        "description": true, "email": false, "ImageName": false, "facilities": false
       })
       setCheckError("Please fill in the description"); window.scrollTo(0, 300);
     }
     else if (email.length > 0 && emailError()) {
       setDataErrors({
         "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false,
-        "description": false, "email": true, "ImageName": false, "fblink": false
+        "description": false, "email": true, "ImageName": false, "facilities": false
       })
       setCheckError("Please write a valid facebook Link"); window.scrollTo(0, 300);
     }
     else if (PhoneNumberError(phone)) {
       setDataErrors({
         "phonenumber1": true, "startDate": false, "endDate": false, "name": false, "address": false,
-        "description": false, "email": false, "ImageName": false, "fblink": false
+        "description": false, "email": false, "ImageName": false, "facilities": false
       })
       setCheckError("Please write a correct phone number ex:010123456789"); window.scrollTo(0, 500);
-    }else if (facebookLink.length > 0 && urlError(facebookLink)) {
-      setDataErrors({
-        "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false,
-        "description": false, "email": false, "ImageName": false, "fblink": true
-      })
     } else if (!isImage(mainImgName)) {
       setDataErrors({
         "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false,
-        "description": false, "email": false, "ImageName": true, "fblink": false
+        "description": false, "email": false, "ImageName": true, "facilities": false
       })
       setCheckError("Please select a valid image, accepted formats are: png, jpg, jpeg"); window.scrollTo(0, 600);
     } else if (DateError(openingTime)) {
       setDataErrors({
         "phonenumber1": false, "startDate": true, "endDate": false, "name": false, "address": false,
-        "description": false, "email": false, "ImageName": false, "fblink": false
+        "description": false, "email": false, "ImageName": false, "facilities": false
       })
       setCheckError("Openinig Hour should be in this format 00:00"); window.scrollTo(0, 600);
     } else if (DateError(closingTime)) {
       setDataErrors({
         "phonenumber1": false, "startDate": false, "endDate": true, "name": false, "address": false,
-        "description": false, "email": false, "ImageName": false, "fblink": false
+        "description": false, "email": false, "ImageName": false , "facilities": false
       })
       setCheckError("Closing Hour should be in this format 00:00"); window.scrollTo(0, 600);
+    } else if (availablefacilities < 2) {
+      setDataErrors({
+        "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false,
+        "description": false, "email": false, "ImageName": false , "facilities": true
+      })
+      setCheckError("Please select at least two facilities"); window.scrollTo(0, 900);
     } else {
       setCheckError("");
       setDataErrors({
         "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false,
-        "description": false, "email": false, "ImageName": false, "fblink": false
+        "description": false, "email": false, "ImageName": false, "facilities": false
       })
       return true
       // if (formRef.current) {
@@ -133,8 +156,8 @@ const WorkSpaceData = forwardRef(({ name, address, description, email, phone, op
       // }
     }
   };
-  useImperativeHandle(childRef , () =>({
-      HandleError
+  useImperativeHandle(childRef, () => ({
+    HandleError
   }))
   return (
     <>
@@ -153,24 +176,24 @@ const WorkSpaceData = forwardRef(({ name, address, description, email, phone, op
             updateFields({ name: e.target.value })
           }}
         ></input>
-        <ShowError condition={dataerrors.name } value={checkerror} />
+        <ShowError condition={dataerrors.name} value={checkerror} />
       </div>
       <div>
         <label
           htmlFor="Location"
           className="block mb-2 text-sm font-medium text-gray-900 "
         >
-          Location<span className="text-red-500">*</span>
+          Address<span className="text-red-500">*</span>
         </label>
-        <input type="text" name="Location" id="Location"
+        <input type="text" name="Address" id="Location"
           value={address}
           className={`bg-gray-50 border ${dataerrors.address ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
-          placeholder="Enter your Location"
+          placeholder="Enter your Address"
           onChange={(e) => {
             updateFields({ address: e.target.value })
           }}
         ></input>
-        <ShowError condition={dataerrors.address } value={checkerror} />
+        <ShowError condition={dataerrors.address} value={checkerror} />
       </div>
       <div>
         <label htmlFor="Description"
@@ -186,7 +209,7 @@ const WorkSpaceData = forwardRef(({ name, address, description, email, phone, op
             updateFields({ description: e.target.value })
           }}
         ></textarea>
-        <ShowError condition={dataerrors.description } value={checkerror} />
+        <ShowError condition={dataerrors.description} value={checkerror} />
       </div>
       <div>
         <label
@@ -203,7 +226,7 @@ const WorkSpaceData = forwardRef(({ name, address, description, email, phone, op
             updateFields({ email: e.target.value })
           }}
         ></input>
-        <ShowError condition={dataerrors.email } value={checkerror} />
+        <ShowError condition={dataerrors.email} value={checkerror} />
       </div>
       <div>
         <label
@@ -220,24 +243,7 @@ const WorkSpaceData = forwardRef(({ name, address, description, email, phone, op
             updateFields({ phone: e.target.value })
           }}
         ></input>
-        <ShowError condition={dataerrors.phonenumber1 } value={checkerror} />
-      </div>
-      <div>
-        <label
-          htmlFor="facebookLink"
-          className="block mb-2 text-sm font-medium text-gray-900 "
-        >
-          Facebook Link
-        </label>
-        <input type="text" name="facebookLink" id="facebookLink"
-          value={facebookLink}
-          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-          placeholder="facebook page"
-          onChange={(e) => {
-            updateFields({ facebookLink: e.target.value })
-          }}
-        ></input>
-        <ShowError condition={dataerrors.fblink } value={checkerror} />
+        <ShowError condition={dataerrors.phonenumber1} value={checkerror} />
       </div>
       <div>
         <label
@@ -255,7 +261,7 @@ const WorkSpaceData = forwardRef(({ name, address, description, email, phone, op
             updateFields({ mainimg: e.target.files[0], mainImgName: e.target.files[0]?.name })
           }}
         ></input>
-        <ShowError condition={dataerrors.ImageName } value={checkerror} />
+        <ShowError condition={dataerrors.ImageName} value={checkerror} />
       </div>
       <div className="flex justify-between gap-8">
         <div>
@@ -291,7 +297,25 @@ const WorkSpaceData = forwardRef(({ name, address, description, email, phone, op
           ></input>
         </div>
       </div>
-      <ShowError condition={(dataerrors.endDate || dataerrors.startDate) } value={checkerror} />
+      <ShowError condition={(dataerrors.endDate || dataerrors.startDate)} value={checkerror} />
+      <div>
+        <label
+          htmlFor="name"
+          className="block mb-4 text-sm font-medium text-gray-900 "
+        >
+          Facilities & Amentities
+        </label>
+        {
+          amenities.map((item) => {
+            return <div className="flex gap-3 items-center my-2">
+              <input name={item} type="checkbox" className="w-4 h-4 cursor-pointer"
+              onChange={handleChange}></input>
+              <h2 className="text-md">{item}</h2>
+            </div>
+          })
+        }
+        <ShowError condition={dataerrors.facilities} value={checkerror} />
+      </div>
     </>
   );
 })
