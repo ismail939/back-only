@@ -16,7 +16,7 @@ function CreateFullWorkSpace() {
         description: "",
         email: "",
         phone: "",
-        facebookLink: "",
+        facilities: "",
         openingTime: "",
         closingTime: "",
         mainImgName: "",
