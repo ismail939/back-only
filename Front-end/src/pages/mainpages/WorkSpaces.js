@@ -38,7 +38,8 @@ function WorkSpaces() {
     const [searchlist, setSearchList] = useState(false);
     const [fetcherror, setFetchError] = useState(false);
     const [showFilter, setShowFilter] = useState(false);
-    const [priceRange, setPriceRange] = useState([100, 500]);
+    const [priceRange, setPriceRange] = useState([0, 500]);
+    const [availableRooms, setAvailableRooms] = useState("");
     const [pageNumber, setPageNumber] = useState(0)
     const token = useSelector(store => store.auth).token;
     const profileData = token ? jwtDecode(token) : null;
@@ -47,7 +48,7 @@ function WorkSpaces() {
     const pageCount = Math.ceil(displayedCwspaces?.length / cwSpacesPerPage);
     let menuRef = useRef();
     useEffect(() => {
-        if(profileData?.clientID) getFavourites();
+        if (profileData?.clientID) getFavourites();
         getWorkSpaces();
         setDropDown(false);
     }, [])
@@ -98,7 +99,13 @@ function WorkSpaces() {
     }
     function ApplyFilter() {
         const filteredCWs = cwspaces?.filter((workspace) => {
-            return workspace.hourPrice !== null && workspace.hourPrice >= priceRange[0] && workspace.hourPrice <= priceRange[1]
+            if (availableRooms.length > 0) return (workspace.hourPrice >= priceRange[0]
+                && workspace.hourPrice <= priceRange[1]
+                && availableRooms.every(value => cwspaces.avilablerooms?.includes(value))
+            )
+            else return workspace.hourPrice >= priceRange[0]
+                && workspace.hourPrice <= priceRange[1]
+            
         })
         setDisplayedCwspaces(filteredCWs)
         setShowFilter(false)
@@ -110,12 +117,12 @@ function WorkSpaces() {
         setPageNumber(value - 1)
     }
     const displayPages = displayedCwspaces?.slice(pagesVisited, pagesVisited + cwSpacesPerPage).map((cwspace) => {
-        return <WorkSpaceCard cwspace={cwspace} showFavIcon={true} favourites={favourites} profileData={profileData}  key={cwspace.cwID} />
+        return <WorkSpaceCard cwspace={cwspace} showFavIcon={true} favourites={favourites} profileData={profileData} key={cwspace.cwID} />
     })
     return (
         <div className="flex flex-col relative min-h-screen justify-between">
             {showFilter && <div className="fixed top-0 left-0 w-full h-[100vh] flex items-center justify-center bg-black/[.2] z-20">
-                <Filters priceRange={priceRange} handleFilter={handleFilter} AdjustPriceRange={AdjustPriceRange} ApplyFilter={ApplyFilter}/>
+                <Filters priceRange={priceRange} handleFilter={handleFilter} AdjustPriceRange={AdjustPriceRange} ApplyFilter={ApplyFilter} setAvailableRooms={setAvailableRooms} />
             </div>}
             <div className="w-4/5 mx-auto md:mt-[30px] p-5">
                 <div className="relative w-full" ref={menuRef}>
@@ -129,7 +136,7 @@ function WorkSpaces() {
                             onClick={() => { setSearchList(true) }}
                         ></input>
                         <button className="duration-200 ease-in-out btn-color h-full p-4 flex items-center rounded-r-md  text-white"
-                            onClick={() => { if (searchData?.length > 0) {setDisplayedCwspaces(searchData ); setSearchList(false)} }}><Search className="text-lg" /></button>
+                            onClick={() => { if (searchData?.length > 0) { setDisplayedCwspaces(searchData); setSearchList(false) } }}><Search className="text-lg" /></button>
                     </div>
                     {(searchData?.length > 0 && searchlist) ? <div className="flex flex-col max-h-60 w-full mt-1 shadow-md rounded-md bg-[#fafafa] overflow-x-hidden absolute z-[90]" >
                         {searchData.map((workspace) => {
