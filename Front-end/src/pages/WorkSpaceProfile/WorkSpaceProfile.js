@@ -1,7 +1,8 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import PageNotFound from "../PageNotFound";
-import { Stars, StarFill, Star, StarHalf, PersonCircle, HouseDoorFill } from "react-bootstrap-icons"
+import { Stars, StarFill, Star, StarHalf, PersonCircle } from "react-bootstrap-icons"
+import rightMark from "../../components/images/Right mark.png"
 import { ClockFill, TelephoneFill } from "react-bootstrap-icons"
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, EffectCoverflow } from 'swiper/modules';
@@ -34,7 +35,7 @@ function Review(props) {
         'January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'
     ];
-    const date = new Date(review.dateTime)
+    const date = new Date(review.createdAt)
     const reviewDate = date.getDate().toString() + " " + months[date.getMonth()] + " " + date.getFullYear().toString();
     const imageUrl = "http://localhost:4000/images/clients/"
     return (
@@ -51,6 +52,19 @@ function Review(props) {
         </div>
     )
 }
+const amenities = [
+    "Comfortable chair",
+    "Comfortable lights",
+    "High-speed internet",
+    "Collaboration Tools (whiteboards, projectors, ...)",
+    "Drinks & Snacks",
+    "Kitchen",
+    "Printers and Scanners",
+    "Waiting area",
+    "Event Spaces",
+    "Pet-Friendly Spaces",
+    "Outdoor Spaces"
+];
 function WorkSpaceProfile() {
     const params = useParams();
     const token = useSelector(store => store.auth).token;
@@ -103,6 +117,7 @@ function WorkSpaceProfile() {
     function createReview(e) {
         e.preventDefault();
         let currentDate = new Date()
+        console.log(reviewRate)
         fetch(`http://localhost:4000/reviews`, {
             method: "POST",
             headers: {
@@ -131,7 +146,22 @@ function WorkSpaceProfile() {
     if (found && !loading) {
         return (
             <div className="w-4/5 mx-auto mt-[50px] min-h-screen">
-                <h2 className="main-font md:text-3xl text-xl mt-5 mb-[50px]">{cwSpace.name}</h2>
+                <div className="flex justify-between items-center" >
+                    <h2 className="main-font md:text-3xl text-xl mt-5 mb-[50px]">{cwSpace.name}</h2>
+                    <div className="flex gap-3 items-center">
+                        <h2 className="text-[35px] font-light">{cwSpace.rate}</h2>
+                        <div>
+                            <div className="text-yellow-500 text-xl flex items-center">
+                                {[1, 2, 3, 4, 5].map(i => {
+                                    if (i <= Math.round(cwSpace.rate * 2) / 2) return <StarFill />
+                                    else if (i - 0.5 === Math.round(cwSpace.rate * 2) / 2) return <StarHalf />
+                                    else return <Star />
+                                })}
+                            </div>
+                            <h2 className="mt-1 text-sm">out of {cwSpace.noOfReviews} review{cwSpace.noOfReviews > 1 && "s"}</h2>
+                        </div>
+                    </div>
+                </div>
                 <Swiper
                     className="lg:h-[30rem] md:h-[20rem] h-[15rem]"
                     effect={'coverflow'}
@@ -160,14 +190,9 @@ function WorkSpaceProfile() {
                         )
                     })}
                 </Swiper>
-                <div className="mt-[100px] grid lg:grid-cols-4 grid-cols-2 gap-5 justify-items-center">
-                    <div className="flex items-center gap-2 text-lg">
-                        <HouseDoorFill className="text-3xl" />
-                        <span>
-                            <h2 className="text-sm">Address</h2>
-                            <p>{cwSpace.address}</p>
-                        </span>
-                    </div>
+                <h2 className="main-font text-3xl mt-[100px]">Accessibility:</h2>
+                <hr className="border-black my-3"></hr>
+                <div className="mt-10 grid md:grid-cols-3 grid-cols-2 gap-5 justify-items-center">
                     <div className="flex items-center gap-2 text-lg">
                         <TelephoneFill className="text-3xl" />
                         <span>
@@ -190,7 +215,22 @@ function WorkSpaceProfile() {
                         </span>
                     </div>
                 </div>
-                <p className="mt-10 mb-[30px] sec-font bg-gray-100 rounded-xl p-10">{cwSpace.description}</p>
+                <h2 className="main-font text-3xl mt-[50px]">Description:</h2>
+                <hr className="border-black my-3"></hr>
+                <p className="mt-4 mb-[30px] sec-font">{cwSpace.description}</p>
+                <h2 className="main-font text-3xl mt-[50px]">Facilities & Amenities:</h2>
+                <hr className="border-black my-3"></hr>
+                <ul className="mt-4 mb-[30px]">
+                    {amenities.map((item) => {
+                        return <div className="flex items-center gap-4">
+                            <img src={rightMark} alt="check" className="w-5 h-5 object-contain"></img>
+                            <li className="text-lg my-1">{item}</li>
+                        </div>
+                    })}
+                </ul>
+                <h2 className="main-font text-3xl mt-[50px]">Maps:</h2>
+                <hr className="border-black my-3"></hr>
+                <p className="mt-4 mb-[30px] sec-font">{cwSpace.address}</p>
                 <div className="">
                     <iframe title={cwSpace.name + " map"} src={`https://www.google.com/maps/embed/v1/place?q=${encodeURIComponent(cwSpace.name)}&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8`}
                         className="w-full "
@@ -254,10 +294,10 @@ function WorkSpaceProfile() {
                     </SwiperSlide>
                 </Swiper>
                 <div className="mt-[100px] grid lg:grid-cols-4 grid-cols-2 gap-10">
-                    <Skeleton className="w-full h-10"/>
-                    <Skeleton className="w-full h-10"/>
-                    <Skeleton className="w-full h-10"/>
-                    <Skeleton className="w-full h-10"/>
+                    <Skeleton className="w-full h-10" />
+                    <Skeleton className="w-full h-10" />
+                    <Skeleton className="w-full h-10" />
+                    <Skeleton className="w-full h-10" />
                 </div>
             </div>
         )
