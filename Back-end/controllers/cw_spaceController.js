@@ -1,4 +1,4 @@
-const { Cw_space, Cw_spacePhone, Cw_spacePhoto, Room, Owner} = require('../models/modelIndex')
+const { Cw_space, Cw_spacePhoto, Room, Owner} = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");

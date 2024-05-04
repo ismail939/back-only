@@ -2,6 +2,8 @@ const express = require('express')
 const offerController = require('../controllers/offerController')
 const router = express.Router();
 const { validateOffer, validateUpdatedOffer } = require("../middlewares/validationSchema");
+const verifyToken = require("../middlewares/verifyToken");
+const allowedTo = require("../middlewares/allowedTo");
 
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -35,12 +37,12 @@ router.route("/home")
 
 router.route("/")
     .get(offerController.getAll)
-    .post(upload.single('img'), offerController.create);
+    .post(verifyToken, allowedTo('owner'), upload.single('img'), offerController.create);
 
 router.route("/:offerID")
     .get(offerController.getOne)
-    .patch(upload.single('img'), offerController.update)
-    .delete(offerController.delete);
+    .patch(verifyToken, allowedTo('owner'), upload.single('img'), offerController.update)
+    .delete(verifyToken, allowedTo('owner'), offerController.delete);
 
 router.route("/cw_space/:cwID")
     .get(offerController.getCwSpaceOffers);

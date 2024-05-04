@@ -35,7 +35,6 @@ module.exports = {
                 roomsIDs.push(rooms[index].roomID)
                 roomsImages.splice(rooms[index].roomID, 0, rooms[index].img)
             }
-
             let books = await Book.findAll({
                 raw: true, where: {
                     roomRoomID: { [sequelize.Op.in]: roomsIDs }
@@ -52,7 +51,6 @@ module.exports = {
                 books[index].clientImage = client.profilePic
                 books[index].roomImage = roomsImages[books[index].roomRoomID]
             }
-
             if (books.length === 0) {
                 const error = appError.create("Books not found", 404, httpStatusCode.ERROR);
                 return next(error);
@@ -74,14 +72,12 @@ module.exports = {
                     index--
                 }
             }
-            console.log(books)
             let times = [] // list of objects each object is a list
             for (let index = 0; index < books.length; index++) {
                 for (let j = books[index].start.getHours(); j < books[index].end.getHours(); j++) {
                     times.push([j, j + 1])
                 }
             }
-            
             return res.json({ status: httpStatusCode.SUCCESS, data: times })
         }
     ),
@@ -122,9 +118,7 @@ module.exports = {
                     roomRoomID: req.body.roomRoomID
                 }
             })
-
             if (booked != null) {
-                console.log(booked)
                 const error = appError.create("This slot is not valid", 400, httpStatusCode.ERROR);
                 return next(error);
             }
@@ -142,7 +136,6 @@ module.exports = {
                     if (err) {
                         return next(err)
                     } else {
-                        console.log(charge);
                         req.body.status = 'paid'
                         await Book.create(req.body);
                         return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Created Successfully" });

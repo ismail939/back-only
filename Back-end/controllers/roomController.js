@@ -10,7 +10,6 @@ module.exports = {
         async (req, res, next) => {
             req.body.img = req.body.imageName
             delete req.body.imageName
-            console.log(req.body)
             const duplicates = await Room.findOne({
                 raw: true, where: {
                     [Sequelize.Op.and]: [

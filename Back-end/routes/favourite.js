@@ -1,14 +1,16 @@
 const express = require('express')
-const addToFavController = require('../controllers/favouriteController')
+const favouriteController = require('../controllers/favouriteController')
+const verifyToken = require("../middlewares/verifyToken");
+const allowedTo = require("../middlewares/allowedTo");
 
 const router = express.Router();
 
 
 router.route("/:clientID")
-    .get(addToFavController.get)
+    .get(verifyToken, allowedTo('client'), favouriteController.get)
 
 router.route("/")
-    .post(addToFavController.create)
-    .delete(addToFavController.delete)
+    .post(verifyToken, allowedTo('client'), favouriteController.create)
+    .delete(verifyToken, allowedTo('client'), favouriteController.delete)
     
 module.exports = router

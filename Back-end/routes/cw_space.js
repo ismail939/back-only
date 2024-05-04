@@ -5,6 +5,8 @@ const { validateCw_space, validateUpdatedCw_space} = require("../middlewares/val
 const httpStatusCode = require("../utils/httpStatusText");
 const appError = require("../utils/appError");
 const multer = require('multer')
+const verifyToken = require("../middlewares/verifyToken");
+const allowedTo = require("../middlewares/allowedTo");
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -37,16 +39,16 @@ const upload = multer({ storage: storage })
 router.route("/home").get(cw_spaceController.getHome);
 
 router.route("/updatePhoto/:ID")
-    .patch(upload.single('mainPhoto'), cw_spaceController.updatePhoto);
+    .patch(verifyToken, allowedTo('owner'), upload.single('mainPhoto'), cw_spaceController.updatePhoto);
 
 router.route("/")
     .get(cw_spaceController.getAll)
-    .post(upload.single('mainPhoto'), cw_spaceController.create);
+    .post(verifyToken, allowedTo('owner'), upload.single('mainPhoto'), cw_spaceController.create);
 
 router.route("/:ID")
     .get(cw_spaceController.getOne)
-    .patch(cw_spaceController.update)
-    .delete(cw_spaceController.delete);
+    .patch(verifyToken, allowedTo('owner'), cw_spaceController.update)
+    .delete(verifyToken, allowedTo('admin'), cw_spaceController.delete);
 
 
 
