@@ -17,8 +17,8 @@ module.exports = (db, type)=>{
             type: type.TEXT,
             allowNull: false
         },
-        fbPage: {
-            type: type.TEXT,
+        amenities: {
+            type: type.STRING,
             allowNull: true
         },
         phone: {
