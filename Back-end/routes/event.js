@@ -5,6 +5,8 @@ const { validateEvent} = require("../middlewares/validationSchema");
 const httpStatusCode = require("../utils/httpStatusText");
 const appError = require("../utils/appError");
 const multer = require('multer')
+const verifyToken = require("../middlewares/verifyToken");
+const allowedTo = require("../middlewares/allowedTo");
 
 
 const storage = multer.diskStorage({
@@ -37,12 +39,12 @@ router.route("/home")
 
 router.route("/")
     .get(eventController.getAll)
-    .post(upload.single('mainPhoto'), eventController.create);
+    .post(verifyToken, allowedTo('owner', 'moderator'), upload.single('mainPhoto'), eventController.create);
 
 router.route("/:eventID")
     .get(eventController.getOne)
-    .patch(eventController.update)
-    .delete(eventController.delete);
+    .patch(verifyToken, allowedTo('owner', 'moderator'), eventController.update)
+    .delete(verifyToken, allowedTo('owner'), eventController.delete);
 
 router.route("/cw_space/:cwID")
     .get(eventController.getCwSpaceEvents);

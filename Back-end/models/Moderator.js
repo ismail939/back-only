@@ -15,7 +15,8 @@ module.exports = (db, type) => {
         },
         profilePic: {
             type: type.TEXT,
-            allowNUll: true
+            allowNUll: true,
+            defaultValue: "http://localhost:4000/images/default.png"
         },
         role: {
             type: type.STRING,
