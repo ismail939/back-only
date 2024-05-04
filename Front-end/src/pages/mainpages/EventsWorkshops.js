@@ -37,9 +37,9 @@ function EventsWorshops() {
     }, [])
     const getSearchData = (event) => {
         const search = event.target.value;
-        setSearchData(events.filter((offer) => {
+        setSearchData(events.filter((event) => {
             return search === '' ?
-                null : offer?.title.toLowerCase().includes(search.toLowerCase());
+                null : event?.name.toLowerCase().includes(search.toLowerCase());
         }))
     }
     return (
@@ -59,7 +59,7 @@ function EventsWorshops() {
                 </div>
                 {(searchData.length > 0 && searchlist) ? <div className="flex flex-col max-h-60 w-full mt-1 shadow-md rounded-md bg-[#fafafa] overflow-x-hidden absolute z-[90]" >
                     {searchData.map((event) => {
-                        return <Link className="w-full p-3 capitalize hover:bg-gray-200 font-semibold" to={``}>{event.cwSpaceName}</Link>
+                        return <Link className="w-full p-3 capitalize hover:bg-gray-200 font-semibold" to={``}>{event.name}</Link>
                     })}
                 </div> : null}
             </div>

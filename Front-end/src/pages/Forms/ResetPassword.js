@@ -17,9 +17,10 @@ function ResetPassword() {
     });
     useEffect(() => {
         const url = window.location.href;
-        setToken(url.slice(42))
-        const usertype = jwtDecode(url.slice(42))
-        setProfileData(usertype)
+        const token = url.slice(42);
+        setToken(token)
+        if(token) { const usertype = jwtDecode(url.slice(42))
+        setProfileData(usertype)}
     }, [])
     function compPassword() {
         if ((password !== confirmPassword) && (password !== "") && (confirmPassword !== "")) return false;
@@ -109,7 +110,7 @@ function ResetPassword() {
                                 </div>
                                 {dataerrors.password ? <ShowErrorMessage condition={true} value={checkerror} /> : <p className="m-0 mt-1 text-[11px] text-gray-500">Note: Password must be at least 8 charachters long with one lowercase, one uppercase and a number</p>}
                             </div>
-                            <div className="mb-4">
+                            <div className="mb-8">
                                 <label htmlFor="confirmpassword" className="block mb-2 text-sm font-medium text-gray-900">Confirm New Password</label>
                                 <input type="password" name="confirmpassword" id="confirmpassword" placeholder="••••••••" className={`bg-gray-50 border ${dataerrors.confirmpassword || !compPassword() ? "border-red-500 focus:outline-rose-600" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg  block w-full p-2.5 `} required
                                     onChange={(e) => { setConfirmPassword(e.target.value) }}></input>

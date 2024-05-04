@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
+import { ShowErrorMessage } from "./PortalLogin";
 function ForgotPassword() {
     const [email, setEmail] = useState("")
     const [checkerror, setCheckError] = useState("")
@@ -56,12 +57,14 @@ function ForgotPassword() {
                             Reset Password
                         </h1>
                         <div className="">
-                            <h1 className="text-sm mb-3 text-gray-600">Please enter your email to be able to change your password</h1>
-                            <div>
+                            <h1 className="text-sm mb-3 text-gray-600 mb-6">Please enter your email to be able to change your password</h1>
+                            <div className="mb-10">
                                 <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 ">Email</label>
                                 <input type="email" value={email} name="email" id="username" className={`bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`} placeholder="enter your email"
                                     onChange={(e) => setEmail(e.target.value)}></input>
-                                {dataerrors.email ? <span className="text-[12px] text-red-500">plaese enter a valid email</span> : null}
+                                <div className="mt-4">
+                                    <ShowErrorMessage condition={dataerrors.email} value={"Please enter a valid email address"} />
+                                </div>
                             </div>
                             {success && <p className="font-semibold my-4 text-[14px]">Please check your inbox for email sent</p>}
                             <div className="mt-4">

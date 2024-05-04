@@ -221,16 +221,16 @@ function PersonalInformation(props) {
             <div className="w-full min-h-screen py-1 lg:w-3/4 " >
                 <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Profile Photo</h2>
                 <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4" >
-                    <div className="w-full lg:px-16 md:px-8 px-4">
+                    <div className="w-full flex flex-col items-center justify-center lg:px-16 md:px-8 px-4">
                         <img className=" object-cover w-60 h-60 p-1 rounded-full ring-2 ring-indigo-300 m-8 " src={img ? URL.createObjectURL(img) : imageUrl} alt="no-picture-added"></img>
                         <input className={`hidden`} id="uploadProfileImg"
                             onChange={(e) => { setImg(e.target.files[0]); setImgName(e.target.files[0]?.name) }}
                             accept=".png,.jpg,.jpeg" type="file" ></input>
                         {dataerrors.imgName ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
-                        <div className="flex flex-row-reverse w-full items-center gap-5">
+                        <div className="flex flex-row-reverse w-full justify-center items-center gap-5">
                             <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${!imgName?.trim() ? "bg-gray-500" : "btn-color border-indigo-200"}
                         rounded-lg border`} disabled={!imgName?.trim()} onClick={(e) => handleImage(e)}>Save</button>
-                            <label htmlFor="uploadProfileImg" className="py-2 px-4 font-medium rounded-lg bg-red-500 hover:bg-red-600 duration-200 cursor-pointer">Change Image</label>
+                            <label htmlFor="uploadProfileImg" className="py-2 px-4 font-medium text-white rounded-lg bg-[#3282B8] hover:bg-[#4292C8] duration-200 cursor-pointer">Change Image</label>
                         </div>
                     </div>
                 </div>

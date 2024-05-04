@@ -128,7 +128,7 @@ function AdjustEvent() {
                     <div className="flex flex-row-reverse w-full items-center gap-5">
                         <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${!imgName?.trim() ? "bg-gray-500" : "btn-color border-indigo-200"}
                         rounded-lg border`} disabled={!imgName?.trim()} onClick={(e) => { }}>Save</button>
-                        <label htmlFor="uploadCWMainImg" className="py-2 px-4 font-medium rounded-lg bg-red-500 hover:bg-red-600 duration-200 cursor-pointer">Change Image</label>
+                        <label htmlFor="uploadCWMainImg" className="py-2 px-4 font-medium rounded-lg text-white bg-[#3282B8] hover:bg-[#4292C8] duration-200 cursor-pointer">Change Image</label>
                         {dataerrors.offerImageName ? <span className="text-[12px] text-red-500">plaese enter an image accepted formats are png , jpg , jpeg</span> : null}
                     </div>
                 </div>
