@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useSelector } from "react-redux";
 import RoomForm from "../../components/WorkSpaceForm/RoomForm";
+import { useNavigate } from "react-router-dom";
 import { ExclamationCircleFill } from "react-bootstrap-icons";
 import Swal from "sweetalert2";
 import { ShowErrorMessage } from "./PortalLogin";
@@ -15,6 +16,7 @@ function CreateRoom() {
         roomImg: null,
         number: ""
     }
+    const navigate = useNavigate();
     const [roomData, setRoomData] = useState(IntitialRoomData)
     const auth = useSelector(store => store.auth);
     const [resError, setResError] = useState("")
@@ -43,7 +45,6 @@ function CreateRoom() {
         });
     }
     const addRoom = () => {
-        console.log(roomData)
         let formData = new FormData();
         formData.append('type', roomData.type);
         formData.append('hourPrice', roomData.hourPrice);
@@ -66,10 +67,8 @@ function CreateRoom() {
                     setResError(response.message)
                 }
                 else if (response.status === "success") {
-                    success()
-                    
                     setRoomData(IntitialRoomData)
-                    console.log(response)
+                    navigate("/rooms-data")
                 }
             }).catch(error => setResError("unfortunately there was a server error"))
     }
@@ -78,6 +77,7 @@ function CreateRoom() {
         if (childRef.current.HandleRoomError()) {
             addRoom()
         }
+        
     }
     return (
         <section className="">

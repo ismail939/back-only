@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useUpdateClientMutation, useUpdatePhotoMutation } from "../reduxtoolkit/Slices/apiSlice";
-function ProfileSettings(props) {
-    const profileData = props.profileData;
-    const usertype = useSelector(store => store.auth).usertype;
-    const auth = useSelector(store => store.auth);
+import { jwtDecode } from "jwt-decode";
+import { useUpdateClientMutation, useUpdatePhotoMutation } from "../../components/reduxtoolkit/Slices/apiSlice";
+function PersonalInformation(props) {
+    const user = useSelector(store => store.auth);
+    const profileData = jwtDecode(user.token);
+    const usertype = user.usertype;
     const [updateData] = useUpdateClientMutation();
     const [updatePhoto] = useUpdatePhotoMutation();
     const [firstName, setFirstName] = useState(profileData.fname);
@@ -217,28 +218,27 @@ function ProfileSettings(props) {
     }
     return (
         <>
-
-            <div className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4 " >
+            <div className="w-full min-h-screen py-1 lg:w-3/4 " >
                 <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Profile Photo</h2>
                 <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4" >
-                    <div className="w-full md:px-16 px-4">
+                    <div className="w-full flex flex-col items-center justify-center lg:px-16 md:px-8 px-4">
                         <img className=" object-cover w-60 h-60 p-1 rounded-full ring-2 ring-indigo-300 m-8 " src={img ? URL.createObjectURL(img) : imageUrl} alt="no-picture-added"></img>
                         <input className={`hidden`} id="uploadProfileImg"
                             onChange={(e) => { setImg(e.target.files[0]); setImgName(e.target.files[0]?.name) }}
                             accept=".png,.jpg,.jpeg" type="file" ></input>
                         {dataerrors.imgName ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
-                        <div className="flex flex-row-reverse w-full items-center gap-5">
+                        <div className="flex flex-row-reverse w-full justify-center items-center gap-5">
                             <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${!imgName?.trim() ? "bg-gray-500" : "btn-color border-indigo-200"}
                         rounded-lg border`} disabled={!imgName?.trim()} onClick={(e) => handleImage(e)}>Save</button>
-                            <label htmlFor="uploadProfileImg" className="py-2 px-4 font-medium rounded-lg bg-red-500 hover:bg-red-600 duration-200 cursor-pointer">Change Image</label>
+                            <label htmlFor="uploadProfileImg" className="py-2 px-4 font-medium text-white rounded-lg bg-[#3282B8] hover:bg-[#4292C8] duration-200 cursor-pointer">Change Image</label>
                         </div>
                     </div>
                 </div>
                 {usertype !== "moderator" && <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Basic Information</h2>}
                 {usertype !== "moderator" && <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4">
-                    <div className="w-full md:px-12 px-4">
+                    <div className="w-full xl:px-16 md:px-6 px-4">
                         <div className="my-4 w-full flex justify-between items-center" >
-                            <label className="block mb-2 cursor-icon w-1/4 gap-2">First Name</label>
+                            <label className="block mb-2 cursor-icon w-1/4 max-sm:w-2/5 gap-2">First Name</label>
                             <div className="w-full">
                                 <input className={`bg-gray-50 border placeholder-gray-900 ${dataerrors.fname ? "border-red-500" : "border-gray-300"}
                             text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 w-full`}
@@ -247,7 +247,7 @@ function ProfileSettings(props) {
                             </div>
                         </div>
                         <div className="my-4 w-full flex justify-between items-center">
-                            <label className="block mb-2 cursor-icon w-1/4 gap-2">Last Name</label>
+                            <label className="block mb-2 cursor-icon w-1/4 max-sm:w-2/5 gap-2">Last Name</label>
                             <div className="w-full">
                                 <input className={`bg-gray-50 border placeholder-gray-900 ${dataerrors.lname ? "border-red-500" : "border-gray-300"} 
                             text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
@@ -256,7 +256,7 @@ function ProfileSettings(props) {
                             </div>
                         </div >
                         <div className="my-4 w-full flex justify-between items-center">
-                            <label className="block mb-2 cursor-icon w-1/4 gap-2">Email</label>
+                            <label className="block mb-2 cursor-icon w-1/4 max-sm:w-2/5 gap-2">Email</label>
                             <div className="w-full">
                                 <input className={`bg-gray-50 border placeholder-gray-900 ${dataerrors.email ? "border-red-500" : "border-gray-300"} 
                             text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
@@ -273,7 +273,7 @@ function ProfileSettings(props) {
                 </div>}
                 {usertype !== "moderator" && <><h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">PhoneNumber</h2>
                     <div className="my-4 border  border-black-90 rounded-3xl max-w-3xl mx-auto mt-4">
-                        <div className="flex justify-between items-center py-4 md:px-12 px-4 gap-8">
+                        <div className="flex justify-between items-center py-4 xl:px-16 md:px-6 px-4 gap-8">
                             <input className={`bg-gray-50 border ${dataerrors.phonenumber ? "border-red-500" : "border-gray-300"} 
                         text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5`}
                                 onChange={(e) => setPhoneNumber(e.target.value)} type="text"
@@ -288,9 +288,9 @@ function ProfileSettings(props) {
                     </div></>}
                 <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Passsword</h2>
                 <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4">
-                    <div className="w-full md:px-12 px-4">
+                    <div className="w-full xl:px-16 md:px-6 px-4">
                         <div className="my-4 w-full flex justify-between items-center gap-2" >
-                            <label className="block mb-2 cursor-icon w-1/4">Old Password</label>
+                            <label className="block mb-2 cursor-icon w-1/4 max-sm:w-2/5">Old Password</label>
                             <div className="w-full">
                                 <input type="password" onChange={(e) => setOldPassword(e.target.value)} className={`bg-gray-50 border ${dataerrors.oldpassword ? "border-red-500" : "border-gray-300"} 
                         text-gray-900 sm:text-sm rounded-lg w-full p-2.5`}></input>
@@ -298,7 +298,7 @@ function ProfileSettings(props) {
                             </div>
                         </div>
                         <div className="my-4 w-full flex justify-between items-center gap-2">
-                            <label className="block mb-2 cursor-icon w-1/4">New Password</label>
+                            <label className="block mb-2 cursor-icon w-1/4 max-sm:w-2/5">New Password</label>
                             <div className="w-full">
                                 <input type="password" onChange={(e) => setNewPassword(e.target.value)} className={`bg-gray-50 border ${dataerrors.newpassword ? "border-red-500" : "border-gray-300"} 
                         text-gray-900 sm:text-sm rounded-lg w-full p-2.5`}></input>
@@ -306,7 +306,7 @@ function ProfileSettings(props) {
                             </div>
                         </div>
                         <div className="my-4 w-full flex justify-between items-center gap-2">
-                            <label className="block mb-2 cursor-icon w-1/4">Confirm Password</label>
+                            <label className="block mb-2 cursor-icon w-1/4 max-sm:w-2/5">Confirm Password</label>
                             <div className="w-full">
                                 <input type="password" onChange={(e) => setConfirmPassword(e.target.value)} className={`bg-gray-50 border ${dataerrors.confrimpassword ? "border-red-500" : "border-gray-300"} 
                         text-gray-900 sm:text-sm rounded-lg  w-full p-2.5`}></input>
@@ -324,4 +324,4 @@ function ProfileSettings(props) {
         </>
     )
 }
-export default ProfileSettings;
+export default PersonalInformation;

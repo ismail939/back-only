@@ -1,6 +1,7 @@
 import Image1 from "../../components/images/HomeImage.jpg"
-import Image2 from "../../components/images/offer1.jpg"
-import sticker from "../../components/images/newsticker.png"
+import newsticker from "../../components/images/newsticker.png"
+import hotsticker from "../../components/images/hotsticker.png"
+import topsticker from "../../components/images/top-rated sticker.png"
 import Slider from "../../components/Slider";
 import { BoxArrowInRight } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
@@ -10,6 +11,7 @@ import { useSelector } from "react-redux";
 function DiscoverCard(props) {
     const discover = props.discover;
     const imageUrl="http://localhost:4000/images/cw_spaces/"+discover.mainPhoto;
+    const icon = discover.discoverType === "New" ? newsticker : (discover.discoverType === "Hot" ? hotsticker : topsticker);
     return (
         <div className="max-w-sm rounded-lg overflow-hidden shadow-lg">
             <div className="w-full relative group h-64">
@@ -17,7 +19,7 @@ function DiscoverCard(props) {
                 <Link to={`/workspaces/${discover.cwID}`}><div className=" w-full absolute inset-0 duration-500 hover:bg-black hover:opacity-50"></div></Link>
                 {/* <h2 className="absolute top-3 right-1 font-extrabold text-lg text-white text-yellow-400 opacity-0 duration-500
                             group-hover:-translate-x-5 group-hover:opacity-100">New</h2> */}
-                <img className="w-[70px] h-[70px] absolute top-[-3px] right-[-3px] object-contain" src={sticker} alt={"new"}></img>
+                <img className="w-[70px] h-[70px] absolute top-[-3px] right-[-3px] object-contain" src={icon} alt={"new"}></img>
             </div>
             <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2 sec-font">{discover.name}</div>

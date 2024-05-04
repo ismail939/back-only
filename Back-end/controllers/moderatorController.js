@@ -54,7 +54,7 @@ module.exports = {
                 bcrypt.compare(enteredPassword, moderator.password, async (err, result) => {
                     if (result) {
                         delete moderator.password
-                        const token = await generateJWT(moderator)
+                        const token = await generateJWT(moderator, process.env.ACCESS_TOKEN_PERIOD)
                         return res.status(200).json({ status: httpStatusCode.SUCCESS, data: { token } })
                     }
                 });

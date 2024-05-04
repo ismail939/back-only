@@ -5,19 +5,21 @@ import Calendar from 'react-calendar';
 import PageNotFound from "../PageNotFound";
 import { useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import 'react-calendar/dist/Calendar.css';
 function TimeStamp({ date, booked, range, bookingRange, updateBookingRange }) {
     const [active, setActive] = useState(false)
-    useEffect(()=>{
+    useEffect(() => {
         setActive(false)
-    },[date])
+    }, [date])
     return (
         <div className={`rounded-3xl text-white w-full h-14 px-2 flex items-center justify-center font-semibold
         ${!booked ? `cursor-pointer duration-200 hover:bg-[#0F4C75] ${active ? "bg-[#197ec2] border-2 border-[#BBE1FA]" : "bg-[#1B262C]"}`
                 : "bg-gray-500"}
         `}
             onClick={() => {
-                if(!booked) setActive(!active);
+                if (!booked) setActive(!active);
                 if (!active && !booked)
                     updateBookingRange([...bookingRange, range])
                 else
@@ -27,7 +29,7 @@ function TimeStamp({ date, booked, range, bookingRange, updateBookingRange }) {
         </div>
     )
 }
-function SuccessMessage({ showsuccess, room, numPerson, cost, bookingRange, closeSuccessMessage,date }) {
+function SuccessMessage({ showsuccess, room, numPerson, cost, bookingRange, closeSuccessMessage, date }) {
     const roomImageUrl = "http://localhost:4000/images/rooms/";
     return (
         <div className="fixed top-0 left-0 w-full h-[100vh] flex items-center justify-center bg-black/[.2] z-100 duration-300">
@@ -113,8 +115,13 @@ function BookingRoom() {
             .then(res => res.json())
             .then(responsedata => {
                 setRoom(responsedata.data);
+                setNumPersons(responsedata.data.minRoomSize)
                 if (responsedata.status === "error") { console.log("Sorry, there are no rooms"); setFound(false); }
-                else if (responsedata.status === "fail") { console.log("Oops something went wrong !") };
+                else if (responsedata.status === "fail") { console.log("Oops something went wrong !") }
+                else if (responsedata.status === "success") {
+                    setFound(true)
+                    setLodaing(false)
+                }
             }
             ).catch(error => { console.log(error); });
     }
@@ -130,13 +137,11 @@ function BookingRoom() {
                     setLodaing(false)
                 } else if (responsedata.status === "success") {
                     let cwspace = responsedata.data;
-                    setFound(true)
-                    setLodaing(false)
                     getRoom();
                     setTimeRange(Array.from({ length: parseInt(cwspace.closingTime.slice(0, 2)) - parseInt(cwspace.openingTime.slice(0, 2)) + 1 }, (_, index) => parseInt(cwspace.openingTime.slice(0, 2)) + index));
                 }
             }
-            );
+            ).catch();
     }
     function getBookedTimes(selectedDate) {
         fetch(`http://localhost:4000/books/roomof/${params.roomid}`, {
@@ -154,7 +159,7 @@ function BookingRoom() {
                     setBookesTimes(responsedata.data)
                 }
             }
-            );
+            ).catch();
     }
     function isContinous() {
         if (bookingRange.length === 0) return false
@@ -205,7 +210,7 @@ function BookingRoom() {
                         setShowSuccess(true)
                     }
                 }
-                );
+                ).catch();
         }
     }
     function createRequest() {
@@ -228,7 +233,7 @@ function BookingRoom() {
                     setShowSuccess(true)
                 }
             }
-            )
+            ).catch()
     }
     function closeSuccessMessage() {
         setShowSuccess(false);
@@ -247,6 +252,11 @@ function BookingRoom() {
         getBookedTimes(selectedDate)
     }
     function isBooked(hour) {
+        let currentDate = new Date()
+        let currentHour = currentDate.getHours();
+        if (date.getDate() === currentDate.getDate() && date.getMonth() === currentDate.getMonth() && date.getFullYear() === currentDate.getFullYear()) {
+            if (hour <= currentHour + 1) return true;
+        }
         if (bookedTimes.length === 0) return false
         else {
             for (let i = 0; i < bookedTimes.length; i++) {
@@ -261,7 +271,7 @@ function BookingRoom() {
         return (
             <div className="min-h-screen w-4/5 mx-auto mt-[70px]">
                 <div className="flex md:flex-row flex-col gap-8">
-                    <img className="md:w-1/2 h-[400px] object-cover" src={roomImageUrl + room.img}></img>
+                    <img className="md:w-1/2 h-[400px] object-cover" src={roomImageUrl + room.img} alt={room.type + "room" + room.number}></img>
                     <div className="md:px-10">
                         <h2 className="text-4xl main-font">Room {room.number}</h2>
                         <h2 className="text-gray-400 mt-2 text-2xl font-medium ">{room.type} Room</h2>
@@ -284,9 +294,7 @@ function BookingRoom() {
                         {room.type === `Private` ? <div className="lg:w-1/2 px-2 py-3 border rounded-md border-[#0F4C75] grid gap-4 sm:grid-cols-5 grid-cols-3">
                             {timeRange.map((value, index) => {
                                 if (index < timeRange.length - 1)
-                                    if (!isBooked(value))
-                                        return <TimeStamp date={date} range={[value, value + 1]} booked={false} bookingRange={bookingRange} updateBookingRange={updateBookingRange} />
-                                    else return <TimeStamp date={date} range={[value, value + 1]} booked={true} bookingRange={bookingRange} updateBookingRange={updateBookingRange} />
+                                    return <TimeStamp date={date} range={[value, value + 1]} booked={isBooked(value)} bookingRange={bookingRange} updateBookingRange={updateBookingRange} key={index} />
                             })}
                         </div> :
                             <div className="lg:w-1/2 px-2 py-3 text-xl main-font">
@@ -296,7 +304,7 @@ function BookingRoom() {
                             <div className="flex gap-4 items-center">Select Number of Persons:<div className="flex items-center gap-3">
                                 <PlusLg className="cursor-pointer hover:text-[#3282B8] duration-200" onClick={() => { if (numPerson < parseInt(room.maxRoomSize)) setNumPersons(numPerson + 1) }} />
                                 <p className="border border-[#1B262C] py-2 w-12 text-center">{numPerson}</p>
-                                <DashLg className="cursor-pointer hover:text-[#3282B8] duration-200" onClick={() => { if (numPerson !== parseInt(room.minRoomSize)) setNumPersons(numPerson - 1) }} />
+                                <DashLg className="cursor-pointer hover:text-[#3282B8] duration-200" onClick={() => { if (numPerson > parseInt(room.minRoomSize)) setNumPersons(numPerson - 1) }} />
                             </div>
                             </div>
                             <p className="mt-4">Total Cost: {room.type === `Private` ? bookingRange.length > 0 ? `${numPerson * room.hourPrice * bookingRange.length}  L.E` : "No time selected" : `${numPerson * room.hourPrice}  L.E/hr`}</p>
@@ -315,11 +323,27 @@ function BookingRoom() {
                 </div>
             </div>
         )
-    } else if (!loading && !found) return (
-        <>
-            <PageNotFound />
-        </>
-    )
+    } else if (loading && !found) {
+        return (
+            <div className="min-h-screen w-4/5 mx-auto mt-[70px]">
+                <div className="flex md:flex-row flex-col">
+                    <div className="md:w-1/2 w-full">
+                        <Skeleton className="h-[400px]" />
+                    </div>
+                    <div className="md:px-10 w-[300px] mt-10">
+                        <Skeleton />
+                        <Skeleton className="mt-4" count={4}/>
+                    </div>
+                </div>
+            </div>
+        )
+    } else if (!loading && !found) {
+        return (
+            <>
+                <PageNotFound />
+            </>
+        )
+    }
 }
 
 export default BookingRoom;

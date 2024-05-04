@@ -51,7 +51,7 @@ function NavBar() {
                             {index !== loggedIn.length - 1 ? <hr className="border-[#BBE1FA]"></hr> : null}</>
                     }) : (
                         <>
-                            <Link to="dashboardProfile" onClick={() => ShowSubMenu()}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">My Profile</li></Link>
+                            <Link to="personal-information" onClick={() => ShowSubMenu()}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">My Profile</li></Link>
                             <hr className="border-[#BBE1FA]"></hr>
                             {usertype === "client" && <>
                             <Link to="favourites" onClick={() => ShowSubMenu()}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">My Favourites</li></Link>
@@ -61,7 +61,7 @@ function NavBar() {
                             <Link to="requests" onClick={() => ShowSubMenu()}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">Booking & Requests</li></Link>
                             <hr className="border-[#BBE1FA]"></hr>
                             </>}
-                            <Link to="" onClick={() => {ShowSubMenu() ; dispatch(logOut()); window.location.reload()}}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">Sign-Out</li></Link>
+                            <Link to="" onClick={() => {ShowSubMenu() ; dispatch(logOut()); window.location.replace("/")}}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">Sign-Out</li></Link>
                         </>
                     )
                     }
