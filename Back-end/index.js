@@ -1,5 +1,6 @@
 const express = require('express')
 const httpStatusCode = require("./utils/httpStatusText");
+const {checkReminders} = require("./utils/reminders")
 const cors = require("cors");
 const app = express()
 app.use(express.json())
@@ -46,6 +47,7 @@ app.use("/favourites", favouriteRouter);
 
 const db = require('./config/database');
 const cw_spacePhotoController = require('./controllers/cw_spacePhotoController');
+const { sendReminderReview } = require('./utils/sendEmail');
 
 db.authenticate()
 .then(()=>{
@@ -54,6 +56,7 @@ db.authenticate()
     console.log('connection failed', err) 
 })
 
+setInterval(checkReminders, 40000)
 
 app.all("*", (req, res) => {
     return res.status(404).json({ status: httpStatusCode.ERROR, message: "this resource not found" })
