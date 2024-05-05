@@ -12,6 +12,7 @@ import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import { useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
+import OpenStreetMap from "../../components/StreetMap";
 function ReviewStars(props) {
     const rate = props.rate;
     const apxrate = Math.round(rate * 2) / 2;
@@ -231,11 +232,12 @@ function WorkSpaceProfile() {
                 <h2 className="main-font text-3xl mt-[50px]">Maps:</h2>
                 <hr className="border-black my-3"></hr>
                 <p className="mt-4 mb-[30px] sec-font">{cwSpace.address}</p>
-                <div className="">
+                {/* <div className="">
                     <iframe title={cwSpace.name + " map"} src={`https://www.google.com/maps/embed/v1/place?q=${encodeURIComponent(cwSpace.name)}&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8`}
                         className="w-full "
                         height="450" allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
-                </div>
+                </div> */}
+                <OpenStreetMap />
                 <Link to="rooms"><button className="mx-auto my-[100px] main-font btn-color py-2 px-6 sm:text-2xl text-xl w-48 flex justify-center">BOOK</button></Link>
                 <div className="mt-[50px]">
                     <h2 className="text-center main-font md:text-4xl text-3xl flex items-center justify-center gap-2 mb-[50px]">
