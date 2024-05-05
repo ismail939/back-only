@@ -168,12 +168,7 @@ module.exports = {
     ),
     updatePhoto: asyncWrapper(
         async (req, res, next) => {
-            if (req.body.imageName == undefined) {
-                const error = appError.create("There is NO Images Provided", 400, httpStatusCode.ERROR);
-                return next(error);
-            }
-            req.body.profilePic = req.body.imageName;
-            delete req.body.imageName;
+            await uploadToCloud(req, 'clients') 
             let updatedClient = await Client.findOne({
                 raw: true, where: {
                     clientID: req.params.ID

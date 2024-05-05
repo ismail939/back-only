@@ -8,14 +8,11 @@ module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
             await uploadToCloud(req, 'offers')
-            console.log(req.body)
             const newOffer = await Offer.create(req.body)
             if (newOffer) {
                 return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Offer is Created Successfully" })
             }
             const error = appError.create("Unexpected Error, Try Again Later", 400, httpStatusCode.ERROR)
-            const filePath = `./public/images/offers/${req.body.img}`;
-            fs.unlink(filePath, () => {});
             return next(error)
         }
     ),
