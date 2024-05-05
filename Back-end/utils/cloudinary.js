@@ -38,6 +38,13 @@ const uploadToCloud = (req, folderName) => {
     });
 };
 
+const deleteFromCloud = async(publicId)=>{
+    try {
+        const result = await cloudinary.uploader.destroy(publicId);
+        return true
+    } catch (error) {
+        console.error('Error deleting image:', error);
+    }
+}
 
-
-module.exports = {uploadToCloud}
+module.exports = {uploadToCloud, deleteFromCloud}

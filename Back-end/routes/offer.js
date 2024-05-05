@@ -36,11 +36,10 @@ router.route("/home")
 router.route("/")
     .get(offerController.getAll)
     .post(upload.single('img'), offerController.create);
-    // .post(offerController.create);
 
 router.route("/:offerID")
     .get(offerController.getOne)
-    // .patch(upload.single('img'), offerController.update)
+    .patch(upload.single('img'), offerController.update)
     .delete(offerController.delete);
 
 router.route("/cw_space/:cwID")
