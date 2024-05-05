@@ -25,7 +25,11 @@ module.exports = (db, type)=>{
             type: type.STRING,
             allowNull: false
         },
-        profilePic: {
+        img: {
+            type: type.TEXT,
+            allowNUll: true
+        },
+        imgName: {
             type: type.TEXT,
             allowNUll: true
         },
