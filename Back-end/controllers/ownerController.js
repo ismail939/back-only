@@ -261,7 +261,6 @@ module.exports = {
         async (req, res, next) => {
             let errors = validateUpdatedUser(req);
             if (errors.length != 0) {
-                console.log(errors)
                 const error = appError.create(errors, 400, httpStatusCode.ERROR)
                 return next(error)
             }

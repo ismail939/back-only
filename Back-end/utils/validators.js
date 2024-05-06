@@ -63,14 +63,11 @@ module.exports = {
         return isNaN(data)
     },
     isTimes: (times)=>{
-        console.log("times is "+ times+ " length is "+times.length)
         if(times.length!=2)
         {
-            console.log('length')
             return false
         }
         else if(times[0]>=times[1]||times[0]>23||times[0]<7||times[1]>23){
-            console.log('comparison')
             return false
         }
         return true

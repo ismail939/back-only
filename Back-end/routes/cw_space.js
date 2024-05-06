@@ -1,10 +1,9 @@
 const express = require('express')
 const cw_spaceController = require('../controllers/cw_spaceController')
 const router = express.Router();
-const { validateCw_space, validateUpdatedCw_space} = require("../middlewares/validationSchema");
-const httpStatusCode = require("../utils/httpStatusText");
-const appError = require("../utils/appError");
 const upload = require('../index')
+const verifyToken = require("../middlewares/verifyToken");
+const allowedTo = require("../middlewares/allowedTo");
 
 router.route("/home").get(cw_spaceController.getHome);
 

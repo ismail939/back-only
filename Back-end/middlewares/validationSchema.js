@@ -368,7 +368,6 @@ const validateUpdatedCw_space = (req) => {
 const validateBook= (req) => {
     let data = req.body
     let errors = []
-    console.log('i am in validate function')
     if(validator.isEmpty(data.date)){
         errors.push("date is empty")
     }else if(!validator.isDate(data.date)){
@@ -410,8 +409,6 @@ const validateBook= (req) => {
     }else if(validator.isNotNumber(data.roomRoomID)){
         errors.push("roomRoomID not in number format")
     }
-
-    console.log(errors)
     return errors
 }
 

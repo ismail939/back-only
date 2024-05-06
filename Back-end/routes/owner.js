@@ -2,11 +2,8 @@ const express = require('express')
 const ownerController = require('../controllers/ownerController')
 const router = express.Router();
 const verifyToken = require("../middlewares/verifyToken");
-const httpStatusCode = require("../utils/httpStatusText");
-const appError = require("../utils/appError");
 const allowedTo = require("../middlewares/allowedTo");
 const upload = require('../index')
-
 
 router.route("/register")
     .post(ownerController.register);

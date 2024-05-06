@@ -7,6 +7,7 @@ const { validateBook } = require('../middlewares/validationSchema');
 const sequelize = require('sequelize')
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { reminderQueue } = require("../utils/schedulingQueues");
+const moment = require("moment");
 
 
 module.exports = {
@@ -105,8 +106,8 @@ module.exports = {
                 const error = appError.create(errors, 400, httpStatusCode.ERROR)
                 return next(error)
             }
-            req.body.start = req.body.date + 'T' + req.body.times[0] + ":00:00"
-            req.body.end = req.body.date + 'T' + req.body.times[1] + ":00:00"
+            req.body.start = moment(req.body.date + ' ' + req.body.times[0], 'YYYY-MM-DD HH:mm').toISOString()
+            req.body.end = moment(req.body.date + ' ' + req.body.times[1], 'YYYY-MM-DD HH:mm').toISOString()
             // check if this date exists already
             const booked = await Book.findOne({
                 raw: true, where: {

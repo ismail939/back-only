@@ -1,10 +1,9 @@
 const express = require('express')
 const eventController = require('../controllers/eventController')
 const router = express.Router();
-const { validateEvent} = require("../middlewares/validationSchema");
-const httpStatusCode = require("../utils/httpStatusText");
-const appError = require("../utils/appError");
 const upload = require('../index')
+const verifyToken = require("../middlewares/verifyToken");
+const allowedTo = require("../middlewares/allowedTo");
 
 
 router.route("/home")
