@@ -7,36 +7,80 @@ cloudinary.config({
     api_secret: process.env.CLOUD_API_SECRET 
 });
 
+// const uploadToCloud = (req, folderName) => {
+//     return new Promise((resolve, reject) => {
+//         if (!req.file) {
+//             const error = appError.create("There is no image provided", 400, httpStatusCode.ERROR);
+//             return reject(error);
+//         }
+
+//         const acceptedFormats = ['image/png', 'image/jpeg', 'image/jpg'];
+//         if (!acceptedFormats.includes(req.file.mimetype)) {
+//             const error = appError.create("Unacceptable Type Format For Image", 415, httpStatusCode.ERROR);
+//             return reject(error);
+//         }
+
+//         const uniqueSuffix = Date.now() + "." + req.file.originalname.split('.')[1];
+//         cloudinary.uploader.upload_stream({ 
+//             resource_type: 'image', 
+//             public_id: uniqueSuffix, 
+//             overwrite: true, 
+//             folder: folderName
+//         }, 
+//         (error, result) => {
+//             if (error) {
+//                 return reject(error);
+//             }
+//             req.body.img = result.url;
+//             req.body.imgName = uniqueSuffix;
+//             resolve(req.body);
+//         }).end(req.file.buffer);
+//     });
+// };
+
 const uploadToCloud = (req, folderName) => {
     return new Promise((resolve, reject) => {
-        if (!req.file) {
-            const error = appError.create("There is no image provided", 400, httpStatusCode.ERROR);
+        if (!req.files || req.files.length === 0) {
+            const error = appError.create("No images provided", 400, httpStatusCode.ERROR);
             return reject(error);
         }
 
+        const uploadedFiles = [];
         const acceptedFormats = ['image/png', 'image/jpeg', 'image/jpg'];
-        if (!acceptedFormats.includes(req.file.mimetype)) {
-            const error = appError.create("Unacceptable Type Format For Image", 415, httpStatusCode.ERROR);
-            return reject(error);
-        }
 
-        const uniqueSuffix = Date.now() + "." + req.file.originalname.split('.')[1];
-        cloudinary.uploader.upload_stream({ 
-            resource_type: 'image', 
-            public_id: uniqueSuffix, 
-            overwrite: true, 
-            folder: folderName
-        }, 
-        (error, result) => {
-            if (error) {
+        req.files.forEach((file, index) => {
+            if (!acceptedFormats.includes(file.mimetype)) {
+                const error = appError.create(`Unacceptable Type Format For Image ${index + 1}`, 415, httpStatusCode.ERROR);
                 return reject(error);
             }
-            req.body.img = result.url;
-            req.body.imgName = uniqueSuffix;
-            resolve(req.body);
-        }).end(req.file.buffer);
+
+            const uniqueSuffix = Date.now() + '_' + file.originalname.split('.')[0]; // Unique name for each file
+
+            cloudinary.uploader.upload_stream({ 
+                resource_type: 'image', 
+                public_id: uniqueSuffix, 
+                overwrite: true, 
+                folder: folderName
+            }, 
+            (error, result) => {
+                if (error) {
+                    return reject(error);
+                }
+                uploadedFiles.push({
+                    img: result.url,
+                    imgName: uniqueSuffix
+                });
+
+                // Check if all files have been uploaded
+                if (uploadedFiles.length === req.files.length) {
+                    req.body.photos = uploadedFiles
+                    resolve(uploadedFiles);
+                }
+            }).end(file.buffer);
+        });
     });
 };
+
 
 const deleteFromCloud = async(publicId)=>{
     try {

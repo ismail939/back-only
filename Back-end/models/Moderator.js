@@ -13,7 +13,11 @@ module.exports = (db, type) => {
             type: type.TEXT,
             allowNull: false
         },
-        profilePic: {
+        img: {
+            type: type.TEXT,
+            allowNUll: true
+        },
+        imgName: {
             type: type.TEXT,
             allowNUll: true
         },

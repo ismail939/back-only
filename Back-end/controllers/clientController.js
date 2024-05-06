@@ -55,7 +55,6 @@ module.exports = {
                 username: req.body.username,
                 email: req.body.email,
                 password: hashedPassword,
-                profilePic: req.body.profilePic,
                 phone: req.body.phone,
                 verificationCode: false
             }))

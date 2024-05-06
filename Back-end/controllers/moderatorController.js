@@ -6,7 +6,7 @@ const appError = require("../utils/appError");
 const {validateUpdatedUser} = require("../middlewares/validationSchema");
 const bcrypt = require("bcrypt")
 const generateJWT = require("../utils/generateJWT");
-const fs = require('fs')
+const {uploadToCloud, deleteFromCloud} = require('../utils/cloudinary');
 
 module.exports = {
     register: asyncWrapper(
@@ -32,7 +32,6 @@ module.exports = {
             const newModerator = await Moderator.create({
                 username: req.body.username,
                 password: hashedPassword,
-                profilePic: req.body.profilePic,
                 cwSpaceCwID: req.body.cwSpaceCwID
             })
             if (newModerator) {
@@ -76,26 +75,23 @@ module.exports = {
     ),
     updatePhoto: asyncWrapper(
         async (req, res, next) => {
-            if(req.body.imageName==undefined){
-                const error = appError.create("There is NO Images Provided", 400, httpStatusCode.ERROR);
-                return next(error);
-            }
-            req.body.profilePic = req.body.imageName;
-            delete req.body.imageName;
             let updatedModerator = await Moderator.findOne({
                 raw: true, where: {
                     moderatorID: req.params.ID
                 }
             })
             if (updatedModerator) {
+                if(updatedModerator.imgName){
+                    await deleteFromCloud(('moderators/'+updatedModerator.imgName))
+                }
+                await uploadToCloud(req, 'moderators') 
                 await Moderator.update(req.body, {
                 where: {
                     moderatorID: req.params.ID
                 }
                 })
-                if (updatedModerator.profilePic) {
-                    const filePath = `./public/images/moderators/${updatedModerator.profilePic}`;
-                    fs.unlink(filePath, ()=>{})
+                if (updatedModerator.imgName) {
+                    await deleteFromCloud(('moderators/'+updatedModerator.imgName))
                 }
                 updatedModerator = await Moderator.findOne({
                     raw: true, where: {
@@ -155,9 +151,8 @@ module.exports = {
                         moderatorID: req.params.ID
                     }
                 })
-                if (deletedModerator.profilePic) {
-                    const filePath = `./public/images/moderators/${deletedModerator.profilePic}`;
-                    fs.unlink(filePath, ()=>{})
+                if (deletedModerator.imgName) {
+                    await deleteFromCloud(('moderators/'+deletedModerator.imgName))
                 }
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Moderator Deleted Successfully" })     
             }

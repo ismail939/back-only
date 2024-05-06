@@ -2,7 +2,6 @@ const { Offer, Cw_space } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-const fs = require('fs')
 const {uploadToCloud, deleteFromCloud} = require('../utils/cloudinary');
 const { validateUpdatedOffer, validateOffer } = require('../middlewares/validationSchema');
 module.exports = {

@@ -1,7 +1,11 @@
 module.exports = (db, type) => {
     return db.define("cw_space_photos", {
-        photo: {
-            type: type.STRING,
+        img: {
+            type: type.TEXT,
+            allowNull: false
+        },
+        imgName: {
+            type: type.TEXT,
             allowNull: false
         }
     },{
