@@ -4,34 +4,7 @@ const router = express.Router();
 const { validateEvent} = require("../middlewares/validationSchema");
 const httpStatusCode = require("../utils/httpStatusText");
 const appError = require("../utils/appError");
-const multer = require('multer')
-const verifyToken = require("../middlewares/verifyToken");
-const allowedTo = require("../middlewares/allowedTo");
-
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './public/images/events')
-    },
-    filename: function (req, file, cb) {
-        let errors = validateEvent(req)
-        if (errors.length != 0) {
-            const error = appError.create(errors, 415, httpStatusCode.ERROR)
-            return cb(error);
-        }
-        const acceptedFormats = ['image/png', 'image/jpeg', 'image/jpg'];
-        if (!acceptedFormats.includes(file.mimetype)) {
-            const error = appError.create("Unacceptable Type Format For Image", 415, httpStatusCode.ERROR)
-            return cb(error);
-        }
-        const uniqueSuffix = Date.now() + "." + file.originalname.split('.')[1];
-        req.body.imageName = uniqueSuffix;
-        cb(null, uniqueSuffix);
-    }
-})
-const upload = multer({ storage: storage })
-
-
+const upload = require('../index')
 
 
 router.route("/home")

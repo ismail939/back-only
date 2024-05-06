@@ -8,7 +8,8 @@ const bcrypt = require('bcrypt')
 const generateJWT = require('../utils/generateJWT')
 const generateVerificationCode = require("../utils/generateVerificationCode");
 const { sendVerificationCode, sendResetLink } = require("../utils/sendEmail");
-const fs = require('fs')
+const {uploadToCloud, deleteFromCloud} = require('../utils/cloudinary');
+
 
 module.exports = {
     register: asyncWrapper(
@@ -52,7 +53,6 @@ module.exports = {
                 username: req.body.username,
                 email: req.body.email,
                 password: hashedPassword,
-                profilePic: req.body.profilePic,
                 phone: req.body.phone,
                 verificationCode: false
             }))
@@ -164,27 +164,23 @@ module.exports = {
     ),
     updatePhoto: asyncWrapper(
         async (req, res, next) => {
-            if (req.body.imageName == undefined) {
-                const error = appError.create("There is NO Images Provided", 400, httpStatusCode.ERROR);
-                return next(error);
-            }
-            req.body.profilePic = req.body.imageName;
-            delete req.body.imageName;
             let updatedClient = await Client.findOne({
                 raw: true, where: {
                     clientID: req.params.ID
                 }
             })
             if (updatedClient) {
+                console.log(updatedClient)
+                if(updatedClient.imgName){
+                    await deleteFromCloud(('clients/'+updatedClient.imgName))
+                }
+                await uploadToCloud(req, 'clients') 
                 await Client.update(req.body, {
                     where: {
                         clientID: req.params.ID
                     }
                 })
-                if (updatedClient.profilePic) {
-                    const filePath = `./public/images/clients/${updatedClient.profilePic}`;
-                    fs.unlink(filePath, () => { })
-                }
+               
                 updatedClient = await Client.findOne({
                     raw: true, where: {
                         clientID: req.params.ID
@@ -307,9 +303,8 @@ module.exports = {
                         clientID: req.params.ID
                     }
                 })
-                if (deletedClient.profilePic) {
-                    const filePath = `./public/images/clients/${deletedClient.profilePic}`;
-                    fs.unlink(filePath, () => { })
+                if (deletedClient.imgName) {
+                    await deleteFromCloud(('clients/'+deletedClient.imgName))
                 }
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Deleted Successfully" });
             }

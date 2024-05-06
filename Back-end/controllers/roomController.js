@@ -3,13 +3,13 @@ const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 const Sequelize = require('sequelize')
-const fs = require('fs')
+const { validateRoom } = require('../middlewares/validationSchema');
+const {uploadToCloud, deleteFromCloud} = require('../utils/cloudinary');
+
 
 module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
-            req.body.img = req.body.imageName
-            delete req.body.imageName
             const duplicates = await Room.findOne({
                 raw: true, where: {
                     [Sequelize.Op.and]: [
@@ -23,6 +23,11 @@ module.exports = {
                 const error = appError.create("Room Already Exists", 400, httpStatusCode.ERROR)
                 return next(error)
             }
+            const errors = validateRoom(req)
+            if(errors.length!==0){
+                return res.status(400).json({status: httpStatusCode.ERROR, message: errors})
+            }
+            await uploadToCloud(req, 'rooms')
             const newRoom = await Room.create(req.body)
             if (newRoom) {
                 return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Room Created Successfully" });
@@ -69,27 +74,23 @@ module.exports = {
                 }
             });
             if (updatedRoom) {
-                let deleteOld = false
-                if (req.body.imageName) { // there is a file
-                    req.body.img = req.body.imageName
-                    delete req.body.imageName
-                    deleteOld = true
-                } else if (req.body.img == '') { // the photo to be removed
-                    deleteOld = true
-                    req.body.img = null
+                let imgAdded = false
+                if (req.file) { // there is a file
+                    await deleteFromCloud(('rooms/'+updatedRoom.imgName))
+                    await uploadToCloud(req, 'rooms')
+                    imgAdded = true
+                }
+                if(!imgAdded){
+                    delete req.body.img
+                    delete req.body.imgName
                 }
                 await Room.update(req.body, {
                     where: {
-                        cwSpaceCwID: req.params.cwID,
-                        roomID: req.params.ID
+                        roomID: req.params.ID,
+                        cwSpaceCwID: req.params.cwID
                     }
-                });
-                if (deleteOld&&updatedRoom.img) {
-                    const filePath = `./public/images/rooms/${updatedRoom.img}`
-                    fs.unlink(filePath, () => { })
-                }
-                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Room Updated Successfully" });
-            }
+                })
+                return res.json({ status: httpStatusCode.SUCCESS, message: "Room Updated Successfully" });            }
             const error = appError.create("Room Not Found", 404, httpStatusCode.ERROR);
             return next(error);
         }
@@ -109,9 +110,8 @@ module.exports = {
                     roomID: req.params.ID
                 }
             })
-            if (deletedRoom.img) {
-                const filePath = `./public/images/rooms/${deletedRoom.img}`
-                fs.unlink(filePath, () => { })
+            if (deletedRoom.imgName) {
+                deleteFromCloud(('rooms/'+deletedRoom.imgName))
             }
             return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Room Deleted Successfully" });
             }

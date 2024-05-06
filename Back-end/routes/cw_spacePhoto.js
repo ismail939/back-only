@@ -4,28 +4,9 @@ const verifyToken = require("../middlewares/verifyToken");
 const allowedTo = require("../middlewares/allowedTo");
 
 const router = express.Router();
-const multer = require('multer')
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './public/images/cw_spaces')
-    },
-    filename: function (req, file, cb) {
-        const acceptedFormats = ['image/png', 'image/jpeg', 'image/jpg'];
-        if (!acceptedFormats.includes(file.mimetype)) {
-            const error = appError.create("Unacceptable Type Format For Image", 415, httpStatusCode.ERROR)
-            return cb(error);
-        }
-        if (req.body.photos == undefined) {
-            req.body.photos = []
-        }
-        const uniqueSuffix = Date.now() + (req.body.photos.length+1) + "." + file.originalname.split('.')[1];
-        req.body.photos.push(uniqueSuffix);      
-        cb(null, uniqueSuffix);       
-    }
+const upload = require('../index')
 
-}
-)
-const upload = multer({ storage: storage })
+
 router.route("/:cwID")
     .get(cw_spacePhotoController.getAll)
     .post(verifyToken, allowedTo('owner'), upload.any('img'), cw_spacePhotoController.create);

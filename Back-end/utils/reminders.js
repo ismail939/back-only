@@ -3,7 +3,6 @@ const { Book, Client } = require("../models/modelIndex")
 const {sendReminder, sendReminderReview} = require("./sendEmail")
 module.exports = {
     checkReminders: async () => {
-        console.log("checking reminders")
         // first we need to check for two things
         // 1- if there is a time in the booking table(start) that is after 6 hours from now
         let timeNow = new Date()
@@ -19,7 +18,6 @@ module.exports = {
                 ]
             }, raw: true
         })
-        console.log(comingBookings)
         // send email to each one of them
         for (let index = 0; index < comingBookings.length; index++) {
             let client = await Client.findOne({
@@ -27,7 +25,6 @@ module.exports = {
                     clientID: comingBookings[index].clientClientID
                 }
             })
-            console.log('sending the email to '+client.email)
             sendReminder(client.email)
         }
         // 2- if there is a time in the booking table(end) that is equal to the current time then send an emailto the person to get his review
