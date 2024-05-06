@@ -1,18 +1,18 @@
-const { Event, Cw_space } = require("../models/modelIndex");
+const { Event, Cw_space, EventPhoto } = require("../models/modelIndex");
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 const { validateEvent } = require("../middlewares/validationSchema");
+const {uploadToCloud, deleteFromCloud} = require('../utils/cloudinary');
 
 module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
-            if (req.body.imageName == undefined || req.body.img == '') {
-                const error = appError.create("There is NO Images Provided", 400, httpStatusCode.ERROR);
-                return next(error);
+            const errors = validateEvent(req)
+            if(errors.length!==0){
+                return res.status(400).json({status: httpStatusCode.ERROR, message: errors})
             }
-            req.body.mainPhoto = req.body.imageName;
-            delete req.body.imageName;
+            await uploadToCloud(req, 'events')
             const newEvent = await Event.create(req.body)
             if (newEvent) {
                 return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Event is Created Successfully" })
@@ -90,16 +90,27 @@ module.exports = {
                     eventID: req.params.eventID
                 }
             });
+            // validate updated event
             if (updatedEvent) {
+                let imgAdded = false
+                if (req.file) { // there is a file
+                    await deleteFromCloud(('events/'+updatedEvent.imgName))
+                    await uploadToCloud(req, 'events')
+                    imgAdded = true
+                }
+                if(!imgAdded){
+                    delete req.body.img
+                    delete req.body.imgName
+                }
                 await Event.update(req.body, {
                     where: {
                         eventID: req.params.eventID
                     }
-                });
-                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Event Updated Successfully" });
+                })
+                return res.json({ status: httpStatusCode.SUCCESS, message: "Event Updated Successfully" });
             }
-            const error = appError.create("Event Not Found", 404, httpStatusCode.ERROR);
-            return next(error);
+            const error = appError.create("Event Not Found", 404, httpStatusCode.ERROR)
+            return next(error)
         }
     ),
     delete: asyncWrapper(
@@ -110,6 +121,20 @@ module.exports = {
                 }
             });
             if (deletedEvent) {
+                await deleteFromCloud('events/'+deletedEvent.imgName)
+                let photos = await EventPhoto.findAll({
+                    where: {
+                        eventID: req.params.eventID
+                    }
+                }, { raw: true })
+                for (const photo of photos) {
+                    await deleteFromCloud('events/'+photo.imgName)
+                }
+                await EventPhoto.destroy({
+                    where: {
+                        eventID: req.params.eventID
+                    }
+                })
                 await Event.destroy({
                     where: {
                         eventID: req.params.eventID

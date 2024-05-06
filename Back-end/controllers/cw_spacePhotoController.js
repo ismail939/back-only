@@ -2,23 +2,20 @@ const { Cw_spacePhoto } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-const fs = require('fs')
+const { uploadToCloud, deleteFromCloud } = require('../utils/cloudinary');
 
 module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
-            if (req.body.photos == undefined) {
-                const error = appError.create("There are No Provided Photos", 404, httpStatusCode.ERROR);
-                return next(error);
-            } else {
-                for (let i = 0; i < req.body.photos.length; i++) {
+            await uploadToCloud(req, 'cw_spaces')
+            for (let i = 0; i < req.body.photos.length; i++) {
                 await Cw_spacePhoto.create({
-                    photo: req.body.photos[i],
+                    img: req.body.photos[i].img,
+                    imgName: req.body.photos[i].imgName,
                     cwSpaceCwID: req.params.cwID
                 })
-            }
+        }
             return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Photos are Added Successfully" });
-            }
         }
     ),
     getAll: asyncWrapper(
@@ -64,9 +61,8 @@ module.exports = {
                     id: req.params.ID
                 }
             })
-            let filePath = `./public/images/cw_spaces/${deletedCw_spacePhoto.photo}`;
-            fs.unlink(filePath, () => { })
-            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Photo Deleted Successfully" });
+                await deleteFromCloud('cw_spaces/'+deletedCw_spacePhoto.imgName)
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Photo Deleted Successfully" });
             }
             const error = appError.create("Photo Not Found", 404, httpStatusCode.ERROR);
             return next(error);

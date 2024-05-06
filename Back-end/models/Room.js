@@ -32,6 +32,10 @@ module.exports = (db, type) => {
         img:{
             type: type.TEXT,
             allowNUll: false
+        },
+        imgName:{
+            type: type.TEXT,
+            allowNUll: false
         }
     },{
         timestamps: false 

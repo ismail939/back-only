@@ -8,7 +8,8 @@ const bcrypt = require("bcrypt")
 const generateJWT = require("../utils/generateJWT");
 const generateVerificationCode = require("../utils/generateVerificationCode");
 const { sendVerificationCode, sendResetLink } = require("../utils/sendEmail");
-const fs = require('fs')
+const {uploadToCloud, deleteFromCloud} = require('../utils/cloudinary');
+
 
 module.exports = {
     register: asyncWrapper(
@@ -133,7 +134,7 @@ module.exports = {
                 bcrypt.compare(enteredPassword, owner.password, async (err, result) => {
                     if (result) {
                         if (owner.verified === 0) {
-                            const error = appError.create(client.email, 400, httpStatusCode.UNVERIFIED)
+                            const error = appError.create(owner.email, 400, httpStatusCode.UNVERIFIED)
                             return next(error)
                         }
                         delete owner.verificationCode;
@@ -162,27 +163,22 @@ module.exports = {
     ),
     updatePhoto: asyncWrapper(
         async (req, res, next) => {
-            if(req.body.imageName==undefined){
-                const error = appError.create("There is NO Images Provided", 400, httpStatusCode.ERROR);
-                return next(error);
-            }
-            req.body.profilePic = req.body.imageName;
-            delete req.body.imageName;
             let updatedOwner = await Owner.findOne({
                 raw: true, where: {
                     ownerID: req.params.ID
                 }
             })
             if (updatedOwner) {
+                if(updatedOwner.imgName){
+                    await deleteFromCloud(('owners/'+updatedOwner.imgName))
+                }
+                await uploadToCloud(req, 'owners') 
                 await Owner.update(req.body, {
                 where: {
                     ownerID: req.params.ID
                 }
                 })
-                if (updatedOwner.profilePic) {
-                    const filePath = `./public/images/owners/${updatedOwner.profilePic}`;
-                    fs.unlink(filePath, ()=>{})
-                }
+                
                 updatedOwner = await Owner.findOne({
                     raw: true, where: {
                         ownerID: req.params.ID
@@ -306,9 +302,8 @@ module.exports = {
                         ownerID: req.params.ID
                     }
                 })
-                if (deletedOwner.profilePic) {
-                    const filePath = `./public/images/owners/${deletedOwner.profilePic}`;
-                    fs.unlink(filePath, ()=>{})
+                if (deletedOwner.imgName) {
+                    await deleteFromCloud(('owners/'+deletedOwner.imgName))
                 }
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Owner Deleted Successfully" })     
             }
