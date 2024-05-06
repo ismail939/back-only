@@ -6,6 +6,7 @@ const appError = require("../utils/appError");
 const { validateBook } = require('../middlewares/validationSchema');
 const sequelize = require('sequelize')
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const { reminderQueue } = require("../utils/schedulingQueues");
 
 
 module.exports = {
@@ -104,8 +105,8 @@ module.exports = {
                 const error = appError.create(errors, 400, httpStatusCode.ERROR)
                 return next(error)
             }
-            req.body.start = req.body.date + ' ' + req.body.times[0] + ":00:00"
-            req.body.end = req.body.date + ' ' + req.body.times[1] + ":00:00"
+            req.body.start = req.body.date + 'T' + req.body.times[0] + ":00:00"
+            req.body.end = req.body.date + 'T' + req.body.times[1] + ":00:00"
             // check if this date exists already
             const booked = await Book.findOne({
                 raw: true, where: {
@@ -138,10 +139,16 @@ module.exports = {
                     } else {
                         req.body.status = 'paid'
                         await Book.create(req.body);
-                        return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Created Successfully" });
                     }
                 });
             }
+            // Calculate the delay until the booking time
+            const bookingTime = new Date(req.body.start)
+            const cancelLink = "gg@gmail.com"
+            const reviewLink = "gg@gmail.com"
+            const delay = bookingTime.getTime() - Date.now() - (6 * 60 * 60 * 1000)
+            reminderQueue.add({ email: req.currentUser.email, cancelLink, reviewLink }, { delay })
+            return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Created Successfully" });
         }
     ),
     update: asyncWrapper(

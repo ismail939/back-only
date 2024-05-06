@@ -231,9 +231,9 @@ module.exports = {
         });
     });
     },
-    sendReminder: (email)=>{
+    sendReminder: (email, cancelLink)=>{
         return new Promise((resolve, reject) => {
-            const cancelLink = "https://localhost:3000/cancelbook";
+            //const cancelLink = "https://localhost:3000/cancelbook";
             const htmlContent = `
                 <html>
                     <head>
@@ -307,6 +307,7 @@ module.exports = {
                                 <img src="cid:logo" alt="Spaces Logo" style="width: 300px; height: auto; ">
                             </div>
                             <div class="code-box">
+                                <p>Please be ready in your time for your booking.</p>
                                 <p>If you want to cancel your booking click on the cancel button</p>
                                 <div class="cancel-button">
                                 <a href= ${cancelLink} class="button">Cancel booking</a>
@@ -346,9 +347,9 @@ module.exports = {
             });
         });
     },
-    sendReminderReview: (email, cwspaceName)=>{
+    sendReminderReview: (email, reviewLink)=>{
         return new Promise((resolve, reject) => {
-            const reviewLink = "https://localhost:3000/reviewbook";
+            //const reviewLink = "https://localhost:3000/reviewbook";
             const htmlContent = `
                 <html>
                     <head>
@@ -416,7 +417,7 @@ module.exports = {
                     <body>
                         <div class="container">
                             <div class="heading">
-                                Thanks for using ${cwspaceName}
+                                Thanks for using Spaces
                             </div>
                             <div style="text-align: center;">
                                 <img src="cid:logo" alt="Spaces Logo" style="width: 300px; height: auto; ">
