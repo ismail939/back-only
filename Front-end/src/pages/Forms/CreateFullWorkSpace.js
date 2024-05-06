@@ -16,7 +16,7 @@ function CreateFullWorkSpace() {
         description: "",
         email: "",
         phone: "",
-        facebookLink: "",
+        facilities: "",
         openingTime: "",
         closingTime: "",
         mainImgName: "",
@@ -73,7 +73,7 @@ function CreateFullWorkSpace() {
         formData.append('address', data.address);
         formData.append('phone', data.phone);
         formData.append('description', data.description);
-        formData.append('fbPage', data.facebookLink);
+        formData.append('amenities', data.facilities);
         formData.append('email', data.email);
         formData.append('openingTime', data.openingTime);
         formData.append('closingTime', data.closingTime);

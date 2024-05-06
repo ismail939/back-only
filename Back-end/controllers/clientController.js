@@ -34,7 +34,6 @@ module.exports = {
                 const error = appError.create("Client Already Exists", 400, httpStatusCode.ERROR)
                 return next(error)
             }
-
             await Client.destroy({
                 where: {
                     [Sequelize.Op.or]: [
@@ -46,7 +45,6 @@ module.exports = {
                     ]
                 }
             })
-
             const password = req.body.password;
             const hashedPassword = await bcrypt.hash(password, Number(process.env.SALT_ROUND))
             const newClient = (await Client.create({
@@ -148,12 +146,10 @@ module.exports = {
                     const error = appError.create("Username or Password is Incorrect", 404, httpStatusCode.ERROR)
                     return next(error)
                 });
-
             } else {
                 const error = appError.create("Username or Password is Incorrect", 404, httpStatusCode.ERROR)
                 return next(error)
             }
-
         }
     ),
     getAll: asyncWrapper(
@@ -216,7 +212,6 @@ module.exports = {
                     await sendResetLink(client.email, token);
                     return res.status(201).json({ status: httpStatusCode.SUCCESS, message: `An Email has been Sent to ${client.email}` });
                 } catch (err) {
-                    console.log(err)
                     const error = appError.create("Error sending Resetting Email", 500, httpStatusCode.FAIL);
                     return next(error);
                 }

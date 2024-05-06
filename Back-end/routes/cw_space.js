@@ -9,16 +9,16 @@ const upload = require('../index')
 router.route("/home").get(cw_spaceController.getHome);
 
 router.route("/updatePhoto/:ID")
-    .patch(upload.single('mainPhoto'), cw_spaceController.updatePhoto);
+    .patch(verifyToken, allowedTo('owner'), upload.single('mainPhoto'), cw_spaceController.updatePhoto);
 
 router.route("/")
     .get(cw_spaceController.getAll)
-    .post(upload.single('mainPhoto'), cw_spaceController.create);
+    .post(verifyToken, allowedTo('owner'), upload.single('mainPhoto'), cw_spaceController.create);
 
 router.route("/:ID")
     .get(cw_spaceController.getOne)
-    .patch(cw_spaceController.update)
-    .delete(cw_spaceController.delete);
+    .patch(verifyToken, allowedTo('owner'), cw_spaceController.update)
+    .delete(verifyToken, allowedTo('admin'), cw_spaceController.delete);
 
 
 

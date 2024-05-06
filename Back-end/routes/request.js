@@ -1,18 +1,20 @@
 const express = require('express')
 const requestController = require('../controllers/requestController')
+const verifyToken = require("../middlewares/verifyToken");
+const allowedTo = require("../middlewares/allowedTo");
 
 const router = express.Router();
 
 router.route("/")
-    .get(requestController.getAll)
-    .post(requestController.create);
+    .get(requestController.getAll) // for admin
+    .post(verifyToken, allowedTo('client'), requestController.create);
 
 router.route("/:cwSpaceID")
-    .get(requestController.getCw_spaceRequests)
+    .get(verifyToken, allowedTo('owner'), requestController.getCw_spaceRequests)
 
 router.route("/:clientID/:roomID")
-    .patch(requestController.update)
-    .delete(requestController.delete);
+    .patch(verifyToken, allowedTo('owner'), requestController.update)
+    .delete(verifyToken, allowedTo('owner'), requestController.delete);
 
 module.exports = router
 

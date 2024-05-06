@@ -1,17 +1,9 @@
 module.exports = (db, type) => {
-    return db.define('book', {
-        bookID: {
+    return db.define('register', {
+        registerID: {
             type: type.INTEGER,
             autoIncrement: true,
             primaryKey: true
-        },
-        start: {
-            type: type.DATE,
-            allowNull: false
-        },
-        end: {
-            type: type.DATE,
-            allowNull: false
         },
         payment: {
             type: type.STRING,

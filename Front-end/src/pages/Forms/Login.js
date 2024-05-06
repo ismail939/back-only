@@ -35,7 +35,7 @@ function Login() {
         }).then(res => res.json()).then((resdata) => {
             if (resdata.status === "success") {
                 setErrorMessage("");
-                dispatch(setCredentials({ user: username, token: resdata.data.token, usertype: "client".toLocaleLowerCase() }))
+                dispatch(setCredentials({ user: username, token: resdata.data.token, usertype: "client" }))
                 navigate(prevPage, { replace: true })
             } else if (resdata.status === "error") {
                 setErrorMessage(resdata.message)

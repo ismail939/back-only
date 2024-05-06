@@ -14,15 +14,12 @@ module.exports = upload
 const bookRouter = require("./routes/book");
 const clientRouter = require('./routes/client')
 const cw_spaceRouter = require("./routes/cw_space");
-const cw_spacePhoneRouter = require("./routes/cw_spacePhone");
 const cw_spacePhotoRouter = require('./routes/cw_spacePhoto');
 const eventRouter = require("./routes/event");
-const subscribeRouter = require("./routes/subscribe");
 const ownerRouter = require("./routes/owner");
 const roomRouter = require("./routes/room");
 const requestRouter = require("./routes/request");
 const reviewRouter = require("./routes/review");
-const eventPhotoRouter = require("./routes/eventPhoto");
 const offerRouter = require('./routes/offer')
 const moderatorRouter = require("./routes/moderator");
 const favouriteRouter = require("./routes/favourite")
@@ -35,24 +32,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors()) //to handle the request comes from other ports
 app.use("/books", bookRouter);
 app.use("/cw_spaces", cw_spaceRouter);
-app.use("/cw_spacePhones", cw_spacePhoneRouter);
 app.use("/cw_spacePhotos", cw_spacePhotoRouter);
 app.use("/events", eventRouter);
-app.use("/subscribe", subscribeRouter);
 app.use("/clients", clientRouter);
 app.use("/owners", ownerRouter);
 app.use("/rooms", roomRouter);
 app.use("/requests", requestRouter);
 app.use("/reviews", reviewRouter);
-app.use("/eventPhotos", eventPhotoRouter);
 app.use('/offers', offerRouter);
 app.use("/moderators", moderatorRouter);
 app.use("/favourites", favouriteRouter);
 
 
 const db = require('./config/database');
-const cw_spacePhotoController = require('./controllers/cw_spacePhotoController');
-const { sendReminderReview } = require('./utils/sendEmail');
 
 db.authenticate()
 .then(()=>{
