@@ -174,6 +174,7 @@ module.exports = {
                 }
             })
             if (updatedClient) {
+                console.log(updatedClient)
                 if(updatedClient.imgName){
                     await deleteFromCloud(('clients/'+updatedClient.imgName))
                 }

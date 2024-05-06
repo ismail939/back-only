@@ -100,11 +100,13 @@ module.exports = {
     ),
     updatePhoto: asyncWrapper(
         async (req, res, next) => {
+            console.log('entered updatePhoto')
             const updatedCw_space = await Cw_space.findOne({
                 where: {
                     cwID: req.params.ID
                 }
             })
+            console.log(updatedCw_space.imgName)
             if (updatedCw_space) {
                 if(updatedCw_space.imgName){
                     await deleteFromCloud(('cw_spaces/'+updatedCw_space.imgName))

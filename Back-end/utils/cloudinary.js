@@ -7,44 +7,17 @@ cloudinary.config({
     api_secret: process.env.CLOUD_API_SECRET 
 });
 
-// const uploadToCloud = (req, folderName) => {
-//     return new Promise((resolve, reject) => {
-//         if (!req.file) {
-//             const error = appError.create("There is no image provided", 400, httpStatusCode.ERROR);
-//             return reject(error);
-//         }
-
-//         const acceptedFormats = ['image/png', 'image/jpeg', 'image/jpg'];
-//         if (!acceptedFormats.includes(req.file.mimetype)) {
-//             const error = appError.create("Unacceptable Type Format For Image", 415, httpStatusCode.ERROR);
-//             return reject(error);
-//         }
-
-//         const uniqueSuffix = Date.now() + "." + req.file.originalname.split('.')[1];
-//         cloudinary.uploader.upload_stream({ 
-//             resource_type: 'image', 
-//             public_id: uniqueSuffix, 
-//             overwrite: true, 
-//             folder: folderName
-//         }, 
-//         (error, result) => {
-//             if (error) {
-//                 return reject(error);
-//             }
-//             req.body.img = result.url;
-//             req.body.imgName = uniqueSuffix;
-//             resolve(req.body);
-//         }).end(req.file.buffer);
-//     });
-// };
-
 const uploadToCloud = (req, folderName) => {
     return new Promise((resolve, reject) => {
-        if (!req.files || req.files.length === 0) {
+        let oneFile = false
+        if (!req.file && !req.files) {
             const error = appError.create("No images provided", 400, httpStatusCode.ERROR);
             return reject(error);
         }
-
+        if(!req.files){
+            req.files = [req.file]
+            oneFile = true
+        }
         const uploadedFiles = [];
         const acceptedFormats = ['image/png', 'image/jpeg', 'image/jpg'];
 
@@ -54,7 +27,7 @@ const uploadToCloud = (req, folderName) => {
                 return reject(error);
             }
 
-            const uniqueSuffix = Date.now() + '_' + file.originalname.split('.')[0]; // Unique name for each file
+            const uniqueSuffix = Date.now() + '.' + file.originalname.split('.')[1]; // Unique name for each file
 
             cloudinary.uploader.upload_stream({ 
                 resource_type: 'image', 
@@ -70,9 +43,13 @@ const uploadToCloud = (req, folderName) => {
                     img: result.url,
                     imgName: uniqueSuffix
                 });
-
+                
                 // Check if all files have been uploaded
-                if (uploadedFiles.length === req.files.length) {
+                if (oneFile) {
+                    req.body.img = uploadedFiles[0].img
+                    req.body.imgName = uploadedFiles[0].imgName
+                    resolve(uploadedFiles);
+                }else if(uploadedFiles.length === req.files.length){
                     req.body.photos = uploadedFiles
                     resolve(uploadedFiles);
                 }

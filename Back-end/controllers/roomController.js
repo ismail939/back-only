@@ -86,7 +86,7 @@ module.exports = {
                 }
                 await Room.update(req.body, {
                     where: {
-                        roomID: req.params.roomID,
+                        roomID: req.params.ID,
                         cwSpaceCwID: req.params.cwID
                     }
                 })

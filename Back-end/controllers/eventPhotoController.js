@@ -33,6 +33,9 @@ module.exports ={
     ),
     create: asyncWrapper(
         async (req, res, next) => {
+            console.log(req.body)
+            console.log(req.file)
+            console.log(req.files[0])
             await uploadToCloud(req, 'events')
             for (let i = 0; i < req.body.photos.length; i++) {
                 await EventPhoto.create({
