@@ -1,7 +1,11 @@
 module.exports = (db, type) => {
     return db.define("event_photos", {
-        photo: {
-            type: type.TEXT('tiny'),
+        img: {
+            type: type.TEXT,
+            allowNull: false
+        },
+        imgName: {
+            type: type.TEXT,
             allowNull: false
         }
     },{

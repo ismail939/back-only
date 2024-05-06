@@ -38,7 +38,11 @@ module.exports = (db, type)=>{
             type: type.STRING,
             allowNull: true
         },
-        mainPhoto: {
+        img: {
+            type: type.TEXT,
+            allowNull: false
+        },
+        imgName: {
             type: type.TEXT,
             allowNull: false
         }
