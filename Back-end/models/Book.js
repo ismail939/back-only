@@ -21,6 +21,11 @@ module.exports = (db, type) => {
         totalCost: {
             type: type.FLOAT,
             allowNull: false
+        },
+        status: {
+            type: type.STRING,
+            allowNull: false,
+            defaultValue: 'unpaid',
         }
     }, {
         timestamps: true
