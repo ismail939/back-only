@@ -11,11 +11,11 @@ router.route("/home")
 
 router.route("/")
     .get(eventController.getAll)
-    .post(verifyToken, allowedTo('owner', 'moderator'), upload.single('mainPhoto'), eventController.create);
+    .post(verifyToken, allowedTo('owner', 'moderator'), upload.single('img'), eventController.create);
 
 router.route("/:eventID")
     .get(eventController.getOne)
-    .patch(verifyToken, allowedTo('owner', 'moderator'), eventController.update)
+    .patch(verifyToken, allowedTo('owner', 'moderator'),upload.single('img'),  eventController.update)
     .delete(verifyToken, allowedTo('owner'), eventController.delete);
 
 router.route("/cw_space/:cwID")
