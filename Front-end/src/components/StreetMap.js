@@ -28,7 +28,8 @@ function DraggableMarker() {
     const customIcon = new Icon({
         iconUrl:mapIcon,
         iconSize:[38,38],
-        iconAnchor: [20,40]
+        iconAnchor: [20,40],
+        popupAnchor: [0,-35]
     })
     const toggleDraggable = useCallback(() => {
         setDraggable((d) => !d)

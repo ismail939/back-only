@@ -265,7 +265,7 @@ function BookingRoom() {
         return (
             <div className="min-h-screen w-4/5 mx-auto mt-[70px]">
                 <div className="flex md:flex-row flex-col gap-8">
-                    <img className="md:w-1/2 h-[400px] object-cover" src={roomImageUrl + room.img} alt={room.type + "room" + room.number}></img>
+                    <img className="md:w-1/2 h-[400px] object-cover rounded-3xl shadow-2xl" src={roomImageUrl + room.img} alt={room.type + "room" + room.number}></img>
                     <div className="md:px-10">
                         <h2 className="text-4xl main-font">Room {room.number}</h2>
                         <h2 className="text-gray-400 mt-2 text-2xl font-medium ">{room.type} Room</h2>
@@ -292,7 +292,8 @@ function BookingRoom() {
                             })}
                         </div> :
                             <div className="lg:w-1/2 px-2 py-3 text-xl main-font">
-                                Please select the number of persons before requesting a place in the room
+                                <span className="text-gray-400">Note:<br></br></span>
+                                Please select the number of persons before requesting a place in the room.
                             </div>}
                         <div className="lg:px-10 text-2xl main-font">
                             <div className="flex gap-4 items-center">Select Number of Persons:<div className="flex items-center gap-3">

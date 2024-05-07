@@ -191,8 +191,11 @@ function WorkSpaceProfile() {
                         )
                     })}
                 </Swiper>
-                <h2 className="main-font text-3xl mt-[100px]">Accessibility:</h2>
-                <hr className="border-black my-3"></hr>
+                <div className="flex items-center justify-center gap-10  mt-[100px]"> 
+                    <hr className="border-gray-300 my-3 w-1/4"></hr>
+                    <h2 className="main-font text-3xl">Accessibility</h2>
+                    <hr className="border-gray-300 my-3 w-1/4"></hr>
+                </div>
                 <div className="mt-10 grid md:grid-cols-3 grid-cols-2 gap-5 justify-items-center">
                     <div className="flex items-center gap-2 text-lg">
                         <TelephoneFill className="text-3xl" />
@@ -216,10 +219,13 @@ function WorkSpaceProfile() {
                         </span>
                     </div>
                 </div>
-                <h2 className="main-font text-3xl mt-[50px]">Description:</h2>
-                <hr className="border-black my-3"></hr>
-                <p className="mt-4 mb-[30px] sec-font">{cwSpace.description}</p>
-                <h2 className="main-font text-3xl mt-[50px]">Facilities & Amenities:</h2>
+                <div className="flex items-center justify-center gap-10 mt-[100px]"> 
+                    <hr className="border-gray-300 my-3 w-1/4"></hr>
+                    <h2 className="main-font text-3xl">Description</h2>
+                    <hr className="border-gray-300 my-3 w-1/4"></hr>
+                </div>
+                <p className="mt-7 mb-[30px] sec-font">{cwSpace.description}</p>
+                <h2 className="main-font text-3xl mt-[80px]">Facilities & Amenities:</h2>
                 <hr className="border-black my-3"></hr>
                 <ul className="mt-4 mb-[30px]">
                     {amenities.map((item) => {
