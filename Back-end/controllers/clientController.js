@@ -164,16 +164,26 @@ module.exports = {
     ),
     updatePhoto: asyncWrapper(
         async (req, res, next) => {
+            let start=performance.now()
             let updatedClient = await Client.findOne({
                 raw: true, where: {
                     clientID: req.params.ID
-                }
+                } 
             })
+            let end = performance.now()
+            console.log(end-start, '1')
+            start = performance.now()
             if (updatedClient) {
                 if(updatedClient.imgName){
                     await deleteFromCloud(('clients/'+updatedClient.imgName))
                 }
+                end = performance.now()
+                console.log(end-start, '2')
+                start = performance.now()
                 await uploadToCloud(req, 'clients') 
+                end = performance.now()
+                console.log(end-start, '3')
+                start = performance.now()
                 await Client.update(req.body, {
                     where: {
                         clientID: req.params.ID
@@ -187,6 +197,8 @@ module.exports = {
                 });
                 delete updatedClient.password;
                 const token = await generateJWT(updatedClient, process.env.ACCESS_TOKEN_PERIOD);
+                end = performance.now()
+                console.log(end-start, '4')
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully", data: { token } });
             }
             const error = appError.create("Client Not Found", 404, httpStatusCode.ERROR);
