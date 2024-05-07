@@ -92,6 +92,9 @@ function WorkSpaceSettings() {
             formData.append('mainPhoto', img);
             fetch(`http://localhost:4000/cw_spaces/updatePhoto/${cwspace.cwID}`, {
                 method: 'PATCH',
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
                 body: formData,
             })
                 .then(response => response.json())
@@ -114,6 +117,9 @@ function WorkSpaceSettings() {
             formData.append('', secImg);
             fetch(`http://localhost:4000/cw_spacePhotos/${cwspace.cwID}`, {
                 method: 'POST',
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
                 body: formData,
             })
                 .then(response => response.json())
@@ -189,6 +195,7 @@ function WorkSpaceSettings() {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
                 "address": mutedData.address,
@@ -266,6 +273,7 @@ function WorkSpaceSettings() {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    "Authorization": `Bearer ${token}`
                 },
             }).then(res => {
                 if (res?.status === 200)
@@ -299,7 +307,7 @@ function WorkSpaceSettings() {
     }
     function PhotoCard(props) {
         const Photo= props.cwSpacePhoto;
-        const ImageUrl = Photo.id ? "http://localhost:4000/images/cw_spaces/" + Photo.photo : URL.createObjectURL(Photo.photo);
+        const ImageUrl = Photo.id ?  Photo.img : URL.createObjectURL(Photo.photo);
         return (
             <>
                 <div className="max-w-sm rounded-lg overflow-hidden shadow-lg">
@@ -319,7 +327,7 @@ function WorkSpaceSettings() {
                 <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Main Photo</h2>
                 <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4" >
                     <div className="w-full md:px-16 px-4">
-                        <img className=" object-cover sm:w-5/6 sm:mx-auto w-full h-[250px] my-4" src={img ? URL.createObjectURL(img) : imageUrl + cwspace?.mainPhoto} alt="no-picture-added"></img>
+                        <img className=" object-cover sm:w-5/6 sm:mx-auto w-full h-[250px] my-4" src={img ? URL.createObjectURL(img) : cwspace?.img} alt="no-picture-added"></img>
                         <input className={`hidden`} id="uploadCWMainImg"
                             onChange={(e) => { setImg(e.target.files[0]); setImgName(e.target.files[0]?.name) }}
                             accept=".png,.jpg,.jpeg" type="file" ></input>

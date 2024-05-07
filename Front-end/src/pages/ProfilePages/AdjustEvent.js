@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function AdjustEvent() {
     const params = useParams();
+    const token = useSelector(store => store.auth).token;
     const [originData, setOriginData] = useState([]);
     const [event, setEvent] = useState([]);
     const [img, setImg] = useState(null);
     const [imgName, setImgName] = useState("");
     const [loading, setLoading] = useState(true)
-    const imageUrl = `http://localhost:4000/images/events/`
     const [dataerrors, setDataErrors] = useState({
         start: false,
         end: false,
@@ -18,7 +19,7 @@ function AdjustEvent() {
         price: false,
         maxCapacity: false
     });
-    const getOffer = () => {
+    const getEvent = () => {
         fetch(`http://localhost:4000/events/${params.eventid}`)
             .then(res => res.json())
             .then(responsedata => {
@@ -34,12 +35,37 @@ function AdjustEvent() {
         setEvent({ ...event, [e.target.name]: e.target.value })
     }
     useEffect(() => {
-        getOffer();
+        getEvent();
     }, [])
     function isImage(offerImage) {
         if (offerImage?.slice(-4) === ".jpg" || offerImage?.slice(-5) === ".jpeg" || offerImage?.slice(-4) === ".png") return true;
         else {
             return false;
+        }
+    }
+    const addImg = () => {
+        if (isImage(imgName)) {
+            let formData = new FormData();
+            formData.append('mainPhoto', img);
+            fetch(`http://localhost:4000/events/${params.eventid}`, {
+                method: 'PATCH',
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
+                body: formData,
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "error") {
+                        console.log(data.message)
+                    } else if (data.status === "success") {
+                        getEvent();
+                        setImgName("")
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during fetch operation:', error);
+                });
         }
     }
     // function isNumber(Number) {
@@ -66,6 +92,7 @@ function AdjustEvent() {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
                 "name": event.name,
@@ -77,7 +104,7 @@ function AdjustEvent() {
             }),
         }).then(res => res.json()).then((data) => {
             if (data.status === "success") {
-                getOffer()
+                getEvent()
             } else if (data.status === "error") {
                 console.log(data)
             } else if (data.status === "fail") {
@@ -120,14 +147,14 @@ function AdjustEvent() {
             <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Image</h2>
             <div className="my-4 border  border-black-90 rounded-sm max-w-3xl mx-auto mt-4" >
                 <div className="w-full md:px-16 px-4">
-                    <img className=" object-cover sm:w-5/6 sm:mx-auto w-full h-[250px] my-4" src={img ? URL.createObjectURL(img) : imageUrl + event.mainPhoto}
+                    <img className=" object-cover sm:w-5/6 sm:mx-auto w-full h-[250px] my-4" src={img ? URL.createObjectURL(img) :  event.img}
                         alt={event.name}></img>
                     <input className={`hidden`} id="uploadCWMainImg"
                         onChange={(e) => { setImg(e.target.files[0]); setImgName(e.target.files[0]?.name) }}
                         accept=".png,.jpg,.jpeg" type="file" ></input>
                     <div className="flex flex-row-reverse w-full items-center gap-5">
                         <button className={`py-2 px-8 my-2 text-base font-medium text-indigo-100 ${!imgName?.trim() ? "bg-gray-500" : "btn-color border-indigo-200"}
-                        rounded-lg border`} disabled={!imgName?.trim()} onClick={(e) => { }}>Save</button>
+                        rounded-lg border`} disabled={!imgName?.trim()} onClick={(e) => { addImg()}}>Save</button>
                         <label htmlFor="uploadCWMainImg" className="py-2 px-4 font-medium rounded-lg text-white bg-[#3282B8] hover:bg-[#4292C8] duration-200 cursor-pointer">Change Image</label>
                         {dataerrors.offerImageName ? <span className="text-[12px] text-red-500">plaese enter an image accepted formats are png , jpg , jpeg</span> : null}
                     </div>

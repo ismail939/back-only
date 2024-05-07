@@ -29,7 +29,7 @@ function PersonalInformation(props) {
         confrimpassword: false
     });
 
-    const imageUrl = `http://localhost:4000/images/${usertype}s/` + profileData.profilePic;
+    const imageUrl = profileData.img;
     const addImg = () => {
         const formData = new FormData();
         formData.append('profilePic', img);

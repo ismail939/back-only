@@ -77,7 +77,11 @@ function CheckoutForm() {
                     // Send the token to your server for further processing
                     setLodaing(false)
                     let token = result.token;
-                    makeBook(token.id)
+                    if(payElements.type === "room"){
+                        makeBook(token.id)
+                    }else{
+                        makeRegister(token.id);
+                    }
                     // Your code to send the token to the server (e.g., using AJAX)
                 };
             }).catch(error => console.log(error))
@@ -91,6 +95,7 @@ function CheckoutForm() {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
+                "Authorization": `Bearer ${client.token}`
             },
             body: JSON.stringify({
                 "date": payElements.date,
@@ -100,6 +105,34 @@ function CheckoutForm() {
                 "type": payElements.type,
                 "clientClientID": profile.clientID,
                 "roomRoomID": payElements.roomid,
+                "totalCost": payElements.totalPrice
+            }),
+        }).then(res => res.json())
+            .then(responsedata => {
+                if (responsedata.status === "success") {
+                    dispatch(removePayData())
+                    setPayComplete(true)
+                    redirect()
+                } else if (responsedata.status === "error") {
+                    setErrorMessage(responsedata.message)
+                } else if (responsedata.status === "fail") {
+                    setErrorMessage(responsedata.message)
+                }
+            }
+            ).catch();
+    }
+    function makeRegister(visaToken) {
+        fetch(`http://localhost:4000/registers`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${client.token}`
+            },
+            body: JSON.stringify({
+                "payment": payMethod,
+                "cardToken": visaToken,
+                "clientClientID": profile.clientID,
+                "eventEventID": payElements.roomid,
                 "totalCost": payElements.totalPrice
             }),
         }).then(res => res.json())
