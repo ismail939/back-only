@@ -22,6 +22,7 @@ const reviewRouter = require("./routes/review");
 const offerRouter = require('./routes/offer')
 const moderatorRouter = require("./routes/moderator");
 const favouriteRouter = require("./routes/favourite")
+const registerRouter = require("./routes/register")
 
 const path = require('path')
 app.use(express.static(path.join(__dirname, 'public')));
@@ -41,6 +42,7 @@ app.use("/reviews", reviewRouter);
 app.use('/offers', offerRouter);
 app.use("/moderators", moderatorRouter);
 app.use("/favourites", favouriteRouter);
+app.use("/registers", registerRouter);
 
 
 const db = require('./config/database');
