@@ -9,9 +9,9 @@ const center = {
     lng: 31.2833330,
 }
 
-function DraggableMarker() {
+function DraggableMarker({adjust, location, setLocation}) {
     const [draggable, setDraggable] = useState(false)
-    const [position, setPosition] = useState(center)
+    const [position, setPosition] = useState(location.lat ? location : center)
     const role = useSelector(store => store.auth).role;
     const markerRef = useRef(null)
     const eventHandlers = useMemo(
@@ -20,6 +20,7 @@ function DraggableMarker() {
                 const marker = markerRef.current
                 if (marker != null) {
                     setPosition(marker.getLatLng())
+                    setLocation(marker.getLatLng())
                 }
             },
         }),
@@ -36,31 +37,31 @@ function DraggableMarker() {
     }, [])
     return (
         <Marker
-            draggable={ draggable}
+            draggable={adjust ?  draggable : false}
             eventHandlers={eventHandlers}
             position={position}
             ref={markerRef}
             icon={customIcon}>
-            <Popup minWidth={90}>
+            {adjust && <Popup minWidth={90}>
                 <span onClick={toggleDraggable}>
                     {draggable
                         ? 'Click Again to Fix location'
                         : 'Click here change location'}
                 </span>
-            </Popup>
+            </Popup>}
         </Marker>
     )
 }
 
 
-export default function OpenStreetMap(){
+export default function OpenStreetMap({adjust, position, setLocation}){
     return(
-        <MapContainer center={center} zoom={13} scrollWheelZoom={true}>
+        <MapContainer center={position.lng ? position : center} zoom={13} scrollWheelZoom={true}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <DraggableMarker />
+            <DraggableMarker adjust={adjust} location={position} setLocation={setLocation}/>
         </MapContainer>
     )
 }
