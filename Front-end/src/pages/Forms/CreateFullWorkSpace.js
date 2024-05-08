@@ -68,7 +68,7 @@ function CreateFullWorkSpace() {
     }
     const addMainData = () => {
         let formData = new FormData();
-        formData.append('imageName', data.offerImageName);
+        formData.append('imgName', data.offerImageName);
         formData.append('name', data.name);
         formData.append('address', data.address);
         formData.append('phone', data.phone);
@@ -78,7 +78,7 @@ function CreateFullWorkSpace() {
         formData.append('openingTime', data.openingTime);
         formData.append('closingTime', data.closingTime);
         formData.append('ownerOwnerID', ownerData.ownerID)
-        formData.append('mainPhoto', data.mainimg);
+        formData.append('img', data.mainimg);
         fetch('http://localhost:4000/cw_spaces', {
             method: 'POST',
             body: formData,
@@ -99,7 +99,6 @@ function CreateFullWorkSpace() {
         data.photos.forEach(image => {
             formData.append('img', image);
         });
-        console.log("test" , ownerData.cwSpaceCwID)
         fetch(`http://localhost:4000/cw_spacePhotos/${ownerData.cwSpaceCwID}`, {
             method: 'POST',
             body: formData,

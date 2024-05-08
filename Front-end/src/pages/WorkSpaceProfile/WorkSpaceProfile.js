@@ -224,7 +224,7 @@ function WorkSpaceProfile() {
                 </div>
                 <p className="mt-7 mb-[30px] sec-font">{cwSpace.description}</p>
                 <h2 className="main-font text-3xl mt-[80px]">Facilities & Amenities:</h2>
-                <hr className="border-black my-3"></hr>
+                <hr className="border-gray-400 my-3"></hr>
                 <ul className="mt-4 mb-[30px]">
                     {amenities.map((item) => {
                         return <div className="flex items-center gap-4">
@@ -234,7 +234,7 @@ function WorkSpaceProfile() {
                     })}
                 </ul>
                 <h2 className="main-font text-3xl mt-[50px]">Maps:</h2>
-                <hr className="border-black my-3"></hr>
+                <hr className="border-gray-400 my-3"></hr>
                 <p className="mt-4 mb-[30px] sec-font">{cwSpace.address}</p>
                 {/* <div className="">
                     <iframe title={cwSpace.name + " map"} src={`https://www.google.com/maps/embed/v1/place?q=${encodeURIComponent(cwSpace.name)}&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8`}

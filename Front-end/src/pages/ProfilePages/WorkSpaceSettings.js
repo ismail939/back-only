@@ -51,7 +51,6 @@ function WorkSpaceSettings() {
         { title: "Address", name: "address", condition: dataerrors.address, value: mutedData.address, errormessage: checkerror, type: "input" },
         { title: "Description", name: "description", condition: dataerrors.description, value: mutedData.description, errormessage: checkerror, type: "textArea" },
         { title: "Email", name: "email", condition: dataerrors.email, value: mutedData.email, errormessage: checkerror, type: "input" },
-        { title: "Fb Page", name: "fbPage", condition: dataerrors.fbPage, value: mutedData.fbPage, errormessage: checkerror, type: "input" },
         { title: "Phone Number", name: "phone", condition: dataerrors.phonenumber, value: mutedData.phone, errormessage: checkerror, type: "input" },
         { title: "Opening Time", name: "openingTime", condition: dataerrors.start, value: mutedData.openingTime, errormessage: checkerror, type: "input" },
         { title: "Closing Time", name: "closingTime", condition: dataerrors.end, value: mutedData.closingTime, errormessage: checkerror, type: "input" }
@@ -116,7 +115,7 @@ function WorkSpaceSettings() {
     const addSecImg = () => {
         if (isImage(secImgName)) {
             let formData = new FormData();
-            formData.append('', secImg);
+            formData.append('img', secImg);
             fetch(`http://localhost:4000/cw_spacePhotos/${cwspace.cwID}`, {
                 method: 'POST',
                 headers: {
@@ -183,15 +182,6 @@ function WorkSpaceSettings() {
             return false;
         }
     };
-    const urlError = (fbPage) => {
-        var regex = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+\/?)|localhost(:\d+)?(\/[.\w-]*)*(\?[\w%&=-]*)?(#[\w-]*)?$/;
-        if (!fbPage.match(regex)) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
     const AddData = () => {
         fetch(`http://localhost:4000/cw_spaces/${cwspace.cwID}`, {
             method: "PATCH",
@@ -206,7 +196,6 @@ function WorkSpaceSettings() {
                 "openingTime": mutedData.openingTime.substring(0, 5),
                 "closingTime": mutedData.closingTime.substring(0, 5),
                 "phone": mutedData.phone,
-                "fbPage": mutedData.fbPage
             }),
         }).then(res => res.json()).then((data) => {
             if (data.status === "error") {
@@ -258,12 +247,6 @@ function WorkSpaceSettings() {
             })
             setCheckError("please write a valid email address");
         }
-        else if (mutedData.fbPage && urlError(mutedData.fbPage)) {
-            setDataErrors({
-                ...IntitilErrors, fbPage: true
-            })
-            setCheckError("please write a correct url");
-        }
         else if (PhoneNumberError(mutedData.phone)) {
             setDataErrors({
                 ...IntitilErrors, phonenumber: true
@@ -307,7 +290,6 @@ function WorkSpaceSettings() {
     function checkCompatability() {
         return mutedData?.address === cwspace?.address
             && mutedData?.email === cwspace?.email
-            && mutedData?.fbPage === cwspace?.fbPage
             && mutedData?.description === cwspace?.description
             && mutedData?.openingTime === cwspace?.openingTime
             && mutedData?.closingTime === cwspace?.closingTime
