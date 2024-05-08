@@ -2,8 +2,9 @@ import image from "../components/images/offer1.jpg"
 import { GeoAlt, CalendarEvent, Clock } from "react-bootstrap-icons";
 import { setPayData } from "./reduxtoolkit/Slices/paySlice";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 function EventsCard(props) {
+    const usertype = useSelector(store => store.auth).usertype
     const event = props.event;
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -45,7 +46,7 @@ function EventsCard(props) {
                         </div>
                     </div>
                     <hr></hr>
-                    <button className="main-font my-2 btn-color py-2 px-2 w-full" onClick={() =>{RegisterEvent()}}>Register</button>
+                    {usertype === "client" && <button className="main-font my-2 btn-color py-2 px-2 w-full" onClick={() =>{RegisterEvent()}}>Register</button>}
                     <div className="my-2">
                         <h2 className="main-font text-lg text-neutral-600">Event Details</h2>
                         <p>{event.description}</p>

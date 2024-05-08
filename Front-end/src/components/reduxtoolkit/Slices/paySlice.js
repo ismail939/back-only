@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 export const paySlice = createSlice({
-    initialState: sessionStorage.getItem('pay') ? JSON.parse(localStorage.getItem('pay')) :{bookingTime:[] , totalPrice:0 , date:"" , type:"", roomid: "1"},
+    initialState: sessionStorage.getItem('pay') ? JSON.parse(localStorage.getItem('pay')) :{bookingTime:[] , totalPrice:0 , date:"" , type:"", roomid: "1",cwspaceId:""},
     name: "paySlice",
     reducers: {
         setPayData: (state, action) =>{
@@ -9,6 +9,7 @@ export const paySlice = createSlice({
             state.date = action.payload.date;
             state.type = action.payload.type;
             state.roomid = action.payload.roomid;
+            state.roomid = action.payload.cwspaceId;
             sessionStorage.setItem("pay" , JSON.stringify(state))
         }, removePayData: (state, action) =>{
             state.bookingTime = [];
@@ -16,6 +17,7 @@ export const paySlice = createSlice({
             state.date = "";
             state.type = "";
             state.roomid = "";
+            state.cwspaceId = "";
             sessionStorage.removeItem('pay')
         }
     }

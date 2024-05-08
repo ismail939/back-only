@@ -77,9 +77,9 @@ function CheckoutForm() {
                     // Send the token to your server for further processing
                     setLodaing(false)
                     let token = result.token;
-                    if(payElements.type === "room"){
+                    if (payElements.type === "room") {
                         makeBook(token.id)
-                    }else{
+                    } else {
                         makeRegister(token.id);
                     }
                     // Your code to send the token to the server (e.g., using AJAX)
@@ -105,7 +105,9 @@ function CheckoutForm() {
                 "type": payElements.type,
                 "clientClientID": profile.clientID,
                 "roomRoomID": payElements.roomid,
-                "totalCost": payElements.totalPrice
+                "totalCost": payElements.totalPrice,
+                "cancelLink": "https://gg.com",
+                "reviewLink": `http://localhost:3000/reviewbook?id=${payElements.cwspaceId}`
             }),
         }).then(res => res.json())
             .then(responsedata => {
@@ -217,7 +219,7 @@ export default function Payment() {
             /*...*/
         },
     };
-    if(payElements.type !== "")return (
+    if (payElements.type !== "") return (
         <Elements stripe={stripePromise} options={options}>
             <CheckoutForm />
         </Elements>
