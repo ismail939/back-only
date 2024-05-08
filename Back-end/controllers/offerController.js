@@ -2,24 +2,21 @@ const { Offer, Cw_space } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-const fs = require('fs')
-
+const {uploadToCloud, deleteFromCloud} = require('../utils/cloudinary');
+const { validateUpdatedOffer, validateOffer } = require('../middlewares/validationSchema');
 module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
-            if (req.body.imageName == undefined || req.body.img == '') {
-                const error = appError.create("There is NO Images Provided", 400, httpStatusCode.ERROR);
-                return next(error);
+            const errors = validateOffer(req)
+            if(errors.length!==0){
+                return res.status(400).json({status: httpStatusCode.ERROR, message: errors})
             }
-            req.body.img = req.body.imageName
-            delete req.body.imageName
+            await uploadToCloud(req, 'offers')
             const newOffer = await Offer.create(req.body)
             if (newOffer) {
                 return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Offer is Created Successfully" })
             }
             const error = appError.create("Unexpected Error, Try Again Later", 400, httpStatusCode.ERROR)
-            const filePath = `./public/images/offers/${req.body.img}`;
-            fs.unlink(filePath, () => {});
             return next(error)
         }
     ),
@@ -91,25 +88,26 @@ module.exports = {
                     offerID: req.params.offerID
                 }
             });
+            const errors = validateUpdatedOffer(req)
+            if(errors.length!==0){
+                return res.status(400).json({status: httpStatusCode.ERROR, message: errors})
+            }
             if (updatedOffer) {
-                let deleteOld = false
-                if (req.body.imageName) { // there is a file
-                    req.body.img = req.body.imageName
-                    delete req.body.imageName
-                    deleteOld = true
-                } else if (req.body.img == '') { // the photo to be removed
-                    deleteOld = true
-                    req.body.img = null
+                let imgAdded = false
+                if (req.file) { // there is a file
+                    await deleteFromCloud(('offers/'+updatedOffer.imgName))
+                    await uploadToCloud(req, 'offers')
+                    imgAdded = true
+                }
+                if(!imgAdded){
+                    delete req.body.img
+                    delete req.body.imgName
                 }
                 await Offer.update(req.body, {
                     where: {
                         offerID: req.params.offerID
                     }
                 })
-                if (deleteOld&&updatedOffer.img) {
-                    const filePath = `./public/images/offers/${updatedOffer.img}`
-                    fs.unlink(filePath, () => { })
-                }
                 return res.json({ status: httpStatusCode.SUCCESS, message: "Offer Updated Successfully" });
             }
             const error = appError.create("Offer Not Found", 404, httpStatusCode.ERROR)
@@ -129,9 +127,8 @@ module.exports = {
                         offerID: req.params.offerID
                     }
                 })
-                if (deletedOffer.img) {
-                    const filePath = `./public/images/offers/${deletedOffer.img}`
-                    fs.unlink(filePath, () => { })
+                if (deletedOffer.imgName) {
+                    deleteFromCloud(('offers/'+deletedOffer.imgName))
                 }
                 return res.json({ status: httpStatusCode.SUCCESS, message: "Offer Deleted Successfully" });
             }

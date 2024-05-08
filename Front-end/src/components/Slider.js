@@ -4,7 +4,6 @@ import Offer2 from "./images/offer2.jpg"
 import { Link } from "react-router-dom"
 
 function Slider(){
-    const imageUrl = "http://localhost:4000/images/offers/";
     const images = [Offer1, Offer2, Offer1,Offer2]
     const [homeoffers, setHomeOffers] = useState([]);
     const [fetcherror, setFetchError] = useState(false);
@@ -35,7 +34,7 @@ function Slider(){
             <div className="relative">
                 <div className="h-[500px] flex transition-transform ease-in-out duration-500" style={{transform: `translateX(-${current *100}%)`}}>
                     {homeoffers ? homeoffers.map((offer) =>{
-                        return <img className="object-cover h-full w-full rounded-xl" src={imageUrl + offer.img} alt="" style={{flexShrink:"0" , flexGrow:"0"}}></img>
+                        return <img className="object-cover h-full w-full rounded-xl" src={offer.img} alt="" style={{flexShrink:"0" , flexGrow:"0"}}></img>
                     }) : images.map((image) =>{
                         return <img className="object-cover h-full w-full rounded-xl" src={image} alt="" style={{flexShrink:"0" , flexGrow:"0"}}></img>
                     })}

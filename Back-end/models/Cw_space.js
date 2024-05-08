@@ -47,9 +47,13 @@ module.exports = (db, type)=>{
             defaultValue: 0,
             allowNull: false
         },
-        mainPhoto: {
+        img: {
             type: type.TEXT,
             allowNull: true
+        },
+        imgName: {
+            type: type.TEXT,
+            allowNull: false
         },
         home: {
             type: type.STRING,
@@ -57,6 +61,14 @@ module.exports = (db, type)=>{
         },
         discoverType: {
             type: type.STRING,
+            allowNull: true
+        },
+        lat: {
+            type: type.FLOAT,
+            allowNull: true
+        },
+        lng: {
+            type: type.FLOAT,
             allowNull: true
         }
     },{

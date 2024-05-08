@@ -60,6 +60,7 @@ function App() {
         <Route path='events&workshops' element={<EventsWorshops />}></Route>
         <Route element={<RequireAuth allowedRoles={["client"]} />} >
           <Route path='favourites' element={<Favourites />}></Route>
+          <Route path='payment' element={<Payment />}></Route>
         </Route>
         <Route element={<RequireAuth allowedRoles={["owner", "moderator"]} />} >
           <Route element={<ProfileManager />} >
@@ -87,7 +88,6 @@ function App() {
             <Route path="" element={<RoomList />} />
             <Route path=":roomid" element={<BookingRoom />} />
           </Route>
-          <Route path='payment' element={<Payment />}></Route>
         </Route>
         <Route element={<RequireAuth allowedRoles={["owner"]} />} >
           <Route element={<ProfileManager />} >

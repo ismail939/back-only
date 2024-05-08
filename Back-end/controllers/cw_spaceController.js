@@ -2,20 +2,18 @@ const { Cw_space, Cw_spacePhoto, Room, Owner} = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-const fs = require('fs')
-const { validateUpdatedCw_space } = require("../middlewares/validationSchema");
+const { validateUpdatedCw_space, validateCw_space } = require("../middlewares/validationSchema");
 const generateJWT = require("../utils/generateJWT");
+const {uploadToCloud, deleteFromCloud} = require('../utils/cloudinary');
 
 
 module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
-            if (req.body.imageName == undefined || req.body.img == '') {
-                const error = appError.create("There is NO Images Provided", 400, httpStatusCode.ERROR);
-                return next(error);
+            const errors = validateCw_space(req)
+            if(errors.length!==0){
+                return res.status(400).json({status: httpStatusCode.ERROR, message: errors})
             }
-            req.body.mainPhoto = req.body.imageName; 
-            delete req.body.imageName;
             const owner = await Owner.findOne({
                     raw: true, where: {
                         ownerID: req.body.ownerOwnerID
@@ -27,10 +25,9 @@ module.exports = {
             }
             if (owner.cwSpaceCwID != null) {
                 const error = appError.create("This Owner Has Already Co-working Space", 400, httpStatusCode.ERROR)
-                const filePath = `./public/images/cw_spaces/${req.body.mainPhoto}`;
-                fs.unlink(filePath, () => {});
                 return next(error)
             }
+            await uploadToCloud(req, 'cw_spaces')
             let newCw_space = (await Cw_space.create(req.body)).get({ plain: true })
             if (newCw_space) {
                 await Owner.update({cwSpaceCwID: newCw_space.cwID}, {where: {ownerID:newCw_space.ownerOwnerID}})
@@ -43,8 +40,6 @@ module.exports = {
                 return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Co-working Space is Created Successfully" , data:{ token }});
             }
             const error = appError.create("Unexpected Error, Try Again Later", 500, httpStatusCode.FAIL)
-            const filePath = `./public/images/cw_spaces/${req.body.mainPhoto}`;
-            fs.unlink(filePath, () => {});
             return next(error)
         }
     ),
@@ -70,6 +65,7 @@ module.exports = {
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_spaces });
             }
             const error = appError.create("There Are No Available Co-working Spaces", 404, httpStatusCode.ERROR);
+            await deleteFromCloud(('cw_spaces/'+updatedCw_space.imgName))
             return next(error);
         }
     ),
@@ -104,32 +100,25 @@ module.exports = {
     ),
     updatePhoto: asyncWrapper(
         async (req, res, next) => {
-            if (req.body.mainPhoto == '') {
-                const error = appError.create("There is NO Images Provided", 400, httpStatusCode.ERROR);
-                return next(error);
-            }
-            req.body.mainPhoto = req.body.imageName;
-            delete req.body.imageName;
             const updatedCw_space = await Cw_space.findOne({
                 where: {
                     cwID: req.params.ID
                 }
             })
             if (updatedCw_space) {
+                if(updatedCw_space.imgName){
+                    await deleteFromCloud(('cw_spaces/'+updatedCw_space.imgName))
+                }
+                await uploadToCloud(req, 'cw_spaces') 
                 await Cw_space.update(req.body, {
                     where: {
                         cwID: req.params.ID
                     }
                 })
-                if (updatedCw_space.mainPhoto) {
-                    const filePath = `./public/images/cw_spaces/${updatedCw_space.mainPhoto}`;
-                    fs.unlink(filePath, ()=>{})
-                }
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Co-working Space Updated Successfully" })
             }
             const error = appError.create("Co-Working Space Not Found", 404, httpStatusCode.ERROR);
-            const filePath = `./public/images/cw_spaces/${req.body.mainPhoto}`;
-            fs.unlink(filePath, () => {});
+            await deleteFromCloud(('cw_spaces/'+updatedCw_space.imgName))
             return next(error);
         }
     ),
@@ -146,6 +135,8 @@ module.exports = {
                 }
             });
             if (updatedCw_space) {
+                delete req.body.imgName
+                delete req.body.img
                 await Cw_space.update(req.body, {
                 where: {
                     cwID: req.params.ID
@@ -165,16 +156,14 @@ module.exports = {
                 }
             });
             if (deletedCw_space) {
-                const filePath = `./public/images/cw_spaces/${deletedCw_space.mainPhoto}`;
-                fs.unlink(filePath, () => {});
+                await deleteFromCloud('cw_spaces/'+deletedCw_space.imgName)
                 let photos = await Cw_spacePhoto.findAll({
                     where: {
                         cwSpaceCwID: req.params.ID
                     }
                 }, { raw: true })
                 for (const photo of photos) {
-                    let filePath = `./public/images/cw_spaces/${photo.photo}`;
-                    fs.unlink(filePath, () => { })
+                    await deleteFromCloud('cw_spaces/'+photo.imgName)
                 }
                 await Cw_spacePhoto.destroy({
                     where: {

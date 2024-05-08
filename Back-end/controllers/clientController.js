@@ -8,7 +8,8 @@ const bcrypt = require('bcrypt')
 const generateJWT = require('../utils/generateJWT')
 const generateVerificationCode = require("../utils/generateVerificationCode");
 const { sendVerificationCode, sendResetLink } = require("../utils/sendEmail");
-const fs = require('fs')
+const {uploadToCloud, deleteFromCloud} = require('../utils/cloudinary');
+
 
 module.exports = {
     register: asyncWrapper(
@@ -52,7 +53,6 @@ module.exports = {
                 username: req.body.username,
                 email: req.body.email,
                 password: hashedPassword,
-                profilePic: req.body.profilePic,
                 phone: req.body.phone,
                 verificationCode: false
             }))
@@ -164,27 +164,32 @@ module.exports = {
     ),
     updatePhoto: asyncWrapper(
         async (req, res, next) => {
-            if (req.body.imageName == undefined) {
-                const error = appError.create("There is NO Images Provided", 400, httpStatusCode.ERROR);
-                return next(error);
-            }
-            req.body.profilePic = req.body.imageName;
-            delete req.body.imageName;
+            let start=performance.now()
             let updatedClient = await Client.findOne({
                 raw: true, where: {
                     clientID: req.params.ID
-                }
+                } 
             })
+            let end = performance.now()
+            console.log(end-start, '1')
+            start = performance.now()
             if (updatedClient) {
+                if(updatedClient.imgName){
+                    await deleteFromCloud(('clients/'+updatedClient.imgName))
+                }
+                end = performance.now()
+                console.log(end-start, '2')
+                start = performance.now()
+                await uploadToCloud(req, 'clients') 
+                end = performance.now()
+                console.log(end-start, '3')
+                start = performance.now()
                 await Client.update(req.body, {
                     where: {
                         clientID: req.params.ID
                     }
                 })
-                if (updatedClient.profilePic) {
-                    const filePath = `./public/images/clients/${updatedClient.profilePic}`;
-                    fs.unlink(filePath, () => { })
-                }
+               
                 updatedClient = await Client.findOne({
                     raw: true, where: {
                         clientID: req.params.ID
@@ -192,6 +197,8 @@ module.exports = {
                 });
                 delete updatedClient.password;
                 const token = await generateJWT(updatedClient, process.env.ACCESS_TOKEN_PERIOD);
+                end = performance.now()
+                console.log(end-start, '4')
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Updated Successfully", data: { token } });
             }
             const error = appError.create("Client Not Found", 404, httpStatusCode.ERROR);
@@ -307,9 +314,8 @@ module.exports = {
                         clientID: req.params.ID
                     }
                 })
-                if (deletedClient.profilePic) {
-                    const filePath = `./public/images/clients/${deletedClient.profilePic}`;
-                    fs.unlink(filePath, () => { })
+                if (deletedClient.imgName) {
+                    await deleteFromCloud(('clients/'+deletedClient.imgName))
                 }
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Client Deleted Successfully" });
             }

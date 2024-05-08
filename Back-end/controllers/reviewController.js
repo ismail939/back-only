@@ -104,7 +104,6 @@ module.exports = {
             });
             if (updatedReview) {
                 if (req.body.rate) {
-                    console.log("lol")
                     const cw_space = await Cw_space.findOne({
                         where: {
                             cwID: req.params.cwSpaceID

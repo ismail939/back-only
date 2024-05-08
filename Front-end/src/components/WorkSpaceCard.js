@@ -8,7 +8,6 @@ function WorkSpaceCard(props) {
     const profileData = props.profileData;
     const getFavourites = props.getFavourites;
     const favourites = props.favourites;
-    const imageUrl="http://localhost:4000/images/cw_spaces/"+cwspace.mainPhoto;
     const showFavIcon = props.showFavIcon;
     const isInFavourites = favourites?.some(item => JSON.stringify(item) === JSON.stringify(cwspace));
     const [selected, setSelected] = useState(isInFavourites)
@@ -47,7 +46,7 @@ function WorkSpaceCard(props) {
         <div className="bg-white rounded-xl shadow-md overflow-hidden relative">
             <div className="md:flex">
                 <div className="md:shrink-0">
-                    <Link to={`/workspaces/${cwspace.cwID}`}><img className="h-48 w-full object-cover md:h-full md:w-64 hover:scale-105 duration-500" src={imageUrl} alt={cwspace.name}></img></Link>
+                    <Link to={`/workspaces/${cwspace.cwID}`}><img className="h-48 w-full object-cover md:h-full md:w-64 hover:scale-105 duration-500" src={cwspace.img} alt={cwspace.name}></img></Link>
                 </div>
                 <div className="px-8 py-2">
                     <Link to={`/workspaces/${cwspace.cwID}`} className="capitalize block font-semibold text-lg leading-tight font-medium text-black hover:text-[#3282B8] duration-300 sec-font">{cwspace.name}</Link>
