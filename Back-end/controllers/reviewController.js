@@ -71,7 +71,7 @@ module.exports = {
                         }
                     })
                     reviews[i].name = client.fname + " " + client.lname
-                    reviews[i].profilePic = client.profilePic
+                    reviews[i].img = client.img
                     }
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: reviews });
             }
