@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
 import { Trash3Fill } from "react-bootstrap-icons";
+import OpenStreetMap from "../../components/StreetMap";
 
 function ProfileInput({ data, HandleChange }) {
     return (
@@ -26,6 +27,7 @@ function WorkSpaceSettings() {
     const [mutedData, setMutedData] = useState([]);
     const [cwSpacePhotos, setCwSpacePhotos] = useState([]);
     const token = useSelector(store => store.auth).token;
+    const [location, setLocation] = useState({lat:null, lng: null})
     const profileData = jwtDecode(token);
     const [img, setImg] = useState(null);
     const [imgName, setImgName] = useState("");
@@ -49,7 +51,6 @@ function WorkSpaceSettings() {
         { title: "Address", name: "address", condition: dataerrors.address, value: mutedData.address, errormessage: checkerror, type: "input" },
         { title: "Description", name: "description", condition: dataerrors.description, value: mutedData.description, errormessage: checkerror, type: "textArea" },
         { title: "Email", name: "email", condition: dataerrors.email, value: mutedData.email, errormessage: checkerror, type: "input" },
-        { title: "Fb Page", name: "fbPage", condition: dataerrors.fbPage, value: mutedData.fbPage, errormessage: checkerror, type: "input" },
         { title: "Phone Number", name: "phone", condition: dataerrors.phonenumber, value: mutedData.phone, errormessage: checkerror, type: "input" },
         { title: "Opening Time", name: "openingTime", condition: dataerrors.start, value: mutedData.openingTime, errormessage: checkerror, type: "input" },
         { title: "Closing Time", name: "closingTime", condition: dataerrors.end, value: mutedData.closingTime, errormessage: checkerror, type: "input" }
@@ -57,7 +58,6 @@ function WorkSpaceSettings() {
     function HandleChange(e) {
         setMutedData({ ...mutedData, [e.target.name]: e.target.value })
     }
-    const imageUrl = `http://localhost:4000/images/cw_spaces/`;
     const getCworkingSpacePhotos = () => {
         fetch(`http://localhost:4000/cw_spacePhotos/${profileData.cwSpaceCwID}`)
             .then(res => res.json())
@@ -72,6 +72,7 @@ function WorkSpaceSettings() {
             .then(responsedata => {
                 setCwSpace(responsedata.data);
                 setMutedData(responsedata.data);
+                setLocation({lat:responsedata.data.lat , lng: responsedata.data.lng})
                 setLoading(false);
             }
             ).catch(error => { console.log(error); });
@@ -114,7 +115,7 @@ function WorkSpaceSettings() {
     const addSecImg = () => {
         if (isImage(secImgName)) {
             let formData = new FormData();
-            formData.append('', secImg);
+            formData.append('img', secImg);
             fetch(`http://localhost:4000/cw_spacePhotos/${cwspace.cwID}`, {
                 method: 'POST',
                 headers: {
@@ -181,15 +182,6 @@ function WorkSpaceSettings() {
             return false;
         }
     };
-    const urlError = (fbPage) => {
-        var regex = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+\/?)|localhost(:\d+)?(\/[.\w-]*)*(\?[\w%&=-]*)?(#[\w-]*)?$/;
-        if (!fbPage.match(regex)) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
     const AddData = () => {
         fetch(`http://localhost:4000/cw_spaces/${cwspace.cwID}`, {
             method: "PATCH",
@@ -204,7 +196,25 @@ function WorkSpaceSettings() {
                 "openingTime": mutedData.openingTime.substring(0, 5),
                 "closingTime": mutedData.closingTime.substring(0, 5),
                 "phone": mutedData.phone,
-                "fbPage": mutedData.fbPage
+            }),
+        }).then(res => res.json()).then((data) => {
+            if (data.status === "error") {
+                console.log(data.message)
+            } else if (data.status === "success") {
+                getCworkingSpaceData();
+            }
+        })
+    }
+    const AddLocation = () => {
+        fetch(`http://localhost:4000/cw_spaces/${cwspace.cwID}`, {
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                "lat": location.lat,
+                "lng": location.lng,
             }),
         }).then(res => res.json()).then((data) => {
             if (data.status === "error") {
@@ -236,12 +246,6 @@ function WorkSpaceSettings() {
                 ...IntitilErrors, email: true
             })
             setCheckError("please write a valid email address");
-        }
-        else if (mutedData.fbPage && urlError(mutedData.fbPage)) {
-            setDataErrors({
-                ...IntitilErrors, fbPage: true
-            })
-            setCheckError("please write a correct url");
         }
         else if (PhoneNumberError(mutedData.phone)) {
             setDataErrors({
@@ -286,11 +290,14 @@ function WorkSpaceSettings() {
     function checkCompatability() {
         return mutedData?.address === cwspace?.address
             && mutedData?.email === cwspace?.email
-            && mutedData?.fbPage === cwspace?.fbPage
             && mutedData?.description === cwspace?.description
             && mutedData?.openingTime === cwspace?.openingTime
             && mutedData?.closingTime === cwspace?.closingTime
             && mutedData?.phone === cwspace?.phone
+    }
+    function checkMaps(){
+        return cwspace?.lat === location.lat 
+        && cwspace?.lng === location.lng
     }
     const handleSecImage = (e) => {
         e.preventDefault();
@@ -306,8 +313,8 @@ function WorkSpaceSettings() {
         }
     }
     function PhotoCard(props) {
-        const Photo= props.cwSpacePhoto;
-        const ImageUrl = Photo.id ?  Photo.img : URL.createObjectURL(Photo.photo);
+        const Photo = props.cwSpacePhoto;
+        const ImageUrl = Photo.id ? Photo.img : URL.createObjectURL(Photo.photo);
         return (
             <>
                 <div className="max-w-sm rounded-lg overflow-hidden shadow-lg">
@@ -352,9 +359,18 @@ function WorkSpaceSettings() {
                         </div>
                     </div>
                 </div>
+                <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Maps</h2>
+                <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4 md:px-12 px-4 py-2">
+                    <OpenStreetMap adjust={true} position={location} setLocation={setLocation}/>
+                    <div className="flex flex-row-reverse w-full">
+                        <button onClick={() => AddLocation()} disabled={checkMaps()}
+                            className={`py-2 px-8 mt-2 text-base font-medium text-indigo-100 ${checkMaps() ? "bg-gray-500" : "btn-color border-indigo-200"}
+                                rounded-lg border`} >Save</button>
+                    </div>
+                </div>
                 <h2 className="max-w-3xl mx-auto mt-8 px-2 font-bold text-2xl">Photos</h2>
-                <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4" >
-                    <div className="w-full md:px-16 py-4 px-4">
+                <div className="my-4 border border-black-90 rounded-3xl max-w-3xl mx-auto mt-4 md:px-16 py-4 px-4" >
+                    <div className="w-full">
                         <div className="grid lg:grid-cols-2 sm:grid-cols-1 gap-3">
                             {cwSpacePhotos?.map((cwSpacePhoto) => {
                                 return <PhotoCard cwSpacePhoto={cwSpacePhoto} key={cwSpacePhoto.id} />
@@ -362,7 +378,7 @@ function WorkSpaceSettings() {
                         </div>
                         <div>
                             <input className={`hidden`} id="uploadSecImg"
-                                onChange={(e) => { setSecImg(e.target.files[0]); setSecImgName(e.target.files[0]?.name); setCwSpacePhotos([...cwSpacePhotos, {photo:e.target.files[0]}]) }}
+                                onChange={(e) => { setSecImg(e.target.files[0]); setSecImgName(e.target.files[0]?.name); setCwSpacePhotos([...cwSpacePhotos, { photo: e.target.files[0] }]) }}
                                 accept=".png,.jpg,.jpeg" type="file" ></input>
                             {dataerrors.secImg ? <span className="text-[12px] text-red-500">{checkerror}</span> : null}
                             <div className="flex flex-row-reverse w-full items-center gap-5">

@@ -24,13 +24,13 @@ function RoomsSettings() {
                 console.error('Error during fetch operation:', error);
             });
     }
+    
     const shared = rooms?.filter(room => room.type === "Shared");
     const privatee = rooms?.filter(room => room.type === "Private");
     const meeting = rooms?.filter(room => room.type === "Meeting");
 
     const RoomCard = ({ room }) => {
-        const imageUrl = `http://localhost:4000/images/rooms/`
-        return <Link to={`${room.roomID}`}><img className=" object-cover w-full h-[250px]" src={imageUrl + room.img} alt={`${room.type} room ${room.number}`}></img></Link>
+        return <Link to={`${room.roomID}`}><img className=" object-cover w-full h-[250px]" src={ room.img} alt={`${room.type} room ${room.number}`}></img></Link>
     }
     if(!loading) return (
         <>

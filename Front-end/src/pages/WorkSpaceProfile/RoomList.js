@@ -42,11 +42,10 @@ function RoomList() {
     const meeting = rooms?.filter(room => room.type === "Meeting");
     function PhotoRow(props) {
         const roomData = props.room;
-        const imageurl = `http://localhost:4000/images/rooms/${roomData.img}`;
         return (
             <>
                 <div className="">
-                    <img className="w-full h-[300px] object-cover rounded-xl" src={imageurl} alt="no image found"></img>
+                    <img className="w-full h-[300px] object-cover rounded-xl" src={roomData.img} alt="no image found"></img>
                 </div>
             </>
         )

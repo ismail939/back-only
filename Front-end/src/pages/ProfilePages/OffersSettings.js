@@ -26,12 +26,11 @@ function OffersSettings() {
     }
     function OfferCard(props) {
         const offer = props.offer;
-        const imageUrl = "http://localhost:4000/images/offers/" + offer.img;
         return (
             <div className="bg-white rounded-xl shadow-md overflow-hidden">
                 <div className="">
                     <div className="md:shrink-0">
-                        <img className="h-48 w-full object-cover" src={imageUrl} alt="Modern building architecture"></img>
+                        <img className="h-48 w-full object-cover" src={offer.img} alt="Modern building architecture"></img>
                     </div>
                     <div className="px-8 py-2">
                         <h2 className="capitalize block font-semibold text-lg leading-tight font-medium text-black sec-font">{offer.title}</h2>

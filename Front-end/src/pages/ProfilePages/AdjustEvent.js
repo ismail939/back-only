@@ -46,7 +46,7 @@ function AdjustEvent() {
     const addImg = () => {
         if (isImage(imgName)) {
             let formData = new FormData();
-            formData.append('mainPhoto', img);
+            formData.append('img', img);
             fetch(`http://localhost:4000/events/${params.eventid}`, {
                 method: 'PATCH',
                 headers: {
