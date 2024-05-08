@@ -53,7 +53,10 @@ function WorkSpaces() {
         setDropDown(false);
     }, [])
     const getFavourites = () => {
-        fetch(`http://localhost:4000/favourites/${profileData.clientID}`)
+        fetch(`http://localhost:4000/favourites/${profileData.clientID}`,{
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }},)
             .then(res => res.json())
             .then(responsedata => {
                 setFavourites(responsedata.data);

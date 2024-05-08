@@ -39,6 +39,7 @@ import AdjustRoom from './pages/ProfilePages/AdjustRoom';
 import AdjustOffer from './pages/ProfilePages/AdjustOffer';
 import AdjustEvent from './pages/ProfilePages/AdjustEvent';
 import Payment from './pages/Payment';
+import Review from './pages/Review';
 function App() {
   return (
     <>
@@ -61,6 +62,7 @@ function App() {
         <Route element={<RequireAuth allowedRoles={["client"]} />} >
           <Route path='favourites' element={<Favourites />}></Route>
           <Route path='payment' element={<Payment />}></Route>
+          <Route path='reviewbook' element={<Review />}></Route>
         </Route>
         <Route element={<RequireAuth allowedRoles={["owner", "moderator"]} />} >
           <Route element={<ProfileManager />} >

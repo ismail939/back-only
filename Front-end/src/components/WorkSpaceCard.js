@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
 import { Star, StarFill, TrashFill } from 'react-bootstrap-icons';
 import { useState } from 'react';
-import image from './images/offer1.jpg';
+import { useSelector } from 'react-redux';
 
 function WorkSpaceCard(props) {
     const cwspace = props.cwspace;
+    const token = useSelector(store => store.auth).token;
     const profileData = props.profileData;
     const getFavourites = props.getFavourites;
     const favourites = props.favourites;
@@ -16,6 +17,7 @@ function WorkSpaceCard(props) {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
                 "clientClientID": profileData.clientID,
@@ -31,6 +33,7 @@ function WorkSpaceCard(props) {
             method: "DELETE",
             headers: {
                 'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
                 "clientClientID": profileData.clientID,
