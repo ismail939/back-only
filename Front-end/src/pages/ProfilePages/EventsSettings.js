@@ -19,7 +19,6 @@ function EventsSettings() {
             .then(responsedata => {
                 setEvents(responsedata.data);
                 setLoading(false)
-                console.log(responsedata.message)
                 if (responsedata.message === "There are No Available Events for This Co-working Space") setNoEvents(true);
             }
             ).catch(error => {
@@ -28,11 +27,10 @@ function EventsSettings() {
     }
     function EventCard(props) {
         const event = props.event;
-        const imageUrl = "http://localhost:4000/images/events/" + event?.mainPhoto;
         return (
             <div className="bg-white shadow-md overflow-hidden rounded-sm">
                 <div className="flex-col">
-                    <img className="h-48 w-full object-cover md:h-72 md:w-full" src={imageUrl} alt={event.name}></img>
+                    <img className="h-48 w-full object-cover md:h-72 md:w-full" src={event.img} alt={event.name}></img>
                     <div className="mt-4 px-4">
                         <h2 className="main-font text-xl">{event.name}</h2>
                         <div className="my-3">

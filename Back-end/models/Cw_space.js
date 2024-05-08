@@ -62,6 +62,14 @@ module.exports = (db, type)=>{
         discoverType: {
             type: type.STRING,
             allowNull: true
+        },
+        lat: {
+            type: type.FLOAT,
+            allowNull: true
+        },
+        lng: {
+            type: type.FLOAT,
+            allowNull: true
         }
     },{
         timestamps: false 

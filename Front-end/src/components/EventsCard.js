@@ -7,14 +7,13 @@ function EventsCard(props) {
     const event = props.event;
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const imageUrl = "http://localhost:4000/images/events/" + event?.mainPhoto;
     function RegisterEvent() {
         dispatch(setPayData({
             bookingTime: [],
             totalPrice: event.price,
             date: "",
             type: "event",
-            roomid: ""
+            roomid: event.eventID
         }
         ))
         navigate("/payment")
@@ -22,7 +21,7 @@ function EventsCard(props) {
     return (
         <div className="bg-white shadow-md overflow-hidden rounded-sm">
             <div className="flex-col">
-                <img className="h-48 w-full object-cover md:h-72 md:w-full" src={imageUrl} alt={"event image"}></img>
+                <img className="h-48 w-full object-cover md:h-72 md:w-full" src={event.img} alt={"event image"}></img>
                 <div className="mt-4 px-4">
                     <h2 className="main-font text-xl">{event.name}</h2>
                     <div className="my-3">
@@ -46,7 +45,7 @@ function EventsCard(props) {
                         </div>
                     </div>
                     <hr></hr>
-                    <button className="main-font my-2 btn-color py-2 px-2 w-full">Register</button>
+                    <button className="main-font my-2 btn-color py-2 px-2 w-full" onClick={() =>{RegisterEvent()}}>Register</button>
                     <div className="my-2">
                         <h2 className="main-font text-lg text-neutral-600">Event Details</h2>
                         <p>{event.description}</p>

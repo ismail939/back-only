@@ -32,11 +32,10 @@ function TimeStamp({ date, booked, range, bookingRange, updateBookingRange }) {
     )
 }
 function SuccessMessage({ showsuccess, room, numPerson, cost, bookingRange, closeSuccessMessage, date }) {
-    const roomImageUrl = "http://localhost:4000/images/rooms/";
     return (
         <div className="fixed top-0 left-0 w-full h-[100vh] flex items-center justify-center bg-black/[.2] z-100 duration-300">
             <div className="bg-white shadow rounded-md p-3 md:w-[500px] w-3/4 duration-800">
-                <img className="w-full h-[200px] object-cover" src={roomImageUrl + room.img}></img>
+                <img className="w-full h-[200px] object-cover" src={ room.img}></img>
                 <div className="mt-5">
                     {room.type === "Shared" ? <><h2 className="main-font text-xl">Request Created Successfully</h2>
                         <p className="text-md my-2">Your Request has been submitted and sent to the owner, the response will appear in your profile page.</p>
@@ -109,7 +108,6 @@ function BookingRoom() {
     const [failMessage, setFailMessage] = useState("")
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const roomImageUrl = "http://localhost:4000/images/rooms/";
     const user = useSelector(store => store.auth);
     const token = user.token;
     const usertype = user.usertype;
@@ -265,7 +263,7 @@ function BookingRoom() {
         return (
             <div className="min-h-screen w-4/5 mx-auto mt-[70px]">
                 <div className="flex md:flex-row flex-col gap-8">
-                    <img className="md:w-1/2 h-[400px] object-cover" src={roomImageUrl + room.img} alt={room.type + "room" + room.number}></img>
+                    <img className="md:w-1/2 h-[400px] object-cover" src={ room.img} alt={room.type + "room" + room.number}></img>
                     <div className="md:px-10">
                         <h2 className="text-4xl main-font">Room {room.number}</h2>
                         <h2 className="text-gray-400 mt-2 text-2xl font-medium ">{room.type} Room</h2>
@@ -292,7 +290,8 @@ function BookingRoom() {
                             })}
                         </div> :
                             <div className="lg:w-1/2 px-2 py-3 text-xl main-font">
-                                Please select the number of persons before requesting a place in the room
+                                <span className="text-gray-400">Note:<br></br></span>
+                                Please select the number of persons before requesting a place in the room.
                             </div>}
                         <div className="lg:px-10 text-2xl main-font">
                             <div className="flex gap-4 items-center">Select Number of Persons:<div className="flex items-center gap-3">
