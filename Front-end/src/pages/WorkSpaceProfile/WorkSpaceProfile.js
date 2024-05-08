@@ -12,6 +12,7 @@ import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import { useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
+import OpenStreetMap from "../../components/StreetMap";
 function ReviewStars(props) {
     const rate = props.rate;
     const apxrate = Math.round(rate * 2) / 2;
@@ -37,12 +38,11 @@ function Review(props) {
     ];
     const date = new Date(review.createdAt)
     const reviewDate = date.getDate().toString() + " " + months[date.getMonth()] + " " + date.getFullYear().toString();
-    const imageUrl = "http://localhost:4000/images/clients/"
     return (
         <div className="md:px-10 lg:w-3/4 my-10">
             <div className="flex items-center justify-between">
                 <div className="flex items-center md:gap-5 gap-2">
-                    {review.profilePic ? <img src={imageUrl + review.profilePic} className="h-[50px] w-[50px] rounded-full object-cover"></img> : <PersonCircle className="text-[40px]" />}
+                    {review.profilePic ? <img src={review.img} className="h-[50px] w-[50px] rounded-full object-cover"></img> : <PersonCircle className="text-[40px]" />}
                     <h2 className="md:text-2xl main-font">{review.name}</h2>
                 </div>
                 <ReviewStars rate={review.rate} />
@@ -76,7 +76,6 @@ function WorkSpaceProfile() {
     const [loading, setLodaing] = useState(true);
     const [reviewBody, setReviewBody] = useState("")
     const [reviewRate, setReviewRate] = useState("")
-    const imageUrl = "http://localhost:4000/images/cw_spaces/";
     const getWorkSpace = () => {
         fetch(`http://localhost:4000/cw_spaces/${params.cwID}`)
             .then(res => res.json())
@@ -180,18 +179,21 @@ function WorkSpaceProfile() {
                     }
                 >
                     <SwiperSlide >
-                        <img src={imageUrl + cwSpace.mainPhoto} alt={cwSpace.name} className="w-full h-full object-cover" />
+                        <img src={ cwSpace.img} alt={cwSpace.name} className="w-full h-full object-cover" />
                     </SwiperSlide>
                     {cwSpacePhotos?.map((image, index) => {
                         return (
                             <SwiperSlide >
-                                <img src={imageUrl + image.photo} key={index} alt={cwSpace.name} className="w-full h-full object-cover" />
+                                <img src={image.img} key={index} alt={cwSpace.name} className="w-full h-full object-cover" />
                             </SwiperSlide>
                         )
                     })}
                 </Swiper>
-                <h2 className="main-font text-3xl mt-[100px]">Accessibility:</h2>
-                <hr className="border-black my-3"></hr>
+                <div className="flex items-center justify-center gap-10  mt-[100px]"> 
+                    <hr className="border-gray-300 my-3 w-1/4"></hr>
+                    <h2 className="main-font text-3xl">Accessibility</h2>
+                    <hr className="border-gray-300 my-3 w-1/4"></hr>
+                </div>
                 <div className="mt-10 grid md:grid-cols-3 grid-cols-2 gap-5 justify-items-center">
                     <div className="flex items-center gap-2 text-lg">
                         <TelephoneFill className="text-3xl" />
@@ -215,10 +217,13 @@ function WorkSpaceProfile() {
                         </span>
                     </div>
                 </div>
-                <h2 className="main-font text-3xl mt-[50px]">Description:</h2>
-                <hr className="border-black my-3"></hr>
-                <p className="mt-4 mb-[30px] sec-font">{cwSpace.description}</p>
-                <h2 className="main-font text-3xl mt-[50px]">Facilities & Amenities:</h2>
+                <div className="flex items-center justify-center gap-10 mt-[100px]"> 
+                    <hr className="border-gray-300 my-3 w-1/4"></hr>
+                    <h2 className="main-font text-3xl">Description</h2>
+                    <hr className="border-gray-300 my-3 w-1/4"></hr>
+                </div>
+                <p className="mt-7 mb-[30px] sec-font">{cwSpace.description}</p>
+                <h2 className="main-font text-3xl mt-[80px]">Facilities & Amenities:</h2>
                 <hr className="border-black my-3"></hr>
                 <ul className="mt-4 mb-[30px]">
                     {amenities.map((item) => {
@@ -231,11 +236,12 @@ function WorkSpaceProfile() {
                 <h2 className="main-font text-3xl mt-[50px]">Maps:</h2>
                 <hr className="border-black my-3"></hr>
                 <p className="mt-4 mb-[30px] sec-font">{cwSpace.address}</p>
-                <div className="">
+                {/* <div className="">
                     <iframe title={cwSpace.name + " map"} src={`https://www.google.com/maps/embed/v1/place?q=${encodeURIComponent(cwSpace.name)}&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8`}
                         className="w-full "
                         height="450" allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
-                </div>
+                </div> */}
+                <OpenStreetMap adjust={false} position={{lat: cwSpace.lat , lng: cwSpace.lng}}/>
                 <Link to="rooms"><button className="mx-auto my-[100px] main-font btn-color py-2 px-6 sm:text-2xl text-xl w-48 flex justify-center">BOOK</button></Link>
                 <div className="mt-[50px]">
                     <h2 className="text-center main-font md:text-4xl text-3xl flex items-center justify-center gap-2 mb-[50px]">

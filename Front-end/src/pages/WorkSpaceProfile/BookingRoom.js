@@ -290,7 +290,8 @@ function BookingRoom() {
                             })}
                         </div> :
                             <div className="lg:w-1/2 px-2 py-3 text-xl main-font">
-                                Please select the number of persons before requesting a place in the room
+                                <span className="text-gray-400">Note:<br></br></span>
+                                Please select the number of persons before requesting a place in the room.
                             </div>}
                         <div className="lg:px-10 text-2xl main-font">
                             <div className="flex gap-4 items-center">Select Number of Persons:<div className="flex items-center gap-3">
