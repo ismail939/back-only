@@ -145,10 +145,8 @@ module.exports = {
             }
             // Calculate the delay until the booking time
             const bookingTime = new Date(req.body.start)
-            const cancelLink = "gg@gmail.com"
-            const reviewLink = "gg@gmail.com"
             const delay = bookingTime.getTime() - Date.now() - (6 * 60 * 60 * 1000)
-            reminderQueue.add({ email: req.currentUser.email, cancelLink, reviewLink }, { delay })
+            reminderQueue.add({ email: req.currentUser.email, cancelLink: req.body.cancelLink, reviewLink: req.body.reviewLink }, { delay })
             return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Created Successfully" });
         }
     ),

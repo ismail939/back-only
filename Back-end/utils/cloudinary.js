@@ -1,6 +1,7 @@
 const cloudinary = require('cloudinary').v2;
 const appError = require('../utils/appError')
-const httpStatusCode = require('../utils/httpStatusText')
+const httpStatusCode = require('../utils/httpStatusText');
+const { compressImage } = require('./sharp');
 cloudinary.config({ 
     cloud_name: process.env.CLOUD_NAME, 
     api_key: process.env.CLOUD_API_KEY, 
@@ -21,12 +22,16 @@ const uploadToCloud = (req, folderName) => {
         const uploadedFiles = [];
         const acceptedFormats = ['image/png', 'image/jpeg', 'image/jpg'];
 
-        req.files.forEach((file, index) => {
+        req.files.forEach(async(file, index) => {
             if (!acceptedFormats.includes(file.mimetype)) {
                 const error = appError.create(`Unacceptable Type Format For Image ${index + 1}`, 415, httpStatusCode.ERROR);
                 return reject(error);
             }
-
+            if(file.buffer.byteLength>700000){
+                file.buffer = await compressImage(file.buffer)
+            }
+            console.log(file)
+            console.log(file.buffer)
             const uniqueSuffix = Date.now() + '.' + file.originalname.split('.')[1]; // Unique name for each file
 
             cloudinary.uploader.upload_stream({ 
