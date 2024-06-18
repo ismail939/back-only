@@ -7,7 +7,7 @@ const { validateUser, validateUpdatedUser } = require("../middlewares/validation
 const bcrypt = require('bcrypt')
 const generateJWT = require('../utils/generateJWT')
 const generateVerificationCode = require("../utils/generateVerificationCode");
-const { sendVerificationCode, sendResetLink } = require("../utils/sendEmail");
+const { sendWelcome, sendVerificationCode, sendResetLink } = require("../utils/sendEmail");
 const {uploadToCloud, deleteFromCloud} = require('../utils/cloudinary');
 
 
@@ -57,7 +57,13 @@ module.exports = {
                 verificationCode: false
             }))
             if (newClient) {
-                return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Client is Registered Successfully" });
+                try {
+                    await sendWelcome(newClient.email, newClient.fname);
+                    return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Client is Registered Successfully" });
+                } catch (err) {
+                    const error = appError.create("Error Sending Welcome Email", 500, httpStatusCode.FAIL);
+                    return next(error);
+                }
             } else {
                 const error = appError.create("Unexpected Error, Try Again Later", 500, httpStatusCode.FAIL);
                 return next(error);
