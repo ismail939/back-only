@@ -11,6 +11,119 @@ const transporter = nodemailer.createTransport({
 });
 
 module.exports = {
+    sendWelcome: (email, user)=>{
+        return new Promise((resolve, reject) => {
+            const htmlContent = `
+                <html>
+                    <head>
+                        <style>
+                            body {
+                                font-family: Arial, sans-serif;
+                                background-color: #f8f8f8;
+                            }
+                            .container {
+                                max-width: 600px;
+                                margin: 0 auto;
+                                padding: 20px;
+                                background-color: #1B262C;
+                                border: 1px solid #dddddd;
+                                border-radius: 5px;
+                                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                            }
+                            .heading {
+                                text-align: center;
+                                color: #BBE1FA;
+                                font-size: 36px;
+                                margin-bottom: 20px;
+                            }
+                            .cancel-button {
+                                margin-top: 20px;
+                                margin-bottom: 30px;
+                            }
+                            .code-box {
+                                display: center;
+                                padding: 10px 20px;
+                                background-color: #BBE1FA;
+                                border: 1px solid #dddddd;
+                                border-radius: 5px;
+                                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                            }
+                            .signature {
+                                text-align: center;
+                                font-weight: bold;
+                                margin-top: 20px;
+                                color: #BBE1FA;
+                            }
+                            p {
+                                font-size: 24px;
+                                color: #0F4C75
+                            }
+                            .button {
+                                display: block;
+                                padding: 10px 20px;
+                                background-color: #1B262C;
+                                color: #BBE1FA;
+                                text-align: center;
+                                text-decoration: none;
+                                font-size: 24px;
+                                border-radius: 5px;
+                                cursor: pointer;
+                            }
+                            .button:hover {
+                                background-color: #0F4C75;
+                            }
+                            a{
+                                color: #BBE1FA
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="container">
+                            <div class="heading">
+                                Welcome to SPACES Platform!
+                            </div>
+                            <div style="text-align: center;">
+                                <img src="cid:logo" alt="Spaces Logo" style="width: 300px; height: auto; ">
+                            </div>
+                            <div class="code-box">
+                                <p>Dear ${user},</p>
+                                <p>Thank you for registering at Spaces platform.</p>
+                                <p>Log in to your account</p>
+                                <p>We wish you all the best in our platform!</</p>
+                            </div>
+                            <div class="signature">
+                                Thanks,<br>
+                                Spaces Team
+                            </div>
+                        </div>
+                    </body>
+                </html>
+                `;
+            const mailOptions = {
+                from: {
+                    name: "Spaces Platform",
+                    address: process.env.GMAIL_USER,
+                },
+                to: email,
+                subject: "Welcome to Spaces Platform",
+                html: htmlContent,
+                attachments: [
+                    {
+                    filename: "logo.png",
+                    path: logoPath,
+                    cid: "logo",
+                    },
+                ],
+                };
+            transporter.sendMail(mailOptions, (error) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve();
+            }
+            });
+        });
+    },
     sendVerificationCode: (email, code) => {
         return new Promise((resolve, reject) => {
         const htmlContent = `
@@ -233,7 +346,6 @@ module.exports = {
     },
     sendReminder: (email, cancelLink)=>{
         return new Promise((resolve, reject) => {
-            //const cancelLink = "https://localhost:3000/cancelbook";
             const htmlContent = `
                 <html>
                     <head>
