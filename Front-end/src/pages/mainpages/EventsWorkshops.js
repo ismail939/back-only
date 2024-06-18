@@ -17,7 +17,6 @@ function EventsWorshops() {
             .then(responsedata => {
                 setEvents(responsedata.data);
                 setDisplayedEvents(responsedata.data)
-
                 setFetchError(false)
                 if (responsedata.status === "error") setStatusResponse("Sorry, there are no Events currently");
                 else if (responsedata.status === "fail") setStatusResponse("Oops something went wrong !");

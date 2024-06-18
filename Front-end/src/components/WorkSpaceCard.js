@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
 import { Star, StarFill, TrashFill } from 'react-bootstrap-icons';
 import { useState } from 'react';
-import image from './images/offer1.jpg';
+import { useSelector } from 'react-redux';
 
 function WorkSpaceCard(props) {
     const cwspace = props.cwspace;
+    const token = useSelector(store => store.auth).token;
     const profileData = props.profileData;
     const getFavourites = props.getFavourites;
     const favourites = props.favourites;
@@ -16,6 +17,7 @@ function WorkSpaceCard(props) {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
                 "clientClientID": profileData.clientID,
@@ -23,6 +25,7 @@ function WorkSpaceCard(props) {
             }),
         }).then(res => res.json()).then((resdata) => {
             if (resdata.status === "success") {
+                setSelected(!selected);
             }
         })
     }
@@ -31,6 +34,7 @@ function WorkSpaceCard(props) {
             method: "DELETE",
             headers: {
                 'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
                 "clientClientID": profileData.clientID,
@@ -39,6 +43,7 @@ function WorkSpaceCard(props) {
         }).then(res => res.json()).then((resdata) => {
             if (resdata.status === "success") {
                 if(!showFavIcon) getFavourites();
+                setSelected(!selected);
             }
         })
     }
@@ -54,7 +59,7 @@ function WorkSpaceCard(props) {
                     <p className="mt-2 text-slate-500 sec-font">{cwspace.description}</p>
                 </div>
             </div>
-            {showFavIcon && profileData?.clientID && <div className="absolute top-3 right-3 text-yellow-500 text-xl cursor-pointer hover:text-yellow-600 duration-300" onClick={() => {if(!selected) addToFavourites(); else RemoveFromFavourites(); setSelected(!selected);}}>
+            {showFavIcon && profileData?.clientID && <div className="absolute top-3 right-3 text-yellow-500 text-xl cursor-pointer hover:text-yellow-600 duration-300" onClick={() => {if(!selected) addToFavourites(); else RemoveFromFavourites();}}>
                 {selected ? <StarFill /> : <Star/>}
             </div>}
             {!showFavIcon && <div className="absolute top-3 right-3 text-red-500 text-xl cursor-pointer hover:text-red-600 duration-300" onClick={() => { RemoveFromFavourites()}}>

@@ -23,7 +23,11 @@ function Requests() {
     const usertype = user.usertype;
     const profileData = jwtDecode(token);
     const getRequests = () => {
-        fetch(`http://localhost:4000/requests/${profileData.cwSpaceCwID}`)
+        fetch(`http://localhost:4000/requests/${profileData.cwSpaceCwID}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
             .then(res => res.json())
             .then(responsedata => {
                 setRequests(responsedata.data)
@@ -38,18 +42,16 @@ function Requests() {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
                 "status": "accepted",
             }),
         }).then(res => res.json()).then((data) => {
             if (data.status === "success") {
-                console.log("success")
                 getRequests()
             } else if (data.status === "error") {
-                console.log(data.message)
             } else if (data.status === "fail") {
-                console.log("oops, something wrong went on !")
             }
         })
     }
@@ -64,24 +66,21 @@ function Requests() {
             }),
         }).then(res => res.json()).then((data) => {
             if (data.status === "success") {
-                console.log("success")
                 getRequests()
             } else if (data.status === "error") {
                 console.log(data.message)
             } else if (data.status === "fail") {
-                console.log("oops, something wrong went on !")
             }
         })
     }
     function PendingRoomCard(props) {
         const room = props.room;
-        const imageUrl = "http://localhost:4000/images/rooms/" + room?.roomImg;
         const clientImage = `http://localhost:4000/images/clients/` + room.clientProfilePic;
         return (
             <div className="bg-white rounded-xl shadow-md overflow-hidden w-full">
                 <div className="">
                     <div className="">
-                        <img className="h-48 w-full object-cover w-full" src={imageUrl} alt={"no image found"}></img>
+                        <img className="h-48 w-full object-cover w-full" src={room.roomImg} alt={"no image found"}></img>
                     </div>
                     <div className="px-8 py-2">
                         <h1 className="capitalize font-semibold text-xl leading-tight text-black main-font">{`${room?.roomType} Room ${room?.roomNumber}`}</h1>
@@ -102,13 +101,12 @@ function Requests() {
     }
     function HistoryCard(props) {
         const room = props.room;
-        const imageUrl = "http://localhost:4000/images/rooms/" + room?.roomImg;
         const clientImage = `http://localhost:4000/images/clients/` + room.clientProfilePic;
         return (
             <div className="bg-white rounded-xl shadow-md overflow-hidden w-full">
                 <div className="">
                     <div className="">
-                        <img className="h-48 w-full object-cover w-full" src={imageUrl} alt={"no image found"}></img>
+                        <img className="h-48 w-full object-cover w-full" src={room.roomImg} alt={"no image found"}></img>
                     </div>
                     <div className="px-8 py-2">
                         <h1 className="capitalize text-lg leading-tight text-xl main-font">{`${room?.roomType} Room ${room?.roomNumber}`}</h1>
@@ -130,26 +128,28 @@ function Requests() {
         <>
             <div className="w-[95%] mx-auto min-h-screen">
                 <TopBar intitalState={"Reqeusts"}/>
-                <div className="">
-                    {pending?.length > 0 ? <div className="mt-10">
+                {pending?.length > 0 || History?.length > 0 ? <><div className="">
+                    {pending?.length > 0 && <div className="mt-10">
                         <h2 className="text-2xl main-font mb-4">Pending</h2>
                         <div className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-6">
                             {pending?.map((room) => {
                                 return <PendingRoomCard room={room} key={room.clientClientID} />
                             })}
                         </div>
-                    </div> : null}
+                    </div>}
                 </div>
                 <div>
-                    {History?.length > 0 ? <div className="mt-10">
+                    {History?.length > 0 && <div className="mt-10">
                         <h2 className="text-2xl main-font mb-4">History</h2>
                         <div className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-6">
                             {History?.map((room) => {
                                 return <HistoryCard room={room} key={room.clientClientID} />
                             })}
                         </div>
-                    </div> : null}
-                </div>
+                    </div>}
+                </div></> : <div className="text-center mt-[100px]">
+                        <p className="font-medium text-xl">Currently there aren't any requests</p>
+                        </div>}
             </div>
         </>
     )
