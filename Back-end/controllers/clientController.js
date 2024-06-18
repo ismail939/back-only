@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const { Client } = require('../models/modelIndex')
+const { Client, Book, Request } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
@@ -159,6 +159,21 @@ module.exports = {
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: clients })
             }
             const error = appError.create("There Are No Available Clients", 404, httpStatusCode.ERROR)
+            return next(error)
+        }
+    ),
+    getBookingsAndRequestsClient: asyncWrapper(
+        async (req, res, next) => {
+            const bookings = await Book.findAll({where: {
+                clientClientID: req.params.clientID
+            }})
+            const requests = await Request.findAll({where: {
+                clientClientID: req.params.clientID
+            }})
+            if(bookings.length!=0||requests.length!=0){
+                return res.status(200).json({status: httpStatusCode.SUCCESS, message: "Bookings and Requests found successfully!", data: [bookings, requests]})
+            }
+            const error = appError.create("There is no bookings or requests found for this client!", 404, httpStatusCode.ERROR)
             return next(error)
         }
     ),
