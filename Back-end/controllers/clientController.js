@@ -162,7 +162,7 @@ module.exports = {
             return next(error)
         }
     ),
-    getBookingsAndRequestsClient: asyncWrapper(
+    getBookingsAndRequests: asyncWrapper(
         async (req, res, next) => {
             const bookings = await Book.findAll({where: {
                 clientClientID: req.params.clientID
@@ -177,7 +177,7 @@ module.exports = {
             return next(error)
         }
     ),
-    updatePhoto: asyncWrapper(
+    updatePhoto: asyncWrapper(  
         async (req, res, next) => {
             let start=performance.now()
             let updatedClient = await Client.findOne({
