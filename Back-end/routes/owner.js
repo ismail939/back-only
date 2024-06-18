@@ -30,6 +30,9 @@ router.route("/:ID")
     .patch(verifyToken, allowedTo('owner'), ownerController.update)
     .delete(verifyToken, allowedTo('admin'), ownerController.delete);
 
+router.route("/updateModeratorPassword")
+    .patch(verifyToken, allowedTo('owner'), ownerController.updateModeratorPassword)
+
 router.route("/")
     .get(verifyToken, allowedTo('admin', 'owner'), ownerController.getAll) 
 
