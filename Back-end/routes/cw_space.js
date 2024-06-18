@@ -14,6 +14,9 @@ router.route("/")
     .get(cw_spaceController.getAll)
     .post(verifyToken, allowedTo('owner'), upload.single('mainPhoto'), cw_spaceController.create);
 
+router.route("/getAllModerators/:ID")
+    .get(verifyToken, allowedTo('owner'), cw_spaceController.getAllModerators)
+
 router.route("/:ID")
     .get(cw_spaceController.getOne)
     .patch(verifyToken, allowedTo('owner'), cw_spaceController.update)
