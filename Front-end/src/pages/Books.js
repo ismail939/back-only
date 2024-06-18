@@ -9,11 +9,15 @@ function Books() {
     const usertype = user.usertype;
     const profileData = jwtDecode(token);
     const getBooks = () => {
-        fetch(`http://localhost:4000/books/${profileData.cwSpaceCwID}`)
+        fetch(`http://localhost:4000/books/${profileData.cwSpaceCwID}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
             .then(res => res.json())
             .then(responsedata => {
-                setBooks(responsedata.data)
                 console.log(responsedata.data)
+                setBooks(responsedata.data)
             }).catch()
     }
     useEffect(() => {
@@ -21,13 +25,12 @@ function Books() {
     }, [])
     function BookedCard(props) {
         const room = props.room;
-        const imageUrl = "http://localhost:4000/images/rooms/" + room?.roomImage;
         const clientImage = `http://localhost:4000/images/clients/` + room.clientImage;
         return (
             <div className="bg-white rounded-xl shadow-md overflow-hidden w-full">
                 <div className="">
                     <div className="">
-                        <img className="h-48 w-full object-cover w-full" src={imageUrl} alt={"no image found"}></img>
+                        <img className="h-48 w-full object-cover w-full" src={room.roomImage} alt={"no image found"}></img>
                     </div>
                     <div className="px-8 py-2">
                         <h1 className="capitalize text-lg leading-tight text-xl main-font">{`${room.payment}`}</h1>
@@ -57,7 +60,9 @@ function Books() {
                                 return <BookedCard room={room} key={room.clientClientID} />
                             })}
                         </div>
-                    </div> : null}
+                    </div> : <div className="text-center mt-[100px]">
+                        <p className="font-medium text-xl">Currently there aren't any books</p>
+                        </div>}
                 </div>
             </div>
         </>

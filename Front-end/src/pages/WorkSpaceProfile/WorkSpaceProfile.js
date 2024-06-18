@@ -40,7 +40,7 @@ function Review(props) {
         <div className="lg:w-3/5 my-10">
             <div className="flex items-center justify-between">
                 <div className="flex items-center md:gap-5 gap-2">
-                    {review.profilePic ? <img src={review.img} className="h-[50px] w-[50px] rounded-full object-cover"></img> : <PersonCircle className="text-[40px]" />}
+                    {review.img ? <img src={review.img} className="h-[50px] w-[50px] rounded-full object-cover"></img> : <PersonCircle className="text-[40px]" />}
                     <h2 className="md:text-2xl main-font">{review.name}</h2>
                 </div>
                 <ReviewStars rate={review.rate} />

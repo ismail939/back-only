@@ -66,6 +66,7 @@ function App() {
         </Route>
         <Route element={<RequireAuth allowedRoles={["owner", "moderator"]} />} >
           <Route element={<ProfileManager />} >
+          <Route path='workspace-data' element={<WorkSpaceSettings />}></Route>
             <Route path='rooms-data' element={<><Outlet /></>}>
               <Route path="" element={<RoomsSettings />} />
               <Route path=":roomid" element={<AdjustRoom />} />
