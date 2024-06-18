@@ -34,7 +34,7 @@ function Footer() {
                     <div className="flex flex-col gap-2">
                         <h2 className="main-font">Quick Links</h2>
                         <ul className="flex flex-col text-sm">
-                            <FooterLink title="FAQ" link={null} />
+                            <FooterLink title="FAQs" link={"faQs"} />
                             <FooterLink title="Terms of Service" link={null} />
                             <FooterLink title="Privacy Policy" link={null} />
                         </ul>
