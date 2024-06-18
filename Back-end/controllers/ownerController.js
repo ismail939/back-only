@@ -290,6 +290,7 @@ module.exports = {
     ),  
     updateModeratorPassword: asyncWrapper(
         async (req, res, next) => {
+            console.log('djjdj')
             let moderator = await Moderator.findOne({where: {
                 moderatorID: req.body.ID
             }, raw: true})
