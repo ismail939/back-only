@@ -1,4 +1,4 @@
-const { Cw_space, Cw_spacePhoto, Room, Owner} = require('../models/modelIndex')
+const { Cw_space, Cw_spacePhoto, Room, Owner, Moderator} = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
@@ -67,6 +67,14 @@ module.exports = {
             const error = appError.create("There Are No Available Co-working Spaces", 404, httpStatusCode.ERROR);
             await deleteFromCloud(('cw_spaces/'+updatedCw_space.imgName))
             return next(error);
+        }
+    ),
+    getAllModerators: asyncWrapper(
+        async (req, res, next) => {
+            const moderators = await Moderator.findAll({where: {
+                cwSpaceCwID: req.params.ID
+            }})
+            return res.status(200).json({status: httpStatusCode.SUCCESS, message: "Moderators in this cw_space found successfully", data: moderators})
         }
     ),
     getHome: asyncWrapper(

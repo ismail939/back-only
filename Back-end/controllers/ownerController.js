@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const { Owner } = require('../models/modelIndex');
+const { Owner, Moderator } = require('../models/modelIndex');
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
@@ -294,6 +294,23 @@ module.exports = {
             return next(error);
         }
     ),  
+    updateModeratorPassword: asyncWrapper(
+        async (req, res, next) => {
+            console.log('djjdj')
+            let moderator = await Moderator.findOne({where: {
+                moderatorID: req.body.ID
+            }, raw: true})
+            if(!moderator){
+                const error = appError.create("Moderator Not Found", 404, httpStatusCode.ERROR);
+                return next(error);
+            }
+            const hashedPassword = await bcrypt.hash(req.body.password, Number(process.env.SALT_ROUND))
+            await Moderator.update({password: hashedPassword}, {where: {
+                moderatorID: req.body.ID
+            }})
+            return res.status(200).json({status: httpStatusCode.SUCCESS, message: "Moderator password updated successfully"})
+        }
+    ),
     delete: asyncWrapper(
         async (req, res, next) => {
             const deletedOwner = await Owner.findOne({

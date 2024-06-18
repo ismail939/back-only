@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const { Client } = require('../models/modelIndex')
+const { Client, Book, Request } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
@@ -168,7 +168,22 @@ module.exports = {
             return next(error)
         }
     ),
-    updatePhoto: asyncWrapper(
+    getBookingsAndRequests: asyncWrapper(
+        async (req, res, next) => {
+            const bookings = await Book.findAll({where: {
+                clientClientID: req.params.clientID
+            }})
+            const requests = await Request.findAll({where: {
+                clientClientID: req.params.clientID
+            }})
+            if(bookings.length!=0||requests.length!=0){
+                return res.status(200).json({status: httpStatusCode.SUCCESS, message: "Bookings and Requests found successfully!", data: [bookings, requests]})
+            }
+            const error = appError.create("There is no bookings or requests found for this client!", 404, httpStatusCode.ERROR)
+            return next(error)
+        }
+    ),
+    updatePhoto: asyncWrapper(  
         async (req, res, next) => {
             let start=performance.now()
             let updatedClient = await Client.findOne({
