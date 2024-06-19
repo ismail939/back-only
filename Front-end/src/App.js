@@ -40,6 +40,12 @@ import AdjustOffer from './pages/ProfilePages/AdjustOffer';
 import AdjustEvent from './pages/ProfilePages/AdjustEvent';
 import Payment from './pages/Payment';
 import Review from './pages/Review';
+import AboutUs from './pages/mainpages/AboutUs';
+import FAQs from './pages/FAQs';
+import Contact from './pages/Contact';
+import AdjustModerator from './pages/ProfilePages/AdjustModerator';
+import ClientRequests from './pages/ProfilePages/ClientRequests';
+import ClientBookings from './pages/ProfilePages/ClientBooks';
 function App() {
   return (
     <>
@@ -48,6 +54,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />}></Route>
         <Route path='login' element={<Login />}></Route>
+        <Route path='aboutus' element={<AboutUs />}></Route>
         <Route path='portal-login' element={<PortalLogin />}></Route>
         <Route path='sign-up' element={<SignUp />}></Route>
         <Route path='email authentication' element={<EmailAuthentication />}></Route>
@@ -63,6 +70,10 @@ function App() {
           <Route path='favourites' element={<Favourites />}></Route>
           <Route path='payment' element={<Payment />}></Route>
           <Route path='reviewbook' element={<Review />}></Route>
+          <Route element={<ProfileManager />} >
+            <Route path='client-requests' element={<ClientRequests />}></Route>
+            <Route path='client-books' element={<ClientBookings />}></Route>
+          </Route>
         </Route>
         <Route element={<RequireAuth allowedRoles={["owner", "moderator"]} />} >
           <Route element={<ProfileManager />} >
@@ -97,7 +108,10 @@ function App() {
             <Route path='workspace-data' element={<WorkSpaceSettings />}></Route>
           </Route>
           <Route element={<ProfileManager />} >
-            <Route path='moderators' element={<Moderators />}></Route>
+            <Route path='moderators' element={<><Outlet /></>}>
+              <Route path="" element={<Moderators />} />
+              <Route path=":moderid" element={<AdjustModerator />} />
+            </Route>
           </Route>
           <Route path='createworkspace' element={<CreateFullWorkSpace />}></Route>
           <Route path='createOffer' element={<CreateOffer />}></Route>
@@ -107,6 +121,8 @@ function App() {
           <Route path='createEvent' element={<CreateEvent />}></Route>
         </Route>
         <Route path='dashboard' element={<Dashboard />}></Route>
+        <Route path='faQs' element={<FAQs />}></Route>
+        <Route path='contact' element={<Contact />}></Route>
         <Route path="*" element={<PageNotFound />}></Route>
       </Routes>
       <Footer />
