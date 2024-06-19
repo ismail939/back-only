@@ -24,6 +24,14 @@ function ProfileManager() {
                             <Link to="personal-information"><button onClick={() => setActive("personal-information")}
                                 className={`${buttonStyle} ${active === "personal-information" ? activeStyle : "hover:text-indigo-900"}`} >Personal Information</button></Link>
                         </div>
+                        {(usertype === "client") && <div className="md:my-7 my-4">
+                            <Link to="client-requests"><button className={`${buttonStyle} ${active === "client-requests" ? activeStyle : "hover:text-indigo-900"}`}
+                                onClick={() => setActive("client-requests")}>Requests</button></Link>
+                        </div>}
+                        {(usertype === "client") && <div className="md:my-7 my-4">
+                            <Link to="client-books"><button className={`${buttonStyle} ${active === "client-books" ? activeStyle : "hover:text-indigo-900"}`}
+                                onClick={() => setActive("client-books")}>Bookings</button></Link>
+                        </div>}
                         {(usertype === "owner" || usertype === "moderator") && <div className="md:my-7 my-4">
                             <Link to="workspace-data"><button className={`${buttonStyle} ${active === "workspace-data" ? activeStyle : "hover:text-indigo-900"}`}
                                 onClick={() => setActive("workspace-data")}>WorkSpace Information</button></Link>
