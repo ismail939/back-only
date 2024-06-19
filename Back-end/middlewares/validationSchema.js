@@ -1,73 +1,60 @@
-const validators = require('../utils/validators');
-const validator = require('../utils/validators')
+const { body } = require("express-validator") 
 
-const validateUser = (req) => {
-    let data = req.body
-    let errors = []
-    if (validator.isEmpty(data.fname)) {
-        errors.push("first name is required");
-    }
+const validators = require("../utils/validators");
+const validator = require("../utils/validators");
 
-    if (validator.isEmpty(data.lname)) {
-        errors.push("last name is required");
-    }
-
-    if (validator.isEmpty(data.username)) {
-        errors.push("username is required");
-    }
-
-    if (validator.isEmpty(data.email)) {
-        errors.push('email is required')
-    } else {
-        if (!validator.isEmail(data.email)) {
-            errors.push('not in email format')
-        }
-    }
-    if (validator.isEmpty(data.password)) {
-        errors.push("password is required");
-    }
-
-    if (validator.isEmpty(data.phone)) {
-        errors.push("phone is required");
-    }
-    return errors
+const userSchema = () => {
+    return [
+        body("fname")
+            .notEmpty().withMessage("first name is required"),
+        body("lname")
+            .notEmpty().withMessage("last name is required"),
+        body("username")
+            .notEmpty().withMessage("username is required"),
+        body("email")
+            .notEmpty().withMessage("email is required")
+            .isEmail().withMessage('Must be a valid email address'),
+        body("password")
+            .notEmpty().withMessage("password is required")
+            .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
+            .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/).withMessage('Must contain at least one uppercase letter, one lowercase letter, and one number'),
+        body("phone")
+            .notEmpty().withMessage("phone is required")
+            .matches(/^\d{10}$/).withMessage('Must be a valid phone number')
+    ]
 }
 
-const validateUpdatedUser = (req) => {
-    let data = req.body
-    let errors = []
-    if (data.fname) {
-        if (validator.isEmpty(data.fname))
-            errors.push("first name is empty");
-    }
+const userUpdateSchema = () => {
+    return [
+        body("fname").optional()
+            .notEmpty().withMessage("first name is required"),
+        body("lname").optional()
+            .notEmpty().withMessage("last name is required"),
+        body("username").optional()
+            .notEmpty().withMessage("username is required"),
+        body("email").optional()
+            .notEmpty().withMessage("email is required")
+            .isEmail().withMessage('Must be a valid email address'),
+        body("password").optional()
+            .notEmpty().withMessage("password is required")
+            .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
+            .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/).withMessage('Must contain at least one uppercase letter, one lowercase letter, and one number'),
+        body("phone").optional()
+            .notEmpty().withMessage("phone is required")
+            .matches(/^\d{10}$/).withMessage('Must be a valid phone number')
+    ]
+}
 
-    if (data.lname) {
-        if (validator.isEmpty(data.lname))
-            errors.push("last name is empty");
-    }
-
-    if (data.username) {
-        if (validator.isEmpty(data.username))
-            errors.push("username is empty");
-    }
-
-    if (data.email) {
-        if (validator.isEmpty(data.email))
-            errors.push('email is empty')
-        else if (!validator.isEmail(data.email)) {
-            errors.push('not in email format')
-        }
-    }
-    if (data.password) {
-        if (validator.isEmpty(data.password))
-            errors.push("password is empty");
-    }
-
-    if (data.phone) {
-        if (validator.isEmpty(data.phone))
-            errors.push("phone is empty");
-    }
-    return errors
+const userPasswordSchema = () => {
+    return [
+        body("reset")
+            .notEmpty().withMessage("reset is required")
+            .isBoolean().withMessage('Must be a boolean value'),
+        body("newPassword")
+            .notEmpty().withMessage("password is required")
+            .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
+            .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/).withMessage('Must contain at least one uppercase letter, one lowercase letter, and one number')
+    ]
 }
 
 const validateOffer = (req) => {
@@ -476,8 +463,8 @@ const validateFavourite = (req) =>{
 }
 
 module.exports = {
-    validateUser,
-    validateUpdatedUser,
+    userSchema,
+    userUpdateSchema,
     validateCw_space,
     validateUpdatedCw_space,
     validateRoom,
