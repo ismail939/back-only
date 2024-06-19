@@ -44,7 +44,8 @@ import AboutUs from './pages/mainpages/AboutUs';
 import FAQs from './pages/FAQs';
 import Contact from './pages/Contact';
 import AdjustModerator from './pages/ProfilePages/AdjustModerator';
-
+import ClientRequests from './pages/ProfilePages/ClientRequests';
+import ClientBookings from './pages/ProfilePages/ClientBooks';
 function App() {
   return (
     <>
@@ -69,6 +70,10 @@ function App() {
           <Route path='favourites' element={<Favourites />}></Route>
           <Route path='payment' element={<Payment />}></Route>
           <Route path='reviewbook' element={<Review />}></Route>
+          <Route element={<ProfileManager />} >
+            <Route path='client-requests' element={<ClientRequests />}></Route>
+            <Route path='client-books' element={<ClientBookings />}></Route>
+          </Route>
         </Route>
         <Route element={<RequireAuth allowedRoles={["owner", "moderator"]} />} >
           <Route element={<ProfileManager />} >
