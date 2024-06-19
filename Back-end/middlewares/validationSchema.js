@@ -1,6 +1,5 @@
 const { body } = require("express-validator") 
 
-const validators = require("../utils/validators");
 const validator = require("../utils/validators");
 
 const userSchema = () => {
@@ -20,7 +19,7 @@ const userSchema = () => {
             .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/).withMessage('Must contain at least one uppercase letter, one lowercase letter, and one number'),
         body("phone")
             .notEmpty().withMessage("phone is required")
-            .matches(/^\d{10}$/).withMessage('Must be a valid phone number')
+            .matches(/^\d{11}$/).withMessage('Must be a valid phone number')
     ]
 }
 
@@ -41,7 +40,7 @@ const userUpdateSchema = () => {
             .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/).withMessage('Must contain at least one uppercase letter, one lowercase letter, and one number'),
         body("phone").optional()
             .notEmpty().withMessage("phone is required")
-            .matches(/^\d{10}$/).withMessage('Must be a valid phone number')
+            .matches(/^\d{11}$/).withMessage('Must be a valid phone number')
     ]
 }
 
@@ -56,6 +55,61 @@ const userPasswordSchema = () => {
             .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/).withMessage('Must contain at least one uppercase letter, one lowercase letter, and one number')
     ]
 }
+
+const cwSpaceSchema = () => {
+    return [
+        body("name")
+            .notEmpty().withMessage("name is required"),
+        body("address")
+            .notEmpty().withMessage("address is required"),
+        body("amenities").optional()
+            .notEmpty().withMessage("amenities is required"),
+        body("email").optional()
+            .notEmpty().withMessage("email is required")
+            .isEmail().withMessage('Must be a valid email address'),
+        body("description")
+            .notEmpty().withMessage("description is required"),
+        body("phone")
+            .notEmpty().withMessage("phone is required")
+            .matches(/^\d{11}$/).withMessage('Must be a valid phone number'),
+        body("openingTime")
+            .notEmpty().withMessage("opening time is required")
+            .matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/).withMessage('Must be a valid time format'),
+        body("closingTime")
+            .notEmpty().withMessage("closing time is required")
+            .matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/).withMessage('Must be a valid time format'),
+        body("ownerOwnerID")
+            .notEmpty().withMessage("ownerID is required")
+    ]
+}
+
+const cwSpaceUpdateSchema = () => {
+    return [
+        body("name").optional()
+            .notEmpty().withMessage("name is required"),
+        body("address").optional()
+            .notEmpty().withMessage("address is required"),
+        body("amenities").optional()
+            .notEmpty().withMessage("amenities is required"),
+        body("email").optional()
+            .notEmpty().withMessage("email is required")
+            .isEmail().withMessage('Must be a valid email address'),
+        body("description").optional()
+            .notEmpty().withMessage("description is required"),
+        body("phone").optional()
+            .notEmpty().withMessage("phone is required")
+            .matches(/^\d{11}$/).withMessage('Must be a valid phone number'),
+        body("openingTime").optional()
+            .notEmpty().withMessage("opening time is required")
+            .matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/).withMessage('Must be a valid time format'),
+        body("closingTime").optional()
+            .notEmpty().withMessage("closing time is required")
+            .matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/).withMessage('Must be a valid time format'),
+        body("ownerOwnerID").optional()
+            .notEmpty().withMessage("ownerID is required")
+    ]
+}
+
 
 const validateOffer = (req) => {
     let data = req.body
@@ -236,121 +290,6 @@ const validateUpdatedRoom = (req) => {
     return errors
 }
 
-const validateCw_space = (req) => {
-    let data = req.body
-    let errors = []
-    if (validator.isEmpty(data.name)) {
-        errors.push('Co-working Space Name is Required')
-    }
-
-    if (validator.isEmpty(data.phone)) {
-        errors.push('Co-working Space phone is Required')
-    }
-
-    if (!validator.isEmpty(data.email)) {
-        if (!validator.isEmail(data.email)) {
-            errors.push("Co-working Space Email Not in Email Format")
-        }
-    }
-
-    if (validator.isEmpty(data.address)) {
-        errors.push("Co-working Space Address is Required");
-    }
-
-    if (!validator.isEmpty(data.fbPage)) {
-        if (!validator.isURL(data.fbPage)) {
-            errors.push("Co-working Space fbPage Not in URL Format");
-        }
-    }
-
-    if (validator.isEmpty(data.openingTime)) {
-        errors.push("Co-working Space Opening Time is Required");
-    } else {
-        if (!validator.isTime(data.openingTime)) {
-            errors.push("Co-working Space Opening Time Not in Time Format");
-        }
-    }
-
-    if (validator.isEmpty(data.closingTime)) {
-        errors.push("Co-working Space Closing Time is Required");
-    } else {
-        if (!validator.isTime(data.closingTime)) {
-            errors.push("Co-working Space Closing Time Not in Time Format");
-        }
-    }
-
-    if (validator.isEmpty(data.description)) {
-        errors.push("Co-working Space Description is Required");
-    }
-
-    if (validator.isEmpty(data.phone)) {
-        errors.push("Co-working Space Phone Number is Required");
-    }
-    return errors
-}
-
-const validateUpdatedCw_space = (req) => {
-    let data = req.body
-    let errors = []
-
-    if (data.name) {
-        if (validator.isEmpty(data.name)) {
-            errors.push('Co-working Space name is empty')
-        }
-    }
-
-    if (data.email) {
-        if (validator.isEmpty(data.email)) {
-            errors.push("Email field is empty")
-        }
-        else if (!validator.isEmail(data.email)) {
-            errors.push("Co-working Space Email Not in email format")
-        }
-    }
-    if (data.address) {
-        if (validator.isEmpty(data.address)) {
-            errors.push("Co-working Space Address is empty");
-        }
-    }
-
-    if (data.fbPage) {
-        if (validator.isEmpty(data.fbPage)) {
-            errors.push("Co-working Space fbPage is empty");
-        } else if (!validator.isURL(data.fbPage)) {
-            errors.push("Co-working Space fbPage Not in URL Format");
-        }
-    }
-
-    if (data.openingTime) {
-        if (validator.isEmpty(data.openingTime)) {
-            errors.push("Co-working Space Opening Time is empty");
-        } else if (!validator.isTime(data.openingTime)) {
-            errors.push("Co-working Space Opening Time not in Time Format");
-        }
-    }
-
-
-    if (data.closingTime) {
-        if (validator.isEmpty(data.closingTime)) {
-            errors.push("Co-working Space closing Time is empty");
-        } else if (!validator.isTime(data.closingTime)) {
-            errors.push("Co-working Space closing Time not in Time Format");
-        }
-    }
-
-    if (data.description) {
-        if (validator.isEmpty(data.description)) {
-            errors.push("Co-working Space Description is empty");
-        }
-    }
-
-    if (data.phones) {
-        if (validator.isEmpty(data.phones)) {
-            errors.push("Co-working Space phone number is empty");
-        }
-    }
-    return errors
-}
 
 const validateBook= (req) => {
     let data = req.body
@@ -466,8 +405,8 @@ module.exports = {
     userSchema,
     userUpdateSchema,
     userPasswordSchema,
-    validateCw_space,
-    validateUpdatedCw_space,
+    cwSpaceSchema,
+    cwSpaceUpdateSchema,
     validateRoom,
     validateUpdatedRoom,
     validateOffer,

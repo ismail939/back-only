@@ -2,17 +2,18 @@ const { Cw_space, Cw_spacePhoto, Room, Owner} = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-const { validateUpdatedCw_space, validateCw_space } = require("../middlewares/validationSchema");
 const generateJWT = require("../utils/generateJWT");
-const {uploadToCloud, deleteFromCloud} = require('../utils/cloudinary');
+const { uploadToCloud, deleteFromCloud } = require('../utils/cloudinary');
+const { validationResult } = require("express-validator");
 
 
 module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
-            const errors = validateCw_space(req)
-            if(errors.length!==0){
-                return res.status(400).json({status: httpStatusCode.ERROR, message: errors})
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                const error = appError.create(errors.array(), 400, httpStatusCode.ERROR)
+                return next(error);
             }
             const owner = await Owner.findOne({
                     raw: true, where: {
@@ -124,10 +125,10 @@ module.exports = {
     ),
     update: asyncWrapper(
         async (req, res, next) => {
-            let errors = validateUpdatedCw_space(req)
-            if (errors.length != 0) {
-                const error = appError.create(errors, 400, httpStatusCode.ERROR)
-                return next(error)
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                const error = appError.create(errors.array(), 400, httpStatusCode.ERROR)
+                return next(error);
             }
             const updatedCw_space = await Cw_space.findOne({
                 where: {
