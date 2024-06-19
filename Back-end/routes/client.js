@@ -34,7 +34,10 @@ router.route("/:ID")
 router.route("/")
     .get(verifyToken, allowedTo('admin'), clientController.getAll)
 
-router.route("/getBookingsAndRequests/:clientID")
-    .get(verifyToken, allowedTo('client'), clientController.getBookingsAndRequests)
+router.route("/getBookings/:clientID")
+    .get(verifyToken, allowedTo('client'), clientController.getBookings)
+
+router.route("/getRequests/:clientID")
+    .get(verifyToken, allowedTo('client'), clientController.getRequests)
 
 module.exports = router
