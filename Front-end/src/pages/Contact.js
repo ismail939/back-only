@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { GeoAltFill, TelephoneFill, ClockFill } from "react-bootstrap-icons";
+import Swal from "sweetalert2";
 function Contact() {
     const [inputs, setInputs] = useState({
         name:"",
@@ -9,8 +10,22 @@ function Contact() {
     function HandleChange(e){
         setInputs({...inputs, [e.target.name]: e.target.value})
     }
+    const success = () => {
+        Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Your message is recieved Successfully",
+            showConfirmButton: false,
+        });
+    }
     function Send(){
-        console.log(inputs)
+        document.getElementById("email").value = "";
+        document.getElementById("message").value = "";
+        document.getElementById("name").value = "";
+        setInputs({name:"",
+            email:"",
+            message:""})
+        success();
     }
     return <div className="min-h-screen w-[90%] mx-auto">
         <div className="lg:mt-[80px] mt-[50px] lg:flex lg:justify-between">
