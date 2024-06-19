@@ -104,12 +104,55 @@ const cwSpaceUpdateSchema = () => {
             .matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/).withMessage('Must be a valid time format'),
         body("closingTime").optional()
             .notEmpty().withMessage("closing time is required")
-            .matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/).withMessage('Must be a valid time format'),
-        body("ownerOwnerID").optional()
-            .notEmpty().withMessage("ownerID is required")
+            .matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/).withMessage('Must be a valid time format')
     ]
 }
 
+const roomSchema = () => {
+    return [
+        body("type")
+            .notEmpty().withMessage("type is required"),
+        body("hourPrice")
+            .notEmpty().withMessage("hour price is required")
+            .isFloat({ min: 0 }).withMessage('Must be a positive number'),
+        body("dayPrice")
+            .notEmpty().withMessage("day price is required")
+            .isFloat({ min: 0 }).withMessage('Must be a positive number'),
+        body("minRoomSize")
+            .notEmpty().withMessage("minimum room size is required")
+            .isInt({ min: 1 }).withMessage('Must be a positive integer'),
+        body("maxRoomSize")
+            .notEmpty().withMessage("maximum room size is required")
+            .isInt({ min: 1 }).withMessage('Must be a positive integer'),
+        body("cwSpaceCwID")
+            .notEmpty().withMessage("co-working space ID is required"),
+        body("number")
+            .notEmpty().withMessage("room number is required")
+            .isInt({ min: 0 }).withMessage('Must be an integer')
+    ]
+}
+
+const roomUpdateSchema = () => {
+    return [
+        body("type").optional()
+            .notEmpty().withMessage("type is required"),
+        body("hourPrice").optional()
+            .notEmpty().withMessage("hour price is required")
+            .isFloat({ min: 0 }).withMessage('Must be a positive number'),
+        body("dayPrice").optional()
+            .notEmpty().withMessage("day price is required")
+            .isFloat({ min: 0 }).withMessage('Must be a positive number'),
+        body("minRoomSize").optional()
+            .notEmpty().withMessage("minimum room size is required")
+            .isInt({ min: 1 }).withMessage('Must be a positive integer'),
+        body("maxRoomSize").optional()
+            .notEmpty().withMessage("maximum room size is required")
+            .isInt({ min: 1 }).withMessage('Must be a positive integer'),
+        body("number").optional()
+            .notEmpty().withMessage("room number is required")
+            .isInt({ min: 0 }).withMessage('Must be an integer')
+    ]
+}
 
 const validateOffer = (req) => {
     let data = req.body
@@ -176,119 +219,7 @@ const validateUpdatedOffer = (req) => {
     return errors
 }
 
-const validateRoom = (req) => {
-    let data = req.body
-    let errors = []
-    if (validator.isEmpty(data.type)) {
-        errors.push("Room Type is Required");
-    }
 
-    if (validator.isEmpty(data.hourPrice)) {
-        errors.push("Room HourPrice is Required");
-    }
-    else if (validator.isNotNumber(data.hourPrice)) {
-        errors.push("Room HourPrice Not in Price Format")
-    }
-
-    if (validator.isEmpty(data.dayPrice)) {
-        errors.push("Room DayPrice is Required");
-    }
-    else if (validator.isNotNumber(data.dayPrice)) {
-        errors.push("Room DayPrice Not in Price Format")
-    }
-
-    if (validator.isEmpty(data.minRoomSize)) {
-        errors.push("Minimum Room Size is Required");
-    }
-    else if (validator.isNotNumber(data.minRoomSize)) {
-        errors.push("Minimum Room Size Not in Number Format")
-    }
-
-    if (validator.isEmpty(data.maxRoomSize)) {
-        errors.push("Maximum Room Size is Required");
-    }
-    else if (validator.isNotNumber(data.maxRoomSize)) {
-        errors.push("Maximum Room Size Not in Number Format")
-    }
-
-    if (validator.isEmpty(data.cwSpaceCwID)) {
-        errors.push("Co-working Space ID is Required");
-    }
-    else if (validator.isNotNumber(data.cwSpaceCwID)) {
-        errors.push("Co-working Space ID Not in Number Format");
-    }
-
-    if (validator.isEmpty(data.number)) {
-        errors.push("Room Number is Required");
-    }
-    else if (validator.isNotNumber(data.number)) {
-        errors.push("Room Number Not in Number Format")
-    }
-
-    return errors
-}
-
-const validateUpdatedRoom = (req) => {
-    let data = req.body
-    let errors = []
-    if (data.type) {
-        if (validator.isEmpty(data.type)) {
-            errors.push("Room Type is empty");
-        }
-    }
-
-    if (data.hourPrice) {
-        if (validator.isEmpty(data.hourPrice)) {
-            errors.push("Room HourPrice is empty");
-        }
-        else if (validator.isNotNumber(data.hourPrice)) {
-            errors.push("Room HourPrice Not in Price Format")
-        }
-    }
-
-    if (data.dayPrice) {
-        if (validator.isEmpty(data.dayPrice)) {
-            errors.push("Room DayPrice is empty");
-        }
-        else if (validator.isNotNumber(data.dayPrice)) {
-            errors.push("Room DayPrice Not in Price Format")
-        }
-    }
-    if (data.minRoomSize) {
-        if (validator.isEmpty(data.minRoomSize)) {
-            errors.push("Minimum Room Size is empty");
-        }
-        else if (validator.isNotNumber(data.minRoomSize)) {
-            errors.push("Minimum Room Size Not in Number Format")
-        }
-    }
-    if (data.maxRoomSize) {
-        if (validator.isEmpty(data.maxRoomSize)) {
-            errors.push("Maximum Room Size is empty");
-        }
-        else if (validator.isNotNumber(data.maxRoomSize)) {
-            errors.push("Maximum Room Size Not in Number Format")
-        }
-    }
-    if (data.cwSpaceCwID) {
-        if (validator.isEmpty(data.cwSpaceCwID)) {
-            errors.push("Co-working Space ID is empty");
-        }
-        else if (validator.isNotNumber(data.cwSpaceCwID)) {
-            errors.push("Co-working Space ID Not in Number Format");
-        }
-    }
-    if (data.number) {
-        if (validator.isEmpty(data.number)) {
-            errors.push("Room Number is empty");
-        }
-        else if (validator.isNotNumber(data.number)) {
-            errors.push("Room Number Not in Number Format")
-        }
-    }
-
-    return errors
-}
 
 
 const validateBook= (req) => {
@@ -407,8 +338,8 @@ module.exports = {
     userPasswordSchema,
     cwSpaceSchema,
     cwSpaceUpdateSchema,
-    validateRoom,
-    validateUpdatedRoom,
+    roomSchema,
+    roomUpdateSchema,
     validateOffer,
     validateUpdatedOffer,
     validateBook,
