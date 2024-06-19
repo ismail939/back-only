@@ -1,6 +1,13 @@
 const { body } = require("express-validator") 
 
-const validator = require("../utils/validators");
+const isTimesValid = (times) => {
+    if (times.length != 2) {
+        throw new Error('Times array must contain exactly two elements');
+    } else if (times[0] >= times[1] || times[0] > 23 || times[0] < 7 || times[1] > 23) {
+        throw new Error('Times must be valid and in the range of 7-23');
+    }
+    return true;
+}
 
 const userSchema = () => {
     return [
@@ -256,72 +263,32 @@ const moderatorPasswordSchema = () => {
     ]
 }
 
-const validateBook= (req) => {
-    let data = req.body
-    let errors = []
-    if(validator.isEmpty(data.date)){
-        errors.push("date is empty")
-    }else if(!validator.isDate(data.date)){
-        errors.push("date not in date format")
-    }
-
-    if(validator.isEmpty(data.times)){
-        errors.push("times is empty")
-    }else if(!validator.isTimes(data.times)){
-        errors.push("times not in times format")
-    }
-
-    
-    if(validator.isEmpty(data.payment)){
-        errors.push("Payment is empty")
-    }// we check if it is cash or visa or whatever.
-
-    let typesAllowed=['event', 'room']
-    if(validator.isEmpty(data.type)){
-        errors.push("Type is empty")
-    }else if(!typesAllowed.includes(data.type)){
-        errors.push("Not a valid type")
-    }
-
-    if(validator.isEmpty(data.totalCost)){
-        errors.push("Total Cost is empty")
-    }else if(validator.isNotNumber(data.totalCost)){
-        errors.push("totalCost not in number format")
-    }
-
-    if(validator.isEmpty(data.clientClientID)){
-        errors.push("clientClientID is empty")
-    }else if(validator.isNotNumber(data.clientClientID)){
-        errors.push("clientClientID not in number format")
-    }
-
-    if(validator.isEmpty(data.roomRoomID)){
-        errors.push("roomRoomID is empty")
-    }else if(validator.isNotNumber(data.roomRoomID)){
-        errors.push("roomRoomID not in number format")
-    }
-    return errors
-}
-
-
-const validateFavourite = (req) =>{
-    let data = req.body
-    let errors = []
-
-    if(validator.isEmpty(data.clientClientID))
-    {
-        errors.push("clientClientID is required")
-    }else if(validator.isNotNumber(data.clientClientID)){
-        errors.push("clientClientID not in number format")
-    }
-
-    if(validator.isEmpty(data.cwSpaceCwID))
-    {
-        errors.push("cwSpaceCwID is required")
-    }else if(validator.isNotNumber(data.cwSpaceCwID)){
-        errors.push("cwSpaceCwID not in number format")
-    }
-    return errors
+const bookSchema = () => {
+    return [
+        body("date")
+            .notEmpty().withMessage("date is required")
+            .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Must be a valid date format'),
+        body("times")
+            .notEmpty().withMessage("times is required")
+            .custom(isTimesValid),
+        body("payment").optional()
+            .notEmpty().withMessage("payment is required"),
+        body("cardToken").optional()
+            .notEmpty().withMessage("card token is required"),
+        body("totalCost")
+            .notEmpty().withMessage("total cost is required")
+            .isFloat({ min: 0 }).withMessage('Must be a positive number'),
+        body("clientClientID")
+            .notEmpty().withMessage("client ID is required"),
+        body("roomRoomID")
+            .notEmpty().withMessage("room ID is required"),
+        body("cancelLink")
+            .notEmpty().withMessage("cancel link is required")
+            .isURL().withMessage('Must be a valid URL'),
+        body("reviewLink")
+            .notEmpty().withMessage("review link is required")
+            .isURL().withMessage('Must be a valid URL')
+    ]
 }
 
 module.exports = {
@@ -331,6 +298,6 @@ module.exports = {
     offerSchema, offerUpdateSchema,
     eventSchema, eventUpdateSchema,
     moderatorSchema, moderatorPasswordSchema,
-    validateBook,
-    validateFavourite
+    bookSchema,
+    
 }

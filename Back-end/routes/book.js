@@ -2,7 +2,7 @@ const express = require('express')
 const bookController = require('../controllers/bookController')
 const verifyToken = require("../middlewares/verifyToken");
 const allowedTo = require("../middlewares/allowedTo");
-
+const { bookSchema } = require("../middlewares/validationSchema");
 const router = express.Router();
 
 router.route("/roomof/:roomID")
@@ -10,7 +10,7 @@ router.route("/roomof/:roomID")
 
 router.route("/")
     .get(bookController.get) // must set to the admin
-    .post(verifyToken, allowedTo('client'), bookController.create);
+    .post(verifyToken, allowedTo('client'), bookSchema(), bookController.create);
 
 router.route("/:cwSpaceCwID")
     .get(verifyToken, allowedTo('owner'), bookController.getCwSpaceBookings)
