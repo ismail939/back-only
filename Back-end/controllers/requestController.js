@@ -3,10 +3,16 @@ const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 const sequelize = require("sequelize");
+const { validationResult } = require("express-validator");
 
 module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                const error = appError.create(errors.array(), 400, httpStatusCode.ERROR)
+                return next(error);
+            }
             const newRequest = await Request.create(req.body)
             if (newRequest) {
                 return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Submitted Successfully" })

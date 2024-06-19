@@ -291,6 +291,34 @@ const bookSchema = () => {
     ]
 }
 
+const registerSchema = () => {
+    return [
+        body("payment").optional()
+            .notEmpty().withMessage("payment is required"),
+        body("cardToken").optional()
+            .notEmpty().withMessage("card token is required"),
+        body("totalCost")
+            .notEmpty().withMessage("total cost is required")
+            .isFloat({ min: 0 }).withMessage('Must be a positive number'),
+        body("clientClientID")
+            .notEmpty().withMessage("client ID is required"),
+        body("eventEventID")
+            .notEmpty().withMessage("room ID is required")
+    ]
+}
+
+const requestSchema = () => {
+    return [
+        body("numberOfPersons")
+            .notEmpty().withMessage("number of persons is required")
+            .isInt({ min: 1 }).withMessage('Must be a positive integer'),
+        body("clientClientID")
+            .notEmpty().withMessage("client ID is required"),
+        body("roomRoomID")
+            .notEmpty().withMessage("room ID is required")
+    ]
+}
+
 module.exports = {
     userSchema, userUpdateSchema, userPasswordSchema,
     cwSpaceSchema, cwSpaceUpdateSchema,
@@ -299,5 +327,6 @@ module.exports = {
     eventSchema, eventUpdateSchema,
     moderatorSchema, moderatorPasswordSchema,
     bookSchema,
-    
+    registerSchema,
+    requestSchema
 }
