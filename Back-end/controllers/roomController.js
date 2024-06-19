@@ -3,13 +3,18 @@ const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 const Sequelize = require('sequelize')
-const { validateRoom } = require('../middlewares/validationSchema');
-const {uploadToCloud, deleteFromCloud} = require('../utils/cloudinary');
+const { uploadToCloud, deleteFromCloud } = require('../utils/cloudinary');
+const { validationResult } = require("express-validator");
 
 
 module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                const error = appError.create(errors.array(), 400, httpStatusCode.ERROR)
+                return next(error);
+            }
             const duplicates = await Room.findOne({
                 raw: true, where: {
                     [Sequelize.Op.and]: [
@@ -22,10 +27,6 @@ module.exports = {
             if (duplicates) {
                 const error = appError.create("Room Already Exists", 400, httpStatusCode.ERROR)
                 return next(error)
-            }
-            const errors = validateRoom(req)
-            if(errors.length!==0){
-                return res.status(400).json({status: httpStatusCode.ERROR, message: errors})
             }
             await uploadToCloud(req, 'rooms')
             const newRoom = await Room.create(req.body)
@@ -67,6 +68,11 @@ module.exports = {
     ),
     update: asyncWrapper(
         async (req, res, next) => {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                const error = appError.create(errors.array(), 400, httpStatusCode.ERROR)
+                return next(error);
+            }
             const updatedRoom = await Room.findOne({
                 where: {
                     cwSpaceCwID: req.params.cwID,

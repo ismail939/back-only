@@ -3,18 +3,18 @@ const { Moderator } = require('../models/modelIndex');
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-const {validateUpdatedUser} = require("../middlewares/validationSchema");
 const bcrypt = require("bcrypt")
 const generateJWT = require("../utils/generateJWT");
-const {uploadToCloud, deleteFromCloud} = require('../utils/cloudinary');
+const { uploadToCloud, deleteFromCloud } = require('../utils/cloudinary');
+const { validationResult } = require("express-validator");
 
 module.exports = {
     register: asyncWrapper(
         async (req, res, next) => {
-            let errors = validateUpdatedUser(req);
-            if (errors.length != 0) {
-                const error = appError.create(errors, 400, httpStatusCode.ERROR)
-                return next(error)
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                const error = appError.create(errors.array(), 400, httpStatusCode.ERROR)
+                return next(error);
             }
             const duplicates = await Moderator.findOne({
                 raw: true, where: {
@@ -110,6 +110,11 @@ module.exports = {
     ),
     updatePassword: asyncWrapper(
         async (req, res, next) => {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                const error = appError.create(errors.array(), 400, httpStatusCode.ERROR)
+                return next(error);
+            }
             let updatedModerator = await Moderator.findOne({
                 raw: true, where: {
                     moderatorID: req.params.ID
