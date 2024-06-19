@@ -186,7 +186,53 @@ const offerUpdateSchema = () => {
     ]
 }
 
+const eventSchema = () => {
+    return [
+        body("name")
+            .notEmpty().withMessage("name is required"),
+        body("description")
+            .notEmpty().withMessage("description is required"),
+        body("start")
+            .notEmpty().withMessage("start date is required")
+            .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Must be a valid date format'),
+        body("end")
+            .notEmpty().withMessage("end date is required")
+            .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Must be a valid date format'),
+        body("price")
+            .notEmpty().withMessage("price is required")
+            .isFloat({ min: 0 }).withMessage('Must be a positive number'),
+        body("maxCapacity")
+            .notEmpty().withMessage("maximum capacity is required")
+            .isInt({ min: 1 }).withMessage('Must be a positive integer'),
+        body("description")
+            .notEmpty().withMessage("description is required"),
+        body("cwSpaceCwID")
+            .notEmpty().withMessage("co-working space ID is required")
+    ]
+}
 
+const eventUpdateSchema = () => {
+    return [
+        body("name").optional()
+            .notEmpty().withMessage("name is required"),
+        body("description").optional()
+            .notEmpty().withMessage("description is required"),
+        body("start").optional()
+            .notEmpty().withMessage("start date is required")
+            .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Must be a valid date format'),
+        body("end").optional()
+            .notEmpty().withMessage("end date is required")
+            .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Must be a valid date format'),
+        body("price").optional()
+            .notEmpty().withMessage("price is required")
+            .isFloat({ min: 0 }).withMessage('Must be a positive number'),
+        body("maxCapacity").optional()
+            .notEmpty().withMessage("maximum capacity is required")
+            .isInt({ min: 1 }).withMessage('Must be a positive integer'),
+        body("description").optional()
+            .notEmpty().withMessage("description is required")
+    ]
+}
 
 const validateBook= (req) => {
     let data = req.body
@@ -235,48 +281,6 @@ const validateBook= (req) => {
     return errors
 }
 
-const validateEvent = (req) => {
-    let data = req.body
-    let errors = []
-    if (validator.isEmpty(data.name)) {
-        errors.push("Event Name is Required");
-    }
-
-    if (validator.isEmpty(data.start)) {
-        errors.push("Event Start Date is Required");
-    } else {
-        if (!validator.isDate(data.start)) {
-            errors.push('Event Start Date Not in Date Format')
-        }
-    }
-
-    if (validator.isEmpty(data.end)) {
-        errors.push("Event End Date is Required");
-    } else {
-        if (!validator.isDate(data.end)) {
-            errors.push('Event End Date Not in Date Format')
-        }
-    }
-
-    if (validator.isEmpty(data.price)) {
-        errors.push("Event price is Required");
-    }
-    else if (validator.isNotNumber(data.price)) {
-        errors.push("Event price Not in Price Format")
-    }
-
-    if (validator.isEmpty(data.maxCapacity)) {
-        errors.push("Maximum Capacity is Required");
-    }
-    else if (validator.isNotNumber(data.maxCapacity)) {
-        errors.push("Maximum Capacity Not in Number Format");
-    }
-    if (validator.isEmpty(data.description)) {
-        errors.push("Description is Required");
-    }
-
-    return errors
-}
 
 const validateFavourite = (req) =>{
     let data = req.body
@@ -299,16 +303,11 @@ const validateFavourite = (req) =>{
 }
 
 module.exports = {
-    userSchema,
-    userUpdateSchema,
-    userPasswordSchema,
-    cwSpaceSchema,
-    cwSpaceUpdateSchema,
-    roomSchema,
-    roomUpdateSchema,
-    offerSchema,
-    offerUpdateSchema,
+    userSchema, userUpdateSchema, userPasswordSchema,
+    cwSpaceSchema, cwSpaceUpdateSchema,
+    roomSchema, roomUpdateSchema,
+    offerSchema, offerUpdateSchema,
+    eventSchema, eventUpdateSchema,
     validateBook,
-    validateEvent,
     validateFavourite
 }
