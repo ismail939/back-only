@@ -8,16 +8,17 @@ const bcrypt = require("bcrypt")
 const generateJWT = require("../utils/generateJWT");
 const generateVerificationCode = require("../utils/generateVerificationCode");
 const { sendWelcome, sendVerificationCode, sendResetLink } = require("../utils/sendEmail");
-const {uploadToCloud, deleteFromCloud} = require('../utils/cloudinary');
+const { uploadToCloud, deleteFromCloud } = require('../utils/cloudinary');
+const { validationResult } = require("express-validator");
 
 
 module.exports = {
     register: asyncWrapper(
         async (req, res, next) => {
-            let errors = validateUser(req);
-            if (errors.length != 0) {
-                const error = appError.create(errors, 400, httpStatusCode.ERROR)
-                return next(error)
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                const error = appError.create(errors.array(), 400, httpStatusCode.ERROR)
+                return next(error);
             }
             const duplicates = await Owner.findOne({
                 raw: true, where: {
@@ -226,6 +227,11 @@ module.exports = {
     ),
     updatePassword: asyncWrapper(
         async (req, res, next) => {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                const error = appError.create(errors.array(), 400, httpStatusCode.ERROR)
+                return next(error);
+            }
             let updatedOwner = await Owner.findOne({
                 raw: true, where: {
                     ownerID: req.params.ID
@@ -265,10 +271,10 @@ module.exports = {
     ),
     update: asyncWrapper(
         async (req, res, next) => {
-            let errors = validateUpdatedUser(req);
-            if (errors.length != 0) {
-                const error = appError.create(errors, 400, httpStatusCode.ERROR)
-                return next(error)
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                const error = appError.create(errors.array(), 400, httpStatusCode.ERROR)
+                return next(error);
             }
             let updatedOwner = await Owner.findOne({
                 where: {
