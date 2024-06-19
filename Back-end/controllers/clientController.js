@@ -168,18 +168,27 @@ module.exports = {
             return next(error)
         }
     ),
-    getBookingsAndRequests: asyncWrapper(
+    getBookings: asyncWrapper(
         async (req, res, next) => {
             const bookings = await Book.findAll({where: {
                 clientClientID: req.params.clientID
             }})
+            if(bookings.length!=0){
+                return res.status(200).json({status: httpStatusCode.SUCCESS, message: "Bookings found successfully!", data: bookings})
+            }
+            const error = appError.create("There is no bookings found for this client!", 404, httpStatusCode.ERROR)
+            return next(error)
+        }
+    ),
+    getRequests: asyncWrapper(
+        async (req, res, next) => {
             const requests = await Request.findAll({where: {
                 clientClientID: req.params.clientID
             }})
-            if(bookings.length!=0||requests.length!=0){
-                return res.status(200).json({status: httpStatusCode.SUCCESS, message: "Bookings and Requests found successfully!", data: [bookings, requests]})
+            if(requests.length!=0){
+                return res.status(200).json({status: httpStatusCode.SUCCESS, message: "Requests found successfully!", data: requests})
             }
-            const error = appError.create("There is no bookings or requests found for this client!", 404, httpStatusCode.ERROR)
+            const error = appError.create("There is no requests found for this client!", 404, httpStatusCode.ERROR)
             return next(error)
         }
     ),
