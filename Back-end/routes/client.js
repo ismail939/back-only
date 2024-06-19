@@ -11,7 +11,7 @@ router.route("/register")
 
 router.route("/sendVerification")
     .post(clientController.sendVerification);
-
+ 
 router.route("/verify")
     .post(clientController.verifyEmail);
 
@@ -34,5 +34,7 @@ router.route("/:ID")
 router.route("/")
     .get(verifyToken, allowedTo('admin'), clientController.getAll)
 
+router.route("/getBookingsAndRequests/:clientID")
+    .get(verifyToken, allowedTo('client'), clientController.getBookingsAndRequests)
 
 module.exports = router

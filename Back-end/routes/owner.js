@@ -26,12 +26,14 @@ router.route("/updatePhoto/:ID")
 router.route("/updatePassword/:ID")
     .patch(verifyToken, allowedTo('owner'), ownerController.updatePassword);
 
-router.route("/:ID")
-    .patch(verifyToken, allowedTo('owner'), ownerController.update)
-    .delete(verifyToken, allowedTo('admin'), ownerController.delete);
+router.route("/updateModeratorPassword")
+    .patch(verifyToken, allowedTo('owner'), ownerController.updateModeratorPassword)
 
 router.route("/")
     .get(verifyToken, allowedTo('admin', 'owner'), ownerController.getAll) 
-
+    
+router.route("/:ID")
+    .patch(verifyToken, allowedTo('owner'), ownerController.update)
+    .delete(verifyToken, allowedTo('admin'), ownerController.delete);
 
 module.exports = router

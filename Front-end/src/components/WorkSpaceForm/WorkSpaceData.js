@@ -1,5 +1,10 @@
 import { useRef, useState } from "react";
 import { forwardRef, useImperativeHandle } from "react";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
 let availablefacilities = [];
 const WorkSpaceData = forwardRef(({ name, address, description, email, phone, openingTime, closingTime, facilities,
   mainImgName, mainimg, updateFields, childRef, ShowError }) => {
@@ -29,14 +34,14 @@ const WorkSpaceData = forwardRef(({ name, address, description, email, phone, op
     "Outdoor Spaces"
   ];
   const formRef = useRef(null);
-  function handleChange(e){
-    if(e.target.checked){
+  function handleChange(e) {
+    if (e.target.checked) {
       availablefacilities.push(e.target.name)
-    } else{
+    } else {
       availablefacilities = availablefacilities.filter(item => item !== e.target.name);
     }
     updateFields({ facilities: availablefacilities.join("/") })
-}
+  }
   function isImage(ImageName) {
     if (ImageName.slice(-4) === ".jpg" || ImageName.slice(-5) === ".jpeg" || ImageName.slice(-4) === ".png") return true;
     else {
@@ -131,17 +136,17 @@ const WorkSpaceData = forwardRef(({ name, address, description, email, phone, op
         "phonenumber1": false, "startDate": true, "endDate": false, "name": false, "address": false,
         "description": false, "email": false, "ImageName": false, "facilities": false
       })
-      setCheckError("Openinig Hour should be in this format 00:00"); window.scrollTo(0, 600);
+      setCheckError("Please select the opening hour"); window.scrollTo(0, 600);
     } else if (DateError(closingTime)) {
       setDataErrors({
         "phonenumber1": false, "startDate": false, "endDate": true, "name": false, "address": false,
-        "description": false, "email": false, "ImageName": false , "facilities": false
+        "description": false, "email": false, "ImageName": false, "facilities": false
       })
-      setCheckError("Closing Hour should be in this format 00:00"); window.scrollTo(0, 600);
+      setCheckError("Please select the closing hour"); window.scrollTo(0, 600);
     } else if (availablefacilities < 2) {
       setDataErrors({
         "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false,
-        "description": false, "email": false, "ImageName": false , "facilities": true
+        "description": false, "email": false, "ImageName": false, "facilities": true
       })
       setCheckError("Please select at least two facilities"); window.scrollTo(0, 900);
     } else {
@@ -263,7 +268,6 @@ const WorkSpaceData = forwardRef(({ name, address, description, email, phone, op
         ></input>
         <ShowError condition={dataerrors.ImageName} value={checkerror} />
       </div>
-      <div className="flex justify-between gap-8">
         <div>
           <label
             htmlFor="phonenumber1"
@@ -271,14 +275,21 @@ const WorkSpaceData = forwardRef(({ name, address, description, email, phone, op
           >
             Opening hour<span className="text-red-500">*</span>
           </label>
-          <input type="text" name="openingTime" id="openingTime"
-            value={openingTime}
-            className={`bg-gray-50 border ${dataerrors.startDate ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
-            placeholder="24 hour format ex 09:30"
-            onChange={(e) => {
-              updateFields({ openingTime: e.target.value })
-            }}
-          ></input>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DemoContainer components={['TimePicker']}>
+              <TimePicker
+              viewRenderers={{
+                hours: renderTimeViewClock,
+                minutes: renderTimeViewClock,
+                seconds: renderTimeViewClock,
+              }}
+              value={openingTime}
+              onChange={(e) => {
+                updateFields({ openingTime: e.getHours().toString().padStart(2, '0') + ":" + e.getMinutes().toString().padStart(2, '0')})
+              }} />
+            </DemoContainer>
+          </LocalizationProvider>
+          <ShowError condition={(dataerrors.startDate)} value={checkerror} />
         </div>
         <div>
           <label
@@ -287,17 +298,22 @@ const WorkSpaceData = forwardRef(({ name, address, description, email, phone, op
           >
             Closing hour<span className="text-red-500">*</span>
           </label>
-          <input type="text" name="closingTime" id="closingTime"
-            value={closingTime}
-            className={`bg-gray-50 border ${dataerrors.endDate ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
-            placeholder="24 hour format ex 09:30"
-            onChange={(e) => {
-              updateFields({ closingTime: e.target.value })
-            }}
-          ></input>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DemoContainer components={['TimePicker']}>
+              <TimePicker
+              viewRenderers={{
+                hours: renderTimeViewClock,
+                minutes: renderTimeViewClock,
+                seconds: renderTimeViewClock,
+              }}
+              value={closingTime}
+              onChange={(e) => {
+                updateFields({ closingTime: e.getHours().toString().padStart(2, '0') + ":" + e.getMinutes().toString().padStart(2, '0')})
+              }} />
+            </DemoContainer>
+          </LocalizationProvider>
         </div>
-      </div>
-      <ShowError condition={(dataerrors.endDate || dataerrors.startDate)} value={checkerror} />
+      <ShowError condition={(dataerrors.endDate)} value={checkerror} />
       <div>
         <label
           htmlFor="name"
@@ -309,7 +325,7 @@ const WorkSpaceData = forwardRef(({ name, address, description, email, phone, op
           amenities.map((item) => {
             return <div className="flex gap-3 items-center my-2">
               <input name={item} type="checkbox" className="w-4 h-4 cursor-pointer"
-              onChange={handleChange}></input>
+                onChange={handleChange}></input>
               <h2 className="text-md">{item}</h2>
             </div>
           })

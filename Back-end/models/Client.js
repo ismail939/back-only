@@ -27,12 +27,12 @@ module.exports = (db, type) => {
         },
         img: {
             type: type.TEXT,
-            allowNUll: true
+            allowNUll: true,
+            defaultValue: "http://localhost:4000/images/default.png"
         },
         imgName: {
             type: type.TEXT,
-            allowNUll: true,
-            defaultValue: "http://localhost:4000/images/default.png"
+            allowNUll: true
         },
         phone: {
             type: type.TEXT,
