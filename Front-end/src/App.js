@@ -40,6 +40,8 @@ import AdjustOffer from './pages/ProfilePages/AdjustOffer';
 import AdjustEvent from './pages/ProfilePages/AdjustEvent';
 import Payment from './pages/Payment';
 import Review from './pages/Review';
+import AboutUs from './pages/mainpages/AboutUs';
+
 function App() {
   return (
     <>
@@ -48,6 +50,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />}></Route>
         <Route path='login' element={<Login />}></Route>
+        <Route path='aboutus' element={<AboutUs />}></Route>
         <Route path='portal-login' element={<PortalLogin />}></Route>
         <Route path='sign-up' element={<SignUp />}></Route>
         <Route path='email authentication' element={<EmailAuthentication />}></Route>
