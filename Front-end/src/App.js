@@ -40,6 +40,8 @@ import AdjustOffer from './pages/ProfilePages/AdjustOffer';
 import AdjustEvent from './pages/ProfilePages/AdjustEvent';
 import Payment from './pages/Payment';
 import Review from './pages/Review';
+import FAQs from './pages/FAQs';
+import Contact from './pages/Contact';
 function App() {
   return (
     <>
@@ -107,6 +109,8 @@ function App() {
           <Route path='createEvent' element={<CreateEvent />}></Route>
         </Route>
         <Route path='dashboard' element={<Dashboard />}></Route>
+        <Route path='faQs' element={<FAQs />}></Route>
+        <Route path='contact' element={<Contact />}></Route>
         <Route path="*" element={<PageNotFound />}></Route>
       </Routes>
       <Footer />

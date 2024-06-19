@@ -16,7 +16,7 @@ function Footer() {
                             <p>Get in touch for enquiries, feedback, complaints and compliments.</p>
                             <p>{"Phone: 13 QGOV (13 64 68)"}</p>
                             <p>Email: Space-s@contact.com</p>
-                            <Link to="dashboard"><button 
+                            <Link to="contact"><button 
                             className="py-2 px-3 main-font text-center border border-[#BBE1FA] mt-3 w-full hover:bg-[#BBE1FA] hover:text-[#1B262C] duration-200" 
                             >Contact Us</button></Link>
                         </div>
@@ -34,7 +34,7 @@ function Footer() {
                     <div className="flex flex-col gap-2">
                         <h2 className="main-font">Quick Links</h2>
                         <ul className="flex flex-col text-sm">
-                            <FooterLink title="FAQ" link={null} />
+                            <FooterLink title="FAQs" link={"faQs"} />
                             <FooterLink title="Terms of Service" link={null} />
                             <FooterLink title="Privacy Policy" link={null} />
                         </ul>
