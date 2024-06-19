@@ -3,7 +3,6 @@ const { Client } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-const { validateUser, validateUpdatedUser } = require("../middlewares/validationSchema");
 const bcrypt = require('bcrypt')
 const generateJWT = require('../utils/generateJWT')
 const generateVerificationCode = require("../utils/generateVerificationCode");

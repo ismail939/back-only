@@ -154,71 +154,37 @@ const roomUpdateSchema = () => {
     ]
 }
 
-const validateOffer = (req) => {
-    let data = req.body
-    let errors = []
-    if (validator.isEmpty(data.title)) {
-        errors.push("Offer Title is Required");
-    }
-
-    if (validator.isEmpty(data.description)) {
-        errors.push("Offer Description is Required");
-    }
-
-    if (validator.isEmpty(data.start)) {
-        errors.push("Offer Start Date is Required");
-    } else {
-        if (!validator.isDate(data.start)) {
-            errors.push('Offer Start Date Not in Date Format')
-        }
-    }
-
-    if (validator.isEmpty(data.end)) {
-        errors.push("Offer End Date is Required");
-    } else {
-        if (!validator.isDate(data.end)) {
-            errors.push('Offer End Date Not in Date Format')
-        }
-    }
-
-    return errors
+const offerSchema = () => {
+    return [
+        body("title")
+            .notEmpty().withMessage("title is required"),
+        body("description")
+            .notEmpty().withMessage("description is required"),
+        body("start")
+            .notEmpty().withMessage("start date is required")
+            .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Must be a valid date format'),
+        body("end")
+            .notEmpty().withMessage("end date is required")
+            .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Must be a valid date format'),
+        body("cwSpaceCwID")
+            .notEmpty().withMessage("co-working space ID is required")
+    ]
 }
 
-const validateUpdatedOffer = (req) => {
-    let data = req.body
-    let errors = []
-
-    if (data.title) {
-        if (validator.isEmpty(data.title)) {
-            errors.push("Offer Title is empty");
-        }
-    }
-
-    if (data.description) {
-        if (validator.isEmpty(data.description)) {
-            errors.push("Offer Description is empty");
-        }
-    }
-
-    if (data.start) {
-        if (validator.isEmpty(data.start)) {
-            errors.push("Offer Start Date is empty");
-        } else if (!validator.isDate(data.start)) {
-            errors.push('Offer Start Date Not in Date Format')
-        }
-    }
-
-    if (data.end) {
-        if (validator.isEmpty(data.end)) {
-            errors.push("Offer End Date is empty");
-        } else if (!validator.isDate(data.end)) {
-            errors.push('Offer End Date Not in Date Format')
-        }
-    }
-
-    return errors
+const offerUpdateSchema = () => {
+    return [
+        body("title").optional()
+            .notEmpty().withMessage("title is required"),
+        body("description").optional()
+            .notEmpty().withMessage("description is required"),
+        body("start").optional()
+            .notEmpty().withMessage("start date is required")
+            .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Must be a valid date format'),
+        body("end").optional()
+            .notEmpty().withMessage("end date is required")
+            .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Must be a valid date format')
+    ]
 }
-
 
 
 
@@ -340,8 +306,8 @@ module.exports = {
     cwSpaceUpdateSchema,
     roomSchema,
     roomUpdateSchema,
-    validateOffer,
-    validateUpdatedOffer,
+    offerSchema,
+    offerUpdateSchema,
     validateBook,
     validateEvent,
     validateFavourite
