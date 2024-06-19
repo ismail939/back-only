@@ -46,6 +46,7 @@ import Contact from './pages/Contact';
 import AdjustModerator from './pages/ProfilePages/AdjustModerator';
 import ClientRequests from './pages/ProfilePages/ClientRequests';
 import ClientBookings from './pages/ProfilePages/ClientBooks';
+import EventAdmin from './pages/AdminPages/eventAdmin';
 function App() {
   return (
     <>
@@ -98,6 +99,7 @@ function App() {
           </Route>
           <Route path='discoverEdit' element={<DiscoverAdmin />}></Route>
           <Route path='offerEdit' element={<OfferAdmin />}></Route>
+          <Route path='eventEdit' element={<EventAdmin />}></Route>
           <Route path='workspaces/:cwID/rooms' element={<><Outlet /></>}>
             <Route path="" element={<RoomList />} />
             <Route path=":roomid" element={<BookingRoom />} />

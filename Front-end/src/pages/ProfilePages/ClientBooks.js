@@ -6,7 +6,7 @@ function ClientBookings() {
     const token = useSelector(store => store.auth).token;
     const profileData = jwtDecode(token);
     const getBooks = () => {
-        fetch(`http://localhost:4000/books/`, {
+        fetch(`http://localhost:4000/clients/getBookings/${profileData.clientID}`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }

@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { ShowErrorMessage } from "../Forms/PortalLogin";
+import { useSelector } from "react-redux";
 function AdjustModerator() {
     const params = useParams();
     const [newPassword, setNewPassword] = useState("");
     const [confrimPassword, setConfirmPassword] = useState("");
     const [checkerror, setCheckError] = useState("");
+    const token = useSelector(store => store.auth).token;
     const [dataerrors, setDataErrors] = useState({
         newpassword: false,
         confrimpassword: false
@@ -57,17 +59,19 @@ function AdjustModerator() {
         }
     }
     function changePassword(){
-        fetch(`http://localhost:4000/moderators/updatePassword/${params.moderid}`, {
+        fetch(`http://localhost:4000/owners/updateModeratorPassword`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
-                "newPassword": newPassword,
+                "password": newPassword,
+                "ID": params.moderid
             }),
         }).then(res => res.json()).then((data) => {
             if (data.status === "success") {
-                //getRoom()
+                window.location.reload();
             } else if (data.status === "error") {
                 console.log(data)
             } else if (data.status === "fail") {
