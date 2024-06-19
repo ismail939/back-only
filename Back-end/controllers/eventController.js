@@ -2,15 +2,16 @@ const { Event, Cw_space, EventPhoto } = require("../models/modelIndex");
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-const { validateEvent } = require("../middlewares/validationSchema");
-const {uploadToCloud, deleteFromCloud} = require('../utils/cloudinary');
+const { uploadToCloud, deleteFromCloud } = require('../utils/cloudinary');
+const { validationResult } = require("express-validator");
 
 module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
-            const errors = validateEvent(req)
-            if(errors.length!==0){
-                return res.status(400).json({status: httpStatusCode.ERROR, message: errors})
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                const error = appError.create(errors.array(), 400, httpStatusCode.ERROR)
+                return next(error);
             }
             await uploadToCloud(req, 'events')
             const newEvent = await Event.create(req.body)
@@ -85,12 +86,16 @@ module.exports = {
     ),
     update: asyncWrapper(
         async (req, res, next) => {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                const error = appError.create(errors.array(), 400, httpStatusCode.ERROR)
+                return next(error);
+            }
             const updatedEvent = await Event.findOne({
                 where: {
                     eventID: req.params.eventID
                 }
             });
-            // validate updated event
             if (updatedEvent) {
                 let imgAdded = false
                 if (req.file) { // there is a file

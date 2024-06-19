@@ -4,12 +4,15 @@ const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 const {uploadToCloud, deleteFromCloud} = require('../utils/cloudinary');
 const { validateUpdatedOffer, validateOffer } = require('../middlewares/validationSchema');
+const { validationResult } = require("express-validator");
+
 module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
-            const errors = validateOffer(req)
-            if(errors.length!==0){
-                return res.status(400).json({status: httpStatusCode.ERROR, message: errors})
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                const error = appError.create(errors.array(), 400, httpStatusCode.ERROR)
+                return next(error);
             }
             await uploadToCloud(req, 'offers')
             const newOffer = await Offer.create(req.body)
@@ -83,15 +86,16 @@ module.exports = {
     ),
     update: asyncWrapper(
         async (req, res, next) => {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                const error = appError.create(errors.array(), 400, httpStatusCode.ERROR)
+                return next(error);
+            }
             const updatedOffer = await Offer.findOne({
                 where: {
                     offerID: req.params.offerID
                 }
             });
-            const errors = validateUpdatedOffer(req)
-            if(errors.length!==0){
-                return res.status(400).json({status: httpStatusCode.ERROR, message: errors})
-            }
             if (updatedOffer) {
                 let imgAdded = false
                 if (req.file) { // there is a file

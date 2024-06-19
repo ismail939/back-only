@@ -3,12 +3,11 @@ const { Book, Room, Client } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-const { validateBook } = require('../middlewares/validationSchema');
 const sequelize = require('sequelize')
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { reminderQueue } = require("../utils/schedulingQueues");
 const moment = require("moment");
-
+const { validationResult } = require("express-validator");
 
 module.exports = {
     get: asyncWrapper(
@@ -100,11 +99,10 @@ module.exports = {
     ),
     create: asyncWrapper(
         async (req, res, next) => {
-            // date, range of hour
-            let errors = validateBook(req);
-            if (errors.length != 0) {
-                const error = appError.create(errors, 400, httpStatusCode.ERROR)
-                return next(error)
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                const error = appError.create(errors.array(), 400, httpStatusCode.ERROR)
+                return next(error);
             }
             req.body.start = moment(req.body.date + ' ' + req.body.times[0], 'YYYY-MM-DD HH:mm').toISOString()
             req.body.end = moment(req.body.date + ' ' + req.body.times[1], 'YYYY-MM-DD HH:mm').toISOString()
