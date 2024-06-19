@@ -42,6 +42,7 @@ import Payment from './pages/Payment';
 import Review from './pages/Review';
 import FAQs from './pages/FAQs';
 import Contact from './pages/Contact';
+import AdjustModerator from './pages/ProfilePages/AdjustModerator';
 function App() {
   return (
     <>
@@ -99,7 +100,10 @@ function App() {
             <Route path='workspace-data' element={<WorkSpaceSettings />}></Route>
           </Route>
           <Route element={<ProfileManager />} >
-            <Route path='moderators' element={<Moderators />}></Route>
+            <Route path='moderators' element={<><Outlet /></>}>
+              <Route path="" element={<Moderators />} />
+              <Route path=":moderid" element={<AdjustModerator />} />
+            </Route>
           </Route>
           <Route path='createworkspace' element={<CreateFullWorkSpace />}></Route>
           <Route path='createOffer' element={<CreateOffer />}></Route>

@@ -1,5 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ExclamationCircleFill } from "react-bootstrap-icons";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { PencilFill } from "react-bootstrap-icons";
+import image from "../../components/images/WorkSpaceNotFound.png"
 function ShowErrorMessage(props) {
     const condition = props.condition;
     const value = props.value;
@@ -13,8 +17,10 @@ function Moderators({ cwid }) {
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [moderators, setModerators] = useState([]);
     const [checkerror, setCheckError] = useState("");
     const [resMessage, setResMessage] = useState("");
+    const token = useSelector(store => store.auth).token;
     const [dataerrors, setDataErrors] = useState({
         username: false,
         password: false,
@@ -58,7 +64,7 @@ function Moderators({ cwid }) {
             return false;
         }
     }
-    function createModerator(){
+    function createModerator() {
         fetch(`http://localhost:4000/moderators/register`, {
             method: "POST",
             headers: {
@@ -67,7 +73,7 @@ function Moderators({ cwid }) {
             body: JSON.stringify({
                 "username": username,
                 "password": password,
-                "cwSpaceCwID" : cwid
+                "cwSpaceCwID": cwid
             }),
         }).then(res => res.json()).then((data) => {
             if (data.status === "success") {
@@ -79,6 +85,26 @@ function Moderators({ cwid }) {
             }
         })
     }
+    const getModerators = () => {
+        fetch(`http://localhost:4000/moderators?cwSpaceID=${cwid}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
+            .then(res => res.json())
+            .then(responsedata => {
+                if (responsedata.status === "success") {
+                    setModerators(responsedata.data)
+                    console.log(responsedata.data)
+                }
+            }
+            ).catch(error => {
+                console.error('Error during fetch operation:', error);
+            });
+    }
+    useEffect(() => {
+        getModerators();
+    }, [])
     const HandleError = (e) => {
         e.preventDefault();
         if (UsernameError()) {
@@ -107,6 +133,17 @@ function Moderators({ cwid }) {
     return (
         <div className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4 " >
             <h2 className="mx-auto mt-8 px-2 font-bold text-2xl">Moderators</h2>
+            <div className="my-8 grid md:grid-cols-4 grid-cols-3 gap-4">
+                {moderators.map((object) => {
+                    return <div className="flex flex-col items-center gap-2">
+                        <div className="relative">
+                            <img src={object.img} alt="" className="w-[60px] h-[60px] rounded-full" ></img>
+                            <Link to={`${object.moderatorID}`}><PencilFill className="absolute bg-[#0F4C75] text-white rounded-full p-1 text-[20px] -bottom-2 right-[30%]"/></Link>
+                        </div>
+                        <h2>{object.username}</h2>
+                    </div>
+                })}
+            </div>
             <div className="mx-auto mt-8 px-2">
                 <h2 className="my-4 font-bold text-lg">Add Moderator</h2>
                 <form className="space-y-4 md:space-y-6 lg:w-3/5 w-full" action="#">
