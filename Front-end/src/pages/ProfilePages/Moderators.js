@@ -137,7 +137,7 @@ function Moderators({ cwid }) {
                 {moderators.map((object) => {
                     return <div className="flex flex-col items-center gap-2">
                         <div className="relative">
-                            <img src={object.img} alt="" className="w-[60px] h-[60px] rounded-full" ></img>
+                            <img src={object.img} alt="" className="w-[70px] h-[70px] rounded-full object-cover" ></img>
                             <Link to={`${object.moderatorID}`}><PencilFill className="absolute bg-[#0F4C75] text-white rounded-full p-1 text-[20px] -bottom-2 right-[30%]"/></Link>
                         </div>
                         <h2>{object.username}</h2>
