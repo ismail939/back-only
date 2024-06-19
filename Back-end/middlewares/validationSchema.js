@@ -465,6 +465,7 @@ const validateFavourite = (req) =>{
 module.exports = {
     userSchema,
     userUpdateSchema,
+    userPasswordSchema,
     validateCw_space,
     validateUpdatedCw_space,
     validateRoom,

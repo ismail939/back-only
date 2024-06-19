@@ -4,9 +4,10 @@ const router = express.Router();
 const verifyToken = require("../middlewares/verifyToken");
 const allowedTo = require("../middlewares/allowedTo");
 const upload = require('../index')
+const { userSchema, userUpdateSchema, userPasswordSchema } = require("../middlewares/validationSchema")
 
 router.route("/register")
-    .post(ownerController.register);
+    .post(userSchema(), ownerController.register);
 
 router.route("/sendVerification")
     .post(ownerController.sendVerification);
@@ -24,10 +25,10 @@ router.route("/updatePhoto/:ID")
     .patch(verifyToken, allowedTo('owner'), upload.single('profilePic'), ownerController.updatePhoto);
 
 router.route("/updatePassword/:ID")
-    .patch(verifyToken, allowedTo('owner'), ownerController.updatePassword);
+    .patch(verifyToken, allowedTo('owner'), userPasswordSchema(), ownerController.updatePassword);
 
 router.route("/:ID")
-    .patch(verifyToken, allowedTo('owner'), ownerController.update)
+    .patch(verifyToken, allowedTo('owner'), userUpdateSchema(), ownerController.update)
     .delete(verifyToken, allowedTo('admin'), ownerController.delete);
 
 router.route("/")

@@ -4,7 +4,7 @@ const router = express.Router();
 const verifyToken = require('../middlewares/verifyToken')
 const allowedTo = require("../middlewares/allowedTo")
 const upload = require("../index")
-const { userSchema, userUpdateSchema } = require("../middlewares/validationSchema");
+const { userSchema, userUpdateSchema, userPasswordSchema } = require("../middlewares/validationSchema");
 
 
 router.route("/register")
@@ -26,7 +26,7 @@ router.route("/updatePhoto/:ID")
     .patch(verifyToken, allowedTo('client'), upload.single('profilePic'), clientController.updatePhoto);
 
 router.route("/updatePassword/:ID")
-    .patch(verifyToken, allowedTo('client'), clientController.updatePassword);
+    .patch(verifyToken, allowedTo('client'), userPasswordSchema(), clientController.updatePassword);
 
 router.route("/:ID")
     .patch(verifyToken, allowedTo('client'), userUpdateSchema(), clientController.update)
