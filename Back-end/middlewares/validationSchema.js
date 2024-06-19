@@ -234,6 +234,28 @@ const eventUpdateSchema = () => {
     ]
 }
 
+const moderatorSchema = () => {
+    return [
+        body("username")
+            .notEmpty().withMessage("username is required"),
+        body("password")
+            .notEmpty().withMessage("password is required")
+            .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
+            .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/).withMessage('Must contain at least one uppercase letter, one lowercase letter, and one number'),
+        body("cwSpaceCwID")
+            .notEmpty().withMessage("co-working space ID is required")
+    ]
+}
+
+const moderatorPasswordSchema = () => {
+    return [
+        body("newPassword")
+            .notEmpty().withMessage("password is required")
+            .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
+            .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/).withMessage('Must contain at least one uppercase letter, one lowercase letter, and one number')
+    ]
+}
+
 const validateBook= (req) => {
     let data = req.body
     let errors = []
@@ -308,6 +330,7 @@ module.exports = {
     roomSchema, roomUpdateSchema,
     offerSchema, offerUpdateSchema,
     eventSchema, eventUpdateSchema,
+    moderatorSchema, moderatorPasswordSchema,
     validateBook,
     validateFavourite
 }
