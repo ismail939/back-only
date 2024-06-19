@@ -28,7 +28,7 @@ function Footer() {
                             <FooterLink title="Co-Working Spaces" link="workspaces" />
                             <FooterLink title="Offers" link="offers" />
                             <FooterLink title="Events & Workshops" link="events&workshops" />
-                            <FooterLink title="About Us" link={null} />
+                            <FooterLink title="About Us" link={"aboutus"} />
                         </ul>
                     </div>
                     <div className="flex flex-col gap-2">
