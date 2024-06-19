@@ -44,12 +44,8 @@ import AboutUs from './pages/mainpages/AboutUs';
 import FAQs from './pages/FAQs';
 import Contact from './pages/Contact';
 import AdjustModerator from './pages/ProfilePages/AdjustModerator';
-<<<<<<< HEAD
 import ClientRequests from './pages/ProfilePages/ClientRequests';
 import ClientBookings from './pages/ProfilePages/ClientBooks';
-=======
-
->>>>>>> b60b134f139dd788a9e05d25893fe79baecf1539
 function App() {
   return (
     <>
@@ -75,7 +71,6 @@ function App() {
           <Route path='payment' element={<Payment />}></Route>
           <Route path='reviewbook' element={<Review />}></Route>
           <Route element={<ProfileManager />} >
-            <Route path='personal-information' element={<PersonalInformation />}></Route>
             <Route path='client-requests' element={<ClientRequests />}></Route>
             <Route path='client-books' element={<ClientBookings />}></Route>
           </Route>
