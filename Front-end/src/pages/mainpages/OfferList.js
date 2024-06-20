@@ -39,7 +39,7 @@ function OfferList() {
         const search = event.target.value;
         setSearchData(offers.filter((offer) => {
             return search === '' ?
-                null : offer?.title.toLowerCase().includes(search.toLowerCase());
+                null : offer?.cwSpaceName.toLowerCase().includes(search.toLowerCase());
         }))
     }
     return (
@@ -59,7 +59,7 @@ function OfferList() {
                 </div>
                 {(searchData.length > 0 && searchlist) ? <div className="flex flex-col max-h-60 w-full mt-1 shadow-md rounded-md bg-[#fafafa] overflow-x-hidden absolute z-[90]" >
                     {searchData.map((offer) => {
-                        return <Link className="w-full p-3 capitalize hover:bg-gray-200 font-semibold" to={`/workspaces/${offer.cwSpaceCwID}`}>{offer.cwSpaceName}</Link>
+                        return <Link className="w-full p-3 capitalize hover:bg-gray-200 font-semibold" to={`/workspaces/${offer.cwSpaceCwID}`}>{offer.title}</Link>
                     })}
                 </div> : null}
             </div>
