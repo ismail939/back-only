@@ -2,6 +2,7 @@ const { Review, Client, Cw_space } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
+const newRate = require("../utils/newRate");
 
 
 module.exports = {
@@ -27,20 +28,30 @@ module.exports = {
                 }
             })
             if (client && cw_space) {
-                const newReview = await Review.create(req.body)
-                const newRate = (cw_space.rate * cw_space.noOfReviews + req.body.rate) / (cw_space.noOfReviews + 1)
+                const { totalRate, internetQualityRate, costRate, atmosphereRate, staffRate, privacyRate, designRate } = req.body
+                await Review.create(
+                    {
+                        totalRate: totalRate,
+                        body: req.body.body
+                    }
+                )
+                //const newRate = (cw_space.rate * cw_space.noOfReviews + req.body.rate) / (cw_space.noOfReviews + 1)
                 await Cw_space.update(
                     {
-                        rate: newRate,
+                        rate: newRate(cw_space.rate, totalRate, cw_space.noOfReviews),
+                        internetQualityRate: newRate(cw_space.internetQualityRate, internetQualityRate, cw_space.noOfReviews),
+                        costRate: newRate(cw_space.costRate, costRate, cw_space.noOfReviews),
+                        atmosphereRate: newRate(cw_space.atmosphereRate, atmosphereRate, cw_space.noOfReviews),
+                        staffRate: newRate(cw_space.staffRate, staffRate, cw_space.noOfReviews),
+                        privacyRate: newRate(cw_space.privacyRate, privacyRate, cw_space.noOfReviews),
+                        designRate: newRate(cw_space.designRate, designRate, cw_space.noOfReviews),
                         noOfReviews: cw_space.noOfReviews+1
                     }, {
                     where: {
                         cwID: cw_space.cwID
                     }
                 })
-                if (newReview) {
-                    return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Review is Created Successfully" });
-                }
+                return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Review is Created Successfully" });
             }
             const error = appError.create("Client or Co-working Space does not exist", 404, httpStatusCode.ERROR);
             return next(error);
