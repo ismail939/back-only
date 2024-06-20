@@ -5,10 +5,10 @@ const appError = require("../utils/appError");
 const { validateUpdatedCw_space, validateCw_space } = require("../middlewares/validationSchema");
 const generateJWT = require("../utils/generateJWT");
 const {uploadToCloud, deleteFromCloud} = require('../utils/cloudinary');
-
+const cache = require('../utils/caching')
 
 module.exports = {
-    create: asyncWrapper(
+    create: asyncWrapper( 
         async (req, res, next) => {
             const errors = validateCw_space(req)
             if(errors.length!==0){
@@ -45,7 +45,11 @@ module.exports = {
     ),
     getAll: asyncWrapper(
         async (req, res, next) => {
-            let cw_spaces = await Cw_space.findAll({ raw: true })
+            let cw_spaces = await cache.getJsonList('cw_spaces')
+            if(cw_spaces.length!=0){
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_spaces });
+            }
+            cw_spaces = await Cw_space.findAll({ raw: true })
             if (cw_spaces.length != 0) {
                 let rooms = await Room.findAll({ 
                     raw: true,
@@ -62,6 +66,12 @@ module.exports = {
                         }
                     }
                 }
+                if(cw_spaces.length!=0){
+                    for (let index = 0; index < cw_spaces.length; index++) {
+                        await cache.pushJsonToList('cw_spaces', cw_spaces[index])
+                    }
+                    await cache.setKeyTTL('cw_spaces', 180)
+                } 
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_spaces });
             }
             const error = appError.create("There Are No Available Co-working Spaces", 404, httpStatusCode.ERROR);
@@ -94,12 +104,24 @@ module.exports = {
     ),
     getOne: asyncWrapper(
         async (req, res, next) => {
-            const cw_space = await Cw_space.findOne({
+            const key = 'cw_space:'+req.params.ID
+            console.log(key)
+            let cw_space = await cache.getJsonObject(key)
+            console.log(cw_space)
+            if(cw_space){
+                console.log('1')
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_space })
+            }
+            cw_space = await Cw_space.findOne({
                 where: {
                     cwID: req.params.ID
                 }
             })
             if (cw_space) {
+                console.log(JSON.stringify(cw_space))
+                await cache.setJsonObject(key, cw_space)
+                console.log(2)
+                await cache.setKeyTTL(key, 600)
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_space })
             }
             const error = appError.create("This Co-working Spaces Not Found", 404, httpStatusCode.ERROR);
