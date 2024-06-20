@@ -1,490 +1,332 @@
-const validators = require('../utils/validators');
-const validator = require('../utils/validators')
+const { body } = require("express-validator") 
 
-const validateUser = (req) => {
-    let data = req.body
-    let errors = []
-    if (validator.isEmpty(data.fname)) {
-        errors.push("first name is required");
+const isTimesValid = (times) => {
+    if (times.length != 2) {
+        throw new Error('Times array must contain exactly two elements');
+    } else if (times[0] >= times[1] || times[0] > 23 || times[0] < 7 || times[1] > 23) {
+        throw new Error('Times must be valid and in the range of 7-23');
     }
-
-    if (validator.isEmpty(data.lname)) {
-        errors.push("last name is required");
-    }
-
-    if (validator.isEmpty(data.username)) {
-        errors.push("username is required");
-    }
-
-    if (validator.isEmpty(data.email)) {
-        errors.push('email is required')
-    } else {
-        if (!validator.isEmail(data.email)) {
-            errors.push('not in email format')
-        }
-    }
-    if (validator.isEmpty(data.password)) {
-        errors.push("password is required");
-    }
-
-    if (validator.isEmpty(data.phone)) {
-        errors.push("phone is required");
-    }
-    return errors
+    return true;
 }
 
-const validateUpdatedUser = (req) => {
-    let data = req.body
-    let errors = []
-    if (data.fname) {
-        if (validator.isEmpty(data.fname))
-            errors.push("first name is empty");
-    }
-
-    if (data.lname) {
-        if (validator.isEmpty(data.lname))
-            errors.push("last name is empty");
-    }
-
-    if (data.username) {
-        if (validator.isEmpty(data.username))
-            errors.push("username is empty");
-    }
-
-    if (data.email) {
-        if (validator.isEmpty(data.email))
-            errors.push('email is empty')
-        else if (!validator.isEmail(data.email)) {
-            errors.push('not in email format')
-        }
-    }
-    if (data.password) {
-        if (validator.isEmpty(data.password))
-            errors.push("password is empty");
-    }
-
-    if (data.phone) {
-        if (validator.isEmpty(data.phone))
-            errors.push("phone is empty");
-    }
-    return errors
+const userSchema = () => {
+    return [
+        body("fname")
+            .notEmpty().withMessage("first name is required"),
+        body("lname")
+            .notEmpty().withMessage("last name is required"),
+        body("username")
+            .notEmpty().withMessage("username is required"),
+        body("email")
+            .notEmpty().withMessage("email is required")
+            .isEmail().withMessage('Must be a valid email address'),
+        body("password")
+            .notEmpty().withMessage("password is required")
+            .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
+            .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/).withMessage('Must contain at least one uppercase letter, one lowercase letter, and one number'),
+        body("phone")
+            .notEmpty().withMessage("phone is required")
+            .matches(/^\d{11}$/).withMessage('Must be a valid phone number')
+    ]
 }
 
-const validateOffer = (req) => {
-    let data = req.body
-    let errors = []
-    if (validator.isEmpty(data.title)) {
-        errors.push("Offer Title is Required");
-    }
-
-    if (validator.isEmpty(data.description)) {
-        errors.push("Offer Description is Required");
-    }
-
-    if (validator.isEmpty(data.start)) {
-        errors.push("Offer Start Date is Required");
-    } else {
-        if (!validator.isDate(data.start)) {
-            errors.push('Offer Start Date Not in Date Format')
-        }
-    }
-
-    if (validator.isEmpty(data.end)) {
-        errors.push("Offer End Date is Required");
-    } else {
-        if (!validator.isDate(data.end)) {
-            errors.push('Offer End Date Not in Date Format')
-        }
-    }
-
-    return errors
+const userUpdateSchema = () => {
+    return [
+        body("fname").optional()
+            .notEmpty().withMessage("first name is required"),
+        body("lname").optional()
+            .notEmpty().withMessage("last name is required"),
+        body("username").optional()
+            .notEmpty().withMessage("username is required"),
+        body("email").optional()
+            .notEmpty().withMessage("email is required")
+            .isEmail().withMessage('Must be a valid email address'),
+        body("password").optional()
+            .notEmpty().withMessage("password is required")
+            .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
+            .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/).withMessage('Must contain at least one uppercase letter, one lowercase letter, and one number'),
+        body("phone").optional()
+            .notEmpty().withMessage("phone is required")
+            .matches(/^\d{11}$/).withMessage('Must be a valid phone number')
+    ]
 }
 
-const validateUpdatedOffer = (req) => {
-    let data = req.body
-    let errors = []
-
-    if (data.title) {
-        if (validator.isEmpty(data.title)) {
-            errors.push("Offer Title is empty");
-        }
-    }
-
-    if (data.description) {
-        if (validator.isEmpty(data.description)) {
-            errors.push("Offer Description is empty");
-        }
-    }
-
-    if (data.start) {
-        if (validator.isEmpty(data.start)) {
-            errors.push("Offer Start Date is empty");
-        } else if (!validator.isDate(data.start)) {
-            errors.push('Offer Start Date Not in Date Format')
-        }
-    }
-
-    if (data.end) {
-        if (validator.isEmpty(data.end)) {
-            errors.push("Offer End Date is empty");
-        } else if (!validator.isDate(data.end)) {
-            errors.push('Offer End Date Not in Date Format')
-        }
-    }
-
-    return errors
+const userPasswordSchema = () => {
+    return [
+        body("reset")
+            .notEmpty().withMessage("reset is required")
+            .isBoolean().withMessage('Must be a boolean value'),
+        body("newPassword")
+            .notEmpty().withMessage("password is required")
+            .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
+            .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/).withMessage('Must contain at least one uppercase letter, one lowercase letter, and one number')
+    ]
 }
 
-const validateRoom = (req) => {
-    let data = req.body
-    let errors = []
-    if (validator.isEmpty(data.type)) {
-        errors.push("Room Type is Required");
-    }
-
-    if (validator.isEmpty(data.hourPrice)) {
-        errors.push("Room HourPrice is Required");
-    }
-    else if (validator.isNotNumber(data.hourPrice)) {
-        errors.push("Room HourPrice Not in Price Format")
-    }
-
-    if (validator.isEmpty(data.dayPrice)) {
-        errors.push("Room DayPrice is Required");
-    }
-    else if (validator.isNotNumber(data.dayPrice)) {
-        errors.push("Room DayPrice Not in Price Format")
-    }
-
-    if (validator.isEmpty(data.minRoomSize)) {
-        errors.push("Minimum Room Size is Required");
-    }
-    else if (validator.isNotNumber(data.minRoomSize)) {
-        errors.push("Minimum Room Size Not in Number Format")
-    }
-
-    if (validator.isEmpty(data.maxRoomSize)) {
-        errors.push("Maximum Room Size is Required");
-    }
-    else if (validator.isNotNumber(data.maxRoomSize)) {
-        errors.push("Maximum Room Size Not in Number Format")
-    }
-
-    if (validator.isEmpty(data.cwSpaceCwID)) {
-        errors.push("Co-working Space ID is Required");
-    }
-    else if (validator.isNotNumber(data.cwSpaceCwID)) {
-        errors.push("Co-working Space ID Not in Number Format");
-    }
-
-    if (validator.isEmpty(data.number)) {
-        errors.push("Room Number is Required");
-    }
-    else if (validator.isNotNumber(data.number)) {
-        errors.push("Room Number Not in Number Format")
-    }
-
-    return errors
+const cwSpaceSchema = () => {
+    return [
+        body("name")
+            .notEmpty().withMessage("name is required"),
+        body("address")
+            .notEmpty().withMessage("address is required"),
+        body("amenities").optional()
+            .notEmpty().withMessage("amenities is required"),
+        body("email").optional()
+            .notEmpty().withMessage("email is required")
+            .isEmail().withMessage('Must be a valid email address'),
+        body("description")
+            .notEmpty().withMessage("description is required"),
+        body("phone")
+            .notEmpty().withMessage("phone is required")
+            .matches(/^\d{11}$/).withMessage('Must be a valid phone number'),
+        body("openingTime")
+            .notEmpty().withMessage("opening time is required")
+            .matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/).withMessage('Must be a valid time format'),
+        body("closingTime")
+            .notEmpty().withMessage("closing time is required")
+            .matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/).withMessage('Must be a valid time format'),
+        body("ownerOwnerID")
+            .notEmpty().withMessage("ownerID is required")
+    ]
 }
 
-const validateUpdatedRoom = (req) => {
-    let data = req.body
-    let errors = []
-    if (data.type) {
-        if (validator.isEmpty(data.type)) {
-            errors.push("Room Type is empty");
-        }
-    }
-
-    if (data.hourPrice) {
-        if (validator.isEmpty(data.hourPrice)) {
-            errors.push("Room HourPrice is empty");
-        }
-        else if (validator.isNotNumber(data.hourPrice)) {
-            errors.push("Room HourPrice Not in Price Format")
-        }
-    }
-
-    if (data.dayPrice) {
-        if (validator.isEmpty(data.dayPrice)) {
-            errors.push("Room DayPrice is empty");
-        }
-        else if (validator.isNotNumber(data.dayPrice)) {
-            errors.push("Room DayPrice Not in Price Format")
-        }
-    }
-    if (data.minRoomSize) {
-        if (validator.isEmpty(data.minRoomSize)) {
-            errors.push("Minimum Room Size is empty");
-        }
-        else if (validator.isNotNumber(data.minRoomSize)) {
-            errors.push("Minimum Room Size Not in Number Format")
-        }
-    }
-    if (data.maxRoomSize) {
-        if (validator.isEmpty(data.maxRoomSize)) {
-            errors.push("Maximum Room Size is empty");
-        }
-        else if (validator.isNotNumber(data.maxRoomSize)) {
-            errors.push("Maximum Room Size Not in Number Format")
-        }
-    }
-    if (data.cwSpaceCwID) {
-        if (validator.isEmpty(data.cwSpaceCwID)) {
-            errors.push("Co-working Space ID is empty");
-        }
-        else if (validator.isNotNumber(data.cwSpaceCwID)) {
-            errors.push("Co-working Space ID Not in Number Format");
-        }
-    }
-    if (data.number) {
-        if (validator.isEmpty(data.number)) {
-            errors.push("Room Number is empty");
-        }
-        else if (validator.isNotNumber(data.number)) {
-            errors.push("Room Number Not in Number Format")
-        }
-    }
-
-    return errors
+const cwSpaceUpdateSchema = () => {
+    return [
+        body("name").optional()
+            .notEmpty().withMessage("name is required"),
+        body("address").optional()
+            .notEmpty().withMessage("address is required"),
+        body("amenities").optional()
+            .notEmpty().withMessage("amenities is required"),
+        body("email").optional()
+            .notEmpty().withMessage("email is required")
+            .isEmail().withMessage('Must be a valid email address'),
+        body("description").optional()
+            .notEmpty().withMessage("description is required"),
+        body("phone").optional()
+            .notEmpty().withMessage("phone is required")
+            .matches(/^\d{11}$/).withMessage('Must be a valid phone number'),
+        body("openingTime").optional()
+            .notEmpty().withMessage("opening time is required")
+            .matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/).withMessage('Must be a valid time format'),
+        body("closingTime").optional()
+            .notEmpty().withMessage("closing time is required")
+            .matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/).withMessage('Must be a valid time format')
+    ]
 }
 
-const validateCw_space = (req) => {
-    let data = req.body
-    let errors = []
-    if (validator.isEmpty(data.name)) {
-        errors.push('Co-working Space Name is Required')
-    }
-
-    if (validator.isEmpty(data.phone)) {
-        errors.push('Co-working Space phone is Required')
-    }
-
-    if (!validator.isEmpty(data.email)) {
-        if (!validator.isEmail(data.email)) {
-            errors.push("Co-working Space Email Not in Email Format")
-        }
-    }
-
-    if (validator.isEmpty(data.address)) {
-        errors.push("Co-working Space Address is Required");
-    }
-
-    if (!validator.isEmpty(data.fbPage)) {
-        if (!validator.isURL(data.fbPage)) {
-            errors.push("Co-working Space fbPage Not in URL Format");
-        }
-    }
-
-    if (validator.isEmpty(data.openingTime)) {
-        errors.push("Co-working Space Opening Time is Required");
-    } else {
-        if (!validator.isTime(data.openingTime)) {
-            errors.push("Co-working Space Opening Time Not in Time Format");
-        }
-    }
-
-    if (validator.isEmpty(data.closingTime)) {
-        errors.push("Co-working Space Closing Time is Required");
-    } else {
-        if (!validator.isTime(data.closingTime)) {
-            errors.push("Co-working Space Closing Time Not in Time Format");
-        }
-    }
-
-    if (validator.isEmpty(data.description)) {
-        errors.push("Co-working Space Description is Required");
-    }
-
-    if (validator.isEmpty(data.phone)) {
-        errors.push("Co-working Space Phone Number is Required");
-    }
-    return errors
+const roomSchema = () => {
+    return [
+        body("type")
+            .notEmpty().withMessage("type is required"),
+        body("hourPrice")
+            .notEmpty().withMessage("hour price is required")
+            .isFloat({ min: 0 }).withMessage('Must be a positive number'),
+        body("dayPrice")
+            .notEmpty().withMessage("day price is required")
+            .isFloat({ min: 0 }).withMessage('Must be a positive number'),
+        body("minRoomSize")
+            .notEmpty().withMessage("minimum room size is required")
+            .isInt({ min: 1 }).withMessage('Must be a positive integer'),
+        body("maxRoomSize")
+            .notEmpty().withMessage("maximum room size is required")
+            .isInt({ min: 1 }).withMessage('Must be a positive integer'),
+        body("cwSpaceCwID")
+            .notEmpty().withMessage("co-working space ID is required"),
+        body("number")
+            .notEmpty().withMessage("room number is required")
+            .isInt({ min: 0 }).withMessage('Must be an integer')
+    ]
 }
 
-const validateUpdatedCw_space = (req) => {
-    let data = req.body
-    let errors = []
-
-    if (data.name) {
-        if (validator.isEmpty(data.name)) {
-            errors.push('Co-working Space name is empty')
-        }
-    }
-
-    if (data.email) {
-        if (validator.isEmpty(data.email)) {
-            errors.push("Email field is empty")
-        }
-        else if (!validator.isEmail(data.email)) {
-            errors.push("Co-working Space Email Not in email format")
-        }
-    }
-    if (data.address) {
-        if (validator.isEmpty(data.address)) {
-            errors.push("Co-working Space Address is empty");
-        }
-    }
-
-    if (data.fbPage) {
-        if (validator.isEmpty(data.fbPage)) {
-            errors.push("Co-working Space fbPage is empty");
-        } else if (!validator.isURL(data.fbPage)) {
-            errors.push("Co-working Space fbPage Not in URL Format");
-        }
-    }
-
-    if (data.openingTime) {
-        if (validator.isEmpty(data.openingTime)) {
-            errors.push("Co-working Space Opening Time is empty");
-        } else if (!validator.isTime(data.openingTime)) {
-            errors.push("Co-working Space Opening Time not in Time Format");
-        }
-    }
-
-
-    if (data.closingTime) {
-        if (validator.isEmpty(data.closingTime)) {
-            errors.push("Co-working Space closing Time is empty");
-        } else if (!validator.isTime(data.closingTime)) {
-            errors.push("Co-working Space closing Time not in Time Format");
-        }
-    }
-
-    if (data.description) {
-        if (validator.isEmpty(data.description)) {
-            errors.push("Co-working Space Description is empty");
-        }
-    }
-
-    if (data.phones) {
-        if (validator.isEmpty(data.phones)) {
-            errors.push("Co-working Space phone number is empty");
-        }
-    }
-    return errors
+const roomUpdateSchema = () => {
+    return [
+        body("type").optional()
+            .notEmpty().withMessage("type is required"),
+        body("hourPrice").optional()
+            .notEmpty().withMessage("hour price is required")
+            .isFloat({ min: 0 }).withMessage('Must be a positive number'),
+        body("dayPrice").optional()
+            .notEmpty().withMessage("day price is required")
+            .isFloat({ min: 0 }).withMessage('Must be a positive number'),
+        body("minRoomSize").optional()
+            .notEmpty().withMessage("minimum room size is required")
+            .isInt({ min: 1 }).withMessage('Must be a positive integer'),
+        body("maxRoomSize").optional()
+            .notEmpty().withMessage("maximum room size is required")
+            .isInt({ min: 1 }).withMessage('Must be a positive integer'),
+        body("number").optional()
+            .notEmpty().withMessage("room number is required")
+            .isInt({ min: 0 }).withMessage('Must be an integer')
+    ]
 }
 
-const validateBook= (req) => {
-    let data = req.body
-    let errors = []
-    if(validator.isEmpty(data.date)){
-        errors.push("date is empty")
-    }else if(!validator.isDate(data.date)){
-        errors.push("date not in date format")
-    }
-
-    if(validator.isEmpty(data.times)){
-        errors.push("times is empty")
-    }else if(!validator.isTimes(data.times)){
-        errors.push("times not in times format")
-    }
-
-    
-    if(validator.isEmpty(data.payment)){
-        errors.push("Payment is empty")
-    }// we check if it is cash or visa or whatever.
-
-    let typesAllowed=['event', 'room']
-    if(validator.isEmpty(data.type)){
-        errors.push("Type is empty")
-    }else if(!typesAllowed.includes(data.type)){
-        errors.push("Not a valid type")
-    }
-
-    if(validator.isEmpty(data.totalCost)){
-        errors.push("Total Cost is empty")
-    }else if(validator.isNotNumber(data.totalCost)){
-        errors.push("totalCost not in number format")
-    }
-
-    if(validator.isEmpty(data.clientClientID)){
-        errors.push("clientClientID is empty")
-    }else if(validator.isNotNumber(data.clientClientID)){
-        errors.push("clientClientID not in number format")
-    }
-
-    if(validator.isEmpty(data.roomRoomID)){
-        errors.push("roomRoomID is empty")
-    }else if(validator.isNotNumber(data.roomRoomID)){
-        errors.push("roomRoomID not in number format")
-    }
-    return errors
+const offerSchema = () => {
+    return [
+        body("title")
+            .notEmpty().withMessage("title is required"),
+        body("description")
+            .notEmpty().withMessage("description is required"),
+        body("start")
+            .notEmpty().withMessage("start date is required")
+            .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Must be a valid date format'),
+        body("end")
+            .notEmpty().withMessage("end date is required")
+            .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Must be a valid date format'),
+        body("cwSpaceCwID")
+            .notEmpty().withMessage("co-working space ID is required")
+    ]
 }
 
-const validateEvent = (req) => {
-    let data = req.body
-    let errors = []
-    if (validator.isEmpty(data.name)) {
-        errors.push("Event Name is Required");
-    }
-
-    if (validator.isEmpty(data.start)) {
-        errors.push("Event Start Date is Required");
-    } else {
-        if (!validator.isDate(data.start)) {
-            errors.push('Event Start Date Not in Date Format')
-        }
-    }
-
-    if (validator.isEmpty(data.end)) {
-        errors.push("Event End Date is Required");
-    } else {
-        if (!validator.isDate(data.end)) {
-            errors.push('Event End Date Not in Date Format')
-        }
-    }
-
-    if (validator.isEmpty(data.price)) {
-        errors.push("Event price is Required");
-    }
-    else if (validator.isNotNumber(data.price)) {
-        errors.push("Event price Not in Price Format")
-    }
-
-    if (validator.isEmpty(data.maxCapacity)) {
-        errors.push("Maximum Capacity is Required");
-    }
-    else if (validator.isNotNumber(data.maxCapacity)) {
-        errors.push("Maximum Capacity Not in Number Format");
-    }
-    if (validator.isEmpty(data.description)) {
-        errors.push("Description is Required");
-    }
-
-    return errors
+const offerUpdateSchema = () => {
+    return [
+        body("title").optional()
+            .notEmpty().withMessage("title is required"),
+        body("description").optional()
+            .notEmpty().withMessage("description is required"),
+        body("start").optional()
+            .notEmpty().withMessage("start date is required")
+            .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Must be a valid date format'),
+        body("end").optional()
+            .notEmpty().withMessage("end date is required")
+            .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Must be a valid date format')
+    ]
 }
 
-const validateFavourite = (req) =>{
-    let data = req.body
-    let errors = []
+const eventSchema = () => {
+    return [
+        body("name")
+            .notEmpty().withMessage("name is required"),
+        body("description")
+            .notEmpty().withMessage("description is required"),
+        body("start")
+            .notEmpty().withMessage("start date is required")
+            .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Must be a valid date format'),
+        body("end")
+            .notEmpty().withMessage("end date is required")
+            .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Must be a valid date format'),
+        body("price")
+            .notEmpty().withMessage("price is required")
+            .isFloat({ min: 0 }).withMessage('Must be a positive number'),
+        body("maxCapacity")
+            .notEmpty().withMessage("maximum capacity is required")
+            .isInt({ min: 1 }).withMessage('Must be a positive integer'),
+        body("description")
+            .notEmpty().withMessage("description is required"),
+        body("cwSpaceCwID")
+            .notEmpty().withMessage("co-working space ID is required")
+    ]
+}
 
-    if(validator.isEmpty(data.clientClientID))
-    {
-        errors.push("clientClientID is required")
-    }else if(validator.isNotNumber(data.clientClientID)){
-        errors.push("clientClientID not in number format")
-    }
+const eventUpdateSchema = () => {
+    return [
+        body("name").optional()
+            .notEmpty().withMessage("name is required"),
+        body("description").optional()
+            .notEmpty().withMessage("description is required"),
+        body("start").optional()
+            .notEmpty().withMessage("start date is required")
+            .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Must be a valid date format'),
+        body("end").optional()
+            .notEmpty().withMessage("end date is required")
+            .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Must be a valid date format'),
+        body("price").optional()
+            .notEmpty().withMessage("price is required")
+            .isFloat({ min: 0 }).withMessage('Must be a positive number'),
+        body("maxCapacity").optional()
+            .notEmpty().withMessage("maximum capacity is required")
+            .isInt({ min: 1 }).withMessage('Must be a positive integer'),
+        body("description").optional()
+            .notEmpty().withMessage("description is required")
+    ]
+}
 
-    if(validator.isEmpty(data.cwSpaceCwID))
-    {
-        errors.push("cwSpaceCwID is required")
-    }else if(validator.isNotNumber(data.cwSpaceCwID)){
-        errors.push("cwSpaceCwID not in number format")
-    }
-    return errors
+const moderatorSchema = () => {
+    return [
+        body("username")
+            .notEmpty().withMessage("username is required"),
+        body("password")
+            .notEmpty().withMessage("password is required")
+            .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
+            .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/).withMessage('Must contain at least one uppercase letter, one lowercase letter, and one number'),
+        body("cwSpaceCwID")
+            .notEmpty().withMessage("co-working space ID is required")
+    ]
+}
+
+const moderatorPasswordSchema = () => {
+    return [
+        body("newPassword")
+            .notEmpty().withMessage("password is required")
+            .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
+            .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/).withMessage('Must contain at least one uppercase letter, one lowercase letter, and one number')
+    ]
+}
+
+const bookSchema = () => {
+    return [
+        body("date")
+            .notEmpty().withMessage("date is required")
+            .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('Must be a valid date format'),
+        body("times")
+            .notEmpty().withMessage("times is required")
+            .custom(isTimesValid),
+        body("payment").optional()
+            .notEmpty().withMessage("payment is required"),
+        body("cardToken").optional()
+            .notEmpty().withMessage("card token is required"),
+        body("totalCost")
+            .notEmpty().withMessage("total cost is required")
+            .isFloat({ min: 0 }).withMessage('Must be a positive number'),
+        body("clientClientID")
+            .notEmpty().withMessage("client ID is required"),
+        body("roomRoomID")
+            .notEmpty().withMessage("room ID is required"),
+        body("cancelLink")
+            .notEmpty().withMessage("cancel link is required")
+            .isURL().withMessage('Must be a valid URL'),
+        body("reviewLink")
+            .notEmpty().withMessage("review link is required")
+            .isURL().withMessage('Must be a valid URL')
+    ]
+}
+
+const registerSchema = () => {
+    return [
+        body("payment").optional()
+            .notEmpty().withMessage("payment is required"),
+        body("cardToken").optional()
+            .notEmpty().withMessage("card token is required"),
+        body("totalCost")
+            .notEmpty().withMessage("total cost is required")
+            .isFloat({ min: 0 }).withMessage('Must be a positive number'),
+        body("clientClientID")
+            .notEmpty().withMessage("client ID is required"),
+        body("eventEventID")
+            .notEmpty().withMessage("room ID is required")
+    ]
+}
+
+const requestSchema = () => {
+    return [
+        body("numberOfPersons")
+            .notEmpty().withMessage("number of persons is required")
+            .isInt({ min: 1 }).withMessage('Must be a positive integer'),
+        body("clientClientID")
+            .notEmpty().withMessage("client ID is required"),
+        body("roomRoomID")
+            .notEmpty().withMessage("room ID is required")
+    ]
 }
 
 module.exports = {
-    validateUser,
-    validateUpdatedUser,
-    validateCw_space,
-    validateUpdatedCw_space,
-    validateRoom,
-    validateUpdatedRoom,
-    validateOffer,
-    validateUpdatedOffer,
-    validateBook,
-    validateEvent,
-    validateFavourite
+    userSchema, userUpdateSchema, userPasswordSchema,
+    cwSpaceSchema, cwSpaceUpdateSchema,
+    roomSchema, roomUpdateSchema,
+    offerSchema, offerUpdateSchema,
+    eventSchema, eventUpdateSchema,
+    moderatorSchema, moderatorPasswordSchema,
+    bookSchema,
+    registerSchema,
+    requestSchema
 }

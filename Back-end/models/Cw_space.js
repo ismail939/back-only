@@ -40,7 +40,7 @@ module.exports = (db, type)=>{
         rate: {
             type: type.FLOAT,
             defaultValue: 0,
-            allowNull: true
+            allowNull: false
         },
         noOfReviews: {
             type: type.INTEGER,
@@ -63,13 +63,29 @@ module.exports = (db, type)=>{
             type: type.STRING,
             allowNull: true
         },
-        lat: {
+        internetQualityRate: {
             type: type.FLOAT,
-            allowNull: true
+            defaultValue: 0
         },
-        lng: {
+        costRate: {
             type: type.FLOAT,
-            allowNull: true
+            defaultValue: 0
+        },
+        atmosphereRate: {
+            type: type.FLOAT,
+            defaultValue: 0
+        },
+        staffRate: {
+            type: type.FLOAT,
+            defaultValue: 0
+        },
+        privacyRate: {
+            type: type.FLOAT,
+            defaultValue: 0
+        },
+        designRate: {
+            type: type.FLOAT,
+            defaultValue: 0
         }
     },{
         timestamps: false 

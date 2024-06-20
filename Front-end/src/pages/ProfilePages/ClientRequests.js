@@ -4,8 +4,9 @@ import { jwtDecode } from "jwt-decode";
 function ClientRequests() {
     const [requests, setRequests] = useState([]);
     const token = useSelector(store => store.auth).token;
+    const profileData = jwtDecode(token)
     const getRequests = () => {
-        fetch(`http://localhost:4000/requests/`, {
+        fetch(`http://localhost:4000/clients/getRequests/${profileData.clientID}`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -13,6 +14,7 @@ function ClientRequests() {
             .then(res => res.json())
             .then(responsedata => {
                 setRequests(responsedata.data)
+                console.log(responsedata.data)
             }).catch()
     }
     useEffect(() => {
@@ -27,9 +29,10 @@ function ClientRequests() {
                         <img className="h-48 w-full object-cover" src={room.roomImg} alt={"no image found"}></img>
                     </div>
                     <div className="px-8 py-2">
-                        <h1 className="capitalize font-semibold text-xl leading-tight text-black main-font">{`${room?.roomType} Room ${room?.roomNumber}`}</h1>
+                        <h1 className="capitalize font-semibold text-xl leading-tight text-black main-font">{`Room ${room?.roomNumber}`}</h1>
                         <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`Request Created: ${room?.createdAt.slice(0, 10)} ${room?.createdAt.slice(11, 19)}`}</div>
                         <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`Request Updated: ${room?.updatedAt.slice(0, 10)} ${room?.updatedAt.slice(11, 19)}`}</div>
+                        <div className="uppercase mt-3 text-lg text-[#0F4C75] font-bold">{`Status: ${room?.status}`}</div>
                     </div>
                 </div>
             </div>

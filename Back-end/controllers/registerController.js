@@ -3,8 +3,8 @@ const { Register, Event, Client } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-const { register } = require('./clientController');
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const { validationResult } = require("express-validator");
 
 
 module.exports = {
@@ -33,6 +33,11 @@ module.exports = {
     ),
     register: asyncWrapper(
         async (req, res, next) => {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                const error = appError.create(errors.array(), 400, httpStatusCode.ERROR)
+                return next(error);
+            }
             const event = await Event.findOne({
                 raw: true, where: {
                     eventID: req.body.eventEventID

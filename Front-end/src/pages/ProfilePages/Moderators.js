@@ -95,7 +95,6 @@ function Moderators({ cwid }) {
             .then(responsedata => {
                 if (responsedata.status === "success") {
                     setModerators(responsedata.data)
-                    console.log(responsedata.data)
                 }
             }
             ).catch(error => {

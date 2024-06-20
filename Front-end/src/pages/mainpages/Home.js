@@ -3,7 +3,7 @@ import newsticker from "../../components/images/newsticker.png"
 import hotsticker from "../../components/images/hotsticker.png"
 import topsticker from "../../components/images/top-rated sticker.png"
 import Slider from "../../components/Slider";
-import { BoxArrowInRight } from "react-bootstrap-icons";
+import { BoxArrowInRight, GeoAlt, CalendarEvent } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -29,8 +29,29 @@ function DiscoverCard(props) {
         </div>
     )
 }
+function EventsCard(props) {
+    const usertype = useSelector(store => store.auth).usertype
+    const event = props.event;
+    return (
+        <div className="bg-white shadow-md overflow-hidden rounded-sm">
+            <div className="flex-col">
+                <img className="h-48 w-full object-cover md:h-72 md:w-full" src={event.img} alt={"event image"}></img>
+                <div className="mt-4 px-4">
+                    <h2 className="main-font text-2xl">{event.name}</h2>
+                    <div className="my-3">
+                        <div className="flex items-center gap-2 text-md main-font my-1 text-[#0F4C75]">
+                            <CalendarEvent />
+                            <p>{`Starting At:  ${event.start.slice(0, 10)}`}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
 function Home() {
     const [discoverData, setDiscover] = useState([]);
+    const [events, setEvents] = useState([]);
     const [fetcherror, setFetchError] = useState(false);
     const client = useSelector(store => store.auth);
     const getDicoverData = () => {
@@ -41,8 +62,18 @@ function Home() {
             }
             ).catch(error => { setFetchError(true); });
     }
+    const getEvents = () => {
+        fetch("http://localhost:4000/events/home")
+            .then(res => res.json())
+            .then(responsedata => {
+                setEvents(responsedata.data);
+                console.log(events)
+            }
+            ).catch(error => { setFetchError(true); });
+    }
     useEffect(() => {
         getDicoverData();
+        getEvents();
     }, [])
     return (
         <>
@@ -83,6 +114,15 @@ function Home() {
                             return <DiscoverCard discover={cwspace} key={cwspace.cwID} />
                         }) : null}
                 </div>
+            </div>
+            <div className="w-4/5 mx-auto mt-[70px]">
+                <h2 className="text-left mb-8 text-4xl text-center main-font">Upcoming Events&Workshops</h2>
+                <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
+                    {events ? events.map((cwspace) => {
+                            return <EventsCard event={cwspace} key={cwspace.cwID} />
+                        }) : null}
+                </div>
+                <Link to="events&workshops" className="my-4 underline text-[#3282B8] float-right">view all</Link>
             </div>
         </>
     )
