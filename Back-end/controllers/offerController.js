@@ -4,6 +4,8 @@ const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 const {uploadToCloud, deleteFromCloud} = require('../utils/cloudinary');
 const { validateUpdatedOffer, validateOffer } = require('../middlewares/validationSchema');
+const cache = require('../utils/caching')
+
 module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
@@ -22,7 +24,11 @@ module.exports = {
     ),
     getAll: asyncWrapper(
         async (req, res, next) => {
-            const offers = await Offer.findAll({ raw: true })
+            let offers = await cache.getJsonList('offers')
+            if(offers.length!=0){
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: offers });
+            }
+            offers = await Offer.findAll({ raw: true })
             if (offers.length != 0) {
                 for (let i = 0; i < offers.length; i++) {
                 let cw_space = await Cw_space.findOne({ raw: true }, {
@@ -32,6 +38,10 @@ module.exports = {
                 })
                 offers[i].cwSpaceName = cw_space.name
             }
+                for (let index = 0; index < offers.length; index++) {
+                    await cache.pushJsonToList('offers', offers[index])
+                }
+                await cache.setKeyTTL('offers', 180)
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: offers })
             }
             const error = appError.create("There are No Available Offers", 404, httpStatusCode.ERROR);
@@ -40,13 +50,21 @@ module.exports = {
     ),
     getHome: asyncWrapper(
         async (req, res, next) => {
-            const offerHome = await Offer.findAll({
+            let offerHome = await cache.getJsonList('offerHome')
+            if(offerHome.length!=0){
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: offerHome })
+            }
+            offerHome = await Offer.findAll({
                 raw: true,
                 where: {
                     home: "home"
                 }
             })
             if (offerHome.length != 0) {
+                for (let index = 0; index < offerHome.length; index++) {
+                    await cache.pushJsonToList('offerHome', offerHome[index])                    
+                }
+                await cache.setKeyTTL('offerHome', 600)
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: offerHome })
             }
             const error = appError.create("There are No Available Offers", 404, httpStatusCode.ERROR);
@@ -55,12 +73,19 @@ module.exports = {
     ),
     getOne: asyncWrapper(
         async (req, res, next) => {
-            const offer = await Offer.findOne({
+            const key = 'offer:'+req.params.offerID
+            let offer = await cache.getJsonObject(key)
+            if(offer){
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: offer })
+            }
+            offer = await Offer.findOne({
                 where: {
                     offerID: req.params.offerID
                 }
             })
             if (offer) {
+                await cache.setJsonObject(key, offer)
+                await cache.setKeyTTL(key, 600)
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: offer })
             }
             const error = appError.create("Offer Not Found", 404, httpStatusCode.ERROR);

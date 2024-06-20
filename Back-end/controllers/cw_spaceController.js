@@ -89,13 +89,21 @@ module.exports = {
     ),
     getHome: asyncWrapper(
         async (req, res, next) => {
-            const cw_spaceHome = await Cw_space.findAll({
+            let cw_spaceHome = await cache.getJsonList('cw_spaceHome')
+            if(cw_spaceHome.length!=0){
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_spaceHome })
+            }
+            cw_spaceHome = await Cw_space.findAll({
                 raw: true,
                 where: {
                     home: "home"
                 }
             })
             if (cw_spaceHome.length != 0) {
+                for (let index = 0; index < cw_spaceHome.length; index++) {
+                    await cache.pushJsonToList('cw_spaceHome', cw_spaceHome[index])                    
+                }
+                await cache.setKeyTTL('cw_spaceHome', 600)
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_spaceHome })
             }
             const error = appError.create("There Are No Available Co-working Spaces", 404, httpStatusCode.ERROR);
@@ -105,11 +113,8 @@ module.exports = {
     getOne: asyncWrapper(
         async (req, res, next) => {
             const key = 'cw_space:'+req.params.ID
-            console.log(key)
             let cw_space = await cache.getJsonObject(key)
-            console.log(cw_space)
             if(cw_space){
-                console.log('1')
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_space })
             }
             cw_space = await Cw_space.findOne({
@@ -118,9 +123,7 @@ module.exports = {
                 }
             })
             if (cw_space) {
-                console.log(JSON.stringify(cw_space))
                 await cache.setJsonObject(key, cw_space)
-                console.log(2)
                 await cache.setKeyTTL(key, 600)
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_space })
             }
