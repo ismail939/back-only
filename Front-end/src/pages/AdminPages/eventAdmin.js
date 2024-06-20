@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 function EventAdmin(){
     const [events, setEvents] = useState([]);
     const [fetcherror, setFetchError] = useState(false);
     const [selected, setSelected] = useState({});
+    const token = useSelector(store => store.auth).token;
     const getOffers = () => {
         fetch("http://localhost:4000/events")
             .then(res => res.json())
@@ -19,6 +21,7 @@ function EventAdmin(){
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
                 "home": "home",
@@ -30,6 +33,7 @@ function EventAdmin(){
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
                 "home": null,

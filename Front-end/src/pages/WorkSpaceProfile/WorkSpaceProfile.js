@@ -43,26 +43,13 @@ function Review(props) {
                     {review.img ? <img src={review.img} className="h-[50px] w-[50px] rounded-full object-cover"></img> : <PersonCircle className="text-[40px]" />}
                     <h2 className="md:text-2xl main-font">{review.name}</h2>
                 </div>
-                <ReviewStars rate={review.rate} />
+                <ReviewStars rate={review.totalRate} />
             </div>
             <p className="mt-6">{review.body}</p>
             <p className="text-sm py-4 text-gray-600">{reviewDate}</p>
         </div>
     )
 }
-const amenities = [
-    "Comfortable chair",
-    "Comfortable lights",
-    "High-speed internet",
-    "Collaboration Tools (whiteboards, projectors, ...)",
-    "Drinks & Snacks",
-    "Kitchen",
-    "Printers and Scanners",
-    "Waiting area",
-    "Event Spaces",
-    "Pet-Friendly Spaces",
-    "Outdoor Spaces"
-];
 function WorkSpaceProfile() {
     const params = useParams();
     const [cwSpace, setCWSpace] = useState(null);
@@ -107,6 +94,7 @@ function WorkSpaceProfile() {
             }
             );
     }
+    const amenities = cwSpace?.amenities?.split("/");
     useEffect(() => {
         getWorkSpace();
         getWorkSpaceImages();
@@ -149,7 +137,7 @@ function WorkSpaceProfile() {
                     }
                 >
                     <SwiperSlide >
-                        <img src={ cwSpace.img} alt={cwSpace.name} className="w-full h-full object-cover" />
+                        <img src={cwSpace.img} alt={cwSpace.name} className="w-full h-full object-cover" />
                     </SwiperSlide>
                     {cwSpacePhotos?.map((image, index) => {
                         return (
@@ -159,7 +147,7 @@ function WorkSpaceProfile() {
                         )
                     })}
                 </Swiper>
-                <div className="flex items-center justify-center gap-10  mt-[100px]"> 
+                <div className="flex items-center justify-center gap-10  mt-[100px]">
                     <hr className="border-gray-300 my-3 w-1/4"></hr>
                     <h2 className="main-font text-3xl">Accessibility</h2>
                     <hr className="border-gray-300 my-3 w-1/4"></hr>
@@ -187,7 +175,7 @@ function WorkSpaceProfile() {
                         </span>
                     </div>
                 </div>
-                <div className="flex items-center justify-center gap-10 mt-[100px]"> 
+                <div className="flex items-center justify-center gap-10 mt-[100px]">
                     <hr className="border-gray-300 my-3 w-1/4"></hr>
                     <h2 className="main-font text-3xl">Description</h2>
                     <hr className="border-gray-300 my-3 w-1/4"></hr>
@@ -196,7 +184,7 @@ function WorkSpaceProfile() {
                 <h2 className="main-font text-3xl mt-[80px]">Facilities & Amenities:</h2>
                 <hr className="border-gray-400 my-3"></hr>
                 <ul className="mt-4 mb-[30px]">
-                    {amenities.map((item) => {
+                    {amenities?.map((item) => {
                         return <div className="flex items-center gap-4">
                             <img src={rightMark} alt="check" className="w-5 h-5 object-contain"></img>
                             <li className="text-lg my-1">{item}</li>
@@ -211,11 +199,39 @@ function WorkSpaceProfile() {
                         className="w-full "
                         height="450" allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
                 </div> */}
-                <OpenStreetMap adjust={false} position={{lat: cwSpace.lat , lng: cwSpace.lng}}/>
+                <OpenStreetMap adjust={false} position={{ lat: cwSpace.lat, lng: cwSpace.lng }} />
                 <Link to="rooms" className="mx-auto my-[100px] main-font btn-color py-2 px-6 sm:text-2xl text-xl w-48 flex justify-center">BOOK</Link>
-                <div className="mt-[50px]">
-                    <h2 className="text-center main-font md:text-4xl text-3xl flex items-center justify-center gap-2 mb-[50px]">
+                <div className="mt-[50px] mx-5 sm:mx-auto">
+                    <h2 className="text-center main-font md:text-4xl text-3xl flex items-center justify-center gap-2">
                         <Stars />Reviews</h2>
+                    <div className="flex justify-center">
+                        <div className="grid md:my-[50px] my-[30px] sm:grid-cols-2 gap-8">
+                            <div className="flex items-center text-xl gap-10">
+                                <h2 className="font-bold w-[90px]">Design: </h2>
+                                <ReviewStars rate={cwSpace.designRate} />
+                            </div>
+                            <div className="flex items-center text-xl gap-10">
+                                <h2 className="font-bold w-[90px]">Staff: </h2>
+                                <ReviewStars rate={cwSpace.staffRate} />
+                            </div>
+                            <div className="flex items-center text-xl gap-10">
+                                <h2 className="font-bold w-[90px]">Internet Quality:</h2>
+                                <ReviewStars rate={cwSpace.internetQualityRate} />
+                            </div>
+                            <div className="flex items-center text-xl gap-10">
+                                <h2 className="font-bold w-[90px]">Cost: </h2>
+                                <ReviewStars rate={cwSpace.costRate} />
+                            </div>
+                            <div className="flex items-center text-xl gap-10">
+                                <h2 className="font-bold w-[90px]">Privacy: </h2>
+                                <ReviewStars rate={cwSpace.privacyRate} />
+                            </div>
+                            <div className="flex items-center text-xl gap-10 ">
+                                <h2 className="font-bold w-[90px]">Atmosphere:</h2>
+                                <ReviewStars rate={cwSpace.atmosphereRate} />
+                            </div>
+                        </div>
+                    </div>
                     {reviews ? reviews.map((review) => {
                         return <Review review={review} key={review.clientClientID + "/" + review.cwSpaceCwID} />
                     }) : <p className="text-center my-[100px] sec-font md:text-xl text-lg">Currently there are now reviews</p>}

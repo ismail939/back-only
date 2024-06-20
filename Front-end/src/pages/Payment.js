@@ -106,7 +106,7 @@ function CheckoutForm() {
                 "clientClientID": profile.clientID,
                 "roomRoomID": payElements.roomid,
                 "totalCost": payElements.totalPrice,
-                "cancelLink": "https://gg.com",
+                "cancelLink": `http://localhost:3000/cancelbook?id=${payElements.cwspaceId}`,
                 "reviewLink": `http://localhost:3000/reviewbook?id=${payElements.cwspaceId}`
             }),
         }).then(res => res.json())

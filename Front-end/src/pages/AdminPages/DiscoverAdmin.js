@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 function DiscoverAdmin() {
     const [cwspaces, setCWSpaces] = useState([]);
     const [fetcherror, setFetchError] = useState(false);
     const [selected, setSelected] = useState({});
+    const token = useSelector(store => store.auth).token;
     const getWorkSpaces = () => {
         fetch("http://localhost:4000/cw_spaces")
             .then(res => res.json())
@@ -15,11 +17,11 @@ function DiscoverAdmin() {
         getWorkSpaces();
     }, [])
     const EditCW = (cwspace) => {
-        console.log(cwspace)
         fetch(`http://localhost:4000/cw_spaces/${cwspace.cwID}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
                 "home": "home",
@@ -32,6 +34,7 @@ function DiscoverAdmin() {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
                 "home": null,

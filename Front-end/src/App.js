@@ -47,6 +47,7 @@ import AdjustModerator from './pages/ProfilePages/AdjustModerator';
 import ClientRequests from './pages/ProfilePages/ClientRequests';
 import ClientBookings from './pages/ProfilePages/ClientBooks';
 import EventAdmin from './pages/AdminPages/eventAdmin';
+import CancelBook from './pages/CancelBook';
 function App() {
   return (
     <>
@@ -71,6 +72,7 @@ function App() {
           <Route path='favourites' element={<Favourites />}></Route>
           <Route path='payment' element={<Payment />}></Route>
           <Route path='reviewbook' element={<Review />}></Route>
+          <Route path='cancelbook' element={<CancelBook />}></Route>
           <Route element={<ProfileManager />} >
             <Route path='client-requests' element={<ClientRequests />}></Route>
             <Route path='client-books' element={<ClientBookings />}></Route>
