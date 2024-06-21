@@ -35,7 +35,7 @@ function Footer() {
                         <h2 className="main-font">Quick Links</h2>
                         <ul className="flex flex-col text-sm">
                             <FooterLink title="FAQs" link={"faQs"} />
-                            <FooterLink title="Terms of Service" link={null} />
+                            <FooterLink title="Terms of Service" link={"termsofservice"} />
                             <FooterLink title="Privacy Policy" link={null} />
                         </ul>
                     </div>

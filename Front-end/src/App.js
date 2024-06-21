@@ -48,6 +48,7 @@ import ClientRequests from './pages/ProfilePages/ClientRequests';
 import ClientBookings from './pages/ProfilePages/ClientBooks';
 import EventAdmin from './pages/AdminPages/eventAdmin';
 import CancelBook from './pages/CancelBook';
+import TermsAndConditions from './pages/TermsOfService';
 function App() {
   return (
     <>
@@ -57,6 +58,7 @@ function App() {
         <Route path='/' element={<Home />}></Route>
         <Route path='login' element={<Login />}></Route>
         <Route path='aboutus' element={<AboutUs />}></Route>
+        <Route path='termsofservice' element={<TermsAndConditions/>}></Route>
         <Route path='portal-login' element={<PortalLogin />}></Route>
         <Route path='sign-up' element={<SignUp />}></Route>
         <Route path='email authentication' element={<EmailAuthentication />}></Route>
