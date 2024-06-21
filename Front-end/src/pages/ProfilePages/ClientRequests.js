@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
+import { PeopleFill, } from "react-bootstrap-icons";
 function ClientRequests() {
     const [requests, setRequests] = useState([]);
     const token = useSelector(store => store.auth).token;
@@ -23,16 +24,22 @@ function ClientRequests() {
     function PendingRoomCard(props) {
         const room = props.room;
         return (
-            <div className="bg-white rounded-sm shadow-md overflow-hidden w-full">
+            <div className="bg-white rounded-sm shadow-md overflow-hidden w-full my-4">
                 <div className="flex md:flex-row flex-col">
                     <div className="">
-                        <img className="h-48 w-full object-cover" src={room.img} alt={"no image found"}></img>
+                        <img className="h-48 w-full md:w-[300px] object-cover" src={room.img} alt={"no image found"}></img>
                     </div>
                     <div className="px-8 py-2">
                         <h1 className="capitalize font-semibold text-xl leading-tight text-black main-font">{`Room ${room?.roomNumber}`}</h1>
                         <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`Request Created: ${room?.createdAt.slice(0, 10)} ${room?.createdAt.slice(11, 19)}`}</div>
                         <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`Request Updated: ${room?.updatedAt.slice(0, 10)} ${room?.updatedAt.slice(11, 19)}`}</div>
-                        <div className="uppercase mt-3 text-lg text-[#0F4C75] font-bold">{`Status: ${room?.status}`}</div>
+                        <div className="mt-1 text-lg flex items-center gap-4">
+                            <PeopleFill />
+                            <div className="font-bold">{`Number of Persons: ${room?.numberOfPersons}`}</div>
+                        </div>
+                        <div className={`uppercase mt-2 text-lg font-bold
+                        ${room?.status === "accepted" ? "text-green-500" : (room?.status !== "pending" ? "text-[#ff0000]" : "text-gray-500")}`}>
+                        {`Status: ${room?.status}`}</div>
                     </div>
                 </div>
             </div>
