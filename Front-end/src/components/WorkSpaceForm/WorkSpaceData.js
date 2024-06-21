@@ -98,7 +98,7 @@ const WorkSpaceData = forwardRef(({ name, address, description, email, phone, op
       })
       setCheckError("Please fill in the name"); window.scrollTo(0, 100);
     }
-    else if (NameError(address)) {
+    else if (!address || NameError(address)) {
       setDataErrors({
         "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": true,
         "description": false, "email": false, "ImageName": false, "facilities": false

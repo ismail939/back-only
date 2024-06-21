@@ -57,6 +57,9 @@ function CreateRoom() {
         fetch(`http://localhost:4000/rooms`, {
             method: 'POST',
             body: formData,
+            headers: {
+                'Authorization': `Bearer ${auth.token}`, // Add the token to the headers
+            },
         })
             .then(res => res.json())
             .then(response => {

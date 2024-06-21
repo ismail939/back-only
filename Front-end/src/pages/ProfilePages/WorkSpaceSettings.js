@@ -48,12 +48,12 @@ function WorkSpaceSettings() {
         secImg: false
     });
     const InputData = [
-        { title: "Address", name: "address", condition: dataerrors.address, value: mutedData.address, errormessage: checkerror, type: "input" },
-        { title: "Description", name: "description", condition: dataerrors.description, value: mutedData.description, errormessage: checkerror, type: "textArea" },
-        { title: "Email", name: "email", condition: dataerrors.email, value: mutedData.email, errormessage: checkerror, type: "input" },
-        { title: "Phone Number", name: "phone", condition: dataerrors.phonenumber, value: mutedData.phone, errormessage: checkerror, type: "input" },
-        { title: "Opening Time", name: "openingTime", condition: dataerrors.start, value: mutedData.openingTime, errormessage: checkerror, type: "input" },
-        { title: "Closing Time", name: "closingTime", condition: dataerrors.end, value: mutedData.closingTime, errormessage: checkerror, type: "input" }
+        { title: "Address", name: "address", condition: dataerrors.address, value: mutedData?.address, errormessage: checkerror, type: "input" },
+        { title: "Description", name: "description", condition: dataerrors.description, value: mutedData?.description, errormessage: checkerror, type: "textArea" },
+        { title: "Email", name: "email", condition: dataerrors.email, value: mutedData?.email, errormessage: checkerror, type: "input" },
+        { title: "Phone Number", name: "phone", condition: dataerrors.phonenumber, value: mutedData?.phone, errormessage: checkerror, type: "input" },
+        { title: "Opening Time", name: "openingTime", condition: dataerrors.start, value: mutedData?.openingTime, errormessage: checkerror, type: "input" },
+        { title: "Closing Time", name: "closingTime", condition: dataerrors.end, value: mutedData?.closingTime, errormessage: checkerror, type: "input" }
     ]
     function HandleChange(e) {
         setMutedData({ ...mutedData, [e.target.name]: e.target.value })
@@ -73,6 +73,7 @@ function WorkSpaceSettings() {
                 setCwSpace(responsedata.data);
                 setMutedData(responsedata.data);
                 setLocation({lat:responsedata.data.lat , lng: responsedata.data.lng})
+                console.log(responsedata.data)
                 setLoading(false);
             }
             ).catch(error => { console.log(error); });
