@@ -5,6 +5,7 @@ const redisConfig = {
     redis: {
         host: 'redis-10817.c241.us-east-1-4.ec2.redns.redis-cloud.com',
         port: 10817,
+        password: '03A29KHtB2oIYYuAogjaDOe2ggLuH4vU'
     },
 };
 
