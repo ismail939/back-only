@@ -29,12 +29,6 @@ function CheckoutForm() {
     const [lodaing, setLodaing] = useState(false);
     const activeStyle = "border-2 text-[#197ec2] border-[#197ec2]"
     const payStyle = "border py-4 px-8 relative rounded-md flex items-center gap-2"
-    useEffect(() => {
-        if (elements) {
-            let cardElement = elements.getElement('card');
-            cardElement?.update({ style: { base: { fontSize: '18px' } } });
-        }
-    }, [elements])
     const [data, setData] = useState({
         name: "",
         cardNum: "",
@@ -111,14 +105,15 @@ function CheckoutForm() {
             }),
         }).then(res => res.json())
             .then(responsedata => {
+                console.log(responsedata)
                 if (responsedata.status === "success") {
                     dispatch(removePayData())
                     setPayComplete(true)
                     redirect()
                 } else if (responsedata.status === "error") {
-                    setErrorMessage(responsedata.message)
+                    setErrorMessage("Sorry we cannot proceed with your request, please try again later")
                 } else if (responsedata.status === "fail") {
-                    setErrorMessage(responsedata.message)
+                    setErrorMessage("Sorry we cannot proceed with your request, please try again later")
                 }
             }
             ).catch();

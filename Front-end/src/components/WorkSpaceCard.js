@@ -24,6 +24,7 @@ function WorkSpaceCard(props) {
                 "cwSpaceCwID": cwspace.cwID
             }),
         }).then(res => res.json()).then((resdata) => {
+            console.log(resdata)
             if (resdata.status === "success") {
                 setSelected(!selected);
             }

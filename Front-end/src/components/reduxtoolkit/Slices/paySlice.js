@@ -9,7 +9,7 @@ export const paySlice = createSlice({
             state.date = action.payload.date;
             state.type = action.payload.type;
             state.roomid = action.payload.roomid;
-            state.roomid = action.payload.cwspaceId;
+            state.cwspaceId = action.payload.cwspaceId;
             sessionStorage.setItem("pay" , JSON.stringify(state))
         }, removePayData: (state, action) =>{
             state.bookingTime = [];
