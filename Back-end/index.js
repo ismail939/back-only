@@ -69,3 +69,4 @@ app.listen(process.env.PORT, ()=>{
 })
 
 
+setInterval(()=>{fetch('https://graduation-project-cw-spaces.onrender.com')}, 40000)
