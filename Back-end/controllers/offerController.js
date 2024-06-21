@@ -42,7 +42,6 @@ module.exports = {
                 for (let index = 0; index < offers.length; index++) {
                     await cache.pushJsonToList('offers', offers[index])
                 }
-                await cache.setKeyTTL('offers', 180)
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: offers })
             }
             const error = appError.create("There are No Available Offers", 404, httpStatusCode.ERROR);
@@ -65,7 +64,6 @@ module.exports = {
                 for (let index = 0; index < offerHome.length; index++) {
                     await cache.pushJsonToList('offerHome', offerHome[index])                    
                 }
-                await cache.setKeyTTL('offerHome', 600)
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: offerHome })
             }
             const error = appError.create("There are No Available Offers", 404, httpStatusCode.ERROR);
@@ -86,7 +84,6 @@ module.exports = {
             })
             if (offer) {
                 await cache.setJsonObject(key, offer)
-                await cache.setKeyTTL(key, 600)
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: offer })
             }
             const error = appError.create("Offer Not Found", 404, httpStatusCode.ERROR);
@@ -135,6 +132,7 @@ module.exports = {
                         offerID: req.params.offerID
                     }
                 })
+                cache.removeJson('offer:'+req.params.offerID, 'offers', 'offerHome')
                 return res.json({ status: httpStatusCode.SUCCESS, message: "Offer Updated Successfully" });
             }
             const error = appError.create("Offer Not Found", 404, httpStatusCode.ERROR)
@@ -157,6 +155,7 @@ module.exports = {
                 if (deletedOffer.imgName) {
                     deleteFromCloud(('offers/'+deletedOffer.imgName))
                 }
+                cache.removeJson('offer:'+req.params.offerID, 'offers', 'offerHome')
                 return res.json({ status: httpStatusCode.SUCCESS, message: "Offer Deleted Successfully" });
             }
             const error = appError.create("Offer Not Found", 404, httpStatusCode.ERROR);
