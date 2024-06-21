@@ -2,7 +2,6 @@ const { Cw_space, Favourite, Client } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-const { validateFavourite } = require('../middlewares/validationSchema');
 const sequelize = require('sequelize')
 
 module.exports = {
@@ -32,11 +31,6 @@ module.exports = {
     ),
     create: asyncWrapper(
         async (req, res, next) => {
-            const errors = validateFavourite(req)
-            if (errors.length != 0) {
-                const error = appError.create(errors, 400, httpStatusCode.ERROR)
-                return next(error)
-            }
             const favourite = await Favourite.create(req.body)
             return res.status(201).json({ status: httpStatusCode.SUCCESS, data: favourite })
         }

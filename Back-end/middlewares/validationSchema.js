@@ -271,7 +271,7 @@ const bookSchema = () => {
         body("times")
             .notEmpty().withMessage("times is required")
             .custom(isTimesValid),
-        body("payment").optional()
+        body("payment")
             .notEmpty().withMessage("payment is required"),
         body("cardToken").optional()
             .notEmpty().withMessage("card token is required"),
@@ -281,13 +281,7 @@ const bookSchema = () => {
         body("clientClientID")
             .notEmpty().withMessage("client ID is required"),
         body("roomRoomID")
-            .notEmpty().withMessage("room ID is required"),
-        body("cancelLink")
-            .notEmpty().withMessage("cancel link is required")
-            .isURL().withMessage('Must be a valid URL'),
-        body("reviewLink")
-            .notEmpty().withMessage("review link is required")
-            .isURL().withMessage('Must be a valid URL')
+            .notEmpty().withMessage("room ID is required")
     ]
 }
 
