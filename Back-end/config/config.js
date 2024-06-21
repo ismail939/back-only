@@ -10,10 +10,11 @@ module.exports = {
         logging: false
     },
     production: {
-        username: process.env.DB_USERNAME,  
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE,
+        username: 'sql7715262',  
+        password: 'cvFwSqEIEI',
+        database: 'sql7715262',
         dialect: process.env.DIALECT, 
-        logging: false
+        logging: false,
+        host: 'sql7.freemysqlhosting.net'
     }
 }
