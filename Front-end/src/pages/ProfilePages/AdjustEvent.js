@@ -23,8 +23,16 @@ function AdjustEvent() {
         fetch(`http://localhost:4000/events/${params.eventid}`)
             .then(res => res.json())
             .then(responsedata => {
-                setEvent(responsedata.data);
-                setOriginData(responsedata.data)
+                setEvent({
+                    ...responsedata.data,
+                    start: responsedata.data.start.split('T')[0],
+                    end: responsedata.data.start.split('T')[0]
+                });
+                setOriginData({
+                    ...responsedata.data,
+                    start: responsedata.data.start.split('T')[0],
+                    end: responsedata.data.start.split('T')[0]
+                });
                 setLoading(false)
                 if (responsedata.status === "error") { console.log("Sorry, there are no events"); }
                 else if (responsedata.status === "fail") { console.log("Oops something went wrong !") };
@@ -104,6 +112,7 @@ function AdjustEvent() {
             }),
         }).then(res => res.json()).then((data) => {
             if (data.status === "success") {
+                console.log("success")
                 getEvent()
             } else if (data.status === "error") {
                 console.log(data)
