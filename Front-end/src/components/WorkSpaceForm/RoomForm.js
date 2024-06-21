@@ -71,7 +71,7 @@ function RoomForm({ roomData, updateRoomData, childRef, ShowError }) {
             setDataErrors({ ...IntitialDataErrors, maxRoomSize: true })
             setCheckError("Please enter a Suitable Max. room size")
             window.scrollTo(0, 400)
-        }else if (roomData.maxRoomSize<=roomData.minRoomSize) {
+        }else if (roomData.maxRoomSize<roomData.minRoomSize) {
             setDataErrors({ ...IntitialDataErrors, maxRoomSize: true })
             setCheckError("max room size must be larger than min room size")
             window.scrollTo(0, 400)
