@@ -36,7 +36,7 @@ function Footer() {
                         <ul className="flex flex-col text-sm">
                             <FooterLink title="FAQs" link={"faQs"} />
                             <FooterLink title="Terms of Service" link={"termsofservice"} />
-                            <FooterLink title="Privacy Policy" link={null} />
+                            <FooterLink title="Privacy Policy" link={"privacypolicy"} />
                         </ul>
                     </div>
                 </div>
