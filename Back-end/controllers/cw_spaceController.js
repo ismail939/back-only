@@ -72,7 +72,6 @@ module.exports = {
                     for (let index = 0; index < cw_spaces.length; index++) {
                         await cache.pushJsonToList('cw_spaces', cw_spaces[index])
                     }
-                    await cache.setKeyTTL('cw_spaces', 180)
                 } 
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_spaces });
             }
@@ -105,7 +104,6 @@ module.exports = {
                 for (let index = 0; index < cw_spaceHome.length; index++) {
                     await cache.pushJsonToList('cw_spaceHome', cw_spaceHome[index])                    
                 }
-                await cache.setKeyTTL('cw_spaceHome', 600)
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_spaceHome })
             }
             const error = appError.create("There Are No Available Co-working Spaces", 404, httpStatusCode.ERROR);
@@ -126,7 +124,6 @@ module.exports = {
             })
             if (cw_space) {
                 await cache.setJsonObject(key, cw_space)
-                await cache.setKeyTTL(key, 600)
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_space })
             }
             const error = appError.create("This Co-working Spaces Not Found", 404, httpStatusCode.ERROR);
@@ -150,6 +147,7 @@ module.exports = {
                         cwID: req.params.ID
                     }
                 })
+                cache.removeJson('cw_space:'+req.params.ID, 'cw_spaces', 'cw_spaceHome')
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Co-working Space Updated Successfully" })
             }
             const error = appError.create("Co-Working Space Not Found", 404, httpStatusCode.ERROR);
@@ -177,6 +175,7 @@ module.exports = {
                     cwID: req.params.ID
                 }
                 });
+                cache.removeJson('cw_space:'+req.params.ID, 'cw_spaces', 'cw_spaceHome')
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Co-working Space Updated Successfully" });
             }
             const error = appError.create("Co-Working Space Not Found", 404, httpStatusCode.ERROR);
@@ -210,6 +209,7 @@ module.exports = {
                         cwID: req.params.ID
                     }
                 })
+                cache.removeJson('cw_space:'+req.params.ID, 'cw_spaces', 'cw_spaceHome')
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Co-working Space Deleted Successfully" })
             }
             const error = appError.create("Co-working Space Not Found", 404, httpStatusCode.ERROR);

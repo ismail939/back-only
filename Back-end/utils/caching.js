@@ -28,6 +28,11 @@ const client = redis.createClient({
     await client.rPush(key, JSON.stringify(jsonObject));
   }
   
+  async function removeJson(key, listKey, homeListKey){
+      await client.del(listKey)
+      await client.del(key)
+      await client.del(homeListKey)
+  }
   // Function to get all JSON objects from the list
   async function getJsonList(key) {
     const values = await client.lRange(key, 0, -1);
@@ -38,4 +43,4 @@ const client = redis.createClient({
     await client.expire(key, ttlInSeconds);
   }
   
-module.exports = {pushJsonToList, getJsonList, setKeyTTL, setJsonObject, getJsonObject}
+module.exports = {pushJsonToList, getJsonList, setKeyTTL, setJsonObject, getJsonObject, removeJson}
