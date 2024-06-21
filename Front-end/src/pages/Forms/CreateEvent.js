@@ -74,6 +74,9 @@ function CreateEvent() {
             fetch('http://localhost:4000/events', {
                 method: 'POST',
                 body: formData,
+                headers: {
+                    'Authorization': `Bearer ${auth.token}`, // Add the token to the headers
+                },
             })
                 .then(response => response.json())
                 .then(data => {

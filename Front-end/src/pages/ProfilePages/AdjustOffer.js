@@ -60,6 +60,7 @@ function AdjustOffer() {
         }
     }
     function HandleChange(e) {
+        console.log(e.target.value)
         setOffer({ ...offer, [e.target.name]: e.target.value })
     }
     useEffect(() => {
@@ -77,6 +78,7 @@ function AdjustOffer() {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
                 "title": offer.title,

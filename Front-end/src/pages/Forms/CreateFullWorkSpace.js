@@ -4,7 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import { useSelector } from "react-redux";
 import { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
-import {setCredentials} from "../../components/reduxtoolkit/Slices/authSlice"
+import { setCredentials } from "../../components/reduxtoolkit/Slices/authSlice"
 import { CheckLg, ExclamationCircleFill, CheckCircleFill } from "react-bootstrap-icons";
 import WorkSpaceImages from "../../components/WorkSpaceForm/WorkSpaceImages";
 import Swal from "sweetalert2";
@@ -68,7 +68,6 @@ function CreateFullWorkSpace() {
     }
     const addMainData = () => {
         let formData = new FormData();
-        formData.append('imgName', data.offerImageName);
         formData.append('name', data.name);
         formData.append('address', data.address);
         formData.append('phone', data.phone);
@@ -77,23 +76,31 @@ function CreateFullWorkSpace() {
         formData.append('email', data.email);
         formData.append('openingTime', data.openingTime);
         formData.append('closingTime', data.closingTime);
-        formData.append('ownerOwnerID', ownerData.ownerID)
-        formData.append('img', data.mainimg);
+        formData.append('ownerOwnerID', ownerData.ownerID);
+        formData.append('mainPhoto', data.mainimg);
+
         fetch('http://localhost:4000/cw_spaces', {
             method: 'POST',
             body: formData,
+            headers: {
+                'Authorization': `Bearer ${auth.token}`, // Add the token to the headers
+            },
         })
             .then(res => res.json())
             .then(response => {
-                if (response.status === "error") { console.log(response.message) }
-                else if (response.status === "success") {
-                    dispatch(setCredentials({...auth , token: response.data.token}))
+                if (response.status === "error") {
+                    console.log(response.message);
+                } else if (response.status === "success") {
+                    dispatch(setCredentials({ ...auth, token: response.data.token }));
                     ownerData = jwtDecode(response.data.token);
                     next();
                 }
-                console.log(response)
+                console.log(response);
             })
-    }
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    };
     const addPhotos = () => {
         let formData = new FormData();
         data.photos.forEach(image => {
@@ -102,6 +109,9 @@ function CreateFullWorkSpace() {
         fetch(`http://localhost:4000/cw_spacePhotos/${ownerData.cwSpaceCwID}`, {
             method: 'POST',
             body: formData,
+            headers: {
+                'Authorization': `Bearer ${auth.token}`, // Add the token to the headers
+            },
         })
             .then(res => res.json())
             .then(response => {
@@ -125,6 +135,9 @@ function CreateFullWorkSpace() {
         fetch(`http://localhost:4000/rooms`, {
             method: 'POST',
             body: formData,
+            headers: {
+                'Authorization': `Bearer ${auth.token}`, // Add the token to the headers
+            },
         })
             .then(res => res.json())
             .then(response => {
