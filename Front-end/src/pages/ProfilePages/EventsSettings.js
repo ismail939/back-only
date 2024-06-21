@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
-import { GeoAlt, CalendarEvent, Clock } from "react-bootstrap-icons";
+import Swal from "sweetalert2";
+import {  CalendarEvent } from "react-bootstrap-icons";
 function EventsSettings() {
     const [events, setEvents] = useState([]);
     const [noEvents, setNoEvents] = useState(false);
@@ -27,6 +28,38 @@ function EventsSettings() {
     }
     function EventCard(props) {
         const event = props.event;
+        function removeEvent() {
+            fetch(`http://localhost:4000/events/${event.eventID}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            }).then(res => res.json()).then((data) => {
+                if (data.status === "success") {
+                    console.log("success")
+                    getevents();
+                } else if (data.status === "error") {
+                    console.log(data)
+                } else if (data.status === "fail") {
+                    console.log(data)
+                }
+            }).catch(error => console.log(error))
+        }
+        function alert() {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3282B8",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    removeEvent();
+                }
+            });
+        }
         return (
             <div className="bg-white shadow-md overflow-hidden rounded-sm">
                 <div className="flex-col">
@@ -54,7 +87,7 @@ function EventsSettings() {
                         </div>
                         <div className="flex items-center justify-between gap-4">
                             <Link to={`${event.eventID}`} className="main-font text-center my-2 btn-color py-2 px-2 w-full">Edit</Link>
-                            <button className="main-font my-2 bg-red-500 hover:bg-red-600 duration-200 py-2 px-2 w-full">Remove</button>
+                            <button className="main-font my-2 bg-[#ee0000] hover:bg-[#dd0000] duration-200 py-2 px-2 w-full" onClick={() => alert()}>Remove</button>
                         </div>
                     </div>
                 </div>
