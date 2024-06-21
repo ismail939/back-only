@@ -51,7 +51,7 @@ function ResetPassword() {
     }
     const sendPassword = () => {
         const id = profileData.role === "owner" ? profileData.ownerID : profileData.clientID
-        fetch(`http://localhost:4000/${profileData.role}s/updatePassword/${id}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/${profileData.role}s/updatePassword/${id}`, {
             method: "PATCH",
             headers: {
                 'Authorization': `Bearer ${token}`,

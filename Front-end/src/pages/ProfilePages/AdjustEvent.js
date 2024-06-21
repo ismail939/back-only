@@ -20,7 +20,7 @@ function AdjustEvent() {
         maxCapacity: false
     });
     const getEvent = () => {
-        fetch(`http://localhost:4000/events/${params.eventid}`)
+        fetch(`${process.env.REACT_APP_BASE_URL}/events/${params.eventid}`)
             .then(res => res.json())
             .then(responsedata => {
                 setEvent({
@@ -55,7 +55,7 @@ function AdjustEvent() {
         if (isImage(imgName)) {
             let formData = new FormData();
             formData.append('img', img);
-            fetch(`http://localhost:4000/events/${params.eventid}`, {
+            fetch(`${process.env.REACT_APP_BASE_URL}/events/${params.eventid}`, {
                 method: 'PATCH',
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -96,7 +96,7 @@ function AdjustEvent() {
             
     }
     const addData = () => {
-        fetch(`http://localhost:4000/events/${params.eventid}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/events/${params.eventid}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',

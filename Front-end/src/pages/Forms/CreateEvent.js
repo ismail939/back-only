@@ -71,7 +71,7 @@ function CreateEvent() {
             formData.append('maxCapacity', maxCapacity);
             formData.append('cwSpaceCwID', ownerData.cwSpaceCwID);
             formData.append('img', img);
-            fetch('http://localhost:4000/events', {
+            fetch(`${process.env.REACT_APP_BASE_URL}/events`, {
                 method: 'POST',
                 body: formData,
                 headers: {

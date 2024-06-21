@@ -53,7 +53,7 @@ function WorkSpaces() {
         setDropDown(false);
     }, [])
     const getFavourites = () => {
-        fetch(`http://localhost:4000/favourites/${profileData.clientID}`,{
+        fetch(`${process.env.REACT_APP_BASE_URL}/favourites/${profileData.clientID}`,{
             headers: {
                 "Authorization": `Bearer ${token}`
             }},)
@@ -72,7 +72,8 @@ function WorkSpaces() {
         document.addEventListener("mousedown", handler)
     }, [])
     const getWorkSpaces = () => {
-        fetch("http://localhost:4000/cw_spaces")
+        console.log(process.env)
+        fetch(`${process.env.REACT_APP_BASE_URL}/cw_spaces`)
             .then(res => res.json())
             .then(responsedata => {
                 setCWSpaces(responsedata.data);

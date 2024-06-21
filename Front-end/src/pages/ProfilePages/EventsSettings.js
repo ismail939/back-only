@@ -15,7 +15,7 @@ function EventsSettings() {
         getevents();
     }, [])
     const getevents = () => {
-        fetch(`http://localhost:4000/events/cw_space/${cwid}`)
+        fetch(`${process.env.REACT_APP_BASE_URL}/events/cw_space/${cwid}`)
             .then(res => res.json())
             .then(responsedata => {
                 setEvents(responsedata.data);
@@ -29,7 +29,7 @@ function EventsSettings() {
     function EventCard(props) {
         const event = props.event;
         function removeEvent() {
-            fetch(`http://localhost:4000/events/${event.eventID}`, {
+            fetch(`${process.env.REACT_APP_BASE_URL}/events/${event.eventID}`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token}`

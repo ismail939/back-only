@@ -23,7 +23,7 @@ function Requests() {
     const usertype = user.usertype;
     const profileData = jwtDecode(token);
     const getRequests = () => {
-        fetch(`http://localhost:4000/requests/${profileData.cwSpaceCwID}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/requests/${profileData.cwSpaceCwID}`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -38,7 +38,7 @@ function Requests() {
         getRequests();
     }, [])
     function handleAccept(clientClientID, roomRoomID) {
-        fetch(`http://localhost:4000/requests/${clientClientID}/${roomRoomID}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/requests/${clientClientID}/${roomRoomID}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ function Requests() {
         })
     }
     function handleDelete(clientClientID, roomRoomID) {
-        fetch(`http://localhost:4000/requests/${clientClientID}/${roomRoomID}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/requests/${clientClientID}/${roomRoomID}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
@@ -75,7 +75,6 @@ function Requests() {
     }
     function PendingRoomCard(props) {
         const room = props.room;
-        const clientImage = `http://localhost:4000/images/clients/` + room.clientProfilePic;
         return (
             <div className="bg-white rounded-xl shadow-md overflow-hidden w-full">
                 <div className="">
@@ -87,7 +86,7 @@ function Requests() {
                         <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`${room?.createdAt.slice(0, 10)} ${room?.createdAt.slice(11, 19)} Created `}</div>
                         <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`${room?.updatedAt.slice(0, 10)} ${room?.updatedAt.slice(11, 19)} Updated`}</div>
                         <div className="flex items-center gap-2 my-2">
-                            <img className="w-10 h-10 object-cover rounded-full" src={clientImage} alt={"no image found"}></img>
+                            <img className="w-10 h-10 object-cover rounded-full" src={room.clientImg} alt={"no image found"}></img>
                             <div>{`${room?.clientName}  requested ${room?.numberOfPersons} people`}</div>
                         </div>
                         <div className="flex flex-col items-center gap-1 mt-2">
@@ -101,7 +100,6 @@ function Requests() {
     }
     function HistoryCard(props) {
         const room = props.room;
-        const clientImage = `http://localhost:4000/images/clients/` + room.clientProfilePic;
         return (
             <div className="bg-white rounded-xl shadow-md overflow-hidden w-full">
                 <div className="">
@@ -113,7 +111,7 @@ function Requests() {
                         <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`${room?.createdAt.slice(0, 10)} ${room?.createdAt.slice(11, 19)} Created `}</div>
                         <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`${room?.updatedAt.slice(0, 10)} ${room?.updatedAt.slice(11, 19)} Updated`}</div>
                         <div className="flex items-center gap-2 my-2">
-                            <img className="w-10 h-10 object-cover rounded-full" src={clientImage} alt={"no image found"}></img>
+                            <img className="w-10 h-10 object-cover rounded-full" src={room.clientImg} alt={"no image found"}></img>
                             <div>{`${room?.clientName}  requested ${room?.numberOfPersons} people`}</div>
                         </div>
                         <div className="main-font text-xl capitalize text-[#0F4C75]">{`Request ${room.status}`}</div>

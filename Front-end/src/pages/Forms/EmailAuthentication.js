@@ -40,7 +40,7 @@ function Verify({ data, SendCode }) {
         }
     }
     function Continue() {
-        fetch(`http://localhost:4000/${data.usertype}s/verify`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/${data.usertype}s/verify`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -50,9 +50,8 @@ function Verify({ data, SendCode }) {
                 "verificationCode": code
             }),
         }).then(res => res.json()).then((data) => {
-            console.log(data)
             if (data.status === "success") {
-                usertype === "owner" ? navigate("../portal-login") : (usertype === "client" ? navigate("../login") : navigate("/"))
+                usertype === "owner" ? navigate("/portal-login") : (usertype === "client" ? navigate("/login") : navigate("/"))
             }else if (data.status === "error") {
                 setIncorrect(true)
             }
@@ -89,7 +88,7 @@ function EmailAuthentication() {
     const [check, setCheck] = useState(false);
     const data = useSelector(store => store.signUp);
     function SendCode() {
-        fetch(`http://localhost:4000/${data.usertype}s/sendVerification`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/${data.usertype}s/sendVerification`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

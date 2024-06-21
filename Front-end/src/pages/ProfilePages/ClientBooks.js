@@ -6,7 +6,7 @@ function ClientBookings() {
     const token = useSelector(store => store.auth).token;
     const profileData = jwtDecode(token);
     const getBooks = () => {
-        fetch(`http://localhost:4000/clients/getBookings/${profileData.clientID}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/clients/getBookings/${profileData.clientID}`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -26,7 +26,7 @@ function ClientBookings() {
             <div className="bg-white rounded-sm shadow-md overflow-hidden w-full my-5">
                 <div className="flex md:flex-row flex-col">
                     <div className="">
-                        <img className="h-48 w-full object-cover" src={room.roomImage} alt={"no image found"}></img>
+                        <img className="h-48 w-full md:w-[300px] object-cover" src={room.img} alt={"no image found"}></img>
                     </div>
                     <div className="px-8 py-2">
                         <h1 className="capitalize text-lg leading-tight text-xl main-font">{`Payment Method: ${room.payment}`}</h1>

@@ -12,7 +12,7 @@ function EventsWorshops() {
     const [statusresponse, setStatusResponse] = useState("");
     let menuRef = useRef();
     const getEventsWorkshops = () => {
-        fetch("http://localhost:4000/events")
+        fetch(`${process.env.REACT_APP_BASE_URL}/events`)
             .then(res => res.json())
             .then(responsedata => {
                 setEvents(responsedata.data);

@@ -67,7 +67,7 @@ function Moderators() {
         }
     }
     function createModerator() {
-        fetch(`http://localhost:4000/moderators/register`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/moderators/register`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ function Moderators() {
         })
     }
     const getModerators = () => {
-        fetch(`http://localhost:4000/moderators?cwSpaceID=${cwid}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/moderators?cwSpaceID=${cwid}`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }

@@ -13,44 +13,60 @@ function FaqObject({ faq }) {
 function FAQs() {
     const faqs = [
         {
-            "question": "What is your return policy?",
-            "answer": "You can return any item within 30 days of purchase for a full refund."
+            "question": "What is SPACEs?",
+            "answer": "SPACEs is an online Platform that connects clients with a variety of co-working spaces. We provide a comprehensive platform where co-working spaces can list their amenities, and clients can easily find and book the space that best suits their needs."
         },
         {
-            "question": "How long does shipping take?",
-            "answer": "Shipping typically takes 5-7 business days, depending on your location."
+            "question": "How do I find a co-working space on the platform?",
+            "answer": "Simply use our search and filter tools to find co-working spaces based on your preferences, such as location, amenities, price, and more. You can view detailed listings, photos, and reviews to help you make an informed decision."
         },
         {
-            "question": "Do you ship internationally?",
-            "answer": "Yes, we ship to most countries worldwide. Shipping fees and times may vary."
+            "question": "How do I book a room in co-working space?",
+            "answer": "Once you find a co-working space that meets your requirements, you can book a room in it directly through our platform. Select your desired dates, choose the membership plan or day pass, and complete the booking process online."
         },
         {
-            "question": "Can I track my order?",
-            "answer": "Yes, once your order has been shipped, you will receive a tracking number via email."
+            "question": "Can I tour a co-working space before booking?",
+            "answer": "Yes, many co-working spaces offer tours to potential clients. You can request a tour directly from the listing page of the co-working space you are interested in."
         },
         {
-            "question": "What payment methods do you accept?",
-            "answer": "We accept Visa, MasterCard, American Express, Discover, and PayPal."
+            "question": "How do I create an account as a co-working space owner?",
+            "answer": "To create an account, click on the 'Sign Up' button and choose the 'Owner' option. Fill out the required details about your space, upload photos, and provide information about your amenities and pricing. Once your account is set up, you can start listing your space and managing bookings."
         },
         {
-            "question": "How can I contact customer service?",
-            "answer": "You can contact our customer service team via email at support@example.com or call us at 1-800-123-4567."
+            "question": "How are payments handled?",
+            "answer": "Payments are processed securely through our platform. Clients can pay for their bookings using major credit cards or other accepted payment methods. Co-working space owners receive payments directly to their specified accounts."
         },
         {
-            "question": "Do you offer gift cards?",
-            "answer": "Yes, we offer gift cards in various denominations. They can be purchased online and sent via email."
+            "question": "How can I leave a review for a co-working space?",
+            "answer": "After your visit or booking, you will receive an email prompting you to leave a review. Your feedback helps other clients make informed decisions and helps co-working space owners improve their services."
         },
         {
-            "question": "Can I change or cancel my order?",
-            "answer": "Yes, you can change or cancel your order within 24 hours of placing it by contacting our customer service team."
+            "question": "What if I need to cancel my booking?",
+            "answer": "You can cancel your booking up to 6 hours before the scheduled time without any charges. If you cancel within 6 hours of the booking time, a penalty will be applied, which will be added to your next booking. Please review the specific cancellation policy provided in the listing before booking. If you need to cancel, follow the instructions in your booking confirmation or contact our support team for assistance."
         },
         {
-            "question": "Do you offer discounts for bulk purchases?",
-            "answer": "Yes, we offer discounts for bulk purchases. Please contact our sales team for more information."
+            "question": "How do I contact customer support?",
+            "answer": "If you have any questions or need assistance, you can contact our customer support team through the 'Contact Us' page on our website. We're here to help with any inquiries or issues you may have."
         },
         {
-            "question": "Are your products environmentally friendly?",
-            "answer": "We are committed to sustainability and offer a range of environmentally friendly products."
+            "question": "Are there any fees for using the platform?",
+            "answer": "Creating an account and browsing co-working spaces is free. Fees may apply for bookings and are transparently displayed during the booking process."
+        },
+        {
+            "question": "Can I list more than one co-working space?",
+            "answer": "No, co-working space owners can list only one location under their account."
+        },
+        {
+            "question": "What measures are in place for COVID-19 safety?",
+            "answer": "We prioritize the health and safety of our community. Each co-working space listing includes information on the COVID-19 safety measures they have implemented, such as enhanced cleaning protocols, social distancing arrangements, and mask requirements."
+        },
+        {
+            "question": "How do I update my listing information?",
+            "answer": "Co-working space owners can update their listing information at any time by logging into their account. From the dashboard, you can edit details, update photos, adjust pricing, and manage availability."
+        },
+        {
+            "question": "Can clients see which spaces have availability in real-time?",
+            "answer": "Yes, our platform provides real-time availability for co-working spaces. Clients can check available dates and times directly from the booking page."
         }
     ]
     return (

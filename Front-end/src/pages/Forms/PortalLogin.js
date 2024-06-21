@@ -45,7 +45,7 @@ function Login({ type }) {
         let apitype;
         if (type === "Owner") apitype = "owners"
         else apitype = "moderators"
-        fetch(`http://localhost:4000/${apitype}/login`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/${apitype}/login`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

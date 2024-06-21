@@ -59,7 +59,7 @@ function AdjustModerator() {
         }
     }
     function changePassword(){
-        fetch(`http://localhost:4000/owners/updateModeratorPassword`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/owners/updateModeratorPassword`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',

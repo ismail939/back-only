@@ -6,7 +6,7 @@ function OfferAdmin(){
     const [selected, setSelected] = useState({});
     const token = useSelector(store => store.auth).token;
     const getOffers = () => {
-        fetch("http://localhost:4000/offers")
+        fetch(`${process.env.REACT_APP_BASE_URL}/offers`)
             .then(res => res.json())
             .then(responsedata => {
                 setOffers(responsedata.data);
@@ -17,7 +17,7 @@ function OfferAdmin(){
         getOffers();
     }, [])
     const EditOffer= (offerID) => {
-        fetch(`http://localhost:4000/offers/${offerID}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/offers/${offerID}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ function OfferAdmin(){
         }).then(res => res.json()).then((data) => { console.log(data) })
     }
     const removeOffer= (offerID) => {
-        fetch(`http://localhost:4000/offers/${offerID}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/offers/${offerID}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
