@@ -30,8 +30,7 @@ const uploadToCloud = (req, folderName) => {
             if(file.buffer.byteLength>700000){
                 file.buffer = await compressImage(file.buffer)
             }
-            console.log(file)
-            console.log(file.buffer)
+           
             const uniqueSuffix = Date.now() + '.' + file.originalname.split('.')[1]; // Unique name for each file
 
             cloudinary.uploader.upload_stream({ 

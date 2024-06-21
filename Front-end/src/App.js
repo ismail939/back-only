@@ -47,6 +47,9 @@ import AdjustModerator from './pages/ProfilePages/AdjustModerator';
 import ClientRequests from './pages/ProfilePages/ClientRequests';
 import ClientBookings from './pages/ProfilePages/ClientBooks';
 import EventAdmin from './pages/AdminPages/eventAdmin';
+import CancelBook from './pages/CancelBook';
+import TermsAndConditions from './pages/TermsOfService';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 function App() {
   return (
     <>
@@ -56,6 +59,8 @@ function App() {
         <Route path='/' element={<Home />}></Route>
         <Route path='login' element={<Login />}></Route>
         <Route path='aboutus' element={<AboutUs />}></Route>
+        <Route path='termsofservice' element={<TermsAndConditions/>}></Route>
+        <Route path='privacypolicy' element={<PrivacyPolicy/>}></Route>
         <Route path='portal-login' element={<PortalLogin />}></Route>
         <Route path='sign-up' element={<SignUp />}></Route>
         <Route path='email authentication' element={<EmailAuthentication />}></Route>
@@ -71,6 +76,7 @@ function App() {
           <Route path='favourites' element={<Favourites />}></Route>
           <Route path='payment' element={<Payment />}></Route>
           <Route path='reviewbook' element={<Review />}></Route>
+          <Route path='cancelbook' element={<CancelBook />}></Route>
           <Route element={<ProfileManager />} >
             <Route path='client-requests' element={<ClientRequests />}></Route>
             <Route path='client-books' element={<ClientBookings />}></Route>

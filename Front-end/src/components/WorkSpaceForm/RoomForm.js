@@ -59,6 +59,10 @@ function RoomForm({ roomData, updateRoomData, childRef, ShowError }) {
             setDataErrors({ ...IntitialDataErrors, dayPrice: true })
             setCheckError("Please enter a Suitable Day Price")
             window.scrollTo(0, 300)
+        } else if (parseInt(roomData.dayPrice) < parseInt(roomData.hourPrice)) {
+            setDataErrors({ ...IntitialDataErrors, dayPrice: true })
+            setCheckError("day price must be larger than hour price")
+            window.scrollTo(0, 300)
         } else if (NumberError(roomData.minRoomSize)) {
             setDataErrors({ ...IntitialDataErrors, minRoomSize: true })
             setCheckError("Please enter a Suitable Min. room size")
@@ -67,7 +71,12 @@ function RoomForm({ roomData, updateRoomData, childRef, ShowError }) {
             setDataErrors({ ...IntitialDataErrors, maxRoomSize: true })
             setCheckError("Please enter a Suitable Max. room size")
             window.scrollTo(0, 400)
+        }else if (parseInt(roomData.maxRoomSize)<= parseInt(roomData.minRoomSize)) {
+            setDataErrors({ ...IntitialDataErrors, maxRoomSize: true })
+            setCheckError("max room size must be larger than min room size")
+            window.scrollTo(0, 400)
         } else {
+            setDataErrors(IntitialDataErrors)
             return true
         }
     }

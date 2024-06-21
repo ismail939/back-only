@@ -1,0 +1,8 @@
+static:
+  web:
+    buildCommand: npm run build
+    publishPath: build
+    redirects:
+      - source: /<*>  # This matches all routes
+        destination: /index.html
+        status: 200

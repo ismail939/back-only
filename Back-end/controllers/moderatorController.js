@@ -101,7 +101,7 @@ module.exports = {
                     }
                 });
                 delete updatedModerator.password;
-                const token = await generateJWT(updatedModerator);
+                const token = await generateJWT(updatedModerator, process.env.ACCESS_TOKEN_PERIOD);
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Moderator Updated Successfully", data: { token } });
             }
             const error = appError.create("Moderator Not Found", 404, httpStatusCode.ERROR);

@@ -48,18 +48,18 @@ function WorkSpaceSettings() {
         secImg: false
     });
     const InputData = [
-        { title: "Address", name: "address", condition: dataerrors.address, value: mutedData.address, errormessage: checkerror, type: "input" },
-        { title: "Description", name: "description", condition: dataerrors.description, value: mutedData.description, errormessage: checkerror, type: "textArea" },
-        { title: "Email", name: "email", condition: dataerrors.email, value: mutedData.email, errormessage: checkerror, type: "input" },
-        { title: "Phone Number", name: "phone", condition: dataerrors.phonenumber, value: mutedData.phone, errormessage: checkerror, type: "input" },
-        { title: "Opening Time", name: "openingTime", condition: dataerrors.start, value: mutedData.openingTime, errormessage: checkerror, type: "input" },
-        { title: "Closing Time", name: "closingTime", condition: dataerrors.end, value: mutedData.closingTime, errormessage: checkerror, type: "input" }
+        { title: "Address", name: "address", condition: dataerrors.address, value: mutedData?.address, errormessage: checkerror, type: "input" },
+        { title: "Description", name: "description", condition: dataerrors.description, value: mutedData?.description, errormessage: checkerror, type: "textArea" },
+        { title: "Email", name: "email", condition: dataerrors.email, value: mutedData?.email, errormessage: checkerror, type: "input" },
+        { title: "Phone Number", name: "phone", condition: dataerrors.phonenumber, value: mutedData?.phone, errormessage: checkerror, type: "input" },
+        { title: "Opening Time", name: "openingTime", condition: dataerrors.start, value: mutedData?.openingTime, errormessage: checkerror, type: "input" },
+        { title: "Closing Time", name: "closingTime", condition: dataerrors.end, value: mutedData?.closingTime, errormessage: checkerror, type: "input" }
     ]
     function HandleChange(e) {
         setMutedData({ ...mutedData, [e.target.name]: e.target.value })
     }
     const getCworkingSpacePhotos = () => {
-        fetch(`http://localhost:4000/cw_spacePhotos/${profileData.cwSpaceCwID}`)
+        fetch(`${process.env.REACT_APP_BASE_URL}/cw_spacePhotos/${profileData.cwSpaceCwID}`)
             .then(res => res.json())
             .then(responsedata => {
                 setCwSpacePhotos(responsedata.data);
@@ -67,7 +67,7 @@ function WorkSpaceSettings() {
             ).catch(error => { console.log(error); });
     }
     const getCworkingSpaceData = () => {
-        fetch(`http://localhost:4000/cw_spaces/${profileData.cwSpaceCwID}`)
+        fetch(`${process.env.REACT_APP_BASE_URL}/cw_spaces/${profileData.cwSpaceCwID}`)
             .then(res => res.json())
             .then(responsedata => {
                 setCwSpace(responsedata.data);
@@ -91,7 +91,7 @@ function WorkSpaceSettings() {
         if (isImage(imgName)) {
             let formData = new FormData();
             formData.append('mainPhoto', img);
-            fetch(`http://localhost:4000/cw_spaces/updatePhoto/${cwspace.cwID}`, {
+            fetch(`${process.env.REACT_APP_BASE_URL}/cw_spaces/updatePhoto/${cwspace.cwID}`, {
                 method: 'PATCH',
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -116,7 +116,7 @@ function WorkSpaceSettings() {
         if (isImage(secImgName)) {
             let formData = new FormData();
             formData.append('img', secImg);
-            fetch(`http://localhost:4000/cw_spacePhotos/${cwspace.cwID}`, {
+            fetch(`${process.env.REACT_APP_BASE_URL}/cw_spacePhotos/${cwspace.cwID}`, {
                 method: 'POST',
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -183,7 +183,7 @@ function WorkSpaceSettings() {
         }
     };
     const AddData = () => {
-        fetch(`http://localhost:4000/cw_spaces/${cwspace.cwID}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/cw_spaces/${cwspace.cwID}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
@@ -206,7 +206,7 @@ function WorkSpaceSettings() {
         })
     }
     const AddLocation = () => {
-        fetch(`http://localhost:4000/cw_spaces/${cwspace.cwID}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/cw_spaces/${cwspace.cwID}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
@@ -273,7 +273,7 @@ function WorkSpaceSettings() {
     };
     const deletethisimg = (wantedImg) => {
         try {
-            fetch(`http://localhost:4000/cw_spacePhotos/${cwspace.cwID}/${wantedImg}`, {
+            fetch(`${process.env.REACT_APP_BASE_URL}/cw_spacePhotos/${cwspace.cwID}/${wantedImg}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

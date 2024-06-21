@@ -86,6 +86,14 @@ module.exports = (db, type)=>{
         designRate: {
             type: type.FLOAT,
             defaultValue: 0
+        },
+        lat: {
+            type: type.FLOAT,
+            allowNull: true
+        },
+        lng: {
+            type: type.FLOAT,
+            allowNull: true
         }
     },{
         timestamps: false 

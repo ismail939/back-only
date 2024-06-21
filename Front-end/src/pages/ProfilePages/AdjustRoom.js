@@ -24,7 +24,7 @@ function AdjustRoom() {
         setRoom({ ...room, [e.target.name]: e.target.value })
     }
     const getRoom = () => {
-        fetch(`http://localhost:4000/rooms/${cwID}/${params.roomid}`)
+        fetch(`${process.env.REACT_APP_BASE_URL}/rooms/${cwID}/${params.roomid}`)
             .then(res => res.json())
             .then(responsedata => {
                 setRoom(responsedata.data);
@@ -48,7 +48,7 @@ function AdjustRoom() {
         if (isImage(imgName)) {
             let formData = new FormData();
             formData.append('img', img);
-            fetch(`http://localhost:4000/rooms/${cwID}/${params.roomid}`, {
+            fetch(`${process.env.REACT_APP_BASE_URL}/rooms/${cwID}/${params.roomid}`, {
                 method: 'PATCH',
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -77,10 +77,11 @@ function AdjustRoom() {
             && originData?.maxRoomSize === room?.maxRoomSize           
     }
     const addData = () => {
-        fetch(`http://localhost:4000/rooms/${cwID}/${params.roomid}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/rooms/${cwID}/${params.roomid}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
                 "number": room.number,

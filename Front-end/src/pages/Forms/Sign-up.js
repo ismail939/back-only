@@ -57,7 +57,7 @@ function SignUp() {
         let apitype;
         if(usertype === "Client") apitype = "clients"
         else apitype = "owners"
-        fetch(`http://localhost:4000/${apitype}/register`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/${apitype}/register`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

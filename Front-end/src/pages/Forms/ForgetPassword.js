@@ -9,7 +9,7 @@ function ForgotPassword() {
         email: false,
     });
     function sendEmail() {
-        fetch(`http://localhost:4000/clients/forgotPassword`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/clients/forgotPassword`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

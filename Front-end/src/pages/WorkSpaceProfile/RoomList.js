@@ -11,7 +11,7 @@ function RoomList() {
     const [found, setFound] = useState(false);
     const [loading, setLodaing] = useState(true);
     const getWorkSpace = () => {
-        fetch(`http://localhost:4000/cw_spaces/${params.cwID}`)
+        fetch(`${process.env.REACT_APP_BASE_URL}/cw_spaces/${params.cwID}`)
             .then(res => res.json())
             .then(responsedata => {
                 setLodaing(false)
@@ -24,7 +24,7 @@ function RoomList() {
             ).catch();
     }
     const getRooms = () => {
-        fetch(`http://localhost:4000/rooms/${params.cwID}`)
+        fetch(`${process.env.REACT_APP_BASE_URL}/rooms/${params.cwID}`)
             .then(res => res.json())
             .then(responsedata => {
                 setRooms(responsedata.data);

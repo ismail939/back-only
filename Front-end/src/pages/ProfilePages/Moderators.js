@@ -3,7 +3,7 @@ import { ExclamationCircleFill } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { PencilFill } from "react-bootstrap-icons";
-import image from "../../components/images/WorkSpaceNotFound.png"
+import { jwtDecode } from "jwt-decode";
 function ShowErrorMessage(props) {
     const condition = props.condition;
     const value = props.value;
@@ -13,7 +13,7 @@ function ShowErrorMessage(props) {
         </>
     )
 }
-function Moderators({ cwid }) {
+function Moderators() {
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -21,6 +21,8 @@ function Moderators({ cwid }) {
     const [checkerror, setCheckError] = useState("");
     const [resMessage, setResMessage] = useState("");
     const token = useSelector(store => store.auth).token;
+    const profileData = jwtDecode(token);
+    const cwid = profileData.cwSpaceCwID
     const [dataerrors, setDataErrors] = useState({
         username: false,
         password: false,
@@ -65,7 +67,7 @@ function Moderators({ cwid }) {
         }
     }
     function createModerator() {
-        fetch(`http://localhost:4000/moderators/register`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/moderators/register`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -86,7 +88,7 @@ function Moderators({ cwid }) {
         })
     }
     const getModerators = () => {
-        fetch(`http://localhost:4000/moderators?cwSpaceID=${cwid}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/moderators?cwSpaceID=${cwid}`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }

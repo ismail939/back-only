@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 function OfferAdmin(){
     const [offers, setOffers] = useState([]);
     const [fetcherror, setFetchError] = useState(false);
     const [selected, setSelected] = useState({});
+    const token = useSelector(store => store.auth).token;
     const getOffers = () => {
-        fetch("http://localhost:4000/offers")
+        fetch(`${process.env.REACT_APP_BASE_URL}/offers`)
             .then(res => res.json())
             .then(responsedata => {
                 setOffers(responsedata.data);
@@ -15,10 +17,11 @@ function OfferAdmin(){
         getOffers();
     }, [])
     const EditOffer= (offerID) => {
-        fetch(`http://localhost:4000/offers/${offerID}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/offers/${offerID}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
                 "home": "home",
@@ -26,10 +29,11 @@ function OfferAdmin(){
         }).then(res => res.json()).then((data) => { console.log(data) })
     }
     const removeOffer= (offerID) => {
-        fetch(`http://localhost:4000/offers/${offerID}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/offers/${offerID}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
                 "home": null,

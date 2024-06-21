@@ -112,12 +112,12 @@ const WorkSpaceData = forwardRef(({ name, address, description, email, phone, op
       })
       setCheckError("Please fill in the description"); window.scrollTo(0, 300);
     }
-    else if (email.length > 0 && emailError()) {
+    else if (email.length ==0 || emailError()) {
       setDataErrors({
         "phonenumber1": false, "startDate": false, "endDate": false, "name": false, "address": false,
         "description": false, "email": true, "ImageName": false, "facilities": false
       })
-      setCheckError("Please write a valid facebook Link"); window.scrollTo(0, 300);
+      setCheckError("Please write a valid email Link"); window.scrollTo(0, 300);
     }
     else if (PhoneNumberError(phone)) {
       setDataErrors({

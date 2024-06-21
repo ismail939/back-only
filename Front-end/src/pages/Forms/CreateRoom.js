@@ -54,9 +54,12 @@ function CreateRoom() {
         formData.append('number', roomData.number);
         formData.append('cwSpaceCwID', ownerData.cwSpaceCwID);
         formData.append('img', roomData.roomImg);
-        fetch(`http://localhost:4000/rooms`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/rooms`, {
             method: 'POST',
             body: formData,
+            headers: {
+                'Authorization': `Bearer ${auth.token}`, // Add the token to the headers
+            },
         })
             .then(res => res.json())
             .then(response => {

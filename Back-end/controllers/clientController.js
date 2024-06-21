@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const { Client, Book, Request } = require('../models/modelIndex')
+const { Client, Book, Request, Room } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
@@ -172,7 +172,18 @@ module.exports = {
         async (req, res, next) => {
             const bookings = await Book.findAll({where: {
                 clientClientID: req.params.clientID
+            }, raw: true})
+            const client = await Client.findOne({where: {
+                clientID: req.params.clientID
             }})
+            for (let index = 0; index < bookings.length; index++) {
+                let roomID = bookings[index].roomRoomID
+                let room = await Room.findOne({where: {
+                    roomID: roomID
+                }}) 
+                bookings[index].img = room.img
+                bookings[index].clientImg = client.img
+            }
             if(bookings.length!=0){
                 return res.status(200).json({status: httpStatusCode.SUCCESS, message: "Bookings found successfully!", data: bookings})
             }
@@ -184,7 +195,18 @@ module.exports = {
         async (req, res, next) => {
             const requests = await Request.findAll({where: {
                 clientClientID: req.params.clientID
+            }, raw: true})
+            const client = await Client.findOne({where: {
+                clientID: req.params.clientID
             }})
+            for (let index = 0; index < requests.length; index++) {
+                let roomID = requests[index].roomRoomID
+                let room = await Room.findOne({where: {
+                    roomID: roomID
+                }}) 
+                requests[index].img = room.img
+                requests[index].clientImg = client.img
+            }
             if(requests.length!=0){
                 return res.status(200).json({status: httpStatusCode.SUCCESS, message: "Requests found successfully!", data: requests})
             }

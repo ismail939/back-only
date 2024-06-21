@@ -8,7 +8,7 @@ function Slider(){
     const [homeoffers, setHomeOffers] = useState([]);
     const [fetcherror, setFetchError] = useState(false);
     const getOfferImages = () => {
-        fetch("http://localhost:4000/offers/home")
+        fetch(`${process.env.REACT_APP_BASE_URL}/offers/home`)
             .then(res => res.json())
             .then(responsedata => {
                 setHomeOffers(responsedata.data);

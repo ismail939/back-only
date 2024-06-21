@@ -56,9 +56,12 @@ function CreateOffer() {
             formData.append('end', end);
             formData.append('cwSpaceCwID', ownerData.cwSpaceCwID);
             formData.append('img', img);
-            fetch('http://localhost:4000/offers', {
+            fetch(`${process.env.REACT_APP_BASE_URL}/offers`, {
                 method: 'POST',
                 body: formData,
+                headers: {
+                    'Authorization': `Bearer ${auth.token}`, // Add the token to the headers
+                },
             })
                 .then(response => response.json())
                 .then(data => {

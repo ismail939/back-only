@@ -3,12 +3,13 @@ const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 const generateJWT = require("../utils/generateJWT");
-const { uploadToCloud, deleteFromCloud } = require('../utils/cloudinary');
+const {uploadToCloud, deleteFromCloud} = require('../utils/cloudinary');
+const cache = require('../utils/caching')
 const { validationResult } = require("express-validator");
 
 
 module.exports = {
-    create: asyncWrapper(
+    create: asyncWrapper( 
         async (req, res, next) => {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
@@ -46,7 +47,11 @@ module.exports = {
     ),
     getAll: asyncWrapper(
         async (req, res, next) => {
-            let cw_spaces = await Cw_space.findAll({ raw: true })
+            let cw_spaces = await cache.getJsonList('cw_spaces')
+            if(cw_spaces.length!=0){
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_spaces });
+            }
+            cw_spaces = await Cw_space.findAll({ raw: true })
             if (cw_spaces.length != 0) {
                 let rooms = await Room.findAll({ 
                     raw: true,
@@ -63,6 +68,11 @@ module.exports = {
                         }
                     }
                 }
+                if(cw_spaces.length!=0){
+                    for (let index = 0; index < cw_spaces.length; index++) {
+                        await cache.pushJsonToList('cw_spaces', cw_spaces[index])
+                    }
+                } 
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_spaces });
             }
             const error = appError.create("There Are No Available Co-working Spaces", 404, httpStatusCode.ERROR);
@@ -80,13 +90,20 @@ module.exports = {
     ),
     getHome: asyncWrapper(
         async (req, res, next) => {
-            const cw_spaceHome = await Cw_space.findAll({
+            let cw_spaceHome = await cache.getJsonList('cw_spaceHome')
+            if(cw_spaceHome.length!=0){
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_spaceHome })
+            }
+            cw_spaceHome = await Cw_space.findAll({
                 raw: true,
                 where: {
                     home: "home"
                 }
             })
             if (cw_spaceHome.length != 0) {
+                for (let index = 0; index < cw_spaceHome.length; index++) {
+                    await cache.pushJsonToList('cw_spaceHome', cw_spaceHome[index])                    
+                }
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_spaceHome })
             }
             const error = appError.create("There Are No Available Co-working Spaces", 404, httpStatusCode.ERROR);
@@ -95,12 +112,18 @@ module.exports = {
     ),
     getOne: asyncWrapper(
         async (req, res, next) => {
-            const cw_space = await Cw_space.findOne({
+            const key = 'cw_space:'+req.params.ID
+            let cw_space = await cache.getJsonObject(key)
+            if(cw_space){
+                return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_space })
+            }
+            cw_space = await Cw_space.findOne({
                 where: {
                     cwID: req.params.ID
                 }
             })
             if (cw_space) {
+                await cache.setJsonObject(key, cw_space)
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_space })
             }
             const error = appError.create("This Co-working Spaces Not Found", 404, httpStatusCode.ERROR);
@@ -124,6 +147,7 @@ module.exports = {
                         cwID: req.params.ID
                     }
                 })
+                cache.removeJson('cw_space:'+req.params.ID, 'cw_spaces', 'cw_spaceHome')
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Co-working Space Updated Successfully" })
             }
             const error = appError.create("Co-Working Space Not Found", 404, httpStatusCode.ERROR);
@@ -151,6 +175,7 @@ module.exports = {
                     cwID: req.params.ID
                 }
                 });
+                cache.removeJson('cw_space:'+req.params.ID, 'cw_spaces', 'cw_spaceHome')
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Co-working Space Updated Successfully" });
             }
             const error = appError.create("Co-Working Space Not Found", 404, httpStatusCode.ERROR);
@@ -184,6 +209,7 @@ module.exports = {
                         cwID: req.params.ID
                     }
                 })
+                cache.removeJson('cw_space:'+req.params.ID, 'cw_spaces', 'cw_spaceHome')
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Co-working Space Deleted Successfully" })
             }
             const error = appError.create("Co-working Space Not Found", 404, httpStatusCode.ERROR);

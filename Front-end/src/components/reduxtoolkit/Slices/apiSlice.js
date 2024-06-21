@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 let authState;
 const baseQuery = fetchBaseQuery({
-    baseUrl: "http://localhost:4000",
+    baseUrl: `${process.env.REACT_APP_BASE_URL}`,
     prepareHeaders: (headers, {getState}) =>{
         const token = getState().auth.token;
         authState = getState().auth
