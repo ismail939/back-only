@@ -151,19 +151,6 @@ module.exports = {
             });
             if (deletedEvent) {
                 await deleteFromCloud('events/'+deletedEvent.imgName)
-                let photos = await EventPhoto.findAll({
-                    where: {
-                        eventID: req.params.eventID
-                    }
-                }, { raw: true })
-                for (const photo of photos) {
-                    await deleteFromCloud('events/'+photo.imgName)
-                }
-                await EventPhoto.destroy({
-                    where: {
-                        eventID: req.params.eventID
-                    }
-                })
                 await Event.destroy({
                     where: {
                         eventID: req.params.eventID
