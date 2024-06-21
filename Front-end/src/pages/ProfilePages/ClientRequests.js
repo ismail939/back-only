@@ -7,7 +7,7 @@ function ClientRequests() {
     const token = useSelector(store => store.auth).token;
     const profileData = jwtDecode(token)
     const getRequests = () => {
-        fetch(`http://localhost:4000/clients/getRequests/${profileData.clientID}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/clients/getRequests/${profileData.clientID}`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }

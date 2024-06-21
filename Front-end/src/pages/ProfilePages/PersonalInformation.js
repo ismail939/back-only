@@ -67,7 +67,7 @@ function PersonalInformation(props) {
     }
     const addPassword = () => {
         const id = usertype === "owner" ? profileData.ownerID : (usertype === "moderator" ? profileData.moderatorID : profileData.clientID)
-        fetch(`http://localhost:4000/${usertype}s/updatePassword/${id}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/${usertype}s/updatePassword/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',

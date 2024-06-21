@@ -55,7 +55,7 @@ function Home() {
     const [fetcherror, setFetchError] = useState(false);
     const client = useSelector(store => store.auth);
     const getDicoverData = () => {
-        fetch("http://localhost:4000/cw_spaces/home")
+        fetch(`${process.env.REACT_APP_BASE_URL}/cw_spaces/home`)
             .then(res => res.json())
             .then(responsedata => {
                 setDiscover(responsedata.data);
@@ -63,7 +63,7 @@ function Home() {
             ).catch(error => { setFetchError(true); });
     }
     const getEvents = () => {
-        fetch("http://localhost:4000/events/home")
+        fetch(`${process.env.REACT_APP_BASE_URL}/events/home`)
             .then(res => res.json())
             .then(responsedata => {
                 setEvents(responsedata.data);

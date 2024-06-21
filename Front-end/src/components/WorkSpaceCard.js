@@ -13,7 +13,7 @@ function WorkSpaceCard(props) {
     const isInFavourites = favourites?.some(item => JSON.stringify(item) === JSON.stringify(cwspace));
     const [selected, setSelected] = useState(isInFavourites)
     function addToFavourites(){
-        fetch(`http://localhost:4000/favourites`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/favourites`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ function WorkSpaceCard(props) {
         })
     }
     function RemoveFromFavourites(){
-        fetch(`http://localhost:4000/favourites`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/favourites`, {
             method: "DELETE",
             headers: {
                 'Content-Type': 'application/json',

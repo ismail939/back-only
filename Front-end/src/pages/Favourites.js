@@ -11,7 +11,7 @@ function Favourites() {
         getFavourites();
     }, [])
     const getFavourites = () => {
-        fetch(`http://localhost:4000/favourites/${profileData.clientID}`,{
+        fetch(`${process.env.REACT_APP_BASE_URL}/favourites/${profileData.clientID}`,{
             headers: {
                 "Authorization": `Bearer ${token}`
             },

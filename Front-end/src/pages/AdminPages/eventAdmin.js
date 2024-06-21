@@ -6,7 +6,7 @@ function EventAdmin(){
     const [selected, setSelected] = useState({});
     const token = useSelector(store => store.auth).token;
     const getOffers = () => {
-        fetch("http://localhost:4000/events")
+        fetch(`${process.env.REACT_APP_BASE_URL}/events`)
             .then(res => res.json())
             .then(responsedata => {
                 setEvents(responsedata.data);
@@ -17,7 +17,7 @@ function EventAdmin(){
         getOffers();
     }, [])
     const EditEvent= (eventID) => {
-        fetch(`http://localhost:4000/events/${eventID}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/events/${eventID}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ function EventAdmin(){
         }).then(res => res.json()).then((data) => { console.log(data) })
     }
     const removeEvent= (eventID) => {
-        fetch(`http://localhost:4000/events/${eventID}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/events/${eventID}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',

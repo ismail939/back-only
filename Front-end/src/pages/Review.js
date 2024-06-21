@@ -90,7 +90,7 @@ function Review() {
             setErrorMessage("Please rate any of the previous fields before submitting your review")
             return;
         }
-        fetch(`http://localhost:4000/reviews`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/reviews`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

@@ -23,7 +23,7 @@ function Requests() {
     const usertype = user.usertype;
     const profileData = jwtDecode(token);
     const getRequests = () => {
-        fetch(`http://localhost:4000/requests/${profileData.cwSpaceCwID}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/requests/${profileData.cwSpaceCwID}`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -38,7 +38,7 @@ function Requests() {
         getRequests();
     }, [])
     function handleAccept(clientClientID, roomRoomID) {
-        fetch(`http://localhost:4000/requests/${clientClientID}/${roomRoomID}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/requests/${clientClientID}/${roomRoomID}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ function Requests() {
         })
     }
     function handleDelete(clientClientID, roomRoomID) {
-        fetch(`http://localhost:4000/requests/${clientClientID}/${roomRoomID}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/requests/${clientClientID}/${roomRoomID}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',

@@ -13,7 +13,7 @@ function OfferList() {
     const [statusresponse, setStatusResponse] = useState("");
     let menuRef = useRef();
     const getOffers = () => {
-        fetch("http://localhost:4000/offers")
+        fetch(`${process.env.REACT_APP_BASE_URL}/offers`)
             .then(res => res.json())
             .then(responsedata => {
                 setOffers(responsedata.data);

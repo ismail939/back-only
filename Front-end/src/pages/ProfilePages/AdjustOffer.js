@@ -23,7 +23,7 @@ function AdjustOffer() {
         }
     }
     const getOffer = () => {
-        fetch(`http://localhost:4000/offers/${params.offerid}`)
+        fetch(`${process.env.REACT_APP_BASE_URL}/offers/${params.offerid}`)
             .then(res => res.json())
             .then(responsedata => {
                 setOffer({
@@ -46,7 +46,7 @@ function AdjustOffer() {
         if (isImage(imgName)) {
             let formData = new FormData();
             formData.append('img', img);
-            fetch(`http://localhost:4000/offers/${params.offerid}`, {
+            fetch(`${process.env.REACT_APP_BASE_URL}/offers/${params.offerid}`, {
                 method: 'PATCH',
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -81,7 +81,7 @@ function AdjustOffer() {
 
     }
     const addData = () => {
-        fetch(`http://localhost:4000/offers/${params.offerid}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/offers/${params.offerid}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',

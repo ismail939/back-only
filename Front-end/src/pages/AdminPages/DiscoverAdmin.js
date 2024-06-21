@@ -6,7 +6,7 @@ function DiscoverAdmin() {
     const [selected, setSelected] = useState({});
     const token = useSelector(store => store.auth).token;
     const getWorkSpaces = () => {
-        fetch("http://localhost:4000/cw_spaces")
+        fetch(`${process.env.REACT_APP_BASE_URL}/cw_spaces`)
             .then(res => res.json())
             .then(responsedata => {
                 setCWSpaces(responsedata.data);
@@ -17,7 +17,7 @@ function DiscoverAdmin() {
         getWorkSpaces();
     }, [])
     const EditCW = (cwspace) => {
-        fetch(`http://localhost:4000/cw_spaces/${cwspace.cwID}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/cw_spaces/${cwspace.cwID}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ function DiscoverAdmin() {
         }).then(res => res.json()).then((data) => { console.log(data) })
     }
     const removeCW = (cwID) => {
-        fetch(`http://localhost:4000/cw_spaces/${cwID}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/cw_spaces/${cwID}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',

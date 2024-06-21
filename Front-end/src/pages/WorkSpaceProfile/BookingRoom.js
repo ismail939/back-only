@@ -113,7 +113,7 @@ function BookingRoom() {
     const usertype = user.usertype;
     const profileData = jwtDecode(token);
     const getRoom = () => {
-        fetch(`http://localhost:4000/rooms/${params.cwID}/${params.roomid}`)
+        fetch(`${process.env.REACT_APP_BASE_URL}/rooms/${params.cwID}/${params.roomid}`)
             .then(res => res.json())
             .then(responsedata => {
                 setRoom(responsedata.data);
@@ -131,7 +131,7 @@ function BookingRoom() {
         setBookingRange(fields)
     }
     const getWorkSpace = () => {
-        fetch(`http://localhost:4000/cw_spaces/${params.cwID}`)
+        fetch(`${process.env.REACT_APP_BASE_URL}/cw_spaces/${params.cwID}`)
             .then(res => res.json())
             .then(responsedata => {
                 if (responsedata.status === "error") {
@@ -146,7 +146,7 @@ function BookingRoom() {
             ).catch();
     }
     function getBookedTimes(selectedDate) {
-        fetch(`http://localhost:4000/books/roomof/${params.roomid}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/books/roomof/${params.roomid}`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -208,7 +208,7 @@ function BookingRoom() {
         }
     }
     function createRequest() {
-        fetch(`http://localhost:4000/requests`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/requests`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

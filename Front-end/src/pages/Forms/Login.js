@@ -23,7 +23,7 @@ function Login() {
         remember ? console.log("checked") : console.log("not checked")
     }
     const AddData = () => {
-        fetch(`http://localhost:4000/clients/login`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/clients/login`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

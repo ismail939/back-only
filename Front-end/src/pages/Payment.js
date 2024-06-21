@@ -84,7 +84,7 @@ function CheckoutForm() {
         }
     }
     function makeBook(visaToken) {
-        fetch(`http://localhost:4000/books`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/books`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -118,7 +118,7 @@ function CheckoutForm() {
             ).catch();
     }
     function makeRegister(visaToken) {
-        fetch(`http://localhost:4000/registers`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/registers`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

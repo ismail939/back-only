@@ -13,7 +13,7 @@ function RoomsSettings() {
         getRooms();
     }, [])
     const getRooms = () => {
-        fetch(`http://localhost:4000/rooms/${cwid}`)
+        fetch(`${process.env.REACT_APP_BASE_URL}/rooms/${cwid}`)
             .then(res => res.json())
             .then(responsedata => {
                 setRooms(responsedata.data);

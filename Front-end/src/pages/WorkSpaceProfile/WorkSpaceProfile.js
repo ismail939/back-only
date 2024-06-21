@@ -58,7 +58,7 @@ function WorkSpaceProfile() {
     const [found, setFound] = useState(false);
     const [loading, setLodaing] = useState(true);
     const getWorkSpace = () => {
-        fetch(`http://localhost:4000/cw_spaces/${params.cwID}`)
+        fetch(`${process.env.REACT_APP_BASE_URL}/cw_spaces/${params.cwID}`)
             .then(res => res.json())
             .then(responsedata => {
                 if (responsedata.status === "error") {
@@ -73,7 +73,7 @@ function WorkSpaceProfile() {
             );
     }
     const getWorkSpaceImages = () => {
-        fetch(`http://localhost:4000/cw_spacePhotos/${params.cwID}`)
+        fetch(`${process.env.REACT_APP_BASE_URL}/cw_spacePhotos/${params.cwID}`)
             .then(res => res.json())
             .then(responsedata => {
                 if (responsedata.status === "error") {
@@ -84,7 +84,7 @@ function WorkSpaceProfile() {
             );
     }
     const getReviews = () => {
-        fetch(`http://localhost:4000/reviews/${params.cwID}`)
+        fetch(`${process.env.REACT_APP_BASE_URL}/reviews/${params.cwID}`)
             .then(res => res.json())
             .then(responsedata => {
                 if (responsedata.status === "error") {

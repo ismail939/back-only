@@ -14,7 +14,7 @@ function OffersSettings() {
         getOffers();
     }, [])
     const getOffers = () => {
-        fetch(`http://localhost:4000/offers/cw_space/${cwid}`)
+        fetch(`${process.env.REACT_APP_BASE_URL}/offers/cw_space/${cwid}`)
             .then(res => res.json())
             .then(responsedata => {
                 setOffers(responsedata.data);
@@ -28,7 +28,7 @@ function OffersSettings() {
     function OfferCard(props) {
         const offer = props.offer;
         function removeOffer() {
-            fetch(`http://localhost:4000/offers/${offer.offerID}`, {
+            fetch(`${process.env.REACT_APP_BASE_URL}/offers/${offer.offerID}`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token}`
