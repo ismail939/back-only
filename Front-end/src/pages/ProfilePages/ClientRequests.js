@@ -26,7 +26,7 @@ function ClientRequests() {
             <div className="bg-white rounded-sm shadow-md overflow-hidden w-full">
                 <div className="flex md:flex-row flex-col">
                     <div className="">
-                        <img className="h-48 w-full object-cover" src={room.roomImg} alt={"no image found"}></img>
+                        <img className="h-48 w-full object-cover" src={room.img} alt={"no image found"}></img>
                     </div>
                     <div className="px-8 py-2">
                         <h1 className="capitalize font-semibold text-xl leading-tight text-black main-font">{`Room ${room?.roomNumber}`}</h1>

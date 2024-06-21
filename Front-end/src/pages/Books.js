@@ -25,7 +25,6 @@ function Books() {
     }, [])
     function BookedCard(props) {
         const room = props.room;
-        const clientImage = `http://localhost:4000/images/clients/` + room.clientImage;
         return (
             <div className="bg-white rounded-xl shadow-md overflow-hidden w-full">
                 <div className="">
@@ -38,7 +37,7 @@ function Books() {
                         <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`${room?.createdAt.slice(0, 10)} ${room?.start.slice(11, 19)} Start `}</div>
                         <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`${room?.updatedAt.slice(0, 10)} ${room?.end.slice(11, 19)} End`}</div>
                         <div className="flex items-center gap-2 my-2">
-                            <img className="w-10 h-10 object-cover rounded-full" src={clientImage} alt={"no image found"}></img>
+                            <img className="w-10 h-10 object-cover rounded-full" src={room.clientImg} alt={"no image found"}></img>
                             <div>{`${room?.username}  Booked`}</div>
                         </div>
                         <div className="main-font text-xl capitalize text-[#0F4C75]">{`total cost is ${room.totalCost}`}</div>

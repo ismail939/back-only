@@ -67,16 +67,29 @@ function PersonalInformation(props) {
     }
     const addPassword = () => {
         const id = usertype === "owner" ? profileData.ownerID : (usertype === "moderator" ? profileData.moderatorID : profileData.clientID)
-        try {
-            const data = JSON.stringify({
-                "reset": false,
+        fetch(`http://localhost:4000/${usertype}s/updatePassword/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${user.token}`
+            },
+            body: JSON.stringify({
+                "reset": true,
                 "oldPassword": oldPassword,
                 "newPassword": newPassword,
+            }),
+        }).then(response => response.json())
+            .then(data => {
+                console.log(data)
+                if (data.status === "error") {
+                    console.log(data.message)
+                } else if (data.status === "success") {
+                    window.location.reload();
+                }
             })
-            updateData({ id: id, credentials: data, usertype: usertype })
-        } catch (error) {
-            console.log(error)
-        }
+            .catch(error => {
+                console.error('Error during fetch operation:', error);
+            })
     }
     function isImage(imageName) {
         if (imageName.slice(-4) === ".jpg" || imageName.slice(-5) === ".jpeg" ||
