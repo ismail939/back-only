@@ -69,7 +69,6 @@ function CheckoutForm() {
                     setErrorMessage(result.error);
                 } else {
                     // Send the token to your server for further processing
-                    setLodaing(false)
                     let token = result.token;
                     if (payElements.type === "room") {
                         makeBook(token.id)
@@ -105,7 +104,7 @@ function CheckoutForm() {
             }),
         }).then(res => res.json())
             .then(responsedata => {
-                console.log(responsedata)
+                setLodaing(false)
                 if (responsedata.status === "success") {
                     dispatch(removePayData())
                     setPayComplete(true)

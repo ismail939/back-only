@@ -37,7 +37,9 @@ function ClientRequests() {
                             <PeopleFill />
                             <div className="font-bold">{`Number of Persons: ${room?.numberOfPersons}`}</div>
                         </div>
-                        <div className="uppercase mt-2 text-lg text-[#0F4C75] font-bold">{`Status: ${room?.status}`}</div>
+                        <div className={`uppercase mt-2 text-lg font-bold
+                        ${room?.status === "accepted" ? "text-green-500" : (room?.status !== "pending" ? "text-[#ff0000]" : "text-gray-500")}`}>
+                        {`Status: ${room?.status}`}</div>
                     </div>
                 </div>
             </div>
