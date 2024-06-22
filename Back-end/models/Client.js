@@ -28,7 +28,7 @@ module.exports = (db, type) => {
         img: {
             type: type.TEXT,
             allowNUll: true,
-            defaultValue: "https://graduation-project-cw-spaces.onrender.com/images/default.png"
+            defaultValue: "https://res.cloudinary.com/duagfqdca/image/upload/v1719042316/default_photo_bi2sce.jpg"
         },
         imgName: {
             type: type.TEXT,

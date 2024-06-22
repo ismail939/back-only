@@ -49,7 +49,7 @@ module.exports = {
                     }
                 })
                 books[index].username = client.username
-                books[index].clientImage = client.profilePic
+                books[index].clientImg = client.img
                 books[index].roomImage = roomsImages[books[index].roomRoomID]
             }
             if (books.length === 0) {

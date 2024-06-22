@@ -65,7 +65,7 @@ module.exports = {
                     }
                     })
                     requests[i].clientName = client.fname + ' ' + client.lname
-                    requests[i].clientProfilePic = client.profilePic
+                    requests[i].clientImg = client.img
                 }
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: requests });
             }
