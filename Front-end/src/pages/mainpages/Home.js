@@ -67,7 +67,6 @@ function Home() {
             .then(res => res.json())
             .then(responsedata => {
                 setEvents(responsedata.data);
-                console.log(events)
             }
             ).catch(error => { setFetchError(true); });
     }
@@ -107,15 +106,15 @@ function Home() {
                     <h2 className="text-md sec-font px-5">Login</h2>
                 </Link>
             </div> : null}
-            <div className="w-4/5 mx-auto mt-[70px]">
+            {discoverData?.length > 0 && <div className="w-4/5 mx-auto mt-[70px]">
                 <h2 className="text-left mb-8 text-5xl main-font">Discover</h2>
                 <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
                     {discoverData ? discoverData.map((cwspace) => {
                             return <DiscoverCard discover={cwspace} key={cwspace.cwID} />
                         }) : null}
                 </div>
-            </div>
-            <div className="w-4/5 mx-auto mt-[70px]">
+            </div>}
+            {events?.length > 0 && <div className="w-4/5 mx-auto mt-[70px]">
                 <h2 className="text-left mb-8 text-4xl text-center main-font">Upcoming Events&Workshops</h2>
                 <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
                     {events ? events.map((cwspace) => {
@@ -123,7 +122,7 @@ function Home() {
                         }) : null}
                 </div>
                 <Link to="events&workshops" className="my-4 underline text-[#3282B8] float-right">view all</Link>
-            </div>
+            </div>}
         </>
     )
 }

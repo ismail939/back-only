@@ -1,5 +1,10 @@
 module.exports = (db, type)=>{
-    return db.define('request',{
+    return db.define('request', {
+        requestID: {
+            type: type.INTEGER,
+            autoIncrement: true,
+            primaryKey: true
+        },
         status: {
             type: type.STRING,
             defaultValue: "pending",

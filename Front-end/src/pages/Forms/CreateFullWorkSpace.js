@@ -3,9 +3,11 @@ import WorkSpaceData from "../../components/WorkSpaceForm/WorkSpaceData"
 import { jwtDecode } from "jwt-decode";
 import { useSelector } from "react-redux";
 import { useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../components/reduxtoolkit/Slices/authSlice"
 import { CheckLg, ExclamationCircleFill, CheckCircleFill } from "react-bootstrap-icons";
+import BounceLoader from "react-spinners/BounceLoader";
 import WorkSpaceImages from "../../components/WorkSpaceForm/WorkSpaceImages";
 import Swal from "sweetalert2";
 import RoomForm from "../../components/WorkSpaceForm/RoomForm";
@@ -38,6 +40,7 @@ function CreateFullWorkSpace() {
     const [data, setData] = useState(IntitialValue)
     const [roomData, setRoomData] = useState(IntitialRoomData)
     const [dataSuccess, setDataSuccess] = useState(false)
+    const [lodaing, setLodaing] = useState(false);
     const stepNames = ["Main Data", "Photos", "Room"]
     const buttonNames = ["SUBMIT DATA", "ADD PHOTOS", "ADD ROOM"]
     const beforeStyle = `before:ml-0.5  before:absolute before:h-[2px] before:w-full before:right-2/4 before:top-1/3 before:z-[-5] before:content-['']`
@@ -67,18 +70,18 @@ function CreateFullWorkSpace() {
         )
     }
     const addMainData = () => {
+        setLodaing(true)
         let formData = new FormData();
         formData.append('name', data.name);
         formData.append('address', data.address);
         formData.append('phone', data.phone);
         formData.append('description', data.description);
         formData.append('amenities', data.facilities);
-        formData.append('email', data.email);
+        if(data.email !== "") formData.append('email', data.email);
         formData.append('openingTime', data.openingTime);
         formData.append('closingTime', data.closingTime);
         formData.append('ownerOwnerID', ownerData.ownerID);
         formData.append('mainPhoto', data.mainimg);
-
         fetch(`${process.env.REACT_APP_BASE_URL}/cw_spaces`, {
             method: 'POST',
             body: formData,
@@ -89,8 +92,10 @@ function CreateFullWorkSpace() {
             .then(res => res.json())
             .then(response => {
                 if (response.status === "error") {
+                    setLodaing(false)
                     console.log(response.message);
                 } else if (response.status === "success") {
+                    setLodaing(false)
                     dispatch(setCredentials({ ...auth, token: response.data.token }));
                     ownerData = jwtDecode(response.data.token);
                     next();
@@ -102,6 +107,7 @@ function CreateFullWorkSpace() {
             });
     };
     const addPhotos = () => {
+        setLodaing(true)
         let formData = new FormData();
         data.photos.forEach(image => {
             formData.append('img', image);
@@ -115,14 +121,15 @@ function CreateFullWorkSpace() {
         })
             .then(res => res.json())
             .then(response => {
-                if (response.status === "error") { console.log(response) }
+                if (response.status === "error") { setLodaing(false);console.log(response) }
                 else if (response.status === "success") {
+                    setLodaing(false);
                     next()
                 }
-                console.log(response)
             })
     }
     const addRoom = () => {
+        setLodaing(true)
         let formData = new FormData();
         formData.append('type', roomData.type);
         formData.append('hourPrice', roomData.hourPrice);
@@ -143,19 +150,10 @@ function CreateFullWorkSpace() {
             .then(response => {
                 if (response.status === "error") { console.log(response) }
                 else if (response.status === "success") {
-                    success();
+                    setLodaing(false)
                     setDataSuccess(true)
                 }
-                console.log(response)
             })
-    }
-    const success = () => {
-        Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Your Workspace is added successfully",
-            showConfirmButton: false,
-        });
     }
     function HandleNext() {
         if (isFirstStep && childRef.current.HandleError()) {
@@ -202,8 +200,8 @@ function CreateFullWorkSpace() {
                         {!dataSuccess ? <form className="space-y-4 md:space-y-6" action="#" >
                             {step}
                             <div className="flex gap-4 flex-row-reverse justify-between text-white">
-                                <button type="button" className="py-2 px-3 btn-color rounded-md" onClick={HandleNext}>
-                                    {buttonNames[currentStepIndex]}
+                                <button type="button" className="py-2 px-3 btn-color min-w-[100px] rounded-md flex items-center justify-center" onClick={HandleNext}>
+                                    {lodaing ? <BounceLoader color="#ffffff" size={20} /> : buttonNames[currentStepIndex]}
                                 </button >
                                 {/* {!isFirstStep ? <button type="button" className="py-2 px-3 btn-color rounded-md" onClick={HandleBack}>
                                     Back
@@ -211,12 +209,17 @@ function CreateFullWorkSpace() {
                             </div>
                         </form> : <div className="text-center flex flex-col items-center justify-center">
                             <CheckCircleFill className="text-green-500 rounded-full text-[70px] m-6" />
-                            <p className="text-xl m-2">
+                            <p className="text-2xl m-2">
                                 Your WorkSpace is created successfully
                             </p>
                             <p className="text-sm text-gray-500">
                                 You can check or update your WorkSpace<br></br> data in your profile page
                             </p>
+                            <p className="mt-1 text-sm text-yellow-500">
+                                Please note: Your Workspace location need to be set on the maps in your profile
+                            </p>
+                            <p className="text-[13px] my-4">You can follow this link to your workspace profile <Link to="/workspace-data"
+                            className="underline">Workspace Data</Link></p>
                         </div>}
                     </div>
                 </div>

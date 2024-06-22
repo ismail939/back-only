@@ -72,7 +72,6 @@ function WorkSpaces() {
         document.addEventListener("mousedown", handler)
     }, [])
     const getWorkSpaces = () => {
-        console.log(process.env)
         fetch(`${process.env.REACT_APP_BASE_URL}/cw_spaces`)
             .then(res => res.json())
             .then(responsedata => {
@@ -140,7 +139,7 @@ function WorkSpaces() {
                             onClick={() => { setSearchList(true) }}
                         ></input>
                         <button className="duration-200 ease-in-out btn-color h-full p-4 flex items-center rounded-r-md  text-white"
-                            onClick={() => { if (searchData?.length > 0) { setDisplayedCwspaces(searchData); setSearchList(false) } }}><Search className="text-lg" /></button>
+                            onClick={() => {  setDisplayedCwspaces(searchData); setSearchList(false)  }}><Search className="text-lg" /></button>
                     </div>
                     {(searchData?.length > 0 && searchlist) ? <div className="flex flex-col max-h-60 w-full mt-1 shadow-md rounded-md bg-[#fafafa] overflow-x-hidden absolute z-[90]" >
                         {searchData.map((workspace) => {
