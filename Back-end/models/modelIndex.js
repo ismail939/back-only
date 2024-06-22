@@ -50,8 +50,8 @@ Client.belongsToMany(Cw_space, { through: Favourite, as: "client3" });
 Cw_space.belongsToMany(Client, { through: Favourite, as: "cwSpace2" });
 
 // client & room (many -> many) through request 
-Client.belongsToMany(Room, { through: Request, as : "client4" })
-Room.belongsToMany(Client, { through: Request, as: "room2" });
+Client.belongsToMany(Room, { through: {model: Request, unique: false}, as : "client4" })
+Room.belongsToMany(Client, { through: {model: Request, unique: false}, as: "room2" });
 
 // client & room (many -> many) through book
 Client.belongsToMany(Event, { through: {model: Register, unique: false}, as : "client5" })
