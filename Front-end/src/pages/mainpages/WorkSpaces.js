@@ -39,7 +39,7 @@ function WorkSpaces() {
     const [fetcherror, setFetchError] = useState(false);
     const [showFilter, setShowFilter] = useState(false);
     const [priceRange, setPriceRange] = useState([0, 500]);
-    const [availableRooms, setAvailableRooms] = useState("");
+    const [availableRooms, setAvailableRooms] = useState([]);
     const [pageNumber, setPageNumber] = useState(0)
     const token = useSelector(store => store.auth).token;
     const profileData = token ? jwtDecode(token) : null;
@@ -98,19 +98,21 @@ function WorkSpaces() {
         setDisplayedCwspaces(soretedData);
     }
     function handleFilter() {
+        setAvailableRooms([])
         setShowFilter(!showFilter)
     }
     function ApplyFilter() {
         const filteredCWs = cwspaces?.filter((workspace) => {
             if (availableRooms.length > 0) return (workspace.hourPrice >= priceRange[0]
                 && workspace.hourPrice <= priceRange[1]
-                && availableRooms.every(value => cwspaces.avilablerooms?.includes(value))
+                && availableRooms.every(value => cwspaces.avilableRooms?.includes(value))
+                
             )
             else return workspace.hourPrice >= priceRange[0]
                 && workspace.hourPrice <= priceRange[1]
-            
         })
         setDisplayedCwspaces(filteredCWs)
+        setAvailableRooms([])
         setShowFilter(false)
     }
     function AdjustPriceRange(newValue) {
@@ -125,7 +127,7 @@ function WorkSpaces() {
     return (
         <div className="flex flex-col relative min-h-screen justify-between">
             {showFilter && <div className="fixed top-0 left-0 w-full h-[100vh] flex items-center justify-center bg-black/[.2] z-20">
-                <Filters priceRange={priceRange} handleFilter={handleFilter} AdjustPriceRange={AdjustPriceRange} ApplyFilter={ApplyFilter} setAvailableRooms={setAvailableRooms} />
+                <Filters priceRange={priceRange} handleFilter={handleFilter} AdjustPriceRange={AdjustPriceRange} ApplyFilter={ApplyFilter} availableRooms={availableRooms} setAvailableRooms={setAvailableRooms} />
             </div>}
             <div className="w-4/5 mx-auto md:mt-[30px] p-5">
                 <div className="relative w-full" ref={menuRef}>

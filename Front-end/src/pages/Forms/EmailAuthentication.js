@@ -28,7 +28,7 @@ function Verify({ data, SendCode }) {
     const [code, setCode] = useState("")
     const [enable, setEnable] = useState(false)
     const [incorrect, setIncorrect] = useState(false)
-    const usertype = useSelector(store => store.auth).usertype;
+    const usertype = useSelector(store => store.signUp).usertype;
     const navigate = useNavigate();
     function HandleChange(e) {
         const input = e.target.value;
@@ -51,6 +51,7 @@ function Verify({ data, SendCode }) {
             }),
         }).then(res => res.json()).then((data) => {
             if (data.status === "success") {
+                
                 usertype === "Owner" ? navigate("/portal-login") :  navigate("/login")
             }else if (data.status === "error") {
                 setIncorrect(true)
