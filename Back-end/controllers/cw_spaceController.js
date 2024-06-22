@@ -72,6 +72,7 @@ module.exports = {
                     for (let index = 0; index < cw_spaces.length; index++) {
                         await cache.pushJsonToList('cw_spaces', cw_spaces[index])
                     }
+                    cache.setKeyTTL('cw_spaces', 600)
                 } 
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_spaces });
             }
@@ -104,6 +105,7 @@ module.exports = {
                 for (let index = 0; index < cw_spaceHome.length; index++) {
                     await cache.pushJsonToList('cw_spaceHome', cw_spaceHome[index])                    
                 }
+                cache.setKeyTTL('cw_spaceHome', 600)
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_spaceHome })
             }
             const error = appError.create("There Are No Available Co-working Spaces", 404, httpStatusCode.ERROR);
@@ -124,6 +126,7 @@ module.exports = {
             })
             if (cw_space) {
                 await cache.setJsonObject(key, cw_space)
+                cache.setKeyTTL(key, 600)
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_space })
             }
             const error = appError.create("This Co-working Spaces Not Found", 404, httpStatusCode.ERROR);

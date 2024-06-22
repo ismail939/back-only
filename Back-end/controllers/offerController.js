@@ -42,6 +42,7 @@ module.exports = {
                 for (let index = 0; index < offers.length; index++) {
                     await cache.pushJsonToList('offers', offers[index])
                 }
+                cache.setKeyTTL('offers', 600)
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: offers })
             }
             const error = appError.create("There are No Available Offers", 404, httpStatusCode.ERROR);
@@ -64,6 +65,7 @@ module.exports = {
                 for (let index = 0; index < offerHome.length; index++) {
                     await cache.pushJsonToList('offerHome', offerHome[index])                    
                 }
+                cache.setKeyTTL('offerHome', 600)
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: offerHome })
             }
             const error = appError.create("There are No Available Offers", 404, httpStatusCode.ERROR);
@@ -84,6 +86,7 @@ module.exports = {
             })
             if (offer) {
                 await cache.setJsonObject(key, offer)
+                cache.setKeyTTL(key, 600)
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: offer })
             }
             const error = appError.create("Offer Not Found", 404, httpStatusCode.ERROR);
