@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize')
-const env = "development"
+const env = process.env.NODE_ENV
 const config = require('./config')[env]
 
 module.exports = new Sequelize(
