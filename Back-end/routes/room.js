@@ -9,7 +9,7 @@ const { roomSchema, roomUpdateSchema } = require("../middlewares/validationSchem
 router.route("/")
     .post(verifyToken, allowedTo('owner'), upload.single("img"), roomSchema(), roomController.create);
 router.route("/:cwID")
-    .get(verifyToken, allowedTo('client', 'owner'), roomController.getAll)
+    .get(roomController.getAll)
 
 router.route("/:cwID/:ID")
     .get(roomController.getOne)
