@@ -28,7 +28,7 @@ module.exports = (db, type) => {
         img: {
             type: type.TEXT,
             allowNUll: true,
-            defaultValue: "http://localhost:4000/images/default.png"
+            defaultValue: "https://graduation-project-cw-spaces.onrender.com/images/default.png"
         },
         imgName: {
             type: type.TEXT,

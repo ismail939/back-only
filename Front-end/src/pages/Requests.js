@@ -57,13 +57,15 @@ function Requests() {
     }
     function handleDelete(clientClientID, roomRoomID) {
         fetch(`${process.env.REACT_APP_BASE_URL}/requests/${clientClientID}/${roomRoomID}`, {
-            method: "PATCH",
+            method: "DELETE",
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
             },
             body: JSON.stringify({
-                "status": "rejected",
-            }),
+                "status": "accepted",
+                
+            })
         }).then(res => res.json()).then((data) => {
             if (data.status === "success") {
                 getRequests()
