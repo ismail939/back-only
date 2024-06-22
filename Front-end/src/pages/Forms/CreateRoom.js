@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import RoomForm from "../../components/WorkSpaceForm/RoomForm";
 import { useNavigate } from "react-router-dom";
 import { ExclamationCircleFill } from "react-bootstrap-icons";
-import Swal from "sweetalert2";
+import BounceLoader from "react-spinners/BounceLoader";
 import { ShowErrorMessage } from "./PortalLogin";
 function CreateRoom() {
     const IntitialRoomData = {
@@ -20,6 +20,7 @@ function CreateRoom() {
     const [roomData, setRoomData] = useState(IntitialRoomData)
     const auth = useSelector(store => store.auth);
     const [resError, setResError] = useState("")
+    const [lodaing, setLodaing] = useState(false);
     const ownerData = jwtDecode(auth.token);
     const childRef = useRef(null);
     function updateRoomData(fields) {
@@ -36,15 +37,8 @@ function CreateRoom() {
             </>
         )
     }
-    const success = () => {
-        Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Your Room is Created Successfully",
-            showConfirmButton: false,
-        });
-    }
     const addRoom = () => {
+        setLodaing(true)
         let formData = new FormData();
         formData.append('type', roomData.type);
         formData.append('hourPrice', roomData.hourPrice);
@@ -64,12 +58,15 @@ function CreateRoom() {
             .then(res => res.json())
             .then(response => {
                 if (response.status === "error") {
+                    setLodaing(false)
                     setResError(response.message)
                 }
                 else if (response.status === "fail") {
+                    setLodaing(false)
                     setResError(response.message)
                 }
                 else if (response.status === "success") {
+                    setLodaing(false)
                     setRoomData(IntitialRoomData)
                     navigate("/rooms-data")
                 }
@@ -96,9 +93,9 @@ function CreateRoom() {
                             <button
                                 type="submit"
                                 onClick={e => HandleClick(e)}
-                                className="mt-3 w-full text-white btn-color font-medium rounded-lg text-md px-5 py-2.5 text-center duration-300 ease-in-out"
+                                className="mt-3 w-full text-white btn-color font-medium rounded-lg text-md px-5 py-2.5 flex items-center justify-center duration-300 ease-in-out"
                             >
-                                Create Room
+                                {lodaing ? <BounceLoader color="#ffffff" size={20} /> : "Create Room"}
                             </button>
                         </form>
                     </div>

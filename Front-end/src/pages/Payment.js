@@ -42,6 +42,7 @@ function CheckoutForm() {
             setTimer(prev => prev - 1)
         }, 1000)
         setInterval(() => {
+            dispatch(removePayData());
             navigate("/workspaces")
         }, 10000)
     }
@@ -80,7 +81,7 @@ function CheckoutForm() {
             }).catch(error => console.log(error))
         } else {
             setLodaing(true)
-            makeBook(null);
+            makeBook("012vdsgs");
         }
     }
     function makeBook(visaToken) {
@@ -104,14 +105,15 @@ function CheckoutForm() {
             }),
         }).then(res => res.json())
             .then(responsedata => {
-                setLodaing(false)
                 if (responsedata.status === "success") {
-                    dispatch(removePayData())
                     setPayComplete(true)
+                    setLodaing(false)
                     redirect()
                 } else if (responsedata.status === "error") {
+                    setLodaing(false)
                     setErrorMessage("Sorry we cannot proceed with your request, please try again later")
                 } else if (responsedata.status === "fail") {
+                    setLodaing(false)
                     setErrorMessage("Sorry we cannot proceed with your request, please try again later")
                 }
             }
