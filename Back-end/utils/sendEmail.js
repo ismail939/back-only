@@ -229,7 +229,7 @@ module.exports = {
     },
     sendResetLink: (email, token) => {
         return new Promise((resolve, reject) => {
-        const resetLink = `http://localhost:3000/ResetPassword?token=${token}`;
+        const resetLink = `https://graduation-project-cw-spaces.onrender.com/ResetPassword?token=${token}`;
         const htmlContent = `
             <html>
                 <head>
@@ -461,7 +461,6 @@ module.exports = {
     },
     sendReminderReview: (email, reviewLink)=>{
         return new Promise((resolve, reject) => {
-            //const reviewLink = "https://localhost:3000/reviewbook";
             const htmlContent = `
                 <html>
                     <head>
