@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
-import Offer1 from "./images/offer1.jpg"
+import Offer1 from "./images/Offer Image.png"
 import Offer2 from "./images/offer2.jpg"
 import { Link } from "react-router-dom"
 
 function Slider(){
-    const images = [Offer1, Offer2, Offer1,Offer2]
+    const images = [Offer1, Offer2]
     const [homeoffers, setHomeOffers] = useState([]);
     const [fetcherror, setFetchError] = useState(false);
     const getOfferImages = () => {
