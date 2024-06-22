@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 export const paySlice = createSlice({
-    initialState: sessionStorage.getItem('pay') ? JSON.parse(localStorage.getItem('pay')) :{bookingTime:[] , totalPrice:0 , date:"" , type:"", roomid: "1",cwspaceId:""},
+    initialState: sessionStorage.getItem('pay') ? JSON.parse(sessionStorage.getItem('pay')) :{bookingTime:[] , totalPrice:0 , date:"" , type:"", roomid: "1",cwspaceId:""},
     name: "paySlice",
     reducers: {
         setPayData: (state, action) =>{

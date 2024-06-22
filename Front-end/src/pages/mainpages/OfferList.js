@@ -37,9 +37,9 @@ function OfferList() {
     }, [])
     const getSearchData = (event) => {
         const search = event.target.value;
-        setSearchData(offers.filter((offer) => {
+        setDisplayedOffers(offers.filter((offer) => {
             return search === '' ?
-                null : offer?.cwSpaceName.toLowerCase().includes(search.toLowerCase());
+                offers : offer?.title.toLowerCase().includes(search.toLowerCase());
         }))
     }
     return (
@@ -48,20 +48,12 @@ function OfferList() {
                 <div className="w-full h-10 flex items-center">
                     <input
                         type="search"
-                        className="h-full w-full p-2 border-2 border-solid border-black border-r-0 rounded-l-md focus:border-[#0F4C75] focus:outline-none"
-                        placeholder="Search for Offers of certain workspace"
+                        className="h-full w-full p-2 border-2 border-solid border-black rounded-md focus:border-[#0F4C75] focus:outline-none"
+                        placeholder="Search for Offers"
                         aria-label="Search"
                         onChange={e => getSearchData(e)}
-                        onClick={() => { setSearchList(true); console.log(searchData) }}
                     ></input>
-                    <button className="duration-200 ease-in-out btn-color h-full p-4 flex items-center rounded-r-md  text-white"
-                        onClick={() => { if (searchData.length > 0) { setDisplayedOffers(searchData); setSearchList(false) } }}><Search className="text-lg" /></button>
                 </div>
-                {(searchData.length > 0 && searchlist) ? <div className="flex flex-col max-h-60 w-full mt-1 shadow-md rounded-md bg-[#fafafa] overflow-x-hidden absolute z-[90]" >
-                    {searchData.map((offer) => {
-                        return <Link className="w-full p-3 capitalize hover:bg-gray-200 font-semibold" to={`/workspaces/${offer.cwSpaceCwID}`}>{offer.title}</Link>
-                    })}
-                </div> : null}
             </div>
             {!fetcherror ? <div>
                 {displayedOffers ? <div className="flex flex-col gap-8 mt-8">

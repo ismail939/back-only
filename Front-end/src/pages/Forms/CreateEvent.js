@@ -3,6 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import BounceLoader from "react-spinners/BounceLoader";
 import { ShowErrorMessage } from "./PortalLogin";
 function getDate() {
     const today = new Date();
@@ -20,7 +21,7 @@ function CreateEvent() {
     const [maxCapacity, setMaxCapacity] = useState("");
     const [checkerror, setCheckError] = useState("");
     const [start, setStart] = useState("");
-    const [error, setError] = useState(false)
+    const [lodaing, setLodaing] = useState(false);
     const [end, setEnd] = useState("");
     const [img, setImg] = useState([]);
     const [errormessage, setErrorMessage] = useState("");
@@ -36,14 +37,6 @@ function CreateEvent() {
         maxCapacity: false
     });
     const formRef = useRef(null);
-    const success = () => {
-        Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Your Event is Created Successfully",
-            showConfirmButton: false,
-        });
-    }
     function isImage(offerImage) {
         if (offerImage.slice(-4) === ".jpg" || offerImage.slice(-5) === ".jpeg" || offerImage.slice(-4) === ".png") return true;
         else {
@@ -61,6 +54,7 @@ function CreateEvent() {
         }
     }
     const addData = () => {
+        setLodaing(true)
         if (isImage(offerImageName)) {
             let formData = new FormData();
             formData.append('name', title);
@@ -81,10 +75,13 @@ function CreateEvent() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === "error") {
+                        setLodaing(false)
                         setErrorMessage(data.message)
                     } else if (data.status === "fail") {
+                        setLodaing(false)
                         setErrorMessage(data.message)
                     } else if (data.status === "success") {
+                        setLodaing(false)
                         setErrorMessage("")
                         setImg([]);
                         document.getElementById("offerImage").value = "";
@@ -301,9 +298,9 @@ function CreateEvent() {
                             <button
                                 type="submit"
                                 onClick={(e) => { HandleError(e) }}
-                                className="mt-3 w-full text-white btn-color font-medium rounded-lg text-md px-5 py-2.5 text-center duration-300 ease-in-out"
+                                className="mt-3 w-full text-white btn-color font-medium rounded-lg text-md px-5 py-2.5 flex items-center justify-center duration-300 ease-in-out"
                             >
-                                Create Event
+                                {lodaing ? <BounceLoader color="#ffffff" size={20} /> : "Create Event"}
                             </button>
                         </form>
                     </div>

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 export const signUpSlice = createSlice({
-    initialState: {
+    initialState: sessionStorage.getItem('sign-up') ? JSON.parse(sessionStorage.getItem('sign-up')) : {
         email: "",
         usertype:""
     },
@@ -9,10 +9,12 @@ export const signUpSlice = createSlice({
         setData: (state, action) =>{
             state.email = action.payload.email;
             state.usertype = action.payload.usertype;
+            sessionStorage.setItem("sign-up" , JSON.stringify(state))
         },
         removeData: (state, action) => {
             state.email = "";
             state.usertype = "";
+            sessionStorage.removeItem('sign-up')
         }
     }
 })

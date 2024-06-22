@@ -59,8 +59,8 @@ function App() {
         <Route path='/' element={<Home />}></Route>
         <Route path='login' element={<Login />}></Route>
         <Route path='aboutus' element={<AboutUs />}></Route>
-        <Route path='termsofservice' element={<TermsAndConditions/>}></Route>
-        <Route path='privacypolicy' element={<PrivacyPolicy/>}></Route>
+        <Route path='termsofservice' element={<TermsAndConditions />}></Route>
+        <Route path='privacypolicy' element={<PrivacyPolicy />}></Route>
         <Route path='portal-login' element={<PortalLogin />}></Route>
         <Route path='sign-up' element={<SignUp />}></Route>
         <Route path='email authentication' element={<EmailAuthentication />}></Route>
@@ -73,6 +73,10 @@ function App() {
         <Route path='offers' element={<OfferList />}></Route>
         <Route path='events&workshops' element={<EventsWorshops />}></Route>
         <Route element={<RequireAuth allowedRoles={["client"]} />} >
+          <Route path='workspaces/:cwID/rooms' element={<><Outlet /></>}>
+            <Route path="" element={<RoomList />} />
+            <Route path=":roomid" element={<BookingRoom />} />
+          </Route>
           <Route path='favourites' element={<Favourites />}></Route>
           <Route path='payment' element={<Payment />}></Route>
           <Route path='reviewbook' element={<Review />}></Route>
@@ -84,7 +88,7 @@ function App() {
         </Route>
         <Route element={<RequireAuth allowedRoles={["owner", "moderator"]} />} >
           <Route element={<ProfileManager />} >
-          <Route path='workspace-data' element={<WorkSpaceSettings />}></Route>
+            <Route path='workspace-data' element={<WorkSpaceSettings />}></Route>
             <Route path='rooms-data' element={<><Outlet /></>}>
               <Route path="" element={<RoomsSettings />} />
               <Route path=":roomid" element={<AdjustRoom />} />
@@ -94,7 +98,7 @@ function App() {
               <Route path=":offerid" element={<AdjustOffer />} />
             </Route>
             <Route path='events&workshops-data' element={<Outlet />}>
-              <Route path="" element={<EventsSettings />}/>
+              <Route path="" element={<EventsSettings />} />
               <Route path=":eventid" element={<AdjustEvent />} />
             </Route>
           </Route>
@@ -106,10 +110,6 @@ function App() {
           <Route path='discoverEdit' element={<DiscoverAdmin />}></Route>
           <Route path='offerEdit' element={<OfferAdmin />}></Route>
           <Route path='eventEdit' element={<EventAdmin />}></Route>
-          <Route path='workspaces/:cwID/rooms' element={<><Outlet /></>}>
-            <Route path="" element={<RoomList />} />
-            <Route path=":roomid" element={<BookingRoom />} />
-          </Route>
         </Route>
         <Route element={<RequireAuth allowedRoles={["owner"]} />} >
           <Route element={<ProfileManager />} >

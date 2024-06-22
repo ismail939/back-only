@@ -36,9 +36,9 @@ function EventsWorshops() {
     }, [])
     const getSearchData = (event) => {
         const search = event.target.value;
-        setSearchData(events.filter((event) => {
+        setDisplayedEvents(events.filter((event) => {
             return search === '' ?
-                null : event?.name.toLowerCase().includes(search.toLowerCase());
+                events : event?.name.toLowerCase().includes(search.toLowerCase());
         }))
     }
     return (
@@ -47,20 +47,12 @@ function EventsWorshops() {
                 <div className="w-full h-10 flex items-center">
                     <input
                         type="search"
-                        className="h-full w-full p-2 border-2 border-solid border-black border-r-0 rounded-l-md focus:border-[#0F4C75] focus:outline-none"
+                        className="h-full w-full p-2 border-2 border-solid border-black rounded-md focus:border-[#0F4C75] focus:outline-none"
                         placeholder="Search for certain event or workshop"
                         aria-label="Search"
                         onChange={e => getSearchData(e)}
-                        onClick={() => { setSearchList(true); console.log(searchData) }}
                     ></input>
-                    <button className="duration-200 ease-in-out btn-color h-full p-4 flex items-center rounded-r-md  text-white"
-                        onClick={() => { if (searchData.length > 0) { setDisplayedEvents(searchData); setSearchList(false) } }}><Search className="text-lg" /></button>
                 </div>
-                {(searchData.length > 0 && searchlist) ? <div className="flex flex-col max-h-60 w-full mt-1 shadow-md rounded-md bg-[#fafafa] overflow-x-hidden absolute z-[90]" >
-                    {searchData.map((event) => {
-                        return <Link className="w-full p-3 capitalize hover:bg-gray-200 font-semibold" to={``}>{event.name}</Link>
-                    })}
-                </div> : null}
             </div>
             {!fetcherror ? <div>
                 {displayedEvents ? <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1  gap-8 mt-8">
