@@ -17,6 +17,8 @@ module.exports = {
             await uploadToCloud(req, 'offers')
             const newOffer = await Offer.create(req.body)
             if (newOffer) {
+                cache.setJsonObject('offer:'+newOffer.offerID, newOffer)
+                cache.pushJsonToList('offers', newOffer)
                 return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Offer is Created Successfully" })
             }
             const error = appError.create("Unexpected Error, Try Again Later", 400, httpStatusCode.ERROR)
