@@ -108,7 +108,7 @@ function Home() {
                 </Link>
             </div> : null}
             <div className="w-4/5 mx-auto mt-[70px]">
-                <h2 className="text-left mb-8 text-5xl main-font">Discover</h2>
+                {}<h2 className="text-left mb-8 text-5xl main-font">Discover</h2>
                 <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
                     {discoverData ? discoverData.map((cwspace) => {
                             return <DiscoverCard discover={cwspace} key={cwspace.cwID} />
