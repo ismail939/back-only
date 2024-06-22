@@ -54,16 +54,19 @@ module.exports = {
             cw_spaces = await Cw_space.findAll({ raw: true })
             if (cw_spaces.length != 0) {
                 let rooms = await Room.findAll({ 
-                    raw: true,
-                    where: {
-                        type: "shared room"
-                    }
+                    raw: true
                 });
                 if (rooms.length != 0) {
                     for (let i = 0; i < cw_spaces.length; i++) {
+                        cw_spaces[i].availableRooms = []
                         for (let j = 0; j < rooms.length; j++) {
                             if (cw_spaces[i].cwID == rooms[j].cwSpaceCwID) {
-                                cw_spaces[i].price = rooms[j].hourPrice
+                                if (rooms[j].type === "Shared") {
+                                    cw_spaces[i].hourPrice = rooms[j].hourPrice;
+                                }
+                                if (!cw_spaces[i].availableRooms.includes(rooms[j].type)) {
+                                    cw_spaces[i].availableRooms.push(rooms[j].type)
+                                }
                             }
                         }
                     }
