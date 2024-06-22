@@ -11,6 +11,7 @@ import BounceLoader from "react-spinners/BounceLoader";
 import WorkSpaceImages from "../../components/WorkSpaceForm/WorkSpaceImages";
 import Swal from "sweetalert2";
 import RoomForm from "../../components/WorkSpaceForm/RoomForm";
+import { ShowErrorMessage } from "./PortalLogin";
 function CreateFullWorkSpace() {
     const IntitialValue = {
         name: "",
@@ -41,6 +42,7 @@ function CreateFullWorkSpace() {
     const [roomData, setRoomData] = useState(IntitialRoomData)
     const [dataSuccess, setDataSuccess] = useState(false)
     const [lodaing, setLodaing] = useState(false);
+    const [resError, setResError] = useState("");
     const stepNames = ["Main Data", "Photos", "Room"]
     const buttonNames = ["SUBMIT DATA", "ADD PHOTOS", "ADD ROOM"]
     const beforeStyle = `before:ml-0.5  before:absolute before:h-[2px] before:w-full before:right-2/4 before:top-1/3 before:z-[-5] before:content-['']`
@@ -93,14 +95,16 @@ function CreateFullWorkSpace() {
             .then(response => {
                 if (response.status === "error") {
                     setLodaing(false)
-                    console.log(response.message);
+                    setResError(response.message);
+                } else if (response.status === "fail") {
+                    setLodaing(false)
+                    setResError("Server error, please try again later");
                 } else if (response.status === "success") {
                     setLodaing(false)
                     dispatch(setCredentials({ ...auth, token: response.data.token }));
                     ownerData = jwtDecode(response.data.token);
                     next();
                 }
-                console.log(response);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -121,8 +125,13 @@ function CreateFullWorkSpace() {
         })
             .then(res => res.json())
             .then(response => {
-                if (response.status === "error") { setLodaing(false);console.log(response) }
-                else if (response.status === "success") {
+                if (response.status === "error") {
+                    setLodaing(false)
+                    setResError(response.message);
+                } else if (response.status === "fail") {
+                    setLodaing(false)
+                    setResError("Server error, please try again later");
+                } else if (response.status === "success") {
                     setLodaing(false);
                     next()
                 }
@@ -148,8 +157,13 @@ function CreateFullWorkSpace() {
         })
             .then(res => res.json())
             .then(response => {
-                if (response.status === "error") { console.log(response) }
-                else if (response.status === "success") {
+                if (response.status === "error") {
+                    setLodaing(false)
+                    setResError(response.message);
+                } else if (response.status === "fail") {
+                    setLodaing(false)
+                    setResError("Server error, please try again later");
+                } else if (response.status === "success") {
                     setLodaing(false)
                     setDataSuccess(true)
                 }
@@ -165,16 +179,6 @@ function CreateFullWorkSpace() {
         else if (isLastStep && childRef.current.HandleRoomError()) {
             addRoom();
         }
-    }
-    function HandleBack() {
-        // if(dataSuccess){
-        //     setDataSuccess(false)
-        //     setData(IntitialValue)
-        //     back()
-        // }else{
-        //     back()
-        // }
-        // back()
     }
     return (
         <section className="min-h-screen">
@@ -199,13 +203,11 @@ function CreateFullWorkSpace() {
                         </h1>
                         {!dataSuccess ? <form className="space-y-4 md:space-y-6" action="#" >
                             {step}
+                            <ShowErrorMessage condition={resError !== ""} value={resError}/>
                             <div className="flex gap-4 flex-row-reverse justify-between text-white">
                                 <button type="button" className="py-2 px-3 btn-color min-w-[100px] rounded-md flex items-center justify-center" disabled={lodaing} onClick={HandleNext}>
                                     {lodaing ? <BounceLoader color="#ffffff" size={20} /> : buttonNames[currentStepIndex]}
                                 </button >
-                                {/* {!isFirstStep ? <button type="button" className="py-2 px-3 btn-color rounded-md" onClick={HandleBack}>
-                                    Back
-                                </button> : null} */}
                             </div>
                         </form> : <div className="text-center flex flex-col items-center justify-center">
                             <CheckCircleFill className="text-green-500 rounded-full text-[70px] m-6" />

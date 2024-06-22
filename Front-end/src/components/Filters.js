@@ -2,17 +2,17 @@ import { ChevronDown, ChevronUp } from "react-bootstrap-icons";
 import { useState } from "react";
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
-function Filters({ handleFilter, priceRange, AdjustPriceRange, ApplyFilter, setAvailableRooms }) {
+function Filters({ availableRooms, handleFilter, priceRange, AdjustPriceRange, ApplyFilter, setAvailableRooms }) {
     const [catdropdown, setCatDropDown] = useState(false)
     const [pricedropdown, setPRiceDropDown] = useState(false)
-    let availableRooms = []
     function handleChange(e){
+        let newValue = [...availableRooms]
         if(e.target.checked){
-            availableRooms.push(e.target.name)
+            newValue.push(e.target.name)
         } else{
-            availableRooms = availableRooms.filter(item => item !== e.target.name);
+            newValue = newValue.filter(item => item !== e.target.name);
         }
-        setAvailableRooms(availableRooms)
+        setAvailableRooms(newValue)
     }
     return (
         <div className="bg-white shadow rounded-md p-5 w-3/4 sm:w-1/2">
@@ -43,11 +43,11 @@ function Filters({ handleFilter, priceRange, AdjustPriceRange, ApplyFilter, setA
                 </div>
                 <div className={`mt-3 text-gray-700 ${pricedropdown ? null : "hidden"}`}>
                     <div className="my-3 text-md flex items-center gap-5">Price: 
-                    <input type="number" min={0} max={500} value={priceRange[0]} className="border verify-input text-center w-20 px-4 py-1 focus:outline-none"
-                    onChange={e => AdjustPriceRange([e.target.value, priceRange[1]])}></input>
+                    <input type="number" min={0} max={250} value={priceRange[0]} className="border verify-input text-center w-20 px-4 py-1 focus:outline-none"
+                    onChange={e => AdjustPriceRange([parseInt(e.target.value), priceRange[1]])}></input>
                         -
-                        <input type="number" min={500} max={1000} value={priceRange[1]} className="border verify-input text-center w-20 px-4 py-1 focus:outline-none"
-                        onChange={e => AdjustPriceRange([ priceRange[0], e.target.value])}></input>
+                        <input type="number" min={250} max={500} value={priceRange[1]} className="border verify-input text-center w-20 px-4 py-1 focus:outline-none"
+                        onChange={e => AdjustPriceRange([ priceRange[0], parseInt(e.target.value)])}></input>
                     </div>
                     <div>
                         <Box sx={{ width: "100%" }}>
@@ -58,7 +58,7 @@ function Filters({ handleFilter, priceRange, AdjustPriceRange, ApplyFilter, setA
                                 onChange={e => AdjustPriceRange(e.target.value)}
                                 valueLabelDisplay="auto"
                                 min={0}
-                                max={1000}
+                                max={500}
                                 disableSwap
                             />
                         </Box>

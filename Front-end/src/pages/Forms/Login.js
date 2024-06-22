@@ -104,7 +104,8 @@ function Login() {
                                 Don’t have an account yet? <Link to="../sign-up" className="text-gray-500 text-light text-[13px] hover:underline">Sign up</Link>
                             </p>
                             <p className="text-[12px] font-light text-gray-500">
-                                Forgot your Password? <Link to="../forgotpassword" className="font-medium text-primary-600 hover:underline">Reset Password</Link>
+                                Forgot your Password? <Link onClick={()=>{dispatch(setData({email: null,usertype: "client"
+                                }))}} to="../forgotpassword" className="font-medium text-primary-600 hover:underline">Reset Password</Link>
                             </p></div>
                     </form>
                 </div>

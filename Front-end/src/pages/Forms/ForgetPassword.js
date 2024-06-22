@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { ShowErrorMessage } from "./PortalLogin";
+import { useSelector } from "react-redux";
 function ForgotPassword() {
     const [email, setEmail] = useState("")
     const [checkerror, setCheckError] = useState("")
@@ -8,8 +9,9 @@ function ForgotPassword() {
     const [dataerrors, setDataErrors] = useState({
         email: false,
     });
+    const usertype = useSelector(store => store.signUp).usertype;
     function sendEmail() {
-        fetch(`${process.env.REACT_APP_BASE_URL}/clients/forgotPassword`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/${usertype}s/forgotPassword`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -19,12 +21,12 @@ function ForgotPassword() {
             }),
         }).then(res => res.json()).then((data) => {
             if (data.status === "success") {
+                setCheckError("")
                 setSuccess(true)
-                console.log("success")
             } else if (data.status === "error") {
-                console.log(data.message)
+                setCheckError(data.message)
             } else if (data.status === "fail") {
-                console.log("oops, something wrong went on !")
+                setCheckError("oops, something wrong went on !")
             }
         })
     }
@@ -64,6 +66,7 @@ function ForgotPassword() {
                                     onChange={(e) => setEmail(e.target.value)}></input>
                                 <div className="mt-4">
                                     <ShowErrorMessage condition={dataerrors.email} value={"Please enter a valid email address"} />
+                                    <ShowErrorMessage condition={checkerror !== ""} value={checkerror} />
                                 </div>
                             </div>
                             {success && <p className="font-semibold my-4 text-[14px]">Please check your inbox for email sent</p>}

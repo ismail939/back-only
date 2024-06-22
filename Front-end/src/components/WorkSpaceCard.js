@@ -49,8 +49,8 @@ function WorkSpaceCard(props) {
         })
     }
     return (
-        <div className="bg-white rounded-xl shadow-md overflow-hidden relative">
-            <div className="md:flex">
+        <div className="bg-white rounded-xl shadow-md overflow-hidden relative md:h-[170px]">
+            <div className="md:flex md:h-full">
                 <div className="md:shrink-0">
                     <Link to={`/workspaces/${cwspace.cwID}`}><img className="h-48 w-full object-cover md:h-full md:w-64 hover:scale-105 duration-500" src={cwspace.img} alt={cwspace.name}></img></Link>
                 </div>
