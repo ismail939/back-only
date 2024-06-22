@@ -297,6 +297,7 @@ function CreateEvent() {
                             {errormessage !== "" ? <ShowErrorMessage condition={true} value={errormessage} /> : null}
                             <button
                                 type="submit"
+                                disabled={lodaing}
                                 onClick={(e) => { HandleError(e) }}
                                 className="mt-3 w-full text-white btn-color font-medium rounded-lg text-md px-5 py-2.5 flex items-center justify-center duration-300 ease-in-out"
                             >

@@ -200,7 +200,7 @@ function CreateFullWorkSpace() {
                         {!dataSuccess ? <form className="space-y-4 md:space-y-6" action="#" >
                             {step}
                             <div className="flex gap-4 flex-row-reverse justify-between text-white">
-                                <button type="button" className="py-2 px-3 btn-color min-w-[100px] rounded-md flex items-center justify-center" onClick={HandleNext}>
+                                <button type="button" className="py-2 px-3 btn-color min-w-[100px] rounded-md flex items-center justify-center" disabled={lodaing} onClick={HandleNext}>
                                     {lodaing ? <BounceLoader color="#ffffff" size={20} /> : buttonNames[currentStepIndex]}
                                 </button >
                                 {/* {!isFirstStep ? <button type="button" className="py-2 px-3 btn-color rounded-md" onClick={HandleBack}>

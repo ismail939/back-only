@@ -17,6 +17,8 @@ module.exports = {
             await uploadToCloud(req, 'events')
             const newEvent = await Event.create(req.body)
             if (newEvent) {
+                cache.setJsonObject('event:'+newEvent.eventID, newEvent)
+                cache.pushJsonToList('events', newEvent)
                 return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Event is Created Successfully" })
             }
             const error = appError.create("Unexpected Error, Try Again Later", 400, httpStatusCode.ERROR)
@@ -43,6 +45,7 @@ module.exports = {
                 for (let index = 0; index < events.length; index++) {
                     await cache.pushJsonToList('events', events[index])
                 }
+                cache.setKeyTTL('events', 600)
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: events })
             }
             const error = appError.create("There are No Available Events", 404, httpStatusCode.ERROR);
@@ -65,6 +68,7 @@ module.exports = {
                 for (let index = 0; index < eventHome.length; index++) {
                     await cache.pushJsonToList('eventHome', eventHome[index])                    
                 }
+                cache.setKeyTTL('eventHome', 600)
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: eventHome })
             }
             const error = appError.create("There are No Available Events", 404, httpStatusCode.ERROR);
@@ -85,6 +89,7 @@ module.exports = {
             })
             if (event) {
                 await cache.setJsonObject(key, event)
+                cache.setKeyTTL(key, 600)
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: event })
             }
             const error = appError.create("Event Not Found", 404, httpStatusCode.ERROR);

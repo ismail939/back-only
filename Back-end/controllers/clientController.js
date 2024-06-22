@@ -182,6 +182,7 @@ module.exports = {
                     roomID: roomID
                 }}) 
                 bookings[index].img = room.img
+                bookings[index].roomNumber = room.number
             }
             if(bookings.length!=0){
                 return res.status(200).json({status: httpStatusCode.SUCCESS, message: "Bookings found successfully!", data: bookings})
@@ -204,6 +205,7 @@ module.exports = {
                     roomID: roomID
                 }}) 
                 requests[index].img = room.img
+                requests[index].roomNumber = room.number
             }
             if(requests.length!=0){
                 return res.status(200).json({status: httpStatusCode.SUCCESS, message: "Requests found successfully!", data: requests})
