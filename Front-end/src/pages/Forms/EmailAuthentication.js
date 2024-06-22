@@ -51,7 +51,7 @@ function Verify({ data, SendCode }) {
             }),
         }).then(res => res.json()).then((data) => {
             if (data.status === "success") {
-                usertype === "owner" ? navigate("/portal-login") :  navigate("/login")
+                usertype === "Owner" ? navigate("/portal-login") :  navigate("/login")
             }else if (data.status === "error") {
                 setIncorrect(true)
             }

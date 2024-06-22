@@ -80,7 +80,7 @@ function Home() {
                 <div className="bg-black w-full h-full opacity-50 absolute"></div>
                 <div className="w-full h-full text-white text-center absolute">
                     <div className="w-3/4 h-full mx-auto mt-[150px] max-sm:w-full max-sm:px-2">
-                        <h2 className="md:text-4xl text-2xl font-bold">More Than a Desk: A Community of Possibilities</h2>
+                        <h2 className="md:text-4xl text-2xl main-font">More Than a Desk: A Community of Possibilities</h2>
                         <p className="mt-4 md:text-lg text-sm font-light">At SPACE S, we believe in more than just shared office space.
                             We offer a dynamic community where diverse talents converge, ideas flourish, and connections thrive. Whether you're a freelancer, entrepreneur, or a growing team,
                             our flexible workspaces provide the perfect environment for productivity and networking.</p>
