@@ -16,7 +16,7 @@ function CancelBook() {
     const [errormessage, setErrorMessage] = useState("");
     function cancelBook(e) {
         e.preventDefault();
-        fetch(`${process.env.REACT_APP_BASE_URL}/books/${userData.clientID}/${id}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/books/${id}`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
