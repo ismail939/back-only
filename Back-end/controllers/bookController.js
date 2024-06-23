@@ -124,8 +124,9 @@ module.exports = {
             }
             delete req.body.date
             delete req.body.times
+            let book
             if (req.body.payment === 'cash') {
-                await Book.create(req.body);
+                book = await Book.create(req.body);
             } else if (req.body.payment === 'visa') {
                 stripe.charges.create({
                     amount: req.body.totalCost * 100, // Amount in cents
@@ -137,14 +138,14 @@ module.exports = {
                         return next(err)
                     } else {
                         req.body.status = 'paid'
-                        await Book.create(req.body);
+                        book = await Book.create(req.body);
                     }
                 });
             }
             // Calculate the delay until the booking time
             const bookingTime = new Date(req.body.start)
             const delay = bookingTime.getTime() - Date.now() - (6 * 60 * 60 * 1000)
-            reminderQueue.add({ email: req.currentUser.email, cancelLink: req.body.cancelLink, reviewLink: req.body.reviewLink }, { delay })
+            reminderQueue.add({ email: req.currentUser.email, bookID: book.bookID, cwSpaceID: req.body.cwSpaceID }, { delay })
             return res.status(201).json({ status: httpStatusCode.SUCCESS, message: "Created Successfully" });
         }
     ),
@@ -173,8 +174,7 @@ module.exports = {
         async (req, res, next) => {
             const deletedBook = await Book.findAll({
                 where: {
-                    clientID: req.params.clientID,
-                    roomID: req.params.roomID
+                    bookID: req.params.bookID
                 }
             });
             if (deletedBook.length === 0) {
@@ -183,11 +183,10 @@ module.exports = {
             }
             await Book.destroy({
                 where: {
-                    clientID: req.params.clientID,
-                    roomID: req.params.roomID
+                    bookID: req.params.bookID
                 }
             })
-            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "deleted successfully" });
+            return res.status(200).json({ status: httpStatusCode.SUCCESS, message: "Deleted Successfully" });
         }
     )
 } 
