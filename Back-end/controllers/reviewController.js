@@ -8,6 +8,7 @@ const newRate = require("../utils/newRate");
 module.exports = {
     create: asyncWrapper(
         async (req, res, next) => {
+
             const review = await Review.findOne({
                 where: {
                     clientClientID: req.body.clientClientID,
@@ -32,7 +33,9 @@ module.exports = {
                 await Review.create(
                     {
                         totalRate: totalRate,
-                        body: req.body.body
+                        body: req.body.body,
+                        clientClientID: req.body.clientClientID,
+                        cwSpaceCwID: req.body.cwSpaceCwID
                     }
                 )
                 //const newRate = (cw_space.rate * cw_space.noOfReviews + req.body.rate) / (cw_space.noOfReviews + 1)
