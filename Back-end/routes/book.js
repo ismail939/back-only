@@ -13,7 +13,7 @@ router.route("/")
     .post(verifyToken, allowedTo('client'), bookSchema(), bookController.create);
 
 router.route("/:cwSpaceCwID")
-    .get(verifyToken, allowedTo('owner'), bookController.getCwSpaceBookings)
+    .get(verifyToken, allowedTo('owner', 'moderator'), bookController.getCwSpaceBookings)
 
 router.route("/:clientID/:roomID")
     .get(verifyToken, allowedTo('client'), bookController.getOne)
