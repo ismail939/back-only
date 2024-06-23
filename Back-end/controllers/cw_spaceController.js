@@ -111,7 +111,7 @@ module.exports = {
                 for (let index = 0; index < cw_spaceHome.length; index++) {
                     await cache.pushJsonToList('cw_spaceHome', cw_spaceHome[index])                    
                 }
-                cache.setKeyTTL('cw_spaceHome', 600)
+                await cache.setKeyTTL('cw_spaceHome', 600)
                 return res.status(200).json({ status: httpStatusCode.SUCCESS, data: cw_spaceHome })
             }
             const error = appError.create("There Are No Available Co-working Spaces", 404, httpStatusCode.ERROR);
