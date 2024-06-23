@@ -100,7 +100,7 @@ function CheckoutForm() {
                 "clientClientID": profile.clientID,
                 "roomRoomID": payElements.roomid,
                 "totalCost": payElements.totalPrice,
-                "cancelLink": `https://spaces-xnt3.onrender.com/cancelbook?id=${payElements.cwspaceId}`,
+                "cancelLink": `https://spaces-xnt3.onrender.com/cancelbook?id=${payElements.roomid}`,
                 "reviewLink": `https://spaces-xnt3.onrender.com/reviewbook?id=${payElements.cwspaceId}`
             }),
         }).then(res => res.json())

@@ -9,6 +9,8 @@ import WorkSpaceCard from "../../components/WorkSpaceCard";
 import { Pagination, PaginationItem } from "@mui/material";
 import { useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 export function ShowError() {
     return (
@@ -40,6 +42,7 @@ function WorkSpaces() {
     const [showFilter, setShowFilter] = useState(false);
     const [priceRange, setPriceRange] = useState([0, 500]);
     const [availableRooms, setAvailableRooms] = useState([]);
+    const [loading, setLodaing] = useState(true);
     const [pageNumber, setPageNumber] = useState(0)
     const token = useSelector(store => store.auth).token;
     const profileData = token ? jwtDecode(token) : null;
@@ -75,6 +78,7 @@ function WorkSpaces() {
         fetch(`${process.env.REACT_APP_BASE_URL}/cw_spaces`)
             .then(res => res.json())
             .then(responsedata => {
+                setLodaing(false)
                 setCWSpaces(responsedata.data);
                 setDisplayedCwspaces(responsedata.data)
                 setFetchError(false)
@@ -149,7 +153,7 @@ function WorkSpaces() {
                         })}
                     </div> : null}
                 </div>
-                <div className="w-full flex justify-between mt-8">
+                {cwspaces?.length > 0 && <div className="w-full flex justify-between mt-8">
                     <button id="dropdownDefaultButton" className="md:w-36 w-28 mb-5 text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm md:px-5 px-2 py-2.5 justify-center items-center gap-2"
                         onClick={() => handleFilter()} type="button"><FunnelFill className="text-lg" /> Filters
                     </button>
@@ -165,10 +169,17 @@ function WorkSpaces() {
                             </li>
                         </ul>
                     </div>
-                </div>
+                </div>}
                 {!fetcherror ? <div>
-                    {cwspaces ? <div className="flex flex-col gap-8">
-                        {displayPages}</div> : <NoDataError response={statusresponse} />
+                    {loading ? 
+                    <div className="flex flex-col gap-8">
+                        <Skeleton className="w-full h-48 rounded-xl mt-10"/>
+                        <Skeleton className="w-full h-48 rounded-xl"/>
+                        <Skeleton className="w-full h-48 rounded-xl"/>
+                    </div>
+                    : 
+                    (cwspaces ? <div className="flex flex-col gap-8">
+                        {displayPages}</div> : <NoDataError response={statusresponse} />)
                     }
                 </div> : <ShowError />
                 }

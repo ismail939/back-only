@@ -16,14 +16,12 @@ function CancelBook() {
     const [errormessage, setErrorMessage] = useState("");
     function cancelBook(e) {
         e.preventDefault();
-        fetch(`${process.env.REACT_APP_BASE_URL}/reviews`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/books/${userData.clientID}/${id}`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
                 "Authorization": `Bearer ${token}`
             },
-            body: JSON.stringify({
-            }),
         }).then(res => res.json()).then((data) => {
             if (data.status === "error") {
                 setErrorMessage("We cannot cancel your book currently, please try again later.")

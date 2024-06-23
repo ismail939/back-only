@@ -28,10 +28,15 @@ function Filters({ availableRooms, handleFilter, priceRange, AdjustPriceRange, A
                         onChange={handleChange}></input>
                         <h2 className="font-medium text-md">Shared</h2>
                     </div>
-                    <div className="flex gap-3 items-center">
+                    <div className="flex gap-3 items-center mb-3">
                         <input name="Private" type="checkbox" className="w-5 h-5 cursor-pointer"
                         onChange={handleChange}></input>
                         <h2 className="font-medium text-md">Private</h2>
+                    </div>
+                    <div className="flex gap-3 items-center">
+                        <input name="Meeting" type="checkbox" className="w-5 h-5 cursor-pointer"
+                        onChange={handleChange}></input>
+                        <h2 className="font-medium text-md">Meeting</h2>
                     </div>
                 </div>
                 <hr class="solid my-3"></hr>

@@ -100,7 +100,7 @@ function Review() {
                 "totalRate": reviews.overall,
                 "body": reviewBody,
                 "clientClientID": userData.clientID,
-                "cwSpaceCwID": id,
+                "cwSpaceCwID": parseInt(id),
                 "internetQualityRate": reviews.internetQuality,
                 "costRate": reviews.cost,
                 "atmosphereRate": reviews.atmosphere,
@@ -112,6 +112,7 @@ function Review() {
             if (data.status === "error") {
                 setErrorMessage("We cannot proceed with your request, please try again later.")
             } else if (data.status === "fail") {
+                console.log(data.message)
                 setErrorMessage("We cannot proceed with your request, please try again later.")
             } else if (data.status === "success") {
                 setReviewComplete(true)
@@ -122,7 +123,7 @@ function Review() {
         })
     }
     if (!reviewComplete) return (
-        <div className="min-h-screen mt-[50px] w-4/5 mx-auto">
+        <div className="min-h-screen mt-[50px] w-4/5 mx-auto" >
             <div className="lg:w-3/4 w-full mt-4 md:px-10">
                 <h2 className="mb-3 text-4xl main-font">Review</h2>
                 <p className="mb-8 ">Your feedback is incredibly valuable to us as we strive to provide the best possible experience. We would greatly appreciate it if you could take a moment to share your thoughts on various aspects of our space. Your insights will help us improve and better serve you and our community.</p>

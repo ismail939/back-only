@@ -10,7 +10,7 @@ function WorkSpaceCard(props) {
     const getFavourites = props.getFavourites;
     const favourites = props.favourites;
     const showFavIcon = props.showFavIcon;
-    const isInFavourites = favourites?.some(item => JSON.stringify(item) === JSON.stringify(cwspace));
+    const isInFavourites = favourites?.some(item => item.cwID === cwspace.cwID);
     const [selected, setSelected] = useState(isInFavourites)
     function addToFavourites(){
         fetch(`${process.env.REACT_APP_BASE_URL}/favourites`, {
@@ -39,7 +39,7 @@ function WorkSpaceCard(props) {
             },
             body: JSON.stringify({
                 "clientClientID": profileData.clientID,
-                "cwSpaceCwID": 1
+                "cwSpaceCwID": cwspace.cwID
             }),
         }).then(res => res.json()).then((resdata) => {
             if (resdata.status === "success") {

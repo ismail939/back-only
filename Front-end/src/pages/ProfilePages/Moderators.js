@@ -88,7 +88,7 @@ function Moderators() {
         })
     }
     const getModerators = () => {
-        fetch(`${process.env.REACT_APP_BASE_URL}/moderators?cwSpaceID=${cwid}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}/cw_spaces/getAllModerators/${cwid}`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
