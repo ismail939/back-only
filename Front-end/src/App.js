@@ -87,21 +87,6 @@ function App() {
           </Route>
         </Route>
         <Route element={<RequireAuth allowedRoles={["owner", "moderator"]} />} >
-          <Route element={<ProfileManager />} >
-            <Route path='workspace-data' element={<WorkSpaceSettings />}></Route>
-            <Route path='rooms-data' element={<><Outlet /></>}>
-              <Route path="" element={<RoomsSettings />} />
-              <Route path=":roomid" element={<AdjustRoom />} />
-            </Route>
-            <Route path='offers-data' element={<><Outlet /></>}>
-              <Route path="" element={<OffersSettings />} />
-              <Route path=":offerid" element={<AdjustOffer />} />
-            </Route>
-            <Route path='events&workshops-data' element={<Outlet />}>
-              <Route path="" element={<EventsSettings />} />
-              <Route path=":eventid" element={<AdjustEvent />} />
-            </Route>
-          </Route>
           <Route path='requests' element={<Requests />}></Route>
           <Route path='books' element={<Books />}></Route>
         </Route>
@@ -116,6 +101,18 @@ function App() {
         <Route element={<RequireAuth allowedRoles={["owner"]} />} >
           <Route element={<ProfileManager />} >
             <Route path='workspace-data' element={<WorkSpaceSettings />}></Route>
+            <Route path='rooms-data' element={<><Outlet /></>}>
+              <Route path="" element={<RoomsSettings />} />
+              <Route path=":roomid" element={<AdjustRoom />} />
+            </Route>
+            <Route path='offers-data' element={<><Outlet /></>}>
+              <Route path="" element={<OffersSettings />} />
+              <Route path=":offerid" element={<AdjustOffer />} />
+            </Route>
+            <Route path='events&workshops-data' element={<Outlet />}>
+              <Route path="" element={<EventsSettings />} />
+              <Route path=":eventid" element={<AdjustEvent />} />
+            </Route>
           </Route>
           <Route element={<ProfileManager />} >
             <Route path='moderators' element={<><Outlet /></>}>
