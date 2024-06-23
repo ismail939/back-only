@@ -235,7 +235,7 @@ function WorkSpaceProfile() {
                         </div>
                     </div>
                     {reviews ? reviews.map((review) => {
-                        return <Review review={review} key={review.clientClientID + "/" + review.cwSpaceCwID} />
+                        if(review.body !== "") return <Review review={review} key={review.clientClientID + "/" + review.cwSpaceCwID} />
                     }) : <p className="text-center my-[100px] sec-font md:text-xl text-lg">Currently there aren't reviews</p>}
                 </div>
             </div>
