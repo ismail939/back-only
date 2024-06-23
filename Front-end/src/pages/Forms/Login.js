@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../components/reduxtoolkit/Slices/authSlice";
@@ -19,8 +19,18 @@ function Login() {
         password: false,
         usertype: false
     });
+    useEffect(()=>{
+        if(localStorage.getItem('client')){
+            setUserName(localStorage.getItem('client'))
+            setRemeber(true)
+        }
+    },[])
     function checkState() {
-        remember ? console.log("checked") : console.log("not checked")
+        if(remember){
+            localStorage.setItem("client" , username)
+        }else{
+            if(localStorage.getItem('client')) localStorage.removeItem('client')
+        }
     }
     const AddData = () => {
         fetch(`${process.env.REACT_APP_BASE_URL}/clients/login`, {
@@ -75,7 +85,7 @@ function Login() {
                     <form className="space-y-4 md:space-y-6" action="#">
                         <div>
                             <label htmlFor="username" className="block mb-2 text-sm font-medium text-gray-900 ">Username</label>
-                            <input type="text" name="username" id="username" className={`bg-gray-50 border ${dataerrors.username ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`} placeholder="enter your username"
+                            <input value={username} type="text" name="username" id="username" className={`bg-gray-50 border ${dataerrors.username ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`} placeholder="enter your username"
                                 onChange={(e) => setUserName(e.target.value)}></input>
                             <ShowErrorMessage condition={dataerrors.username} value={"please enter your username"} />
                         </div>
@@ -90,7 +100,7 @@ function Login() {
                             <div className="flex items-start">
                                 <div className="flex items-center h-5">
                                     <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 cursor-pointer" required=""
-                                        onClick={() => { setRemeber(!remember) }}></input>
+                                        checked={remember} onClick={() => { setRemeber(!remember) }}></input>
                                 </div>
                                 <div className="ml-3 text-sm">
                                     <label className="text-gray-500">Remember me</label>

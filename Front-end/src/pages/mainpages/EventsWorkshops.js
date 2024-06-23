@@ -1,20 +1,20 @@
 import { useEffect, useState, useRef } from "react";
 import { NoDataError, ShowError } from "./WorkSpaces";
-import { Link } from "react-router-dom";
-import { Search } from "react-bootstrap-icons";
 import EventsCard from "../../components/EventsCard";
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 function EventsWorshops() {
-    const [searchlist, setSearchList] = useState(false);
-    const [searchData, setSearchData] = useState([]);
     const [events, setEvents] = useState([]);
     const [displayedEvents, setDisplayedEvents] = useState([]);
     const [fetcherror, setFetchError] = useState(false);
+    const [loading, setLodaing] = useState(true);
     const [statusresponse, setStatusResponse] = useState("");
     let menuRef = useRef();
     const getEventsWorkshops = () => {
         fetch(`${process.env.REACT_APP_BASE_URL}/events`)
             .then(res => res.json())
             .then(responsedata => {
+                setLodaing(false)
                 setEvents(responsedata.data);
                 setDisplayedEvents(responsedata.data)
                 setFetchError(false)
@@ -25,14 +25,6 @@ function EventsWorshops() {
     }
     useEffect(() => {
         getEventsWorkshops();
-    }, [])
-    useEffect(() => {
-        let handler = (e) => {
-            if (menuRef.current && !menuRef.current.contains(e.target)) {
-                setSearchList(false)
-            }
-        }
-        document.addEventListener("mousedown", handler)
     }, [])
     const getSearchData = (event) => {
         const search = event.target.value;
@@ -55,15 +47,19 @@ function EventsWorshops() {
                 </div>
             </div>
             {!fetcherror ? <div>
-                {displayedEvents ? <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1  gap-8 mt-8">
+                {loading ?
+                    <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1  gap-8 mt-8">
+                        <Skeleton className="w-full h-[450px]" />
+                        <Skeleton className="w-full h-[450px]" />
+                        <Skeleton className="w-full h-[450px]" />
+                        <Skeleton className="w-full h-[450px]" />
+                    </div>
+                    :(displayedEvents ? <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1  gap-8 mt-8">
                     {displayedEvents.map((event) => {
                         return <EventsCard event={event} key={event.eventID} />
                     })}
                 </div>
-                    : <NoDataError response={statusresponse} />}
-                <div className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-6 mt-8">
-
-                </div>
+                    : <NoDataError response={statusresponse} />)}
             </div> : <ShowError />}
         </div>
     )

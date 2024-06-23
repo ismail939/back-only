@@ -15,31 +15,46 @@ function ClientRequests() {
             .then(res => res.json())
             .then(responsedata => {
                 setRequests(responsedata.data)
-                console.log(responsedata.data)
             }).catch()
     }
+    
     useEffect(() => {
         getRequests();
     }, [])
+    function formatDate(isoString) {
+        const date = new Date(isoString);
+        const months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        // Extract the date components
+        const day = date.getDate();
+        const month = months[date.getMonth()];
+        const year = date.getFullYear();
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${day} ${month} ${year} ${hours}:${minutes}`;
+    }
     function PendingRoomCard(props) {
         const room = props.room;
         return (
-            <div className="bg-white rounded-sm shadow-md overflow-hidden w-full my-4">
+            <div className="bg-white rounded-sm shadow-md overflow-hidden w-full my-4 max-w-[800px]">
                 <div className="flex md:flex-row flex-col">
                     <div className="">
-                        <img className="h-48 w-full md:w-[300px] object-cover" src={room.img} alt={"no image found"}></img>
+                        <img className="h-52 w-full md:w-[300px] object-cover" src={room.img} alt={"no image found"}></img>
                     </div>
                     <div className="px-8 py-2">
+                        <h1 className="capitalize font-semibold text-2xl leading-tight text-black main-font">{room?.cw_spaceName}</h1>
                         <h1 className="capitalize font-semibold text-xl leading-tight text-black main-font">{`Room ${room?.roomNumber}`}</h1>
-                        <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`Request Created: ${room?.createdAt.slice(0, 10)} ${room?.createdAt.slice(11, 19)}`}</div>
-                        <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`Request Updated: ${room?.updatedAt.slice(0, 10)} ${room?.updatedAt.slice(11, 19)}`}</div>
+                        <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`Request Created: ${formatDate(room?.createdAt)}`}</div>
+                        <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`Request Updated: ${formatDate(room?.updatedAt)}`}</div>
                         <div className="mt-1 text-lg flex items-center gap-4">
                             <PeopleFill />
                             <div className="font-bold">{`Number of Persons: ${room?.numberOfPersons}`}</div>
                         </div>
                         <div className={`uppercase mt-2 text-lg font-bold
                         ${room?.status === "accepted" ? "text-green-500" : (room?.status !== "pending" ? "text-[#ff0000]" : "text-gray-500")}`}>
-                        {`Status: ${room?.status}`}</div>
+                            {`Status: ${room?.status}`}</div>
                     </div>
                 </div>
             </div>

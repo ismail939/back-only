@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../components/reduxtoolkit/Slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
@@ -34,6 +34,7 @@ function Login({ type }) {
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [errormessage, setErrorMessage] = useState("");
+    const [remember, setRemeber] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [dataerrors, setDataErrors] = useState({
@@ -41,6 +42,19 @@ function Login({ type }) {
         password: false,
         usertype: false
     });
+    useEffect(()=>{
+        if(localStorage.getItem(type)){
+            setUserName(localStorage.getItem(type))
+            setRemeber(true)
+        }
+    },[])
+    function checkState() {
+        if(remember){
+            localStorage.setItem(type , username)
+        }else{
+            if(localStorage.getItem(type)) localStorage.removeItem(type)
+        }
+    }
     const AddData = () => {
         let apitype;
         if (type === "Owner") apitype = "owners"
@@ -83,7 +97,7 @@ function Login({ type }) {
             setDataErrors({ username: false, password: true })
         }
         else {
-            setDataErrors({ username: false, password: false }); AddData();
+            setDataErrors({ username: false, password: false });checkState(); AddData();
         }
     }
     return (
@@ -98,7 +112,7 @@ function Login({ type }) {
                         <div>
                             <label htmlFor="username" className="block mb-2 text-sm font-medium text-gray-900 ">Username</label>
                             <input type="text" name="username" id="username" className={`bg-gray-50 border ${dataerrors.username ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`} placeholder="enter your username"
-                                onChange={(e) => setUserName(e.target.value)}></input>
+                                value={username} onChange={(e) => setUserName(e.target.value)}></input>
                             <ShowErrorMessage condition={dataerrors.username} value={"please enter your username"} />
                         </div>
                         <div>
@@ -106,6 +120,17 @@ function Login({ type }) {
                             <input type="password" name="password" id="password" placeholder="••••••••" className={`bg-gray-50 border ${dataerrors.password ? "border-red-500" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
                                 onChange={(e) => setPassword(e.target.value)}></input>
                             <ShowErrorMessage condition={dataerrors.password} value={"please enter your password"} />
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-start">
+                                <div className="flex items-center h-5">
+                                    <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 cursor-pointer" required=""
+                                        checked={remember} onClick={() => { setRemeber(!remember) }}></input>
+                                </div>
+                                <div className="ml-3 text-sm">
+                                    <label className="text-gray-500">Remember me</label>
+                                </div>
+                            </div>
                         </div>
                         {errormessage !== "" ? <ShowErrorMessage condition={true} value={errormessage} /> : null}
                         <button type="submit" className="w-full btn-color font-medium rounded-lg text-md px-5 py-2.5 text-center duration-300 ease-in-out"
