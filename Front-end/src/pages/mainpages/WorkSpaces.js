@@ -109,7 +109,7 @@ function WorkSpaces() {
         const filteredCWs = cwspaces?.filter((workspace) => {
             if (availableRooms.length > 0) return (workspace.hourPrice >= priceRange[0]
                 && workspace.hourPrice <= priceRange[1]
-                && availableRooms.every(value => cwspaces.avilableRooms?.includes(value))
+                && availableRooms.every(value => workspace.availableRooms?.includes(value))
                 
             )
             else return workspace.hourPrice >= priceRange[0]
