@@ -102,6 +102,8 @@ function App() {
               <Route path=":eventid" element={<AdjustEvent />} />
             </Route>
           </Route>
+          <Route path='requests' element={<Requests />}></Route>
+          <Route path='books' element={<Books />}></Route>
         </Route>
         <Route element={<RequireAuth allowedRoles={["owner", "client", "moderator"]} />} >
           <Route element={<ProfileManager />} >
@@ -124,8 +126,6 @@ function App() {
           <Route path='createworkspace' element={<CreateFullWorkSpace />}></Route>
           <Route path='createOffer' element={<CreateOffer />}></Route>
           <Route path='createRoom' element={<CreateRoom />}></Route>
-          <Route path='requests' element={<Requests />}></Route>
-          <Route path='books' element={<Books />}></Route>
           <Route path='createEvent' element={<CreateEvent />}></Route>
         </Route>
         <Route path='dashboard' element={<Dashboard />}></Route>

@@ -57,7 +57,7 @@ function NavBar() {
                             <Link to="favourites" onClick={() => ShowSubMenu()}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">My Favourites</li></Link>
                             <hr className="border-[#BBE1FA]"></hr>
                             </>}
-                            {usertype === "owner" && <>
+                            {(usertype === "owner" || usertype === "moderator") && <>
                             <Link to="requests" onClick={() => ShowSubMenu()}><li className="px-5 py-4 hover:bg-[#0c3d5e] cursor-pointer duration-200">Booking & Requests</li></Link>
                             <hr className="border-[#BBE1FA]"></hr>
                             </>}
