@@ -15,10 +15,12 @@ router.route("/")
 router.route("/:cwSpaceCwID")
     .get(verifyToken, allowedTo('owner', 'moderator'), bookController.getCwSpaceBookings)
 
+router.route("/:bookID")
+    .delete(verifyToken, allowedTo('client'), bookController.delete)     
+
 router.route("/:clientID/:roomID")
     .get(verifyToken, allowedTo('client'), bookController.getOne)
     .patch(verifyToken, allowedTo('client'), bookController.update)
-    .delete(verifyToken, allowedTo('client'), bookController.delete);
 
 
 

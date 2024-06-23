@@ -1,5 +1,6 @@
 const nodemailer = require("nodemailer");
 const path = require("path");
+const Cw_space = require("../models/Cw_space");
 const logoPath = path.join(__dirname, "..", "public", "images", "logo.png");
 
 const transporter = nodemailer.createTransport({
@@ -344,7 +345,8 @@ module.exports = {
         });
     });
     },
-    sendReminder: (email, cancelLink)=>{
+    sendReminder: (email, bookID) => {
+        let cancelLink = `https://spaces-xnt3.onrender.com/cancelbook?id=${bookID}`;
         return new Promise((resolve, reject) => {
             const htmlContent = `
                 <html>
@@ -459,7 +461,8 @@ module.exports = {
             });
         });
     },
-    sendReminderReview: (email, reviewLink)=>{
+    sendReminderReview: (email, cwSpaceID) => {
+        let reviewLink = `https://spaces-xnt3.onrender.com/reviewbook?id=${cwSpaceID}`;
         return new Promise((resolve, reject) => {
             const htmlContent = `
                 <html>

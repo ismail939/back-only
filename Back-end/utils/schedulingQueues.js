@@ -13,14 +13,14 @@ const reminderQueue = new Queue("reminder", redisConfig);
 const reviewQueue = new Queue("review", redisConfig);
 
 reminderQueue.process(async (job) => {
-    const { email, cancelLink, reviewLink } = job.data
-    sendReminder(email, cancelLink)
-    reviewQueue.add({ email, reviewLink }, { delay: 2 * 60 * 60 * 1000})
+    const { email, bookID, cwSpaceID } = job.data
+    sendReminder(email, bookID)
+    reviewQueue.add({ email, cwSpaceID }, { delay: 2 * 60 * 60 * 1000})
 });
  
 reviewQueue.process(async (job) => {
-    const { email, reviewLink } = job.data;
-    sendReminderReview(email, reviewLink)
+    const { email, cwSpaceID } = job.data;
+    sendReminderReview(email, cwSpaceID);
 });
 
 module.exports = { reminderQueue };
