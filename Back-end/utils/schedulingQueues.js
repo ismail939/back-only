@@ -3,9 +3,9 @@ const { sendReminder, sendReminderReview } = require("./sendEmail");
 
 const redisConfig = {
     redis: {
-        host: 'redis-10817.c241.us-east-1-4.ec2.redns.redis-cloud.com',
-        port: 10817,
-        password: '03A29KHtB2oIYYuAogjaDOe2ggLuH4vU'
+        host: process.env.REDIS_HOST,
+        port: process.env.REDIS_PORT,
+        password: process.env.REDIS_PASSWORD
     },
 };
 
@@ -17,7 +17,7 @@ reminderQueue.process(async (job) => {
     sendReminder(email, cancelLink)
     reviewQueue.add({ email, reviewLink }, { delay: 2 * 60 * 60 * 1000})
 });
-
+ 
 reviewQueue.process(async (job) => {
     const { email, reviewLink } = job.data;
     sendReminderReview(email, reviewLink)

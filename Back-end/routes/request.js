@@ -11,11 +11,11 @@ router.route("/")
     .post(verifyToken, allowedTo('client'), requestSchema(), requestController.create);
 
 router.route("/:cwSpaceID")
-    .get(verifyToken, allowedTo('owner'), requestController.getCw_spaceRequests)
+    .get(verifyToken, allowedTo('owner', 'moderator'), requestController.getCw_spaceRequests)
 
 router.route("/:clientID/:roomID")
-    .patch(verifyToken, allowedTo('owner'), requestController.update)
-    .delete(verifyToken, allowedTo('owner'), requestController.delete);
+    .patch(verifyToken, allowedTo('owner', 'moderator'), requestController.update)
+    .delete(verifyToken, allowedTo('owner', 'moderator'), requestController.delete);
 
 module.exports = router
 

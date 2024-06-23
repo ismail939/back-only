@@ -10,7 +10,7 @@ function WorkSpaceCard(props) {
     const getFavourites = props.getFavourites;
     const favourites = props.favourites;
     const showFavIcon = props.showFavIcon;
-    const isInFavourites = favourites?.some(item => JSON.stringify(item) === JSON.stringify(cwspace));
+    const isInFavourites = favourites?.some(item => item.cwID === cwspace.cwID);
     const [selected, setSelected] = useState(isInFavourites)
     function addToFavourites(){
         fetch(`${process.env.REACT_APP_BASE_URL}/favourites`, {
@@ -39,7 +39,7 @@ function WorkSpaceCard(props) {
             },
             body: JSON.stringify({
                 "clientClientID": profileData.clientID,
-                "cwSpaceCwID": 1
+                "cwSpaceCwID": cwspace.cwID
             }),
         }).then(res => res.json()).then((resdata) => {
             if (resdata.status === "success") {
@@ -49,8 +49,8 @@ function WorkSpaceCard(props) {
         })
     }
     return (
-        <div className="bg-white rounded-xl shadow-md overflow-hidden relative">
-            <div className="md:flex">
+        <div className="bg-white rounded-xl shadow-md overflow-hidden relative md:h-[170px]">
+            <div className="md:flex md:h-full">
                 <div className="md:shrink-0">
                     <Link to={`/workspaces/${cwspace.cwID}`}><img className="h-48 w-full object-cover md:h-full md:w-64 hover:scale-105 duration-500" src={cwspace.img} alt={cwspace.name}></img></Link>
                 </div>

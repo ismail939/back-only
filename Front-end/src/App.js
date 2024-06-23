@@ -87,6 +87,18 @@ function App() {
           </Route>
         </Route>
         <Route element={<RequireAuth allowedRoles={["owner", "moderator"]} />} >
+          <Route path='requests' element={<Requests />}></Route>
+          <Route path='books' element={<Books />}></Route>
+        </Route>
+        <Route element={<RequireAuth allowedRoles={["owner", "client", "moderator"]} />} >
+          <Route element={<ProfileManager />} >
+            <Route path='personal-information' element={<PersonalInformation />}></Route>
+          </Route>
+          <Route path='discoverEdit' element={<DiscoverAdmin />}></Route>
+          <Route path='offerEdit' element={<OfferAdmin />}></Route>
+          <Route path='eventEdit' element={<EventAdmin />}></Route>
+        </Route>
+        <Route element={<RequireAuth allowedRoles={["owner"]} />} >
           <Route element={<ProfileManager />} >
             <Route path='workspace-data' element={<WorkSpaceSettings />}></Route>
             <Route path='rooms-data' element={<><Outlet /></>}>
@@ -102,19 +114,6 @@ function App() {
               <Route path=":eventid" element={<AdjustEvent />} />
             </Route>
           </Route>
-        </Route>
-        <Route element={<RequireAuth allowedRoles={["owner", "client", "moderator"]} />} >
-          <Route element={<ProfileManager />} >
-            <Route path='personal-information' element={<PersonalInformation />}></Route>
-          </Route>
-          <Route path='discoverEdit' element={<DiscoverAdmin />}></Route>
-          <Route path='offerEdit' element={<OfferAdmin />}></Route>
-          <Route path='eventEdit' element={<EventAdmin />}></Route>
-        </Route>
-        <Route element={<RequireAuth allowedRoles={["owner"]} />} >
-          <Route element={<ProfileManager />} >
-            <Route path='workspace-data' element={<WorkSpaceSettings />}></Route>
-          </Route>
           <Route element={<ProfileManager />} >
             <Route path='moderators' element={<><Outlet /></>}>
               <Route path="" element={<Moderators />} />
@@ -124,8 +123,6 @@ function App() {
           <Route path='createworkspace' element={<CreateFullWorkSpace />}></Route>
           <Route path='createOffer' element={<CreateOffer />}></Route>
           <Route path='createRoom' element={<CreateRoom />}></Route>
-          <Route path='requests' element={<Requests />}></Route>
-          <Route path='books' element={<Books />}></Route>
           <Route path='createEvent' element={<CreateEvent />}></Route>
         </Route>
         <Route path='dashboard' element={<Dashboard />}></Route>

@@ -9,6 +9,8 @@ import WorkSpaceCard from "../../components/WorkSpaceCard";
 import { Pagination, PaginationItem } from "@mui/material";
 import { useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 export function ShowError() {
     return (
@@ -39,7 +41,8 @@ function WorkSpaces() {
     const [fetcherror, setFetchError] = useState(false);
     const [showFilter, setShowFilter] = useState(false);
     const [priceRange, setPriceRange] = useState([0, 500]);
-    const [availableRooms, setAvailableRooms] = useState("");
+    const [availableRooms, setAvailableRooms] = useState([]);
+    const [loading, setLodaing] = useState(true);
     const [pageNumber, setPageNumber] = useState(0)
     const token = useSelector(store => store.auth).token;
     const profileData = token ? jwtDecode(token) : null;
@@ -75,6 +78,7 @@ function WorkSpaces() {
         fetch(`${process.env.REACT_APP_BASE_URL}/cw_spaces`)
             .then(res => res.json())
             .then(responsedata => {
+                setLodaing(false)
                 setCWSpaces(responsedata.data);
                 setDisplayedCwspaces(responsedata.data)
                 setFetchError(false)
@@ -98,19 +102,21 @@ function WorkSpaces() {
         setDisplayedCwspaces(soretedData);
     }
     function handleFilter() {
+        setAvailableRooms([])
         setShowFilter(!showFilter)
     }
     function ApplyFilter() {
         const filteredCWs = cwspaces?.filter((workspace) => {
             if (availableRooms.length > 0) return (workspace.hourPrice >= priceRange[0]
                 && workspace.hourPrice <= priceRange[1]
-                && availableRooms.every(value => cwspaces.avilablerooms?.includes(value))
+                && availableRooms.every(value => workspace.availableRooms?.includes(value))
+                
             )
             else return workspace.hourPrice >= priceRange[0]
                 && workspace.hourPrice <= priceRange[1]
-            
         })
         setDisplayedCwspaces(filteredCWs)
+        setAvailableRooms([])
         setShowFilter(false)
     }
     function AdjustPriceRange(newValue) {
@@ -125,7 +131,7 @@ function WorkSpaces() {
     return (
         <div className="flex flex-col relative min-h-screen justify-between">
             {showFilter && <div className="fixed top-0 left-0 w-full h-[100vh] flex items-center justify-center bg-black/[.2] z-20">
-                <Filters priceRange={priceRange} handleFilter={handleFilter} AdjustPriceRange={AdjustPriceRange} ApplyFilter={ApplyFilter} setAvailableRooms={setAvailableRooms} />
+                <Filters priceRange={priceRange} handleFilter={handleFilter} AdjustPriceRange={AdjustPriceRange} ApplyFilter={ApplyFilter} availableRooms={availableRooms} setAvailableRooms={setAvailableRooms} />
             </div>}
             <div className="w-4/5 mx-auto md:mt-[30px] p-5">
                 <div className="relative w-full" ref={menuRef}>
@@ -147,7 +153,7 @@ function WorkSpaces() {
                         })}
                     </div> : null}
                 </div>
-                <div className="w-full flex justify-between mt-8">
+                {cwspaces?.length > 0 && <div className="w-full flex justify-between mt-8">
                     <button id="dropdownDefaultButton" className="md:w-36 w-28 mb-5 text-white btn-color flex focus:outline-none font-medium rounded-lg text-sm md:px-5 px-2 py-2.5 justify-center items-center gap-2"
                         onClick={() => handleFilter()} type="button"><FunnelFill className="text-lg" /> Filters
                     </button>
@@ -163,10 +169,17 @@ function WorkSpaces() {
                             </li>
                         </ul>
                     </div>
-                </div>
+                </div>}
                 {!fetcherror ? <div>
-                    {cwspaces ? <div className="flex flex-col gap-8">
-                        {displayPages}</div> : <NoDataError response={statusresponse} />
+                    {loading ? 
+                    <div className="flex flex-col gap-8">
+                        <Skeleton className="w-full h-48 rounded-xl mt-10"/>
+                        <Skeleton className="w-full h-48 rounded-xl"/>
+                        <Skeleton className="w-full h-48 rounded-xl"/>
+                    </div>
+                    : 
+                    (cwspaces ? <div className="flex flex-col gap-8">
+                        {displayPages}</div> : <NoDataError response={statusresponse} />)
                     }
                 </div> : <ShowError />
                 }

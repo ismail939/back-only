@@ -23,6 +23,20 @@ function Books() {
     useEffect(() => {
         getBooks();
     }, [])
+    function formatDate(isoString) {
+        const date = new Date(isoString);
+        const months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        // Extract the date components
+        const day = date.getDate();
+        const month = months[date.getMonth()];
+        const year = date.getFullYear();
+        const hours = isoString.split('T')[1].split(':')[0];
+        const minutes = isoString.split('T')[1].split(':')[1];
+        return `${day} ${month} ${year} ${hours}:${minutes}`;
+    }
     function BookedCard(props) {
         const room = props.room;
         return (
@@ -33,9 +47,9 @@ function Books() {
                     </div>
                     <div className="px-8 py-2">
                         <h1 className="capitalize text-lg leading-tight text-xl main-font">{`${room.payment}`}</h1>
-                        <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`${room?.createdAt.slice(0, 10)} ${room?.createdAt.slice(11, 19)} Created `}</div>
-                        <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`${room?.createdAt.slice(0, 10)} ${room?.start.slice(11, 19)} Start `}</div>
-                        <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`${room?.updatedAt.slice(0, 10)} ${room?.end.slice(11, 19)} End`}</div>
+                        <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`${formatDate(room?.createdAt)} Created `}</div>
+                        <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`${formatDate(room?.start)} Start `}</div>
+                        <div className="uppercase mt-1 tracking-wide text-sm text-[#3282B8] sec-font">{`${formatDate(room?.end)} End`}</div>
                         <div className="flex items-center gap-2 my-2">
                             <img className="w-10 h-10 object-cover rounded-full" src={room.clientImg} alt={"no image found"}></img>
                             <div>{`${room?.username}  Booked`}</div>

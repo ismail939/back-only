@@ -10,16 +10,18 @@ function ResetPassword() {
     const [profileData, setProfileData] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("")
     const [checkerror, setCheckError] = useState("")
+    const [resError, setResError] = useState("")
     const navigate = useNavigate();
     const [dataerrors, setDataErrors] = useState({
         password: false,
         confirmPassword: false,
     });
     useEffect(() => {
-        const url = window.location.href;
-        const token = url.slice(42);
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const token = urlParams.get('token')
         setToken(token)
-        if(token) { const usertype = jwtDecode(url.slice(42))
+        if(token) { const usertype = jwtDecode(token)
         setProfileData(usertype)}
     }, [])
     function compPassword() {
@@ -63,11 +65,12 @@ function ResetPassword() {
             })
         }).then(res => res.json()).then((data) => {
             if (data.status === "success") {
+                setResError("")
                 profileData.role === "owner" ? navigate("../portal-login") : navigate("../login")
             } else if (data.status === "error") {
-                console.log(data.message)
+                setResError(data.message)
             } else if (data.status === "fail") {
-                console.log("There is problem in the server")
+                setResError("There is problem in the server, please try again later")
             }
         })
     }
@@ -115,6 +118,7 @@ function ResetPassword() {
                                 <input type="password" name="confirmpassword" id="confirmpassword" placeholder="••••••••" className={`bg-gray-50 border ${dataerrors.confirmpassword || !compPassword() ? "border-red-500 focus:outline-rose-600" : "border-gray-300"} text-gray-900 sm:text-sm rounded-lg  block w-full p-2.5 `} required
                                     onChange={(e) => { setConfirmPassword(e.target.value) }}></input>
                                 {!compPassword() || dataerrors.confirmpassword ? <ShowErrorMessage condition={true} value={"Password doesn't match"} /> : null}
+                                <div className="mt-4"><ShowErrorMessage condition={resError !== ""} value={resError}/></div>
                             </div>
                             <div className="mt-4">
                                 <button type="submit" className={`w-full btn-color rounded-sm text-md font-medium px-5 py-2.5 text-center duration-300`}

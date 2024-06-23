@@ -31,13 +31,13 @@ function TimeStamp({ date, booked, range, bookingRange, updateBookingRange }) {
         </div>
     )
 }
-function SuccessMessage({ showsuccess, room, numPerson, cost, bookingRange, closeSuccessMessage, date }) {
+function SuccessMessage({ room, numPerson, cost, closeSuccessMessage }) {
     return (
         <div className="fixed top-0 left-0 w-full h-[100vh] flex items-center justify-center bg-black/[.2] z-100 duration-300">
             <div className="bg-white shadow rounded-md p-3 md:w-[500px] w-3/4 duration-800">
                 <img className="w-full h-[200px] object-cover" src={ room.img}></img>
                 <div className="mt-5">
-                    {room.type === "Shared" ? <><h2 className="main-font text-xl">Request Created Successfully</h2>
+                    <h2 className="main-font text-xl">Request Created Successfully</h2>
                         <p className="text-md my-2">Your Request has been submitted and sent to the owner, the response will appear in your profile page.</p>
                         <div className="flex items-center gap-4 text-lg main-font">
                             <PeopleFill />
@@ -47,23 +47,6 @@ function SuccessMessage({ showsuccess, room, numPerson, cost, bookingRange, clos
                             <ClockFill />
                             <p>Cost of one hour: {cost} L.E</p>
                         </div>
-                    </> : <>
-                        <h2 className="main-font text-xl mb-2">Room Booked Successfully</h2>
-                        <p className="text-md my-2">Thanks for your booking, you can find all your bookings in your profile page.</p>
-                        <div className="flex items-center gap-4 text-lg main-font my-1 text-[#0F4C75]">
-                            <PeopleFill />
-                            <p>{numPerson} Persons</p>
-                        </div>
-                        <div className="flex items-center gap-4 text-lg main-font my-1 text-[#0F4C75]">
-                            <Calendar2EventFill />
-                            <p>{date.toDateString()}</p>
-                        </div>
-                        <div className="flex items-center gap-4 text-lg main-font my-1 text-[#0F4C75]">
-                            <ClockFill />
-                            <p>From {bookingRange[0][0]} to {bookingRange[bookingRange.length - 1][1]}</p>
-                        </div>
-                        <h2 className="main-font text-2xl mt-4">Total Cost is {cost} L.E</h2>
-                    </>}
                     <hr className="border-black"></hr>
                     <button className="btn-color px-6 py-1 mt-2 float-right rounded-sm" onClick={() => closeSuccessMessage()}>
                         Close
@@ -278,7 +261,7 @@ function BookingRoom() {
                     </div>
                 </div>
                 <div className="mt-[50px]">
-                    {room.type === `Private` && <div className="relative">
+                    {(room.type === `Private` || room.type === `Meeting`)  && <div className="relative">
                         <div className="flex gap-5 items-center">
                             <Calendar3 className="text-[40px] my-2 cursor-pointer text-[#3282B8] hover:text-[#0F4C75] duration-200" onClick={() => setShowCal(!showCal)} />
                             <p className="text-xl font-bold">{date.toDateString()}</p>
@@ -286,7 +269,7 @@ function BookingRoom() {
                         <Calendar onChange={onDateChange} minDate={new Date()} value={date} className={showCal ? "absolute" : "hidden"} />
                     </div>}
                     <div className="mt-4 flex gap-8 lg:flex-row flex-col">
-                        {room.type === `Private` ? <div className="lg:w-1/2 px-2 py-3 border rounded-md border-[#0F4C75] grid gap-4 sm:grid-cols-5 grid-cols-3">
+                        {room.type === `Private` || room.type === `Meeting` ? <div className="lg:w-1/2 px-2 py-3 border rounded-md border-[#0F4C75] grid gap-4 sm:grid-cols-5 grid-cols-3">
                             {timeRange.map((value, index) => {
                                 if (index < timeRange.length - 1)
                                     return <TimeStamp date={date} range={[value, value + 1]} booked={isBooked(value)} bookingRange={bookingRange} updateBookingRange={updateBookingRange} key={index} />
@@ -305,15 +288,14 @@ function BookingRoom() {
                             </div>
                             <p className="mt-4">Total Cost: {room.type === `Private` ? bookingRange.length > 0 ? `${numPerson * room.hourPrice * bookingRange.length}  L.E` : "No time selected" : `${numPerson * room.hourPrice}  L.E/hr`}</p>
                             <button className="w-full mt-6 py-2 text-center btn-color text-white" onClick={() => {
-                                if (room.type === `Private`) {
+                                if (room.type === `Private` || room.type === `Meeting`) {
                                     createBook();
                                 } else if (room.type === `Shared`) {
                                     createRequest();
                                 }
                             }}>{room.type === `Shared` ? "Request" : "Book"}</button>
                         </div>
-                        {showsuccess && room.type === `Shared` && <SuccessMessage showsuccess={showsuccess} room={room} numPerson={numPerson} cost={numPerson * room.hourPrice} closeSuccessMessage={closeSuccessMessage} />}
-                        {showsuccess && room.type === `Private` && <SuccessMessage date={date} room={room} numPerson={numPerson} cost={numPerson * room.hourPrice * bookingRange.length} bookingRange={bookingRange} closeSuccessMessage={closeSuccessMessage} />}
+                        {showsuccess && room.type === `Shared` && <SuccessMessage room={room} numPerson={numPerson} cost={numPerson * room.hourPrice} closeSuccessMessage={closeSuccessMessage} />}
                         {showFail && <FailedMessage room={room} failMessage={failMessage} closeFailMessage={closeFailMessage} />}
                     </div>
                 </div>

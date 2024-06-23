@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const { Client, Book, Request, Room } = require('../models/modelIndex')
+const { Client, Book, Request, Room, Cw_space } = require('../models/modelIndex')
 const httpStatusCode = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
@@ -181,8 +181,12 @@ module.exports = {
                 let room = await Room.findOne({where: {
                     roomID: roomID
                 }}) 
+                let cw_space = await Cw_space.findOne({where: {
+                    cwID: room.cwSpaceCwID
+                }})
                 bookings[index].img = room.img
                 bookings[index].roomNumber = room.number
+                bookings[index].cw_spaceName = cw_space.name
             }
             if(bookings.length!=0){
                 return res.status(200).json({status: httpStatusCode.SUCCESS, message: "Bookings found successfully!", data: bookings})
@@ -204,8 +208,12 @@ module.exports = {
                 let room = await Room.findOne({where: {
                     roomID: roomID
                 }}) 
+                let cw_space = await Cw_space.findOne({where: {
+                    cwID: room.cwSpaceCwID
+                }})
                 requests[index].img = room.img
                 requests[index].roomNumber = room.number
+                requests[index].cw_spaceName = cw_space.name
             }
             if(requests.length!=0){
                 return res.status(200).json({status: httpStatusCode.SUCCESS, message: "Requests found successfully!", data: requests})
