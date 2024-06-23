@@ -28,25 +28,24 @@ module.exports = {
                 }
             })
             if (client && cw_space) {
-                const { totalRate, internetQualityRate, costRate, atmosphereRate, staffRate, privacyRate, designRate } = req.body
-                await Review.create(
-                    {
-                        totalRate: totalRate,
-                        body: req.body.body
-                    }
-                )
-                //const newRate = (cw_space.rate * cw_space.noOfReviews + req.body.rate) / (cw_space.noOfReviews + 1)
-                await Cw_space.update(
-                    {
-                        rate: newRate(cw_space.rate, totalRate, cw_space.noOfReviews),
-                        internetQualityRate: newRate(cw_space.internetQualityRate, internetQualityRate, cw_space.noOfReviews),
-                        costRate: newRate(cw_space.costRate, costRate, cw_space.noOfReviews),
-                        atmosphereRate: newRate(cw_space.atmosphereRate, atmosphereRate, cw_space.noOfReviews),
-                        staffRate: newRate(cw_space.staffRate, staffRate, cw_space.noOfReviews),
-                        privacyRate: newRate(cw_space.privacyRate, privacyRate, cw_space.noOfReviews),
-                        designRate: newRate(cw_space.designRate, designRate, cw_space.noOfReviews),
-                        noOfReviews: cw_space.noOfReviews+1
-                    }, {
+                const { totalRate, internetQualityRate, costRate, atmosphereRate, staffRate, privacyRate, designRate, body, clientClientID, cwSpaceCwID } = req.body
+                await Review.create({
+                    totalRate,
+                    body,
+                    clientClientID,
+                    cwSpaceCwID
+                })
+                const newReview = {
+                    rate: newRate(cw_space.rate, totalRate, cw_space.noOfReviews),
+                    internetQualityRate: newRate(cw_space.internetQualityRate, internetQualityRate, cw_space.noOfReviews),
+                    costRate: newRate(cw_space.costRate, costRate, cw_space.noOfReviews),
+                    atmosphereRate: newRate(cw_space.atmosphereRate, atmosphereRate, cw_space.noOfReviews),
+                    staffRate: newRate(cw_space.staffRate, staffRate, cw_space.noOfReviews),
+                    privacyRate: newRate(cw_space.privacyRate, privacyRate, cw_space.noOfReviews),
+                    designRate: newRate(cw_space.designRate, designRate, cw_space.noOfReviews),
+                    noOfReviews: cw_space.noOfReviews + 1
+                }
+                await Cw_space.update(newReview, {
                     where: {
                         cwID: cw_space.cwID
                     }
